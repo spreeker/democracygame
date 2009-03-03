@@ -1,0 +1,9 @@
+<form method="post" action=".">
+<h3>Tag dit onderwerp</h3>
+Populaire tags :
+{% for tag in tags %}
+<a href="" class="tagadd" id="tagadd_{{tag.pk}}">{{tag}}</a>
+{% endfor %}
+<br /><br />Nieuwe tag : {{form.tags}}
+<input type="submit" value="voeg toe" id="tagsubmit"/>
+</form><br />

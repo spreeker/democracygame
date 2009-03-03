@@ -1,0 +1,19 @@
+{% extends "emocracy_core/index.html" %}
+
+
+{% block content %}
+
+
+<h3>{{profile.title}}</h3>
+<div style="font-family:serif;line-height:120%">
+{{profile.description|striptags|linebreaks|truncatewords_html:200}}
+</div>
+
+{% if profile.url%}
+url {{profile.url|urlizetrunc:30}}
+{% else %}
+No url given.
+{% endif %}
+
+<br /><a href="{% url change_description %}">Change my description</a><br />
+{% endblock %}

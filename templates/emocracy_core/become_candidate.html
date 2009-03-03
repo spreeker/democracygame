@@ -1,0 +1,9 @@
+{% extends "emocracy_core/index.html" %}
+{% load i18n %}
+
+{% block content %}
+<h3>Run for office</h3>
+<p>So you want to run for office. If you do that then you during your candidacy
+you vote history will be made public</p>
+<form action="." method="post">{{form.ok}}<input type="submit" value="{% blocktrans %}Yes, run for office.{% endblocktrans %}"></form>
+{% endblock %}
