@@ -1,0 +1,27 @@
+{% extends "emocracy_core/index.html" %}
+{% load i18n %}
+
+{% block content %}
+<form method="post" action=".">
+{{form.search_string}}<input type="submit" value="{% trans "search" %}">
+</form>
+{% if current_page.object_list %}
+<ul>
+    {% for user in current_page.object_list %}
+    <li><a href="{% url userprofile user.username %}">{{user.username}}</a></li>
+    {% endfor %}
+</ul>
+{% else %}
+<ul><li>{% trans "No users were found that match you query ..." %}</li></ul>
+{% endif%}
+<div>
+    {% if current_page.has_previous %}
+    <a href="?page={{current_page.previous_page_number}}&search_string={{search_string}}">{% trans "previous" %}</a>
+    {% endif %}
+    {% blocktrans with current_page.number as no and num_pages as np %}page {{no}} of {{np}} {% endblocktrans %}
+    {% if current_page.has_next %}
+    <a href="?page={{current_page.next_page_number}}&search_string={{search_string}}">{% trans "next" %}</a>
+    {% endif %}
+</div>
+
+{% endblock %}

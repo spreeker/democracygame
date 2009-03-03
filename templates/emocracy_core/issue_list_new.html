@@ -1,0 +1,32 @@
+{% extends "emocracy_core/index.html" %}
+{% load i18n %}
+
+{% block content %}
+<script type="text/javascript" src="/media/ajaxvote.js"></script>
+{% if user.is_authenticated %}
+<script type="text/javascript" src="/media/ajaxtag.js"></script>
+{% endif %}
+<h2>{{page_title}}</h2>
+{% include "emocracy_core/sort_order_block.html" %}
+{% for votable, vote_text, vote_class, tags in object_list%}
+<div class="issue_block">
+    {% include "emocracy_core/votable_sidebar.html" %}
+    {% with votable.payload as issue %}
+    {% include "emocracy_core/issue_body.html" %}
+    {% endwith %}
+    
+    <div style="margin:1em 0em 0em 2em;width:75%" id="voteform_{{votable.pk}}" class="voteform_target system">
+    </div>
+</div>
+{% endfor %}
+<div class="system" style="clear:both;margin-bottom:1em">
+    {% if current_page.has_previous %}
+    <a href="?page={{current_page.previous_page_number}}">previous</a>
+    {% endif %}
+    page {{current_page.number}} of {{num_pages}}
+    {% if current_page.has_next %}
+    <a href="?page={{current_page.next_page_number}}">next</a>
+    {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,11 @@
+{% load i18n %}
+                <form action="" method="post">
+                <h3>Stem op dit onderwerp</h3>
+                <div>{% trans "cast a vote" %} : {{voteform.vote}}{{voteform.motivation}}
+                {{voteform.issue_no}}
+                <input type="submit" value="cast vote" id="castvote"/>
+                {% if user.is_authenticated %}
+                {% trans "Keep private" %} {{voteform.keep_private}}
+                {% endif %}
+                </div><br />
+                </form>

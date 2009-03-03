@@ -1,0 +1,26 @@
+{% extends "emocracy_core/index.html" %}
+
+{% block content %}
+
+<div class="issueblock">
+<h3>Propose an issue :</h3>
+<form action="." method="POST">
+{{form.non_field_errors}}
+<table>
+<tr><td>Title</td><td>{{form.title}}</td></tr>
+<tr><td></td><td>{{form.title.errors}}</td></tr>
+<tr><td></td><td></td></tr>
+<tr><td></td><td></td></tr>
+<tr><td>Body</td><td>{{form.body}}</td></tr>
+<tr><td></td><td>{{form.body.errors}}</td></tr>
+<tr><td>URL</td><td>{{form.url}}</td></tr>
+<tr><td></td><td>{{form.url.errors}}</td></tr>
+<tr><td>source type</td><td>{{form.source_type}}</td></tr>
+<tr><td></td><td>{{form.source_type.errors}}</td></tr>
+<tr><td>Your opinion</td><td>{{form.owners_vote}}</td></tr>
+<tr><td></td><td>{{form.owners_vote.errors}}</td></tr>
+</table><br />
+<input type="submit" value="Submit Issue">
+</form>
+</div>
+{% endblock %}

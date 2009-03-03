@@ -1,0 +1,24 @@
+{% extends "emocracy_core/index.html" %}
+
+{% block content %}
+
+<form method="post" action=".">
+<table>
+<tr>
+<td>{{form.username.label_tag}}</td>
+<td>{{form.username}}</td>
+</tr>
+<tr>
+<td>{{form.password.label_tag}}</td>
+<td>{{form.password}}</td>
+</tr>
+</table>
+{% if form.errors %}
+Try again, username and password don't match.
+{% endif %}
+
+<input type="submit" value="login">
+<input type="hidden" value="{{next}}" name="next">
+</form>
+
+{% endblock %}
