@@ -1,0 +1,35 @@
+
+Installing emocracy for development:
+
+1. Make sure django installation is the svn django-1.0.x
+
+do an svn checkout and make sure your python site-packages/django 
+points to the django-1.0 directory.
+
+$ svn co http://code.djangoproject.com/svn/django/branches/releases/1.0.X/ django-1.0
+
+$ cd /use/lib/python2.5/site-packages #this differs on various systems.
+$ ln -s /home/user/bla/*path to django-1.0 dir*/django django
+
+check if it is working by doing trying to import django in the python interpreter!
+
+2. go to the emorcacy directory default it uses sqlite3 as database backend and you dont need
+to install annything if you are using python2.
+create the database
+$ python manage.py syncdb
+
+now run the robots script to fill up the database with fake data.
+$ python robots_users.py
+$ python robot.py NUMBER , will fill up the database with number of issues.
+
+
+3 run you testserver!!
+
+python manage.py runserver 8080
+
+
+
+
+
+
+
