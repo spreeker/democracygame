@@ -1,0 +1,20 @@
+{% extends "emocracy_core/index.html" %}
+
+
+{% block content %}
+<div style="border-color:gray;border-width:0px 0px 0px 0px;border-style:solid;margin:0em 2em 1em 2em;padding-bottom:2em">
+<h3>{{profile.title}}</h3>
+<div style="font-family:serif;line-height:120%">
+{{profile.description|striptags|linebreaks|truncatewords_html:200}}
+</div>
+{% if profile.url%}
+url {{profile.url|urlizetrunc:30}}
+{% else %}
+No url given.
+{% endif %}
+
+<h3 style="font-family:serif;position:relative;right:1em">Details for {{user_to_show.username}}</h3>
+<a href="{% url issues_for_user user_to_show.username %}">Show {{user_to_show.username}}'s issues</a><br />
+<a href="{% url votes_for_user user_to_show.username %}">Show {{user_to_show.username}}'s votes</a><br />
+</div>
+{% endblock %}

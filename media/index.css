@@ -1,0 +1,129 @@
+/* General Emocracy site wide CSS file */
+
+/* general declarations */
+
+body {
+    margin: 0em;
+    padding: 0em;
+    background-color:white; 
+    color:black; 
+    font-family:sans-serif, helvetica, arial;
+    }
+
+a   {
+    text-decoration:underline;
+    color:#003366;
+    }
+
+.system {
+    font-size: 80%;
+    font-family: sans-serif;
+    line-height: 120%;
+}
+
+
+
+/* header style declarations */
+
+#header {
+    background-color: gray;
+    color: white;
+    }
+
+#header > h1 > a {
+    color: white;
+    text-decoration: none
+    }
+
+#header > a {
+    color: white;
+/*    text-decoration: none */
+}
+
+/* messagebar*/
+#messagebar {
+    color:black;
+    background-color:#ffff99;
+    padding:0em 1em 0em 1em;
+}
+
+/* sidebar style declarations */
+
+#sidebar{
+    font-family: sans-serif;
+}
+
+.sidebarblock {
+    margin:0em 0em 0em 1em;
+}
+
+
+.sidebarblock > p {
+    font-size:80%;
+    line-height:120%
+}
+
+
+
+/* main content area style declarations*/
+
+#content {
+    padding: 1em;
+    margin: 1em 0em 1em 0em;
+}
+
+
+
+/* Issue display specific styles */
+
+.issueblock {
+    position:relative;
+    margin:0em 0em 2em 0em;
+    overflow:hidden;
+}
+
+.votableinfo {
+    position:absolute;
+    left:75%;
+    width:20%;
+    font-family:sans-serif;
+    font-size:80%;
+    overflow:hidden;
+    /*background-color:green;*/
+    padding: 0em 0em 1em 1em;
+}
+
+.issuebody {
+    margin:0em 1em 0em 0em;
+    padding:0em 0em 1em 0em;
+    font-family:serif;
+    line-height:120%;
+    text-align:justify;
+    border-style:solid;
+    border-color:gray;
+    border-width:0px 0px 0px 0px;
+}
+
+.issuebody > p {
+    text-align:justify;
+}
+
+/* Vote link/report style declarations */
+
+.for {
+    background-color:#99ff99;
+    color:black;
+    padding:0em 1em 0em 1em;
+}
+
+.against {
+    background-color:#ff6666;
+    color:black;
+    padding:0em 1em 0em 1em;
+}
+
+.blank {
+    background-color:#cccccc;
+    color:black;
+    padding:0em 1em 0em 1em;
+}

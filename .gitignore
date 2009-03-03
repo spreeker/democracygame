@@ -1,0 +1,6 @@
+database.sqlite3
+emocracy_log.txt
+*.pyc
+*.pyo
+*.DS_Store
+*.mo
