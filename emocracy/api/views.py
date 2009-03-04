@@ -1,11 +1,17 @@
 import re
-from emocracy_core.models import Votable, IssueBody
 from django.shortcuts import render_to_response
-from django.http import Http404, HttpResponse, HttpResponseNotAllowed
+from django.http import Http404
+from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseServerError, HttpResponseNotFound, HttpResponseBadRequest
 from django.core import serializers
 from django.utils import simplejson
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
+
+
+from emocracy_core.models import Votable, IssueBody
+from emocracy_core import actions
+from forms import IssueCollectionForm
 
 
 TEMP_SERVER_NAME = u'http://127.0.0.1:8000'
@@ -28,9 +34,13 @@ TEMP_SERVER_NAME = u'http://127.0.0.1:8000'
 class HttpResponseUnauthorized(HttpResponse):
     status_code = 401
 
+class HttpResponseCreated(HttpResponse):
+    status_code = 201
+
 # ------------------------------------------------------------------------------
 
 def paginator_helper(request, l, paginate_by = 10):
+    """This function contains the Paginator boilerplate ... """
     paginator = Paginator(l, paginate_by)
     try:
         page_no = int(request.GET.get('page', '1'))
@@ -62,20 +72,41 @@ class Resource(object):
 
 class IssueResource(Resource):
     # show issue detail
-    def GET(self, request, *args, **kwargs):
-        raise Http404('GET')
-
+    def GET(self, request, pk, *args, **kwargs):
+        try:
+            issue = Votable.objects.filter(pk = pk)
+        except Votable.DoesNotExist:
+            return HttpResponseNotFound
+        return HttpResponse(serializers.serialize("json", issue, ensure_ascii = False), mimetype = 'text/html')
+        
+        
 class IssueCollection(Resource):
     def POST(self, request, *args, **kwargs):
         # The authentication check should be moved to django-oauth ASAP
         if not request.user.is_authenticated():
             return HttpResponseUnauthorized()
-        # Process the POST data, using a form. If valid -> create an issue.
-        # Use a Reponse with status_code 201 and URI of new issue as reply on 
-        # succes.
-        #IssueCreationForm()
+        form = IssueCollectionForm(request.POST)        
+        # For now CSRF is turned off, django 1.1 it can be turned off on a per
+        # view basis.
+        if form.is_valid():
+            new_votable = actions.propose(
+                request.user, 
+                form.cleaned_data['title'],
+                form.cleaned_data['body'],
+                form.cleaned_data['vote_int'],
+                form.cleaned_data['source_url'],
+                form.cleaned_data['source_type'],
+            )
+            if new_votable:
+                # If a new resource is created succesfully send a 201 response and
+                # embed a pointer to the newly created resource.
+                data = {'resource' : TEMP_SERVER_NAME + reverse('api_issue_pk', args = [new_votable.pk]),}
+                return HttpResponseCreated(simplejson.dumps(data, ensure_ascii = False), mimetype = 'text/html')
+            else:
+                return HttpReponseBadRequest()
+        else:
+            return HttpResponseBadRequest()
         
-        raise Http404('POST')
     
     def GET(self, request, *args, **kwargs):
         """Send paginated list of issue URIs to client as JSON."""
@@ -84,12 +115,13 @@ class IssueCollection(Resource):
         votable_ids = Votable.objects.values_list('pk', flat = True) 
         current_page, page_no = paginator_helper(request, votable_ids, 10)
         
-        resource_uris = [TEMP_SERVER_NAME + u'/api/issue/' + unicode(id) + u'/' for id in current_page.object_list]
+        resource_uris = [TEMP_SERVER_NAME + reverse('api_issue_pk', args = [id]) for id in current_page.object_list]
+    
         response_content = {'issues' : resource_uris,}
         if current_page.has_next():
-            response_content['next'] = TEMP_SERVER_NAME + u'/api/issue/?page=' + unicode(current_page.next_page_number())
+            response_content['next'] = TEMP_SERVER_NAME + reverse('api_issue') + u'?page=' + unicode(current_page.next_page_number())
         if current_page.has_previous():
-            response_content['previous'] = TEMP_SERVER_NAME + u'/api/issue/?page=' + unicode(current_page.previous_page_number())
+            response_content['previous'] = TEMP_SERVER_NAME +reverse('api_issue') + unicode(current_page.previous_page_number())
             
         reply = simplejson.dumps(response_content)
         return HttpResponse(reply, mimetype = 'text/html') 

@@ -72,7 +72,7 @@ def archive_votes(votable, user, vote_int):
     return voted_already, repeated_vote
 
 def propose(user, title, body, vote_int, source_url, source_type):
-    if not allow.propose(user, title, body, vote_int, source_url, source_type): return
+    if not allow.propose(user, title, body, vote_int, source_url, source_type): return None
 
     new_issue = IssueBody.objects.create(
         owner = user,
