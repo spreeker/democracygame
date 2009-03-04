@@ -10,13 +10,13 @@ from django.utils.translation import ugettext as _
 tag_count_threshold = 10
 
 source_types = (
-    (u"video", u"video"),
-    (u"audio", u"audio"),
-    (u"boek", u"boek"),
-    (u"document", u"document"),
-    (u"image", u"image"),
-    (u"deeplink", u"deeplink"),
-    (u"website", u"website"),
+    (u"video", _(u"video")),
+    (u"audio", _(u"audio")),
+    (u"boek", _(u"boek")),
+    (u"document", _(u"document")),
+    (u"image", _(u"image")),
+    (u"deeplink", _(u"deeplink")),
+    (u"website", _(u"website")),
 )
 
 # ADD NEW POSSIBILITIES WITH NEW INTEGERS, THEY NEED TO BE UNIQUE
