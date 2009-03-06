@@ -24,12 +24,12 @@ from django.template.loader import render_to_string
 
 
 from util import *
-import actions, anonymous_actions
-from forms import TagForm, CastVoteFormFull, IssueFormNew, HiddenOkForm, TagSearchForm, TagForm2
-from forms import NormalVoteForm, BlankVoteForm
-from models import votes_to_description
-from models import IssueTag, TaggedIssue
-from models import Issue, IssueBody, IssueSet
+import gamelogic.actions, anonymous_actions
+from gamelogic.forms import TagForm, CastVoteFormFull, IssueFormNew, HiddenOkForm, TagSearchForm, TagForm2
+from gamelogic.forms import NormalVoteForm, BlankVoteForm
+from gamelogic.models import votes_to_description
+from gamelogic.models import IssueTag, TaggedIssue
+from gamelogic.models import Issue, IssueBody, IssueSet
 import settings
 
 # ------------------------------------------------------------------------------
@@ -96,7 +96,7 @@ class ListIssueBaseView(object):
             'show_more_info_link' : True,
             'object_list' : zip(current_page.object_list, user_votes, vote_css_class, tags_for_objects),
         })
-        return render_to_response('gamelogic/issue_list_new.html',
+        return render_to_response('web/issue_list_new.html',
             RequestContext(request, extra_context))
 
 issue_list = ListIssueBaseView()
@@ -146,7 +146,6 @@ class OneIssueBaseView(object):
     can then be used by the subclass to do the right thing.)
     """
 
-    # TODO hook up to tagging machinery in actions.py module
     # TODO FIXME XSS make the handling of request parameters safe, as it stands
     # the request parameters end up in the page HTML unescaped! (that sucks!)
     
@@ -163,7 +162,7 @@ class OneIssueBaseView(object):
                 else:
                     # Register the votes in the DB and assign score:
                     if request.user.is_authenticated():
-                        actions.vote(request.user, issue, form.cleaned_data['vote'], False) # TODO: deal with private votes
+                        gamelogic.actions.vote(request.user, issue, form.cleaned_data['vote'], False) # TODO: deal with private votes
                     else:
                         anonymous_actions.vote(request, issue, form.cleaned_data['vote'])
                     # Succesful submit of a normal (For or Against) vote,
@@ -182,7 +181,7 @@ class OneIssueBaseView(object):
             if form.is_valid():
                 # Register the vote in the DB and assign score
                 if request.user.is_authenticated():
-                    actions.vote(request.user, issue, form.cleaned_data['motivation'], False) # TODO: deal with private votes
+                    gamelogic.actions.vote(request.user, issue, form.cleaned_data['motivation'], False) # TODO: deal with private votes
                 else:
                     anonymous_actions.vote(request, issue, form.cleaned_data['motivation'])
                 # Succesful submit of a motivation for a blank vote. Redirect to
@@ -201,11 +200,10 @@ class OneIssueBaseView(object):
                 ptag = form.cleaned_data.get(u'popular_tags')
                 tag = form.cleaned_data.get(u'tags')
                 if ptag:
-                    actions.tag(request.user, issue, ptag)
+                    gamelogic.actions.tag(request.user, issue, ptag)
                 else:
-                    actions.tag(request.user, issue, tag)
+                    gamelogic.actions.tag(request.user, issue, tag)
 
-                #actions.tag()
                 # New tag sucessfully submitted. Redirect to formless version
                 # of this page.
                 del qd['form_type']
@@ -264,7 +262,7 @@ class PollTakeView(OneIssueBaseView):
          
         if form_type in ['voteform','voteblankform', 'tagform']:
             extra_context[form_type] = form 
-        return render_to_response('gamelogic/issue_detail.html',
+        return render_to_response('web/issue_detail.html',
             RequestContext(request, extra_context))
 
 poll_take = PollTakeView()
@@ -301,7 +299,7 @@ class DetailView(OneIssueBaseView):
         if form_type in ['voteform','voteblankform', 'tagform']:
             extra_context[form_type] = form
         
-        return render_to_response('gamelogic/issue_detail.html',
+        return render_to_response('web/issue_detail.html',
             RequestContext(request, extra_context))
         
 newdetail = DetailView()
@@ -317,7 +315,7 @@ def issue_propose(request):
         form = IssueFormNew(request.POST)
         if form.is_valid():
         
-            new_issue = actions.propose(
+            new_issue = gamelogic.actions.propose(
                 request.user,
                 form.cleaned_data[u'title'],
                 form.cleaned_data[u'body'],
@@ -331,14 +329,14 @@ def issue_propose(request):
         form = IssueFormNew()
         
     context = RequestContext(request, {"form" : form})
-    return render_to_response("gamelogic/issue_propose.html", context)
+    return render_to_response("web/issue_propose.html", context)
 
 # ------------------------------------------------------------------------------
 # -- Poll related view functions : ---------------------------------------------
 
 def poll_list(request): # replace with a generic view, called straight from urls.py
     all_polls = IssueSet.objects.all().order_by("time_stamp").reverse()
-    return object_list(request, queryset = all_polls, paginate_by = 25, template_name = 'gamelogic/poll_list.html')
+    return object_list(request, queryset = all_polls, paginate_by = 25, template_name = 'web/poll_list.html')
 
 class PollResultView(object):
     """
@@ -419,7 +417,7 @@ class PollResultView(object):
             'scored_poll_users' : scored_poll_users,
             'number_of_issues' : len(issue_ids),
         })
-        return render_to_response('gamelogic/poll_result.html', context)
+        return render_to_response('web/poll_result.html', context)
 
 poll_result = PollResultView()
 
@@ -439,7 +437,7 @@ def tagform(request, issue_pk):
         'tags' : popular_tags,
     })
     context = RequestContext(request, extra_context)
-    return render_to_response('gamelogic/tagform.html', context)
+    return render_to_response('web/tagform.html', context)
 
 def ajaxtag(request, pk):
     """
@@ -451,7 +449,7 @@ def ajaxtag(request, pk):
     if request.method == 'POST':
         form = TagForm(request.POST)
         if form.is_valid():
-            tag_object, msg = actions.tag(request.user, issue, form.cleaned_data["tags"])
+            tag_object, msg = gamelogic.actions.tag(request.user, issue, form.cleaned_data["tags"])
             reply = simplejson.dumps({'msg' : msg}, ensure_ascii = False)
             return HttpResponse(reply, mimetype = 'application/json')
         else:
@@ -502,7 +500,7 @@ def search_tag(request):
         'search_string' : search_string,
         'num_pages' : paginator.num_pages,
     })
-    return render_to_response('gamelogic/search_tag.html', context)
+    return render_to_response('web/search_tag.html', context)
 
 # ------------------------------------------------------------------------------
 
@@ -513,7 +511,7 @@ def voteform(request, issue_no):
     """
     f = CastVoteFormFull({'issue_no' : int(issue_no), 'vote' : 0})
     context = RequestContext(request, {'voteform' : f})
-    return render_to_response('gamelogic/voteform.html', context)
+    return render_to_response('web/voteform.html', context)
 
 
 def ajaxvote(request):
@@ -544,7 +542,7 @@ def ajaxvote(request):
                 css_class = u'blank'
 
             if request.user.is_authenticated():
-                actions.vote(request.user, issue, vote_int, form.cleaned_data['keep_private'])
+                gamelogic.actions.vote(request.user, issue, vote_int, form.cleaned_data['keep_private'])
             else:
                 anonymous_actions.vote(request, issue, vote_int)
             
@@ -573,23 +571,23 @@ def mandate(request, rep):
     if request.method == 'POST':
         form = HiddenOkForm(request.POST)
         if form.is_valid():
-            actions.mandate(request.user, representative)
+            gamelogic.actions.mandate(request.user, representative)
     form = HiddenOkForm()
     context = RequestContext(request, {
         'representative' : representative,
         'form' : form,
     })
-    return render_to_response('gamelogic/mandate.html', context)
+    return render_to_response('web/mandate.html', context)
 
 @login_required
 def become_candidate(request):
     if request.method == 'POST':
         form = HiddenOkForm(request.POST)
         if form.is_valid():
-            actions.become_candidate(request.user)
+            gamelogic.actions.become_candidate(request.user)
     form = HiddenOkForm()
     context = RequestContext(request, {
         'form' : form,
     })
-    return render_to_response('gamelogic/become_candidate.html', context)
+    return render_to_response('web/become_candidate.html', context)
     
