@@ -38,9 +38,9 @@ import settings
 def vote_list_user(request, user_name):
     user = get_object_or_404(User, username = user_name)
     if request.user.username == user_name:
-        user_votes = NewStyleVote.objects.filter(owner = user, is_archived = False).order_by("time_stamp").reverse()
+        user_votes = Vote.objects.filter(owner = user, is_archived = False).order_by("time_stamp").reverse()
     else:
-        user_votes = NewStyleVote.objects.filter(owner = user, is_archived = False, keep_private = False).order_by("time_stamp").reverse()
+        user_votes = Vote.objects.filter(owner = user, is_archived = False, keep_private = False).order_by("time_stamp").reverse()
     return object_list(request, queryset = user_votes, paginate_by = 25)
 
 # ------------------------------------------------------------------------------
@@ -352,7 +352,7 @@ class PollResultView(object):
         """
         # TODO see wether this needs to be refactored and moved to models.py
         out = {}
-        votes = NewStyleVote.objects.filter(is_archived = False).filter(votable__in = votable_ids).filter(owner = user).values('votable', 'vote')
+        votes = Vote.objects.filter(is_archived = False).filter(votable__in = votable_ids).filter(owner = user).values('votable', 'vote')
         for x in votes:
             out[int(x['votable'])] = int(x['vote'])
         return out
