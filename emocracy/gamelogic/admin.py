@@ -1,7 +1,7 @@
 # by Thijs Coenen  for the Emocracy project
 from django.contrib import admin
 
-from emocracy.emocracy_core.models import Mandate, IssueTag, TaggedIssue
+from models import Mandate, IssueTag, TaggedIssue
 from models import Votable, LawProposal, Motion, IssueBody, VotableSet
 
 

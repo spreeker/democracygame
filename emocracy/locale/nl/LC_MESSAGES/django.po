@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-06 15:50+0100\n"
+"POT-Creation-Date: 2009-03-06 17:28+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,119 +20,117 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: emocracy_core/actions.py:123
+#: gamelogic/actions.py:123
 #, python-format
 msgid ""
 "Tag %(tagname)s added to this votable. The new tag might not show up "
 "immediately"
 msgstr ""
 
-#: emocracy_core/forms.py:56
+#: gamelogic/forms.py:56
 msgid "Tag"
 msgstr ""
 
-#: emocracy_core/forms.py:60 emocracy_core/forms.py:74
-#: emocracy_core/models.py:26
+#: gamelogic/forms.py:60 gamelogic/forms.py:74 gamelogic/models.py:26
 msgid "Against"
 msgstr "Tegen"
 
-#: emocracy_core/forms.py:60 emocracy_core/forms.py:74
+#: gamelogic/forms.py:60 gamelogic/forms.py:74
 msgid "Blank..."
 msgstr "Blanco..."
 
-#: emocracy_core/forms.py:60 emocracy_core/forms.py:74
-#: emocracy_core/models.py:27
+#: gamelogic/forms.py:60 gamelogic/forms.py:74 gamelogic/models.py:27
 msgid "For"
 msgstr "Voor"
 
-#: emocracy_core/models.py:13
+#: gamelogic/models.py:13
 msgid "video"
 msgstr ""
 
-#: emocracy_core/models.py:14
+#: gamelogic/models.py:14
 msgid "audio"
 msgstr ""
 
-#: emocracy_core/models.py:15
+#: gamelogic/models.py:15
 msgid "boek"
 msgstr ""
 
-#: emocracy_core/models.py:16
+#: gamelogic/models.py:16
 msgid "document"
 msgstr ""
 
-#: emocracy_core/models.py:17
+#: gamelogic/models.py:17
 msgid "image"
 msgstr ""
 
-#: emocracy_core/models.py:18
+#: gamelogic/models.py:18
 msgid "deeplink"
 msgstr ""
 
-#: emocracy_core/models.py:19
+#: gamelogic/models.py:19
 msgid "website"
 msgstr ""
 
-#: emocracy_core/models.py:32
+#: gamelogic/models.py:32
 msgid "Unconvincing"
 msgstr "Niet overtuigend"
 
-#: emocracy_core/models.py:33
+#: gamelogic/models.py:33
 msgid "Can't completely agree"
 msgstr "Niet helemaal mee eens"
 
-#: emocracy_core/models.py:35
+#: gamelogic/models.py:35
 msgid "Needs more work"
 msgstr "Nog niet af"
 
-#: emocracy_core/models.py:36
+#: gamelogic/models.py:36
 msgid "Badly worded"
 msgstr "Slecht verwoord"
 
-#: emocracy_core/models.py:37
+#: gamelogic/models.py:37
 msgid "Duplicate"
 msgstr "Duplicaat"
 
-#: emocracy_core/models.py:38
+#: gamelogic/models.py:38
 msgid "Unrelated source"
 msgstr "Geen toepasselijke bron"
 
-#: emocracy_core/models.py:40
+#: gamelogic/models.py:40
 msgid "I need to know more"
 msgstr "Te weinig kennis"
 
-#: emocracy_core/models.py:41
+#: gamelogic/models.py:41
 msgid "Ask me later"
 msgstr "Vraag me later"
 
-#: emocracy_core/models.py:172
+#: gamelogic/models.py:172
 #, python-format
 msgid "%(user)s voted for %(representative)s"
 msgstr ""
 
-#: emocracy_core/util.py:35 emocracy_core/util.py:39 emocracy_core/util.py:67
+#: gamelogic/util.py:35 gamelogic/util.py:39 gamelogic/util.py:67
 msgid "I did not vote"
 msgstr "Ik heb niet gestemd"
 
-#: emocracy_core/views.py:60
+#: gamelogic/views.py:60
 msgid "All Issues"
 msgstr "alle onderwerpen"
 
-#: emocracy_core/views.py:112
+#: gamelogic/views.py:112
 #, fuzzy, python-format
 msgid "Issues tagged with %(tagname)s"
 msgstr "Onderwerpen getagd met %(tagname)s"
 
-#: emocracy_core/views.py:125
+#: gamelogic/views.py:125
 #, fuzzy, python-format
 msgid "Issues for %(username)s"
 msgstr "De nieuwste Onderwerpen voor %(username)s"
 
-#: emocracy_core/views.py:458
+#: gamelogic/views.py:458
 msgid "No tag added"
 msgstr ""
 
-#: emocracy_core/views.py:532
+#: gamelogic/views.py:532
 #, fuzzy
 msgid "Votable object does not exist"
 msgstr "Onderwerp bestaat niet"
@@ -141,8 +139,7 @@ msgstr "Onderwerp bestaat niet"
 msgid "You are now logged out."
 msgstr ""
 
-#: templates/accounts/search_user.html:6
-#: templates/emocracy_core/search_tag.html:6
+#: templates/accounts/search_user.html:6 templates/gamelogic/search_tag.html:6
 msgid "search"
 msgstr ""
 
@@ -151,101 +148,101 @@ msgid "No users were found that match you query ..."
 msgstr ""
 
 #: templates/accounts/search_user.html:19
-#: templates/emocracy_core/issue_detail.html:58
-#: templates/emocracy_core/search_tag.html:19
+#: templates/gamelogic/issue_detail.html:58
+#: templates/gamelogic/search_tag.html:19
 msgid "previous"
 msgstr ""
 
 #: templates/accounts/search_user.html:21
-#: templates/emocracy_core/search_tag.html:21
+#: templates/gamelogic/search_tag.html:21
 #, python-format
 msgid "page %(no)s of %(np)s "
 msgstr ""
 
 #: templates/accounts/search_user.html:23
-#: templates/emocracy_core/issue_detail.html:64
-#: templates/emocracy_core/search_tag.html:23
+#: templates/gamelogic/issue_detail.html:64
+#: templates/gamelogic/search_tag.html:23
 msgid "next"
 msgstr ""
 
-#: templates/emocracy_core/become_candidate.html:8
+#: templates/gamelogic/become_candidate.html:8
 msgid "Yes, run for office."
 msgstr ""
 
-#: templates/emocracy_core/index.html:12
+#: templates/gamelogic/index.html:12
 msgid "Emocracy the Game"
 msgstr "Emocracy het Spel"
 
-#: templates/emocracy_core/index.html:14
+#: templates/gamelogic/index.html:14
 msgid "home"
 msgstr "thuis"
 
-#: templates/emocracy_core/index.html:14
+#: templates/gamelogic/index.html:14
 msgid "about"
 msgstr "over"
 
-#: templates/emocracy_core/index.html:15
+#: templates/gamelogic/index.html:15
 msgid "contact"
 msgstr "contact"
 
-#: templates/emocracy_core/index.html:15
+#: templates/gamelogic/index.html:15
 msgid "bugs"
 msgstr "bugs"
 
-#: templates/emocracy_core/index.html:15
+#: templates/gamelogic/index.html:15
 msgid "wishes"
 msgstr "wensen"
 
-#: templates/emocracy_core/issue_body.html:5
+#: templates/gamelogic/issue_body.html:5
 msgid "by"
 msgstr "door"
 
-#: templates/emocracy_core/issue_body.html:5
+#: templates/gamelogic/issue_body.html:5
 msgid "on"
 msgstr "op"
 
-#: templates/emocracy_core/issue_body.html:5
+#: templates/gamelogic/issue_body.html:5
 msgid "at"
 msgstr "om"
 
-#: templates/emocracy_core/issue_body.html:8
+#: templates/gamelogic/issue_body.html:8
 msgid "source"
 msgstr "bron"
 
-#: templates/emocracy_core/issue_detail.html:27
-#: templates/emocracy_core/issue_detail.html:35
+#: templates/gamelogic/issue_detail.html:27
+#: templates/gamelogic/issue_detail.html:35
 #, fuzzy
 msgid "Vote on this issue"
 msgstr "Score voor dit onderwerp"
 
-#: templates/emocracy_core/issue_detail.html:29
+#: templates/gamelogic/issue_detail.html:29
 #, fuzzy
 msgid "Vote"
 msgstr "stemmen"
 
-#: templates/emocracy_core/issue_detail.html:37
+#: templates/gamelogic/issue_detail.html:37
 #, fuzzy
 msgid "Motivation"
 msgstr "meer informatie"
 
-#: templates/emocracy_core/issue_detail.html:43
+#: templates/gamelogic/issue_detail.html:43
 #, fuzzy
 msgid "Tag this issue"
 msgstr "Score voor dit onderwerp"
 
-#: templates/emocracy_core/issue_detail.html:45
+#: templates/gamelogic/issue_detail.html:45
 msgid "Popular tags"
 msgstr ""
 
-#: templates/emocracy_core/issue_detail.html:46
+#: templates/gamelogic/issue_detail.html:46
 msgid "other tag"
 msgstr ""
 
-#: templates/emocracy_core/issue_detail.html:49
+#: templates/gamelogic/issue_detail.html:49
 msgid "Errors"
 msgstr ""
 
-#: templates/emocracy_core/issue_detail.html:60
+#: templates/gamelogic/issue_detail.html:60
 #, python-format
 msgid ""
 "\n"
@@ -253,20 +250,20 @@ msgid ""
 "        "
 msgstr ""
 
-#: templates/emocracy_core/issue_detail.html:66
+#: templates/gamelogic/issue_detail.html:66
 msgid "show results"
 msgstr ""
 
-#: templates/emocracy_core/mandate.html:7
+#: templates/gamelogic/mandate.html:7
 #, python-format
 msgid "Yes, mandate %(name)s."
 msgstr ""
 
-#: templates/emocracy_core/search_tag.html:15
+#: templates/gamelogic/search_tag.html:15
 msgid "No tags were found that match you query ..."
 msgstr ""
 
-#: templates/emocracy_core/sidebar.html:12
+#: templates/gamelogic/sidebar.html:12
 #, python-format
 msgid ""
 "Your are currently a <a href=\"http://emocracy.nl/wiki/index.php/Burger\">%"
@@ -275,76 +272,76 @@ msgstr ""
 "Je bent nu een <a href=\"http://emocracy.nl/wiki/index.php/Burger\">%(role)"
 "s</a>.<br />"
 
-#: templates/emocracy_core/sidebar.html:19
+#: templates/gamelogic/sidebar.html:19
 msgid "all issues"
 msgstr "alle onderwerpen"
 
-#: templates/emocracy_core/sidebar.html:20
+#: templates/gamelogic/sidebar.html:20
 msgid "my issues"
 msgstr "mijn onderwerpen"
 
-#: templates/emocracy_core/sidebar.html:21
+#: templates/gamelogic/sidebar.html:21
 msgid "propose issue"
 msgstr "maak een onderwerp"
 
-#: templates/emocracy_core/sidebar.html:22
+#: templates/gamelogic/sidebar.html:22
 msgid "my votes"
 msgstr "mijn stemmen"
 
-#: templates/emocracy_core/sidebar.html:23
+#: templates/gamelogic/sidebar.html:23
 msgid "polls"
 msgstr "peilingen"
 
-#: templates/emocracy_core/sidebar.html:24
+#: templates/gamelogic/sidebar.html:24
 msgid "my profile"
 msgstr "mijn profiel"
 
-#: templates/emocracy_core/sidebar.html:25
+#: templates/gamelogic/sidebar.html:25
 msgid "log out"
 msgstr "log uit"
 
-#: templates/emocracy_core/sort_order_block.html:3
+#: templates/gamelogic/sort_order_block.html:3
 msgid "most recent"
 msgstr "meest recent"
 
-#: templates/emocracy_core/sort_order_block.html:4
+#: templates/gamelogic/sort_order_block.html:4
 msgid "most voted on"
 msgstr "meeste stemmen"
 
-#: templates/emocracy_core/sort_order_block.html:5
+#: templates/gamelogic/sort_order_block.html:5
 msgid "highest score"
 msgstr "hoogste score"
 
 #
-#: templates/emocracy_core/sort_order_block.html:6
+#: templates/gamelogic/sort_order_block.html:6
 msgid "hottest"
 msgstr "hottest"
 
-#: templates/emocracy_core/sort_order_block.html:6
+#: templates/gamelogic/sort_order_block.html:6
 msgid "currently sorting by hotness"
 msgstr "hotness"
 
-#: templates/emocracy_core/votable_sidebar.html:16
+#: templates/gamelogic/votable_sidebar.html:16
 msgid "more information"
 msgstr "meer informatie"
 
-#: templates/emocracy_core/votable_sidebar.html:19
-#: templates/emocracy_core/votable_sidebar.html:33
+#: templates/gamelogic/votable_sidebar.html:19
+#: templates/gamelogic/votable_sidebar.html:33
 msgid "add tag"
 msgstr "tag toevoegen"
 
-#: templates/emocracy_core/votable_sidebar.html:41
+#: templates/gamelogic/votable_sidebar.html:41
 msgid "score"
 msgstr "score"
 
-#: templates/emocracy_core/votable_sidebar.html:42
+#: templates/gamelogic/votable_sidebar.html:42
 msgid "votes"
 msgstr "stemmen"
 
-#: templates/emocracy_core/voteform.html:4
+#: templates/gamelogic/voteform.html:4
 msgid "cast a vote"
 msgstr "stem"
 
-#: templates/emocracy_core/voteform.html:8
+#: templates/gamelogic/voteform.html:8
 msgid "Keep private"
 msgstr "houd prive"
