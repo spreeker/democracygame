@@ -6,7 +6,7 @@ import logging
 
 from django.utils.translation import ugettext as _
 
-from models import NewStyleVote, votes_to_description
+from models import Vote, votes_to_description
 
 def vote_helper_anonymous(request, votables):
     """Returns a list of votes for <request.user> and the selected <votable>."""
@@ -49,7 +49,7 @@ def vote_helper_authenticated(user, votables):
     vote_class = []    
         
     for votable in votables:
-        vote = NewStyleVote.objects.filter(owner = user).filter(votable = votable.pk).filter(is_archived = False)
+        vote = Vote.objects.filter(owner = user).filter(votable = votable.pk).filter(is_archived = False)
         if vote:
             tmp = vote[0].vote
             try:

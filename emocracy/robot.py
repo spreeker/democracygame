@@ -4,7 +4,7 @@ import settings
 setup_environ(settings)
 # now continue as per usual:
 import datetime, random, codecs, sys
-from emocracy.emocracy_core.models import IssueBody, Votable, NewStyleVote
+from emocracy.emocracy_core.models import IssueBody, Votable, Vote
 from django.contrib.auth.models import User
 
 def homerus(n_issues = 10):

@@ -85,7 +85,7 @@ class Votable(models.Model):
     votes = models.IntegerField(default = 0)
     hotness = models.IntegerField(default = 0)
     
-    # TODO add fields for anymous votes (see wether they also need NewStyleVote
+    # TODO add fields for anymous votes (see wether they also need Vote
     # objects in the database)
     
     objects = VotableManager()
@@ -94,7 +94,7 @@ class Votable(models.Model):
         unique_together = ('content_type', 'object_id') # UNIQUENESS CONSTRAINT SEEMS TO BE IGNORED? FIXME
 
     def vote(self, user, vote_int, keep_private, votableset = None):
-        new_vote = NewStyleVote.objects.create(
+        new_vote = Vote.objects.create(
             owner = user,
             votable = self,
             votableset = votableset,
@@ -151,7 +151,7 @@ class VotableSet(models.Model):
     def __unicode__(self):
         return self.title
 
-class NewStyleVote(models.Model):
+class Vote(models.Model):
     owner = models.ForeignKey(User)
     votable = models.ForeignKey(Votable)
     votableset = models.ForeignKey(VotableSet, null = True)
