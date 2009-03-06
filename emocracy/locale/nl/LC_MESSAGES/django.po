@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-03 16:36+0100\n"
+"POT-Creation-Date: 2009-03-06 15:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,6 +44,34 @@ msgstr "Blanco..."
 #: emocracy_core/models.py:27
 msgid "For"
 msgstr "Voor"
+
+#: emocracy_core/models.py:13
+msgid "video"
+msgstr ""
+
+#: emocracy_core/models.py:14
+msgid "audio"
+msgstr ""
+
+#: emocracy_core/models.py:15
+msgid "boek"
+msgstr ""
+
+#: emocracy_core/models.py:16
+msgid "document"
+msgstr ""
+
+#: emocracy_core/models.py:17
+msgid "image"
+msgstr ""
+
+#: emocracy_core/models.py:18
+msgid "deeplink"
+msgstr ""
+
+#: emocracy_core/models.py:19
+msgid "website"
+msgstr ""
 
 #: emocracy_core/models.py:32
 msgid "Unconvincing"
