@@ -1,5 +1,5 @@
 # by Thijs Coenen for the Emocracy project october 2008
-from models import blank_votes, blank_votes, IssueTag
+from gamelogic.models import blank_votes, blank_votes, IssueTag
 import models
 
 from django import forms
