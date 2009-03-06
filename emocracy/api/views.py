@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
 
-from gamelogic.models import Votable, IssueBody, Vote
+from gamelogic.models import Issue, IssueBody, Vote
 from gamelogic import actions
 from forms import IssueCollectionForm
 
@@ -85,8 +85,8 @@ class IssueResource(Resource):
     # show issue detail
     def GET(self, request, pk, *args, **kwargs):
         try:
-            issue = Votable.objects.get(pk = pk)
-        except Votable.DoesNotExist:
+            issue = Issue.objects.get(pk = pk)
+        except Issue.DoesNotExist:
             return HttpResponseNotFound()
         data = {
             'title' : issue.title,
@@ -108,7 +108,7 @@ class IssueCollection(Resource):
         # For now CSRF is turned off, django 1.1 it can be turned off on a per
         # view basis.
         if form.is_valid():
-            new_votable = actions.propose(
+            new_issue = actions.propose(
                 request.user, 
                 form.cleaned_data['title'],
                 form.cleaned_data['body'],
@@ -116,10 +116,10 @@ class IssueCollection(Resource):
                 form.cleaned_data['source_url'],
                 form.cleaned_data['source_type'],
             )
-            if new_votable:
+            if new_issue:
                 # If a new resource is created succesfully send a 201 response and
                 # embed a pointer to the newly created resource.
-                data = {'resource' : TEMP_SERVER_NAME + reverse('api_issue_pk', args = [new_votable.pk]),}
+                data = {'resource' : TEMP_SERVER_NAME + reverse('api_issue_pk', args = [new_issue.pk]),}
                 return HttpResponseCreated(simplejson.dumps(data, ensure_ascii = False), mimetype = 'text/html')
             else:
                 return HttpReponseBadRequest()
@@ -131,8 +131,8 @@ class IssueCollection(Resource):
         """Send paginated list of issue URIs to client as JSON."""
         # If ValueListQuerySets are evaluated to a lists by Django the following
         # line needs to change (TODO find out):
-        votable_ids = Votable.objects.values_list('pk', flat = True) 
-        data = paginated_collection_helper(request, votable_ids, 'api_issue', 
+        issue_ids = Issue.objects.values_list('pk', flat = True) 
+        data = paginated_collection_helper(request, issue_ids, 'api_issue', 
             'api_issue_pk')
         return HttpResponse(simplejson.dumps(data), mimetype = 'text/html') 
         # text/html is here for debugging, should be application/javascript or application/json
@@ -148,14 +148,14 @@ class VoteResource(Resource):
     def GET(self, request, pk, *args, **kwargs):
         try:
             vote = Vote.objects.get(pk = pk)
-        except Votable.DoesNotExist:
+        except Issue.DoesNotExist:
             return HttpResponseNotFound()
         data = {
             'vote_int' : vote.vote,
-            # The vote.votable_id does not follow the relation (would cause 
+            # The vote.issue_id does not follow the relation (would cause 
             # extra and unnecessary work for the db).
-            'issue' : TEMP_SERVER_NAME + reverse('api_issue_pk', args = [vote.votable_id]),
-            'votableset' : 'NOT IMPLEMENTED YET',
+            'issue' : TEMP_SERVER_NAME + reverse('api_issue_pk', args = [vote.issue_id]),
+            'issueset' : 'NOT IMPLEMENTED YET',
         }
         return HttpResponse(simplejson.dumps(data, ensure_ascii = False), mimetype = 'text/html')
 

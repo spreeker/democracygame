@@ -8,18 +8,18 @@ from django.utils.translation import ugettext as _
 
 from models import Vote, votes_to_description
 
-def vote_helper_anonymous(request, votables):
-    """Returns a list of votes for <request.user> and the selected <votable>."""
+def vote_helper_anonymous(request, issues):
+    """Returns a list of votes for <request.user> and the selected <issue>."""
     user_votes = []
     vote_class = []
     
     if request.session.has_key("vote_history"):
-        for votable in votables:
+        for issue in issues:
             try:
                 # Assuming there is no garbage in the user's session.  
                 # (So that <request.session["vote_history"][issue.no]> will
                 # always cast to an integer.)
-                tmp = int(request.session["vote_history"][votable.pk])
+                tmp = int(request.session["vote_history"][issue.pk])
                 try:
                     user_votes.append(votes_to_description[tmp])
                     
@@ -35,21 +35,21 @@ def vote_helper_anonymous(request, votables):
                 user_votes.append(_(u'I did not vote'))
                 vote_class.append(u'blank')
     else:
-        for votable in votables:
+        for issue in issues:
             user_votes.append(_(u'I did not vote'))
             vote_class.append(u'blank')
     
     return user_votes, vote_class
     
 
-def vote_helper_authenticated(user, votables):
+def vote_helper_authenticated(user, issues):
     """Returns a list of votes as text and css classes that go with each type of
-    vote for <user> and the selected <votables>."""
+    vote for <user> and the selected <issues>."""
     vote_text = []
     vote_class = []    
         
-    for votable in votables:
-        vote = Vote.objects.filter(owner = user).filter(votable = votable.pk).filter(is_archived = False)
+    for issue in issues:
+        vote = Vote.objects.filter(owner = user).filter(issue = issue.pk).filter(is_archived = False)
         if vote:
             tmp = vote[0].vote
             try:
@@ -71,7 +71,7 @@ def vote_helper_authenticated(user, votables):
      
 def issue_sort_order_helper(request):
     """Helper function that checks the HTTP GET data and the session for the
-    sort order of Votable objects in Votable list views. If it needs updating the
+    sort order of Issue objects in Issue list views. If it needs updating the
     session is updated with a new sort order."""
     
     order_choices = ["votes", "score", "time_stamp", "hotness"]
