@@ -10,7 +10,7 @@ admin.autodiscover()
 import settings
 
 urlpatterns = patterns('',
-    (r'^web/', include('emocracy.gamelogic.urls')),
+    (r'^web/', include('emocracy.web.urls')),
     (r'^api/', include('api.urls')),
     # Example:
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 

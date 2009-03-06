@@ -94,7 +94,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
     'django.core.context_processors.request',
-    'emocracy.gamelogic.context_processors.profile',
+    'emocracy.web.context_processors.profile',
     
 )
 
@@ -112,6 +112,7 @@ INSTALLED_APPS = (
     'emocracy.gamelogic',
     'emocracy.accounts',
     'emocracy.api',
+    'emocracy.web',
 
 )
 

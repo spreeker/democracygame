@@ -1,4 +1,4 @@
-{% extends "gamelogic/index.html" %}
+{% extends "web/index.html" %}
 {% load i18n %}
 {% comment %}
 This template is used by the issue detail view and the polling view that
@@ -16,9 +16,9 @@ by allowing the user to send extra request parameters.
 {% endif %}
 <h2>{{page_title}}</h2>
 <div class="issue_block">
-    {% include "gamelogic/issue_sidebar.html" %}
+    {% include "web/issue_sidebar.html" %}
     {% with issue.payload as issue %}
-    {% include "gamelogic/issue_body.html" %}
+    {% include "web/issue_body.html" %}
     {% endwith %}
 </div>
 
