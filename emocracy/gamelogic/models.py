@@ -50,7 +50,7 @@ roles = [u"anonymous citizen", u"citizen", u"active citizen", u"opinion leader",
 # ------------------------------------------------------------------------------
 # -- New Style Emocracy internals ----------------------------------------------
 
-class VotableManager(models.Manager):
+class IssueManager(models.Manager):
     def get_for_object(self, obj):
         # TODO add check: is obj a Django Model and does it have ContentType entry
         ctype = ContentType.objects.get_for_model(obj)
@@ -62,15 +62,15 @@ class VotableManager(models.Manager):
         # TODO enforce uniqueness (either through Django or something homebrew)
         title = kwargs.pop('title', '')
         owner = kwargs.pop('owner', None)
-        new_votable = self.create(
+        new_issue = self.create(
             owner = owner,
             title = title,
             time_stamp = datetime.datetime.now(),
             payload = obj,
         )        
-        return new_votable
+        return new_issue
 
-class Votable(models.Model):
+class Issue(models.Model):
     owner = models.ForeignKey(User)
     title = models.CharField(blank = True, max_length = 200)
     time_stamp = models.DateTimeField()
@@ -88,16 +88,16 @@ class Votable(models.Model):
     # TODO add fields for anymous votes (see wether they also need Vote
     # objects in the database)
     
-    objects = VotableManager()
+    objects = IssueManager()
     
     class Meta():
         unique_together = ('content_type', 'object_id') # UNIQUENESS CONSTRAINT SEEMS TO BE IGNORED? FIXME
 
-    def vote(self, user, vote_int, keep_private, votableset = None):
+    def vote(self, user, vote_int, keep_private, issueset = None):
         new_vote = Vote.objects.create(
             owner = user,
-            votable = self,
-            votableset = votableset,
+            issue = self,
+            issueset = issueset,
             vote = vote_int,
             keep_private = keep_private,
             time_stamp = datetime.datetime.now()
@@ -124,14 +124,14 @@ class Votable(models.Model):
         # Find out wether the user has tagged this issue already with this tag.
         try:
             ti = TaggedIssue.objects.get(
-                votable = self,
+                issue = self,
                 tag = tag,
                 user = user
             )
             first_time = False
         except TaggedIssue.DoesNotExist:
             ti = TaggedIssue.objects.create(
-                votable = self,
+                issue = self,
                 tag = tag,
                 user = user
             )
@@ -140,12 +140,12 @@ class Votable(models.Model):
         return tag, first_time
             
             
-class VotableSet(models.Model):
+class IssueSet(models.Model):
     owner = models.ForeignKey(User)
     title = models.CharField(max_length = 200)
     body = models.TextField(max_length = 2000)
     time_stamp = models.DateTimeField()
-    votables = models.ManyToManyField(Votable) # add a trough keyword later ...
+    issues = models.ManyToManyField(Issue) # add a trough keyword later ...
     users = models.ManyToManyField(User, related_name = 'pollusers')
     
     def __unicode__(self):
@@ -153,15 +153,15 @@ class VotableSet(models.Model):
 
 class Vote(models.Model):
     owner = models.ForeignKey(User)
-    votable = models.ForeignKey(Votable)
-    votableset = models.ForeignKey(VotableSet, null = True)
+    issue = models.ForeignKey(Issue)
+    issueset = models.ForeignKey(IssueSet, null = True)
     vote = models.IntegerField(choices = possible_votes)
     time_stamp = models.DateTimeField(editable = False)
     is_archived = models.BooleanField(default = False)
     keep_private = models.BooleanField(default = False)
     
     def __unicode__(self):
-        return unicode(self.vote) + u" on \"" + self.votable.title + u"\" by " + self.owner.username
+        return unicode(self.vote) + u" on \"" + self.issue.title + u"\" by " + self.owner.username
 
 class Mandate(models.Model):
     user = models.ForeignKey(User, unique = True)
@@ -201,17 +201,17 @@ class Motion(models.Model):
 
 # Rationale: Django-tagging does not keep counts of the number of tags for an
 # model. I need that number because a new tag should only show up after
-# a certain number of users have used it (on any Votable, so Model wide counts
+# a certain number of users have used it (on any Issue, so Model wide counts
 # will suffice). On the other hand the only things that can be tagged in
 # Emocracy are Issues/stuff you can vote on - so there is no need to user the
 # generic foreign key facilities in Django
 
-# Possible way to speed up get_for_votable: have a IssueTagField on an Issue
+# Possible way to speed up get_for_issue: have a IssueTagField on an Issue
 # (that would get rid of the TaggedIssue query).
 
 class IssueTagManager(models.Manager):
-    def get_for_votable(self, votable, max_num = 10):        
-        tag_ids = TaggedIssue.objects.filter(votable = votable).values_list('tag', flat = True)
+    def get_for_issue(self, issue, max_num = 10):        
+        tag_ids = TaggedIssue.objects.filter(issue = issue).values_list('tag', flat = True)
         return self.filter(pk__in = tag_ids).filter(visible = True).distinct().order_by('count').reverse()[:max_num]
     def get_popular(self, max_num = 10):
         return self.all().order_by('count').reverse()[:max_num]
@@ -229,12 +229,12 @@ class IssueTag(models.Model):
     def __unicode__(self):
         return self.name
     
-    def get_votables(self):
-        votable_ids = TaggedIssue.objects.filter(tag = self).values_list('votable', flat = True)
-        return Votable.objects.filter(pk__in = votable_ids).distinct()
+    def get_issues(self):
+        issue_ids = TaggedIssue.objects.filter(tag = self).values_list('issue', flat = True)
+        return Issue.objects.filter(pk__in = issue_ids).distinct()
         
     
 class TaggedIssue(models.Model):
-    votable = models.ForeignKey(Votable)
+    issue = models.ForeignKey(Issue)
     tag = models.ForeignKey(IssueTag)
     user = models.ForeignKey(User)

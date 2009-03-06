@@ -29,7 +29,7 @@ from forms import TagForm, CastVoteFormFull, IssueFormNew, HiddenOkForm, TagSear
 from forms import NormalVoteForm, BlankVoteForm
 from models import votes_to_description
 from models import IssueTag, TaggedIssue
-from models import Votable, IssueBody, VotableSet
+from models import Issue, IssueBody, IssueSet
 import settings
 
 # ------------------------------------------------------------------------------
@@ -44,7 +44,7 @@ def vote_list_user(request, user_name):
     return object_list(request, queryset = user_votes, paginate_by = 25)
 
 # ------------------------------------------------------------------------------
-# -- View functions that show several Votables/Issues : ------------------------
+# -- View functions that show several Issues : ---------------------------------
 
 class ListIssueBaseView(object):
     """This is the baseclass for the views that show several issues on 1 page.
@@ -54,17 +54,17 @@ class ListIssueBaseView(object):
     """
     
     def get_extra_context_and_queryset(self, request, *args, **kwargs):
-        """Extra filtering of the Votable queryset and setting of extra context
+        """Extra filtering of the Issue queryset and setting of extra context
         paramaters is done in this instance method. Override in subclass if
         necessary."""
         extra_context = {'page_title' : _(u'All Issues')}
-        queryset = Votable.objects.all()
+        queryset = Issue.objects.all()
         return extra_context, queryset
     
     def __call__(self, request, *args, **kwargs):
         """
         View instance method that does does all the standard things for
-        Issue/Votable list views.
+        Issue list views.
         """
         sort_order = issue_sort_order_helper(request)
         extra_context, qs = self.get_extra_context_and_queryset(request, *args, **kwargs)
@@ -86,8 +86,8 @@ class ListIssueBaseView(object):
             user_votes, vote_css_class = vote_helper_authenticated(request.user, current_page.object_list)
         else:
             user_votes, vote_css_class = vote_helper_anonymous(request, current_page.object_list)
-        # grab the tags for each Issue/Votable
-        tags_for_objects = [IssueTag.objects.get_for_votable(x) for x in current_page.object_list]
+        # grab the tags for each Issue
+        tags_for_objects = [IssueTag.objects.get_for_issue(x) for x in current_page.object_list]
         
         extra_context.update({
             'sort_order' : sort_order,
@@ -103,12 +103,12 @@ issue_list = ListIssueBaseView()
 
 class IssuesForTagView(ListIssueBaseView):
     """
-    This class shows the Issues/votables that go with a certain tag in Emocracy.
+    This class shows the Issues that go with a certain tag in Emocracy.
     """
     def get_extra_context_and_queryset(self, request, *args, **kwargs):
         tag_pk = kwargs.pop('tag_pk')
         tag = get_object_or_404(IssueTag, pk = tag_pk)
-        queryset = tag.get_votables()
+        queryset = tag.get_issues()
         extra_context = {'page_title' : _(u'Issues tagged with %(tagname)s' % {'tagname' : tag.name})}
         return extra_context, queryset
 
@@ -116,19 +116,19 @@ issue_list_tag = IssuesForTagView()
 
 class IssuesForUserView(ListIssueBaseView):
     """
-    This class show the Issues/Votables that go with a certain user of Emocracy.
+    This class show the Issues that go with a certain user of Emocracy.
     """
     def get_extra_context_and_queryset(self, request, *args, **kwargs):
         username = kwargs.pop('username')
         user = get_object_or_404(User, username = username)
-        queryset = Votable.objects.filter(owner = user)
+        queryset = Issue.objects.filter(owner = user)
         extra_context = {'page_title' : _(u'Issues for %(username)s' % {'username' : username})}
         return extra_context, queryset
     
 issues_list_user = IssuesForUserView()
 
 # ------------------------------------------------------------------------------
-# -- Views that show one Votable/Issue at a time : -----------------------------
+# -- Views that show one Issue at a time : -------------------------------------
 
 class OneIssueBaseView(object):
     """This class needs to inherited from by a class that implements __call__.
@@ -150,7 +150,7 @@ class OneIssueBaseView(object):
     # TODO FIXME XSS make the handling of request parameters safe, as it stands
     # the request parameters end up in the page HTML unescaped! (that sucks!)
     
-    def handle_voteform(self, request, votable):
+    def handle_voteform(self, request, issue):
         if request.method == 'POST':
             qd = request.GET.copy()
             form = NormalVoteForm(request.POST)
@@ -163,9 +163,9 @@ class OneIssueBaseView(object):
                 else:
                     # Register the votes in the DB and assign score:
                     if request.user.is_authenticated():
-                        actions.vote(request.user, votable, form.cleaned_data['vote'], False) # TODO: deal with private votes
+                        actions.vote(request.user, issue, form.cleaned_data['vote'], False) # TODO: deal with private votes
                     else:
-                        anonymous_actions.vote(request, votable, form.cleaned_data['vote'])
+                        anonymous_actions.vote(request, issue, form.cleaned_data['vote'])
                     # Succesful submit of a normal (For or Against) vote,
                     # redirect to a formless version of the same page. (ie.
                     # remove formtype query parameter).
@@ -175,16 +175,16 @@ class OneIssueBaseView(object):
             form = NormalVoteForm()
         return form, None
                    
-    def handle_voteblankform(self, request, votable):
+    def handle_voteblankform(self, request, issue):
         if request.method == 'POST':
             qd = request.GET.copy()
             form = BlankVoteForm(request.POST)
             if form.is_valid():
                 # Register the vote in the DB and assign score
                 if request.user.is_authenticated():
-                    actions.vote(request.user, votable, form.cleaned_data['motivation'], False) # TODO: deal with private votes
+                    actions.vote(request.user, issue, form.cleaned_data['motivation'], False) # TODO: deal with private votes
                 else:
-                    anonymous_actions.vote(request, votable, form.cleaned_data['motivation'])
+                    anonymous_actions.vote(request, issue, form.cleaned_data['motivation'])
                 # Succesful submit of a motivation for a blank vote. Redirect to
                 # a formless version of the same page.                
                 del qd['form_type']
@@ -193,7 +193,7 @@ class OneIssueBaseView(object):
             form = BlankVoteForm()
         return form, None
     
-    def handle_tagform(self, request, votable):
+    def handle_tagform(self, request, issue):
         if request.method == 'POST':
             qd = request.GET.copy()
             form = TagForm2(request.POST)
@@ -201,9 +201,9 @@ class OneIssueBaseView(object):
                 ptag = form.cleaned_data.get(u'popular_tags')
                 tag = form.cleaned_data.get(u'tags')
                 if ptag:
-                    actions.tag(request.user, votable, ptag)
+                    actions.tag(request.user, issue, ptag)
                 else:
-                    actions.tag(request.user, votable, tag)
+                    actions.tag(request.user, issue, tag)
 
                 #actions.tag()
                 # New tag sucessfully submitted. Redirect to formless version
@@ -217,9 +217,9 @@ class OneIssueBaseView(object):
 
 class PollTakeView(OneIssueBaseView):
     def __call__(self, request, pk, *args, **kwargs):
-        poll = get_object_or_404(VotableSet, pk = pk)
-        votables = poll.votables.select_related() # TODO should be cached !
-        paginator = Paginator(votables, 1)
+        poll = get_object_or_404(IssueSet, pk = pk)
+        issues = poll.issues.select_related() # TODO should be cached !
+        paginator = Paginator(issues, 1)
         # Grab page number from the HTTP GET parameters if present.
         try:
             page_no = int(request.GET.get('page', '1'))
@@ -252,14 +252,14 @@ class PollTakeView(OneIssueBaseView):
             pass
         
         extra_context = {
-            'votable' : current_page.object_list[0],
+            'issue' : current_page.object_list[0],
             'vote_class' : css[0],
             'vote_text' : votes[0],
             'page_title' : u'TAKE A POLL',
             'poll_pk' : poll.pk,
             'current_page' : current_page,
             'num_pages' : paginator.num_pages,
-            'tags' : IssueTag.objects.get_for_votable(current_page.object_list[0]),
+            'tags' : IssueTag.objects.get_for_issue(current_page.object_list[0]),
         }        
          
         if form_type in ['voteform','voteblankform', 'tagform']:
@@ -272,31 +272,31 @@ poll_take = PollTakeView()
 
 class DetailView(OneIssueBaseView):
     def __call__(self, request, pk, *args, **kwargs):
-        votable = get_object_or_404(Votable, pk = pk)
+        issue = get_object_or_404(Issue, pk = pk)
         form_type = request.GET.get('form_type', '')
         if form_type == 'voteform':
-            form, redirect = self.handle_voteform(request, votable)
+            form, redirect = self.handle_voteform(request, issue)
             if redirect: return redirect
         elif form_type == 'voteblankform':
-            form, redirect = self.handle_voteblankform(request, votable)
+            form, redirect = self.handle_voteblankform(request, issue)
             if redirect: return redirect
         elif form_type == 'tagform':
-            form, redirect = self.handle_tagform(request, votable)
+            form, redirect = self.handle_tagform(request, issue)
             if redirect: return redirect
         else:
             pass
         
         if request.user.is_authenticated():
-            votes, css = vote_helper_authenticated(request.user, [votable])
+            votes, css = vote_helper_authenticated(request.user, [issue])
         else:
-            votes, css = vote_helper_anonymous(request, [votable])
+            votes, css = vote_helper_anonymous(request, [issue])
                 
         extra_context = {
-            'votable' : votable,
+            'issue' : issue,
             'vote_class' : css[0],
             'vote_text' : votes[0],
             'title' : u'ISSUE DETAIL VIEW',
-            'tags' : IssueTag.objects.get_for_votable(votable)
+            'tags' : IssueTag.objects.get_for_issue(issue)
         }        
         if form_type in ['voteform','voteblankform', 'tagform']:
             extra_context[form_type] = form
@@ -337,7 +337,7 @@ def issue_propose(request):
 # -- Poll related view functions : ---------------------------------------------
 
 def poll_list(request): # replace with a generic view, called straight from urls.py
-    all_polls = VotableSet.objects.all().order_by("time_stamp").reverse()
+    all_polls = IssueSet.objects.all().order_by("time_stamp").reverse()
     return object_list(request, queryset = all_polls, paginate_by = 25, template_name = 'gamelogic/poll_list.html')
 
 class PollResultView(object):
@@ -346,25 +346,25 @@ class PollResultView(object):
     change the template or calculation that goes with a poll.
     """
     
-    def FROMDB(self, user, votable_ids):
+    def FROMDB(self, user, issue_ids):
         """
         This method extracts votes on a poll for a certain user.
         """
         # TODO see wether this needs to be refactored and moved to models.py
         out = {}
-        votes = Vote.objects.filter(is_archived = False).filter(votable__in = votable_ids).filter(owner = user).values('votable', 'vote')
+        votes = Vote.objects.filter(is_archived = False).filter(issue__in = issue_ids).filter(owner = user).values('issue', 'vote')
         for x in votes:
-            out[int(x['votable'])] = int(x['vote'])
+            out[int(x['issue'])] = int(x['vote'])
         return out
     
-    def FROMSESSION(self, request, votable_ids):
+    def FROMSESSION(self, request, issue_ids):
         """
         This method extracts votes on a poll for a certain anonymous user
         playing Emocracy through the web interface.
         """
         out = {}
         if request.session.has_key('vote_history'):
-            for pk in votable_ids:
+            for pk in issue_ids:
                 try:
                     out[pk] = request.session['vote_history'][pk]
                 except KeyError:
@@ -377,21 +377,21 @@ class PollResultView(object):
         this method for different 
         """
         poll_no = int(poll_no)
-        poll = get_object_or_404(VotableSet, pk = poll_no)
-        votable_ids = poll.votables.values_list('pk', flat = True)
+        poll = get_object_or_404(IssueSet, pk = poll_no)
+        issue_ids = poll.issues.values_list('pk', flat = True)
                 
         if request.user.is_authenticated():
-            votes_on_poll = self.FROMDB(request.user, votable_ids)
+            votes_on_poll = self.FROMDB(request.user, issue_ids)
         else:
-            votes_on_poll = self.FROMSESSION(request, votable_ids)        
+            votes_on_poll = self.FROMSESSION(request, issue_ids)        
 
         poll_users = list(poll.users.all())
         scored_poll_users = []
         for u in poll_users:
-            tmp_votes = self.FROMDB(u, votable_ids) # TODO cache this (should not change to often)
+            tmp_votes = self.FROMDB(u, issue_ids) # TODO cache this (should not change to often)
             agreement_score = 0
             disagreement_score = 0
-            for pk in votable_ids:
+            for pk in issue_ids:
                 v1 = votes_on_poll.get(pk, None)
                 v2 = tmp_votes.get(pk, None)
                 if v1 in [-1, 1] and v2 in [-1, 1]:
@@ -409,15 +409,15 @@ class PollResultView(object):
                     # both did not vote
                     pass
             scored_poll_users.append((
-                int(100 * agreement_score / len(votable_ids)),
-                int(100 * disagreement_score / len(votable_ids)),
+                int(100 * agreement_score / len(issue_ids)),
+                int(100 * disagreement_score / len(issue_ids)),
                 u
             ))
   
         context = RequestContext(request, {
             'poll' : poll,
             'scored_poll_users' : scored_poll_users,
-            'number_of_issues' : len(votable_ids),
+            'number_of_issues' : len(issue_ids),
         })
         return render_to_response('gamelogic/poll_result.html', context)
 
@@ -426,12 +426,12 @@ poll_result = PollResultView()
 # ------------------------------------------------------------------------------
 # -- Tagging related view functions --------------------------------------------
 
-def tagform(request, votable_pk):
+def tagform(request, issue_pk):
     """
     This view returns an HTML fragment containing a TagForm instance.
     This view exists to serve asynchrounous javascript on the client side.
     """
-    pk = int(votable_pk)
+    pk = int(issue_pk)
     form = TagForm({'issue_no' : pk})
     popular_tags = IssueTag.objects.get_popular(10)
     extra_context = RequestContext(request, {
@@ -447,11 +447,11 @@ def ajaxtag(request, pk):
     tagging system.
     """
     pk = int(pk)
-    votable = get_object_or_404(Votable, pk = pk)
+    issue = get_object_or_404(Issue, pk = pk)
     if request.method == 'POST':
         form = TagForm(request.POST)
         if form.is_valid():
-            tag_object, msg = actions.tag(request.user, votable, form.cleaned_data["tags"])
+            tag_object, msg = actions.tag(request.user, issue, form.cleaned_data["tags"])
             reply = simplejson.dumps({'msg' : msg}, ensure_ascii = False)
             return HttpResponse(reply, mimetype = 'application/json')
         else:
@@ -527,9 +527,9 @@ def ajaxvote(request):
         if form.is_valid(): 
             issue_no = int(form.cleaned_data["issue_no"])
             try:
-                votable = Votable.objects.get(pk = issue_no)
+                issue = Issue.objects.get(pk = issue_no)
             except:
-                reply = simplejson.dumps({'msg' : _('Votable object does not exist')}, ensure_ascii = False)
+                reply = simplejson.dumps({'msg' : _('Issue object does not exist')}, ensure_ascii = False)
                 return HttpResponseServerError(reply, mimetype = 'application/javascript')            
             
             # The following line adapt the output from the vote form (old style)
@@ -544,16 +544,16 @@ def ajaxvote(request):
                 css_class = u'blank'
 
             if request.user.is_authenticated():
-                actions.vote(request.user, votable, vote_int, form.cleaned_data['keep_private'])
+                actions.vote(request.user, issue, vote_int, form.cleaned_data['keep_private'])
             else:
-                anonymous_actions.vote(request, votable, vote_int)
+                anonymous_actions.vote(request, issue, vote_int)
             
             data = {
                 'issue_no' : issue_no,
                 'vote_text' : votes_to_description[vote_int],
                 'css_class' : css_class,
-                'score' : votable.score,
-                'votes' : votable.votes,
+                'score' : issue.score,
+                'votes' : issue.votes,
             }
             reply = simplejson.dumps(data, ensure_ascii = False)
             return HttpResponse(reply, mimetype = 'application/json')
