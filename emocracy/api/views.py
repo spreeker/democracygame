@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
 
-from emocracy_core.models import Votable, IssueBody, NewStyleVote
+from emocracy_core.models import Votable, IssueBody, Vote
 from emocracy_core import actions
 from forms import IssueCollectionForm
 
@@ -139,7 +139,7 @@ class IssueCollection(Resource):
 
 class VoteCollection(Resource):
     def GET(self, request):
-        object_ids = NewStyleVote.objects.values_list('pk', flat = True) 
+        object_ids = Vote.objects.values_list('pk', flat = True) 
         data = paginated_collection_helper(request, object_ids, 'api_vote',
             'api_vote_pk')
         return HttpResponse(simplejson.dumps(data), mimetype = 'text/html') 
@@ -147,7 +147,7 @@ class VoteCollection(Resource):
 class VoteResource(Resource):
     def GET(self, request, pk, *args, **kwargs):
         try:
-            vote = NewStyleVote.objects.get(pk = pk)
+            vote = Vote.objects.get(pk = pk)
         except Votable.DoesNotExist:
             return HttpResponseNotFound()
         data = {

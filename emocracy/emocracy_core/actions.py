@@ -25,7 +25,7 @@ from django.contrib.contenttypes.models import ContentType
 import allow
 import score
 from models import votes_to_description, Mandate, tag_count_threshold, IssueTag, TaggedIssue
-from models import NewStyleVote, IssueBody, Votable
+from models import Vote, IssueBody, Votable
 
 
 
@@ -39,7 +39,7 @@ def vote(user, votable, vote_int, keep_private):
     voted_already, repeated_vote = archive_votes(votable, user, vote_int)
     if repeated_vote: return
     # TODO make this use the appropriate instance method of the Votable object
-    new_vote = NewStyleVote(
+    new_vote = Vote(
         owner = user,
         votable = votable,
         time_stamp = datetime.datetime.now(),
@@ -59,7 +59,7 @@ def archive_votes(votable, user, vote_int):
     
     # TODO : clean up this function and its interaction with the voting 
     # functions. See wether it should be a manager function in models.py!
-    votes = NewStyleVote.objects.filter(owner = user, is_archived = False, votable = votable)
+    votes = Vote.objects.filter(owner = user, is_archived = False, votable = votable)
     voted_already = False
     repeated_vote = False
     for v in votes:
