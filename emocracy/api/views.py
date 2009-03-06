@@ -10,8 +10,8 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
 
-from emocracy_core.models import Votable, IssueBody, Vote
-from emocracy_core import actions
+from gamelogic.models import Votable, IssueBody, Vote
+from gamelogic import actions
 from forms import IssueCollectionForm
 
 
