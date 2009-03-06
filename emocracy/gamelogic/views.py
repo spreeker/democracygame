@@ -96,7 +96,7 @@ class ListIssueBaseView(object):
             'show_more_info_link' : True,
             'object_list' : zip(current_page.object_list, user_votes, vote_css_class, tags_for_objects),
         })
-        return render_to_response('emocracy_core/issue_list_new.html',
+        return render_to_response('gamelogic/issue_list_new.html',
             RequestContext(request, extra_context))
 
 issue_list = ListIssueBaseView()
@@ -264,7 +264,7 @@ class PollTakeView(OneIssueBaseView):
          
         if form_type in ['voteform','voteblankform', 'tagform']:
             extra_context[form_type] = form 
-        return render_to_response('emocracy_core/issue_detail.html',
+        return render_to_response('gamelogic/issue_detail.html',
             RequestContext(request, extra_context))
 
 poll_take = PollTakeView()
@@ -301,7 +301,7 @@ class DetailView(OneIssueBaseView):
         if form_type in ['voteform','voteblankform', 'tagform']:
             extra_context[form_type] = form
         
-        return render_to_response('emocracy_core/issue_detail.html',
+        return render_to_response('gamelogic/issue_detail.html',
             RequestContext(request, extra_context))
         
 newdetail = DetailView()
@@ -331,14 +331,14 @@ def issue_propose(request):
         form = IssueFormNew()
         
     context = RequestContext(request, {"form" : form})
-    return render_to_response("emocracy_core/issue_propose.html", context)
+    return render_to_response("gamelogic/issue_propose.html", context)
 
 # ------------------------------------------------------------------------------
 # -- Poll related view functions : ---------------------------------------------
 
 def poll_list(request): # replace with a generic view, called straight from urls.py
     all_polls = VotableSet.objects.all().order_by("time_stamp").reverse()
-    return object_list(request, queryset = all_polls, paginate_by = 25, template_name = 'emocracy_core/poll_list.html')
+    return object_list(request, queryset = all_polls, paginate_by = 25, template_name = 'gamelogic/poll_list.html')
 
 class PollResultView(object):
     """
@@ -419,7 +419,7 @@ class PollResultView(object):
             'scored_poll_users' : scored_poll_users,
             'number_of_issues' : len(votable_ids),
         })
-        return render_to_response('emocracy_core/poll_result.html', context)
+        return render_to_response('gamelogic/poll_result.html', context)
 
 poll_result = PollResultView()
 
@@ -439,7 +439,7 @@ def tagform(request, votable_pk):
         'tags' : popular_tags,
     })
     context = RequestContext(request, extra_context)
-    return render_to_response('emocracy_core/tagform.html', context)
+    return render_to_response('gamelogic/tagform.html', context)
 
 def ajaxtag(request, pk):
     """
@@ -502,7 +502,7 @@ def search_tag(request):
         'search_string' : search_string,
         'num_pages' : paginator.num_pages,
     })
-    return render_to_response('emocracy_core/search_tag.html', context)
+    return render_to_response('gamelogic/search_tag.html', context)
 
 # ------------------------------------------------------------------------------
 
@@ -513,7 +513,7 @@ def voteform(request, issue_no):
     """
     f = CastVoteFormFull({'issue_no' : int(issue_no), 'vote' : 0})
     context = RequestContext(request, {'voteform' : f})
-    return render_to_response('emocracy_core/voteform.html', context)
+    return render_to_response('gamelogic/voteform.html', context)
 
 
 def ajaxvote(request):
@@ -579,7 +579,7 @@ def mandate(request, rep):
         'representative' : representative,
         'form' : form,
     })
-    return render_to_response('emocracy_core/mandate.html', context)
+    return render_to_response('gamelogic/mandate.html', context)
 
 @login_required
 def become_candidate(request):
@@ -591,5 +591,5 @@ def become_candidate(request):
     context = RequestContext(request, {
         'form' : form,
     })
-    return render_to_response('emocracy_core/become_candidate.html', context)
+    return render_to_response('gamelogic/become_candidate.html', context)
     
