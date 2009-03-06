@@ -15,7 +15,7 @@ from django.core.urlresolvers import reverse
 from forms import NewUserForm, ChangeSettingsForm, ChangeDescriptionForm, UserSearchForm
 from django.contrib.auth.forms import PasswordResetForm
 from models import UserProfile
-from gamelogic.models import Votable
+from gamelogic.models import Issue
 import datetime
 
 # TODO : see wether some of the custom code can be replaced with django-registration
@@ -80,11 +80,11 @@ def migrate_votes(user, dict):
     userprofile = user.get_profile()
     for poll_pk, vote in dict.items():
         try:
-            votable = Votable.objects.get(pk = poll_pk)
-        except Votable.DoesNotExist:
+            issue = Issue.objects.get(pk = poll_pk)
+        except Issue.DoesNotExist:
             pass
         else:
-            votable.vote(user, dict[poll_pk], False)
+            issue.vote(user, dict[poll_pk], False)
             if vote == 1:
                 userprofile.total_for += 1
             elif vote == -1:

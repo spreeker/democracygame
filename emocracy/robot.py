@@ -4,7 +4,7 @@ import settings
 setup_environ(settings)
 # now continue as per usual:
 import datetime, random, codecs, sys
-from emocracy.gamelogic.models import IssueBody, Votable, Vote
+from emocracy.gamelogic.models import IssueBody, Issue, Vote
 from django.contrib.auth.models import User
 
 def homerus(n_issues = 10):
@@ -43,8 +43,8 @@ def homerus(n_issues = 10):
         )
         new_issue.save()
         
-        new_votable = Votable.objects.create_for_object(new_issue, title = new_issue.title, owner = new_issue.owner)
-        new_votable.vote(new_issue.owner, random.choice([-1, 1]), keep_private = False)    
+        new_issue = Issue.objects.create_for_object(new_issue, title = new_issue.title, owner = new_issue.owner)
+        new_issue.vote(new_issue.owner, random.choice([-1, 1]), keep_private = False)    
 
     print n_issues, "random issue(s) were added to the system."
 

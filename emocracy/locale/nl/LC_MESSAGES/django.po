@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-06 17:28+0100\n"
+"POT-Creation-Date: 2009-03-06 19:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,7 +23,7 @@ msgstr ""
 #: gamelogic/actions.py:123
 #, python-format
 msgid ""
-"Tag %(tagname)s added to this votable. The new tag might not show up "
+"Tag %(tagname)s added to this issue. The new tag might not show up "
 "immediately"
 msgstr ""
 
@@ -132,7 +132,7 @@ msgstr ""
 
 #: gamelogic/views.py:532
 #, fuzzy
-msgid "Votable object does not exist"
+msgid "Issue object does not exist"
 msgstr "Onderwerp bestaat niet"
 
 #: templates/accounts/logged_out.html:5

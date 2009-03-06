@@ -3,11 +3,11 @@ This module implements the Emocracy game rules as far as score keeping is
 concerned. The rest of the game rules are in actions.py and allow.py .
 """
 
-def vote(user, votable, new_vote, voted_already):
+def vote(user, issue, new_vote, voted_already):
     """Score keeping for voting."""
     
     userprofile = user.get_profile()
-    proposerprofile = votable.payload.owner.get_profile()
+    proposerprofile = issue.payload.owner.get_profile()
 
     if not voted_already:
         # User only gets poinst if it is the first vote on the issue.
@@ -18,7 +18,7 @@ def vote(user, votable, new_vote, voted_already):
             proposerprofile.score += 1
             # Issue only gets a higher score if it is the first vote that is 
             # also a for or against vote.
-            votable.score += 1
+            issue.score += 1
     # Update the user's profile with his/her vote.
     if new_vote.vote == 1:
         userprofile.total_for += 1
@@ -27,7 +27,7 @@ def vote(user, votable, new_vote, voted_already):
     else:
         userprofile.total_blank += 1
     # Write all that back to the database.
-    votable.save()
+    issue.save()
     userprofile.save()
     proposerprofile.save()
     

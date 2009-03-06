@@ -1,8 +1,8 @@
 {% extends "gamelogic/index.html" %}
 {% load i18n %}
 {% comment %}
-This template is used by the issue/votable detail view and the polling view that
-also only shows 1 issue/votable at a time.
+This template is used by the issue detail view and the polling view that
+also only shows 1 issue at a time.
 
 TODO XSS : See wether the request.get_full_path opens up any security problems
 by allowing the user to send extra request parameters. 
@@ -16,13 +16,13 @@ by allowing the user to send extra request parameters.
 {% endif %}
 <h2>{{page_title}}</h2>
 <div class="issue_block">
-    {% include "gamelogic/votable_sidebar.html" %}
-    {% with votable.payload as issue %}
+    {% include "gamelogic/issue_sidebar.html" %}
+    {% with issue.payload as issue %}
     {% include "gamelogic/issue_body.html" %}
     {% endwith %}
 </div>
 
-<div style="margin-top:1em;" id="voteform_{{votable.pk}}" class="voteform_target system">
+<div style="margin-top:1em;" id="voteform_{{issue.pk}}" class="voteform_target system">
     {% if voteform %}
         <h4>{% trans "Vote on this issue" %}</h4>
         <form action="{{request.get_full_path|safe}}" method="POST">
