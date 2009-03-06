@@ -5,7 +5,7 @@ from django.views.generic.simple import redirect_to
 
 
 urlpatterns = patterns('gamelogic.views',
-    # urls that go with viewing of Issues/Votables
+    # urls that go with viewing of Issues
     url(r'^issue/for_user/(?P<username>\w+)/$', 'issues_list_user', name = 'issues_for_user'),
     url(r'^issue/for_tag/(?P<tag_pk>\d+)/$', 'issue_list_tag', name = 'issue_list_tag'),
     url(r'^issue/(?P<pk>\d+)/$', 'newdetail', name = 'issue_detail' ),
@@ -14,7 +14,7 @@ urlpatterns = patterns('gamelogic.views',
     url(r'^ajax/voteform/(?P<issue_no>\d+)/$', 'voteform', name = 'voteform'),
     url(r'^ajax/vote/$', 'ajaxvote', name = 'ajaxvote'),     
     url(r'^ajax/tag/(?P<pk>\d+)/$', 'ajaxtag', name = 'add_tag'),
-    url(r'ajax/tagform/(?P<votable_pk>\d+)/$', 'tagform', name='tagform'),
+    url(r'ajax/tagform/(?P<issue_pk>\d+)/$', 'tagform', name='tagform'),
     # Propose new Issues
     url(r'^propose/$', 'issue_propose', name = 'issue_propose'),
     # Show list of votes for a user.

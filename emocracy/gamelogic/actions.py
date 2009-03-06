@@ -25,41 +25,41 @@ from django.contrib.contenttypes.models import ContentType
 import allow
 import score
 from models import votes_to_description, Mandate, tag_count_threshold, IssueTag, TaggedIssue
-from models import Vote, IssueBody, Votable
+from models import Vote, IssueBody, Issue
 
 
 
 # -- Authenticated voting: -----------------------------------------------------
 
-def vote(user, votable, vote_int, keep_private):
+def vote(user, issue, vote_int, keep_private):
     """Unified voting (both blank and normal votes)."""
     logging.info(u"actions.vote called")
     # TODO reenable the check on whether the action is allowed
-    #if not allow.vote(user, votable, vote_int, keep_private): return
-    voted_already, repeated_vote = archive_votes(votable, user, vote_int)
+    #if not allow.vote(user, issue, vote_int, keep_private): return
+    voted_already, repeated_vote = archive_votes(issue, user, vote_int)
     if repeated_vote: return
-    # TODO make this use the appropriate instance method of the Votable object
+    # TODO make this use the appropriate instance method of the Issue object
     new_vote = Vote(
         owner = user,
-        votable = votable,
+        issue = issue,
         time_stamp = datetime.datetime.now(),
         vote = vote_int,
         keep_private = keep_private
     )
     new_vote.save()
-    logging.info(u"User " + user.username + u" voted " + unicode(new_vote.vote) + u" on votable object with pk =" + unicode(votable.id) + ".")
+    logging.info(u"User " + user.username + u" voted " + unicode(new_vote.vote) + u" on issue object with pk =" + unicode(issue.id) + ".")
     
-    score.vote(user, votable, new_vote, voted_already)
+    score.vote(user, issue, new_vote, voted_already)
 
     return new_vote
 
-def archive_votes(votable, user, vote_int):
+def archive_votes(issue, user, vote_int):
     """This function archives old votes by switching the is_archived flag to True
-    for all the previous votes on <votable> by <user>."""
+    for all the previous votes on <issue> by <user>."""
     
     # TODO : clean up this function and its interaction with the voting 
     # functions. See wether it should be a manager function in models.py!
-    votes = Vote.objects.filter(owner = user, is_archived = False, votable = votable)
+    votes = Vote.objects.filter(owner = user, is_archived = False, issue = issue)
     voted_already = False
     repeated_vote = False
     for v in votes:
@@ -83,14 +83,14 @@ def propose(user, title, body, vote_int, source_url, source_type):
         time_stamp = datetime.datetime.now(),
     )
     
-    new_votable = Votable.objects.create_for_object(new_issue, title = new_issue.title, owner = user)
-    new_votable.vote(user, vote_int, keep_private = False)    
+    new_issue = Issue.objects.create_for_object(new_issue, title = new_issue.title, owner = user)
+    new_issue.vote(user, vote_int, keep_private = False)    
 
     score.propose(user)
-    return new_votable
+    return new_issue
 
-def tag(user, votable, tag_string):
-    if not allow.tag(user, votable, tag_string): return
+def tag(user, issue, tag_string):
+    if not allow.tag(user, issue, tag_string): return
     # TODO look into manual transaction control (either do everything below and
     # commit or fail to do any of it).
     
@@ -108,7 +108,7 @@ def tag(user, votable, tag_string):
     # start seeing use. (Like domain squatters with domain names ... ) A work
     # around that problem would also make tagging cost points somehow ...
     
-    tag, first_time = votable.tag(user, tag_string)
+    tag, first_time = issue.tag(user, tag_string)
     
 
     if tag.count > tag_count_threshold:
@@ -120,7 +120,7 @@ def tag(user, votable, tag_string):
             tag.points_awarded = True
     tag.save()
     
-    return tag, _(u'Tag %(tagname)s added to this votable. The new tag might not show up immediately' % {'tagname' : tag.name})
+    return tag, _(u'Tag %(tagname)s added to this issue. The new tag might not show up immediately' % {'tagname' : tag.name})
 
 def mandate(user, representative):
     if not allow.mandate(user, representative): return

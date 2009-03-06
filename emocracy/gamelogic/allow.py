@@ -17,7 +17,7 @@ def propose(user, title, body, vote_int, source_url, source_type):
         return True
     return False
 
-def tag(user, votable, tag):
+def tag(user, issue, tag):
     if user.is_authenticated():
         return True
     return False

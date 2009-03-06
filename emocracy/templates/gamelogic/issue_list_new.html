@@ -8,14 +8,14 @@
 {% endif %}
 <h2>{{page_title}}</h2>
 {% include "gamelogic/sort_order_block.html" %}
-{% for votable, vote_text, vote_class, tags in object_list%}
+{% for issue, vote_text, vote_class, tags in object_list%}
 <div class="issue_block">
-    {% include "gamelogic/votable_sidebar.html" %}
-    {% with votable.payload as issue %}
+    {% include "gamelogic/issue_sidebar.html" %}
+    {% with issue.payload as issue %}
     {% include "gamelogic/issue_body.html" %}
     {% endwith %}
     
-    <div style="margin:1em 0em 0em 2em;width:75%" id="voteform_{{votable.pk}}" class="voteform_target system">
+    <div style="margin:1em 0em 0em 2em;width:75%" id="voteform_{{issue.pk}}" class="voteform_target system">
     </div>
 </div>
 {% endfor %}
