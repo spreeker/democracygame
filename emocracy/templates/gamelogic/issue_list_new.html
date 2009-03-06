@@ -1,4 +1,4 @@
-{% extends "emocracy_core/index.html" %}
+{% extends "gamelogic/index.html" %}
 {% load i18n %}
 
 {% block content %}
@@ -7,12 +7,12 @@
 <script type="text/javascript" src="/media/ajaxtag.js"></script>
 {% endif %}
 <h2>{{page_title}}</h2>
-{% include "emocracy_core/sort_order_block.html" %}
+{% include "gamelogic/sort_order_block.html" %}
 {% for votable, vote_text, vote_class, tags in object_list%}
 <div class="issue_block">
-    {% include "emocracy_core/votable_sidebar.html" %}
+    {% include "gamelogic/votable_sidebar.html" %}
     {% with votable.payload as issue %}
-    {% include "emocracy_core/issue_body.html" %}
+    {% include "gamelogic/issue_body.html" %}
     {% endwith %}
     
     <div style="margin:1em 0em 0em 2em;width:75%" id="voteform_{{votable.pk}}" class="voteform_target system">

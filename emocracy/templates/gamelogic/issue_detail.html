@@ -1,4 +1,4 @@
-{% extends "emocracy_core/index.html" %}
+{% extends "gamelogic/index.html" %}
 {% load i18n %}
 {% comment %}
 This template is used by the issue/votable detail view and the polling view that
@@ -16,9 +16,9 @@ by allowing the user to send extra request parameters.
 {% endif %}
 <h2>{{page_title}}</h2>
 <div class="issue_block">
-    {% include "emocracy_core/votable_sidebar.html" %}
+    {% include "gamelogic/votable_sidebar.html" %}
     {% with votable.payload as issue %}
-    {% include "emocracy_core/issue_body.html" %}
+    {% include "gamelogic/issue_body.html" %}
     {% endwith %}
 </div>
 
