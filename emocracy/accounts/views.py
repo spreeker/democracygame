@@ -15,8 +15,7 @@ from django.core.urlresolvers import reverse
 from forms import NewUserForm, ChangeSettingsForm, ChangeDescriptionForm, UserSearchForm
 from django.contrib.auth.forms import PasswordResetForm
 from models import UserProfile
-from emocracy_core.models import Votable
-#from emocracy_core.models import Issue, Vote
+from gamelogic.models import Votable
 import datetime
 
 # TODO : see wether some of the custom code can be replaced with django-registration

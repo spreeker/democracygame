@@ -1,11 +1,11 @@
 from django import forms
 from django.forms import ModelForm
 from django.utils.translation import ugettext as _
-from emocracy_core.models import source_types, possible_votes, normal_votes
+from gamelogic.models import source_types, possible_votes, normal_votes
 
 class IssueCollectionForm(forms.Form):
     # TODO : see wether this can done more cleanly (as there is some duplication
-    # of information the emocracy_core/models.py module).
+    # of information the gamelogic/models.py module).
     title = forms.CharField(max_length = 200)
     body = forms.CharField(max_length = 2000, widget = forms.Textarea())
     vote_int = forms.IntegerField()
