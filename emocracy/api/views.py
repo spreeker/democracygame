@@ -5,11 +5,12 @@ from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseServer
 from django.core import serializers
 from django.utils import simplejson
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
 
-from emocracy_core.models import Votable, IssueBody
+from emocracy_core.models import Votable, IssueBody, NewStyleVote
 from emocracy_core import actions
 from forms import IssueCollectionForm
 
@@ -39,9 +40,14 @@ class HttpResponseCreated(HttpResponse):
 
 # ------------------------------------------------------------------------------
 
-def paginator_helper(request, l, paginate_by = 10):
-    """This function contains the Paginator boilerplate ... """
-    paginator = Paginator(l, paginate_by)
+def paginated_collection_helper(request, object_ids, url_name, url_name_pk , paginate_by = 10):
+    """This function constructs a dictionary with URIs to resources and
+    the URIs of the next and previous page of URIs. 
+    
+    Assumes that the url conf to a single resource is expects a keyword argument
+    called pk.
+    """
+    paginator = Paginator(object_ids, paginate_by)
     try:
         page_no = int(request.GET.get('page', '1'))
     except ValueError:
@@ -50,7 +56,12 @@ def paginator_helper(request, l, paginate_by = 10):
         current_page = paginator.page(page_no)
     except (EmptyPage, InvalidPage):
         current_page = paginator.page(paginator.num_pages)
-    return current_page, page_no
+    data = {'resources' : [TEMP_SERVER_NAME + reverse(url_name_pk, args =[pk]) for pk in current_page.object_list]}
+    if current_page.has_next():
+        data['next'] = TEMP_SERVER_NAME + reverse(url_name) + u'?page=%d' % (page_no + 1,)
+    if current_page.has_previous():
+        data['previous'] = TEMP_SERVER_NAME + reverse(url_name) + u'?page=%d' % (page_no - 1,)
+    return data
 
 # ------------------------------------------------------------------------------
 
@@ -74,10 +85,18 @@ class IssueResource(Resource):
     # show issue detail
     def GET(self, request, pk, *args, **kwargs):
         try:
-            issue = Votable.objects.filter(pk = pk)
+            issue = Votable.objects.get(pk = pk)
         except Votable.DoesNotExist:
-            return HttpResponseNotFound
-        return HttpResponse(serializers.serialize("json", issue, ensure_ascii = False), mimetype = 'text/html')
+            return HttpResponseNotFound()
+        data = {
+            'title' : issue.title,
+            'body' : issue.payload.body,
+            'owner' : TEMP_SERVER_NAME + u"/api/user/" + unicode(issue.owner_id) + "/", # convert to link to User Resource
+            'source_type' : issue.payload.source_type,
+            'url' : issue.payload.url,
+            'time_stamp' : unicode(issue.time_stamp),
+        }
+        return HttpResponse(simplejson.dumps(data, ensure_ascii = False), mimetype = 'text/html')
         
         
 class IssueCollection(Resource):
@@ -113,18 +132,51 @@ class IssueCollection(Resource):
         # If ValueListQuerySets are evaluated to a lists by Django the following
         # line needs to change (TODO find out):
         votable_ids = Votable.objects.values_list('pk', flat = True) 
-        current_page, page_no = paginator_helper(request, votable_ids, 10)
-        
-        resource_uris = [TEMP_SERVER_NAME + reverse('api_issue_pk', args = [id]) for id in current_page.object_list]
-    
-        response_content = {'issues' : resource_uris,}
-        if current_page.has_next():
-            response_content['next'] = TEMP_SERVER_NAME + reverse('api_issue') + u'?page=' + unicode(current_page.next_page_number())
-        if current_page.has_previous():
-            response_content['previous'] = TEMP_SERVER_NAME +reverse('api_issue') + unicode(current_page.previous_page_number())
-            
-        reply = simplejson.dumps(response_content)
-        return HttpResponse(reply, mimetype = 'text/html') 
+        data = paginated_collection_helper(request, votable_ids, 'api_issue', 
+            'api_issue_pk')
+        return HttpResponse(simplejson.dumps(data), mimetype = 'text/html') 
         # text/html is here for debugging, should be application/javascript or application/json
 
-    
+class VoteCollection(Resource):
+    def GET(self, request):
+        object_ids = NewStyleVote.objects.values_list('pk', flat = True) 
+        data = paginated_collection_helper(request, object_ids, 'api_vote',
+            'api_vote_pk')
+        return HttpResponse(simplejson.dumps(data), mimetype = 'text/html') 
+            
+class VoteResource(Resource):
+    def GET(self, request, pk, *args, **kwargs):
+        try:
+            vote = NewStyleVote.objects.get(pk = pk)
+        except Votable.DoesNotExist:
+            return HttpResponseNotFound()
+        data = {
+            'vote_int' : vote.vote,
+            # The vote.votable_id does not follow the relation (would cause 
+            # extra and unnecessary work for the db).
+            'issue' : TEMP_SERVER_NAME + reverse('api_issue_pk', args = [vote.votable_id]),
+            'votableset' : 'NOT IMPLEMENTED YET',
+        }
+        return HttpResponse(simplejson.dumps(data, ensure_ascii = False), mimetype = 'text/html')
+
+class UserCollection(Resource):
+    def GET(self, request, *args, **kwargs):
+        object_ids = User.objects.values_list('pk', flat = True)
+        data = paginated_collection_helper(request, object_ids, 'api_user', 
+            'api_user_pk')
+        return HttpResponse(simplejson.dumps(data), mimetype = 'text/html') 
+        
+
+class UserResource(Resource):
+    def GET(self, request, pk, *args, **kwargs):
+        try:
+            user = User.objects.get(pk = pk)
+        except User.DoesNotExist:
+            return HttpResponseNotFound()
+        userprofile = user.get_profile()
+        data = {
+            'username' : user.username,
+            'score' : userprofile.score,
+        }
+        return HttpResponse(simplejson.dumps(data, ensure_ascii = False), mimetype = 'text/html')
+        
