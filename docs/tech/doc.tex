@@ -1,0 +1,614 @@
+\documentclass[a4paper]{report}
+\usepackage{hyperref}
+\usepackage{a4wide}
+\author{Thijs Coenen}
+\title{Emocracy Technical Documentation (release : 2009 03 20)}
+\begin{document}
+\maketitle
+\tableofcontents
+\chapter{Emocracy API}
+By providing an API Emocracy allows third parties to construct different 
+interfaces to Emocracy. The API will allow both other websites and 
+software running on desktops or mobile platforms to interact with Emocracy 
+(provided that an internet connection is available). Authentication will be 
+implemented using the Oauth protocol (see \url{http://oauth.net}).
+
+The API for Emocracy is implemented as a REST (REpresentational State Transfer) 
+API. REST was formalized by Roy Fielding in his doctoral thesis (see : 
+\url{http://www.ics.uci.edu/\~fielding/pubs/dissertation/top.htm}). REST APIs do
+not define an extra protocol layer on top of HTTP (like XML-RPC and other 
+webservices protocols do).
+
+\textsl{An note about this document: the API is a work in progress, specifics are still 
+subject to change (returned data might change, extra resources can still be 
+added). The march 20th release of Emocracy will be the first release with a 
+publicly accessible API.}
+
+
+\section{HTTP methods used by the Emocracy API}
+\begin{itemize}
+    \item{\texttt{GET}\\
+    Used to get information out of a resource, this method does not change the 
+    state of the Resource.}
+    \item{\texttt{POST}\\
+    Used to create new resources and to change resources. (Future versions
+    of the API will use the \texttt{PUT} and \texttt{DELETE} methods where 
+    appropriate.)}
+\end{itemize}
+For more information see \url{http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html}
+\section{HTTP Status Codes used by Emocracy API}
+\begin{itemize}
+    \item{\texttt{200, Ok}\\
+    Returned when a requested resource was found.
+    }
+    \item{\texttt{201, Created}\\
+    Returned after a new resource was created (after a POST to the correct 
+    resource).
+    }
+    \item{\texttt{400, Bad Request}\\
+    Returned when POST data contains bad data or there is a problem processing 
+    the request.
+    }
+    \item{\texttt{401, Unauthorized}\\
+    Resource is not available without authorization. With proper authentication
+    the resource is available.
+    }
+    \item{\texttt{403, Forbidden}\\
+    Request is refused. Authentication won't help.
+    }
+    \item{\texttt{404, Not Found}\\
+    Resource was not found.
+    }
+    \item{\texttt{405, Method Not Allowed}\\
+    Request method is not allowed on this resource.
+    }
+    \item{\texttt{500, Internal Server Error}\\
+    An error ocurred in the server.
+    }
+\end{itemize}
+For more information see \url{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html}.
+\section{Emocracy API Request and Response data types}
+The first version of the Emocracy API sends data as JSON to clients (see \url{http://www.json.org/}). 
+\section{Resources provided by the Emocracy API}
+This section describes the resources made available trough the Emocracy API. As 
+of now not all resources have been defined yet.
+\subsection{\texttt{http://emocracy.nl/api/issue/}}
+\begin{itemize}
+    \item{\textsl{implemented by} : \texttt{api.views.IssueCollection}}
+    \item{\textsl{http methods} :
+        \begin{itemize}
+            \item{\texttt{GET} : List of issues 
+                \begin{itemize}
+                    \item{\texttt{200}
+                    \begin{itemize}
+                        \item{Request parameters encoded as GET parameters. 
+                        \texttt{page} for the page of results and \texttt{sort\_order}
+                        for the ordering of the returned issues.}
+                        \item{Response data are a JSON encoded paginated list of 
+                        resource URIs (\texttt{resources}) and the URIs of the 
+                        previous and next page (\texttt{previous} and \texttt{next}
+                        ).}
+                    \end{itemize}
+                    }
+                \end{itemize}
+             }
+            \item{\texttt{POST} : Create an Issue
+                \begin{itemize}
+                    \item{\texttt{401}, \texttt{400}}
+                    \item{\texttt{201}
+                    \begin{itemize}
+                        \item{Request parameters encoded as POST data.}
+                        \item{Response is a JSON encoded URI of the newly
+                        created Issue (\texttt{resource}).}
+                    \end{itemize}
+                    }
+                \end{itemize}
+            }
+            \item{other : 
+                \begin{itemize}
+                    \item{\texttt{405}}
+                \end{itemize}
+            }
+        \end{itemize}
+    \item{\textsl{request parameters} : }
+    }
+\end{itemize}
+
+
+\subsection{\texttt{http://emocracy.nl/api/issue/\textsf{pk}/}}
+\begin{itemize}
+    \item{\textsl{implemented by} : \texttt{api.views.IssueResource}}
+    \item{\textsl{http methods} :
+        \begin{itemize}
+            \item{\texttt{GET} : Grab detailed info about an Issue (with primary key \textsf{pk})
+                \begin{itemize}
+                    \item{\texttt{404}}
+                    \item{\texttt{200}
+                    \begin{itemize}
+                        \item{Response data is a JSON encoded Issue.}
+                    \end{itemize}
+                    }
+                \end{itemize}
+            }
+            \item{\texttt{other}
+                \begin{itemize}
+                    \item{\texttt{405}}
+                \end{itemize}
+            }
+        \end{itemize}
+    }
+\end{itemize}
+
+
+\subsection{\texttt{http://emocracy.nl/api/issue/\textsf{pk}/tags/}}
+\begin{itemize}
+    \item{\textsl{implemented by} : \texttt{api.views.IssueTagCollection}}
+    \item{\textsl{http methods} :
+        \begin{itemize}
+            \item{\texttt{GET} : Tags for issue with primary key \textsf{pk}
+                \begin{itemize}
+                    \item{\texttt{404}}
+                    \item{\texttt{200}\\
+                    Requested issue found, returned data are a JSON encoded
+                    paginated list of tags (\texttt{resources}) and the URIs of 
+                    the previous and next page (\texttt{previous} and \texttt{next}).
+                    }
+                \end{itemize}
+            }
+            \item{\texttt{POST} : tag issue 
+                \begin{itemize}
+                    \item{\texttt{400, 401}}
+                    \item{\texttt{201}\\
+                    \begin{itemize}
+                    \item{Request data is encoded as POST data. The name of the 
+                    tag is encoded as UTF-8 with key \texttt{tagname}.}
+                    \item{Tag added to the Issue with primary key \textsf{pk}. The 
+                    URI of the tag resource is returned JSON encoded.}
+                    \end{itemize}
+                    }
+                \end{itemize}
+            }
+            \item{\texttt{other}
+                \begin{itemize}
+                    \item{\texttt{405}}
+                \end{itemize}
+            }
+        \end{itemize}
+    }
+\end{itemize}
+
+\subsection{\texttt{http://emocracy.nl/api/issue/\textsf{pk}/votes/}}
+\begin{itemize}
+    \item{\textsl{implemented by} : \texttt{api.views.IssueVoteCollection}}
+    \item{\textsl{http methods} :
+        \begin{itemize}
+            \item{\texttt{GET} : Get the votes for an Issue
+                \begin{itemize}
+                    \item{\texttt{401, 404}}
+                    \begin{itemize}
+                        \item{Request parameters encoded as GET parameters. 
+                        \texttt{page} for the page of results .}
+                        \item{Response data are a JSON encoded paginated list of 
+                        resource URIs (\texttt{resources}) and the URIs of the 
+                        previous and next page (\texttt{previous} and \texttt{next}
+                        ).}
+                    \end{itemize}
+                \end{itemize}
+            }
+            \item{\texttt{POST} : Vote on Issue
+                \begin{itemize}
+                    \item{\texttt{400, 401, 404}}
+                    \item{\texttt{201}\\
+                    Voted on Issue, return data contains the JSON encoded
+                    URI of the vote.}
+                \end{itemize}
+            }
+            \item{\texttt{other}
+                \begin{itemize}
+                    \item{\texttt{405}}
+                \end{itemize}
+            }
+        \end{itemize}
+    }
+\end{itemize}
+
+\subsection{\texttt{http://emocracy.nl/api/vote/}}
+\begin{itemize}
+    \item{\textsl{implemented by} : \texttt{api.views.VoteCollection}}
+    \item{\textsl{http methods} :
+        \begin{itemize}
+            \item{\texttt{GET} :
+                \begin{itemize}
+                    \item{\texttt{200} : List of public votes
+                    \begin{itemize}
+                        \item{Request parameters encoded as GET parameters. 
+                        \texttt{page} for the page of results .}
+                        \item{Response data are a JSON encoded paginated list of 
+                        resource URIs (\texttt{resources}) and the URIs of the 
+                        previous and next page (\texttt{previous} and \texttt{next}
+                        ).}
+                    \end{itemize}
+                    }
+                \end{itemize}
+            }
+            \item{\texttt{POST} :
+                \begin{itemize}
+                    \item{\texttt{400, 401}}
+                    \item{\texttt{201} : vote created}
+                \end{itemize}
+            }
+            
+            \item{\texttt{other} :
+                \begin{itemize}
+                    \item{\texttt{405}}
+                \end{itemize}
+            }
+        \end{itemize}
+    }
+\end{itemize}
+
+\subsection{\texttt{http://emocracy.nl/api/vote/\textsf{pk}/}}
+\begin{itemize}
+    \item{\textsl{implemented by} : \texttt{api.views.VoteResource}}
+    \item{\textsl{http methods} :
+        \begin{itemize}
+            \item{\texttt{GET} : 
+                \begin{itemize}
+                    \item{\texttt{401, 404}}
+                    \item{\texttt{200}}
+                    \begin{itemize}
+                        \item{Response data is a JSON encoded representation of 
+                        the vote (date / time, user, issue).
+                        }
+                    \end{itemize}
+                \end{itemize}
+            }
+            \item{\texttt{other} :
+                \begin{itemize}
+                    \item{\texttt{405}}
+                \end{itemize}
+            }
+        \end{itemize}
+    }
+\end{itemize}
+
+%\subsection{\texttt{? http://emocracy.nl/api/votetype/}}
+%\begin{itemize}
+%    \item{\textsl{implemented by} : \texttt{api.views.VoteTypeCollection}}
+%    \item{\textsl{http methods} :
+%        \begin{itemize}
+%            \item{\texttt{\texttt{GET}} :
+%                \begin{itemize}
+%                    \item{\texttt{200} : list of vote types}
+%                \end{itemize}
+%            }
+%            \item{\texttt{other} :
+%                \begin{itemize}
+%                    \item{\texttt{405} : http method not allowed}
+%                \end{itemize}
+%            }
+%        \end{itemize}
+%    }
+%    \item{\textsl{request parameters} : \textsl{tbd}}
+%\end{itemize}
+%
+%\subsection{\texttt{? http://emocracy.nl/api/votetype/\textsf{pk}/}}
+%\begin{itemize}
+%    \item{\textsl{implemented by} : \texttt{api.views.VoteTypeResource}}
+%    \item{\textsl{http methods} :
+%        \begin{itemize}
+%            \item{\texttt{\texttt{GET}} :
+%                \begin{itemize}
+%                    \item{\texttt{200} : list of vote types}
+%                \end{itemize}
+%            }
+%            \item{\texttt{other} :
+%                \begin{itemize}
+%                    \item{\texttt{405} : http method not allowed}
+%                \end{itemize}
+%            }
+%        \end{itemize}
+%    }
+%    \item{\textsl{request parameters} : \textsl{tbd}}
+%\end{itemize}
+
+
+\subsection{\texttt{http://emocracy.nl/api/user/}}
+\begin{itemize}
+    \item{\textsl{implemented by} : \texttt{api.views.UserCollection}}
+    \item{\textsl{http methods} :
+        \begin{itemize}
+            \item{\texttt{GET} :
+                \begin{itemize}
+                    \item{\texttt{200} : list of users
+                    \begin{itemize}
+                        \item{Request parameters encoded as GET parameters. 
+                        \texttt{page} for the page of results.}
+                        \item{Response data are a JSON encoded paginated list of 
+                        resource URIs (\texttt{resources}) and the URIs of the 
+                        previous and next page (\texttt{previous} and \texttt{next}
+                        ).}
+                    \end{itemize}
+                    }
+                \end{itemize}
+            }
+            \item{\texttt{other} :
+                \begin{itemize}
+                    \item{\texttt{405}}
+                \end{itemize}
+            }
+        \end{itemize}
+    }
+    \item{\textsl{note} : User creation through API not allowed as yet.}
+\end{itemize}
+
+\subsection{\texttt{http://emocracy.nl/api/user/\textsf{pk}/}}
+\begin{itemize}
+    \item{\textsl{implemented by} : \texttt{api.views.UserResource}}
+    \item{\textsl{http methods} :
+        \begin{itemize}
+            \item{\texttt{GET} :
+                \begin{itemize}
+                    \item{\texttt{200} : User info for the user with primary key \textsf{pk}.
+                    \begin{itemize}
+                        \item{Response data are JSON representation of a user and
+                        his or profile containing such data as user's score
+                        and role within Emocracy.}
+                    \end{itemize}
+                    }
+                \end{itemize}
+            }
+            \item{\texttt{other} :
+                \begin{itemize}
+                    \item{\texttt{405}}
+                \end{itemize}
+            }
+        \end{itemize}
+    }
+    \item{\textsl{request parameters} : }
+\end{itemize}
+
+
+\subsection{\texttt{http://emocracy.nl/api/tag/}}
+\begin{itemize}
+    \item{\textsl{implemented by} : \texttt{api.views.TagCollection}}
+    \item{\textsl{http methods} :
+        \begin{itemize}
+            \item{\texttt{GET} :
+                \begin{itemize}
+                    \item{\texttt{200} : List of tags}
+                    \begin{itemize}
+                        \item{Request parameters encoded as GET parameters. 
+                        \texttt{page} for the page of results.}
+                        \item{Response data are a JSON encoded paginated list of 
+                        resource URIs (\texttt{resources}) and the URIs of the 
+                        previous and next page (\texttt{previous} and \texttt{next}
+                        ).}
+                    \end{itemize}
+                \end{itemize}
+            }
+            
+            \item{\texttt{other} :
+                \begin{itemize}
+                    \item{\texttt{405}}
+                \end{itemize}
+            }
+        \end{itemize}
+    }
+\end{itemize}
+
+
+\subsection{\texttt{http://emocracy.nl/api/tag/\textsf{pk}/}}
+\begin{itemize}
+    \item{\textsl{implemented by} : \texttt{api.views.TagResource}}
+    \item{\textsl{http methods} :
+        \begin{itemize}
+            \item{\texttt{GET} :
+                \begin{itemize}
+                    \item{\texttt{200} : Information about the tag with primary key \textsf{pk}}
+                    \begin{itemize}
+                        \item{Response data is JSON encoded number of times the
+                        tag is used (\texttt{count}) and the tag itself (\texttt{tagname})}
+                    \end{itemize}
+                \end{itemize}
+            }
+            
+            \item{\texttt{other} :
+                \begin{itemize}
+                    \item{\texttt{405}}
+                \end{itemize}
+            }
+        \end{itemize}
+    }
+\end{itemize}
+
+\subsection{\texttt{http://emocracy.nl/api/tag/\textsf{pk}/issues/}}
+\begin{itemize}
+    \item{\textsl{implemented by} : \texttt{api.views.TagIssueCollection}}
+    \item{\textsl{http methods} :
+        \begin{itemize}
+            \item{\texttt{GET} :
+                \begin{itemize}
+                    \item{\texttt{200} : List of Issues tagged with the tag that has primary key \textsf{pk}}
+                    \begin{itemize}
+                        \item{Request parameters encoded as GET parameters 
+                        \texttt{page} for the page of results.}
+                        \item{Response data are a JSON encoded paginated list of 
+                        resource URIs (\texttt{resources}) and the URIs of the 
+                        previous and next page (\texttt{previous} and \texttt{next}
+                        ).}
+                    \end{itemize}
+                \end{itemize}
+            }
+            
+            \item{\texttt{other} :
+                \begin{itemize}
+                    \item{\texttt{405}}
+                \end{itemize}
+            }
+        \end{itemize}
+    }
+\end{itemize}
+
+
+
+\subsection{\texttt{http://emocracy.nl/api/candidate/}}
+\begin{itemize}
+    \item{\textsl{implemented by} : \texttt{api.views.CandidateCollection}}
+    \item{\textsl{http methods} :
+        \begin{itemize}
+            \item{\texttt{GET} :
+                \begin{itemize}
+                    \item{\texttt{200} : List of current candidates
+                    \begin{itemize}
+                        \item{Request parameters encoded as GET parameters 
+                        \texttt{page} for the page of results.}
+                        \item{Response data are a JSON encoded paginated list of 
+                        resource URIs (\texttt{resources}) and the URIs of the 
+                        previous and next page (\texttt{previous} and \texttt{next}
+                        ).}
+                    \end{itemize}
+                    }
+                \end{itemize}
+            }
+            \item{\texttt{POST}:
+                \begin{itemize}
+                    \item{\texttt{400, 401}}
+                    \item{\texttt{201} : candidate created
+                    \begin{itemize}
+                        \item{Request data are a http POST encoded representation
+                        of the candidate.}
+                        \item{Response data are JSON encoded URI of the new
+                        candidate resource that was created.}
+                    \end{itemize}
+                    }
+                \end{itemize}
+            }
+            
+            \item{\texttt{other} :
+                \begin{itemize}
+                    \item{\texttt{405}}
+                \end{itemize}
+            }
+        \end{itemize}
+    }
+    \item{\textsl{note} : See wether an archive of actions should be kept.}    
+\end{itemize}
+
+
+\subsection{\texttt{http://emocracy.nl/api/candidate/\textsf{pk}/}}
+\begin{itemize}
+    \item{\textsl{implemented by} : \texttt{api.views.CandidateResource}}
+    \item{\textsl{http methods} :
+        \begin{itemize}
+            \item{\texttt{GET} :  Info about a candidacy
+                \begin{itemize}
+                    \item{\texttt{200}
+                    \begin{itemize}
+                        \item{Response data are JSON encoded, content TBD.}
+                    \end{itemize}
+                    }
+                \end{itemize}
+            }
+            \item{\texttt{POST} : end a candidacy
+                \begin{itemize}
+                    \item{\texttt{400, 401}}
+                    \item{\texttt{201} : candidacy ended}
+                \end{itemize}
+            }
+            
+            \item{\texttt{other} :
+                \begin{itemize}
+                    \item{\texttt{405}}
+                \end{itemize}
+            }
+        \end{itemize}
+    }
+\end{itemize}
+
+\subsection{\texttt{http://emocracy.nl/api/poll/}}
+\begin{itemize}
+    \item{\textsl{implemented by} : \texttt{api.views.PollCollection}}
+    \item{\textsl{http methods} :
+        \begin{itemize}
+            \item{\texttt{GET} : List of polls
+                \begin{itemize}
+                    \item{\texttt{200}}
+                    \begin{itemize}
+                        \item{Request parameters encoded as GET parameters 
+                        \texttt{page} for the page of results.}
+                        \item{Response data are a JSON encoded paginated list of 
+                        resource URIs (\texttt{resources}) and the URIs of the 
+                        previous and next page (\texttt{previous} and \texttt{next}
+                        ).}
+                    \end{itemize}
+                \end{itemize}
+            }
+            \item{\texttt{POST} : Create a poll
+                \begin{itemize}
+                    \item{\texttt{401, 400}}
+                    \item{\texttt{201}
+                    \begin{itemize}
+                        \item{Request data are a http POST encoded 
+                        representation of a poll.}
+                        \item{Response data are a JSON encoded URI for the newly
+                        created poll.}
+                    \end{itemize}
+                    }
+                \end{itemize}
+            }
+            
+            \item{\texttt{other} :
+                \begin{itemize}
+                    \item{\texttt{405}}
+                \end{itemize}
+            }
+        \end{itemize}
+    }
+\end{itemize}
+
+\subsection{\texttt{http://emocracy.nl/api/poll/pk/}}
+\begin{itemize}
+    \item{\textsl{implemented by} : \texttt{api.views.PollResource}}
+    \item{\textsl{http methods} :
+        \begin{itemize}
+            \item{\texttt{GET} :
+                \begin{itemize}
+                    \item{\texttt{200} : info about poll
+                    \begin{itemize}
+                        \item{Response data are a JSON encode representation of
+                        the Poll also containing a list of URIs to the Issues 
+                        that go with the poll.}
+                    \end{itemize}                    
+                    }
+                \end{itemize}
+            }
+            \item{\texttt{POST} : create a Poll
+                \begin{itemize}
+                    \item{\texttt{400, 401}}
+                    \item{\texttt{201}\\
+                    Poll created, the response data is a JSON encoded URI to the
+                    newly created Poll}
+                \end{itemize}
+            }
+            
+            \item{\texttt{other} :
+                \begin{itemize}
+                    \item{\texttt{405}}
+                \end{itemize}
+            }
+        \end{itemize}
+    }
+\end{itemize}
+
+
+
+\section{Authentication through Oauth}
+For more information on Oauth:
+\begin{itemize}
+    \item{The Oauth website \url{http://oauth.net}}
+    \item{The Netflix Oauth documentation \url{http://developer.netflix.com/docs/Security}}
+    \item{The Google data API Oauth documentation \url{http://code.google.com/intl/nl-NL/apis/gdata/articles/oauth.html}}
+\end{itemize}
+
+\end{document}
