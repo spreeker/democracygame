@@ -1,5 +1,5 @@
 # by Thijs Coenen for the Emocracy project october 2008
-from gamelogic.models import blank_votes, blank_votes, IssueTag
+from emocracy.gamelogic.models import blank_votes, blank_votes, IssueTag, source_types, normal_votes
 import models
 
 from django import forms
@@ -19,10 +19,10 @@ class IssueFormNew(forms.Form):
     )
     url = forms.URLField()
     source_type = forms.CharField(
-        widget = forms.Select(choices = models.source_types)
+        widget = forms.Select(choices = source_types)
     )
     owners_vote = forms.IntegerField(widget = forms.Select(
-        choices = models.normal_votes,
+        choices = normal_votes,
     ))    
 
 class TagForm(forms.Form):
@@ -62,7 +62,7 @@ class NormalVoteForm(forms.Form):
 
 class BlankVoteForm(forms.Form):
     motivation = forms.IntegerField(widget = forms.Select(
-        choices = models.blank_votes
+        choices = blank_votes
     ))
 
 class CastVoteFormFull(forms.Form):
