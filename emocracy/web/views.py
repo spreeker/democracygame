@@ -169,7 +169,7 @@ class OneIssueBaseView(object):
     
     def handle_voteform(self, request, issue):
         if request.method == 'POST':
-            qd = request.GET.copy()
+            qd = clean_request_parameters(request)
             form = NormalVoteForm(request.POST)
             if form.is_valid():
                 if form.cleaned_data['vote'] == 0:
@@ -194,7 +194,7 @@ class OneIssueBaseView(object):
                    
     def handle_voteblankform(self, request, issue):
         if request.method == 'POST':
-            qd = request.GET.copy()
+            qd = clean_request_parameters(request)
             form = BlankVoteForm(request.POST)
             if form.is_valid():
                 # Register the vote in the DB and assign score
@@ -212,7 +212,7 @@ class OneIssueBaseView(object):
     
     def handle_tagform(self, request, issue):
         if request.method == 'POST':
-            qd = request.GET.copy()
+            qd = clean_request_parameters(request)
             form = TagForm2(request.POST)
             if form.is_valid():
                 ptag = form.cleaned_data.get(u'popular_tags')
