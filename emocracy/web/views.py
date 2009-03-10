@@ -146,30 +146,32 @@ class OneIssueBaseView(object):
     can then be used by the subclass to do the right thing.)
     """
 
-    # TODO FIXME XSS make the handling of request parameters safe, as it stands
-    # the request parameters end up in the page HTML unescaped! (that sucks!)
-    
-    def clean_request_parameters(self, request):
-        """This method checks and cleans up request parameters, so that they are
+    def clean_GET_parameters(self, request):
+        """This method checks and cleans up GET parameters, so that they are
         quaranteed to be safe to include into HTML."""
-        qd = request.GET.copy()
-        new_qd = QueryDict()
-
-        if qd.has_key('form_type'):
-            if qd['form_type'] in ['voteblankform', 'voteform', 'tagform']:
-                new_qd['form_type'] = qd['form_type']
-        if qd.has_key('page'):
+        # Make an empty QueryDict, make it mutable (and later only add cleaned
+        # key, value pairs)
+        cleaned_GET_parameters = QueryDict({}).copy()
+        # Check that the form to be included is for tagging, voting or giving
+        # your motivation on a blank vote.
+        if request.GET.has_key('form_type'):
+            if request.GET['form_type'] in ['voteblankform', 'voteform', 'tagform']:
+                cleaned_GET_parameters['form_type'] = request.GET['form_type']
+        # Check that the page parameter is only an integer (the page parameter
+        # is used for the polling view).
+        if request.GET.has_key('page'):
             try:
-                int(qd['page'])
+                int(request.GET['page'])
             except ValueError:
                 pass
             else:
-                new_qd['page'] = qd['page']
-        return new_qd
-    
+                cleaned_GET_parameters['page'] = request.GET['page']
+        # Note, any other GET parameters are discarded.
+        return cleaned_GET_parameters
+        
     def handle_voteform(self, request, issue):
         if request.method == 'POST':
-            qd = clean_request_parameters(request)
+            qd = self.clean_GET_parameters(request)
             form = NormalVoteForm(request.POST)
             if form.is_valid():
                 if form.cleaned_data['vote'] == 0:
@@ -184,7 +186,7 @@ class OneIssueBaseView(object):
                     else:
                         anonymous_actions.vote(request, issue, form.cleaned_data['vote'])
                     # Succesful submit of a normal (For or Against) vote,
-                    # redirect to a formless version of the same page. (ie.
+                    # redirect to a formless version of the same page. (i.e.
                     # remove formtype query parameter).
                     del qd['form_type']
                     return None, HttpResponseRedirect(request.path + '?' + qd.urlencode())
@@ -194,7 +196,7 @@ class OneIssueBaseView(object):
                    
     def handle_voteblankform(self, request, issue):
         if request.method == 'POST':
-            qd = clean_request_parameters(request)
+            qd = self.clean_GET_parameters(request)
             form = BlankVoteForm(request.POST)
             if form.is_valid():
                 # Register the vote in the DB and assign score
@@ -211,8 +213,8 @@ class OneIssueBaseView(object):
         return form, None
     
     def handle_tagform(self, request, issue):
-        if request.method == 'POST':
-            qd = clean_request_parameters(request)
+        if request.method == 'POST':        
+            qd = self.clean_GET_parameters(request)
             form = TagForm2(request.POST)
             if form.is_valid():
                 ptag = form.cleaned_data.get(u'popular_tags')
@@ -266,7 +268,7 @@ class PollTakeView(OneIssueBaseView):
             if redirect: return redirect
         else:
             pass
-        
+
         extra_context = {
             'issue' : current_page.object_list[0],
             'vote_class' : css[0],
@@ -276,6 +278,7 @@ class PollTakeView(OneIssueBaseView):
             'current_page' : current_page,
             'num_pages' : paginator.num_pages,
             'tags' : IssueTag.objects.get_for_issue(current_page.object_list[0]),
+            'clean_request_path_for_form' : request.path + u'?' + self.clean_GET_parameters(request).urlencode(),
         }        
          
         if form_type in ['voteform','voteblankform', 'tagform']:
@@ -294,6 +297,7 @@ class DetailView(OneIssueBaseView):
             form, redirect = self.handle_voteform(request, issue)
             if redirect: return redirect
         elif form_type == 'voteblankform':
+            print "JOY"
             form, redirect = self.handle_voteblankform(request, issue)
             if redirect: return redirect
         elif form_type == 'tagform':
@@ -306,13 +310,14 @@ class DetailView(OneIssueBaseView):
             votes, css = vote_helper_authenticated(request.user, [issue])
         else:
             votes, css = vote_helper_anonymous(request, [issue])
-                
+
         extra_context = {
             'issue' : issue,
             'vote_class' : css[0],
             'vote_text' : votes[0],
             'title' : u'ISSUE DETAIL VIEW',
-            'tags' : IssueTag.objects.get_for_issue(issue)
+            'tags' : IssueTag.objects.get_for_issue(issue),
+            'clean_request_path_for_form' : request.path + u'?' + self.clean_GET_parameters(request).urlencode(),            
         }        
         if form_type in ['voteform','voteblankform', 'tagform']:
             extra_context[form_type] = form
