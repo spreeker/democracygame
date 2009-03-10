@@ -6,8 +6,10 @@
 # Django, HTTP request handled by Django, site running on top of SQLite.
 # For media stuff look at the base urls.py.
 
-import logging, logging.handlers
+import logging
 import os
+
+
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
 
@@ -15,7 +17,7 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@domain.com'),
+    # ('Stephan Preeker', 'stephan@preeker.net'),
 )
 
 MANAGERS = ADMINS
@@ -122,13 +124,10 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # (see: http://simonwillison.net/2008/May/22/debugging/ )
 # and python docs
 
-LOG_FILE_NAME = ("emocracy_log.txt")
-
+LOG_FILE_NAME = os.path.join(PROJECT_PATH, "emocracy_log.txt")
 
 logging.basicConfig(
     level = logging.INFO,
     format = '%(asctime)s %(levelname)s %(message)s',
     filename = LOG_FILE_NAME,
-    
 )
-
