@@ -20,7 +20,7 @@ from django.http import HttpResponse, HttpResponseServerError
 from django.utils import simplejson
 from django import forms
 from django.template.loader import render_to_string
-
+from django.http import QueryDict
 
 
 from util import *
@@ -148,6 +148,24 @@ class OneIssueBaseView(object):
 
     # TODO FIXME XSS make the handling of request parameters safe, as it stands
     # the request parameters end up in the page HTML unescaped! (that sucks!)
+    
+    def clean_request_parameters(self, request):
+        """This method checks and cleans up request parameters, so that they are
+        quaranteed to be safe to include into HTML."""
+        qd = request.GET.copy()
+        new_qd = QueryDict()
+
+        if qd.has_key('form_type'):
+            if qd['form_type'] in ['voteblankform', 'voteform', 'tagform']:
+                new_qd['form_type'] = qd['form_type']
+        if qd.has_key('page'):
+            try:
+                int(qd['page'])
+            except ValueError:
+                pass
+            else:
+                new_qd['page'] = qd['page']
+        return new_qd
     
     def handle_voteform(self, request, issue):
         if request.method == 'POST':
