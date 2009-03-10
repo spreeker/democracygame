@@ -1,6 +1,5 @@
 # by Thijs Coenen for the Emocracy project october 2008
 from emocracy.gamelogic.models import blank_votes, blank_votes, IssueTag, source_types, normal_votes
-import models
 
 from django import forms
 from django.forms import ModelForm
