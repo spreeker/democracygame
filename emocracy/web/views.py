@@ -348,7 +348,6 @@ class PollResultView(object):
         """
         This method extracts votes on a poll for a certain user.
         """
-        # TODO see wether this needs to be refactored and moved to models.py
         out = {}
         votes = Vote.objects.filter(is_archived = False).filter(issue__in = issue_ids).filter(owner = user).values('issue', 'vote')
         for x in votes:
