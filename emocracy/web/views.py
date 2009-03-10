@@ -148,9 +148,9 @@ class OneIssueBaseView(object):
 
     def clean_GET_parameters(self, request):
         """This method checks and cleans up GET parameters, so that they are
-        quaranteed to be safe to include into HTML."""
+        guaranteed to be safe to include into HTML."""
         # Make an empty QueryDict, make it mutable (and later only add cleaned
-        # key, value pairs)
+        # key, value pairs).
         cleaned_GET_parameters = QueryDict({}).copy()
         # Check that the form to be included is for tagging, voting or giving
         # your motivation on a blank vote.
@@ -182,7 +182,7 @@ class OneIssueBaseView(object):
                 else:
                     # Register the votes in the DB and assign score:
                     if request.user.is_authenticated():
-                        gamelogic.actions.vote(request.user, issue, form.cleaned_data['vote'], False) # TODO: deal with private votes
+                        gamelogic.actions.vote(request.user, issue, form.cleaned_data['vote'], form.cleaned_data["keep_private"]) 
                     else:
                         anonymous_actions.vote(request, issue, form.cleaned_data['vote'])
                     # Succesful submit of a normal (For or Against) vote,
@@ -198,10 +198,11 @@ class OneIssueBaseView(object):
         if request.method == 'POST':
             qd = self.clean_GET_parameters(request)
             form = BlankVoteForm(request.POST)
+            print form
             if form.is_valid():
                 # Register the vote in the DB and assign score
                 if request.user.is_authenticated():
-                    gamelogic.actions.vote(request.user, issue, form.cleaned_data['motivation'], False) # TODO: deal with private votes
+                    gamelogic.actions.vote(request.user, issue, form.cleaned_data['motivation'], form.cleaned_data["keep_private"])
                 else:
                     anonymous_actions.vote(request, issue, form.cleaned_data['motivation'])
                 # Succesful submit of a motivation for a blank vote. Redirect to

@@ -24,6 +24,7 @@ also only shows 1 issue at a time.
         <h4>{% trans "Vote on this issue" %}</h4>
         <form action="{{clean_request_path_for_form|safe}}" method="POST">
         <label for="id_vote">{% trans "Vote" %} : </label>{{voteform.vote}}
+        <label for="id_keep_private">{% trans "Keep private" %} : </label>{{voteform.keep_private}}
         <input type='submit' value='submit' />
         </form>
     {% endif %}
@@ -32,6 +33,7 @@ also only shows 1 issue at a time.
         <h4>{% trans "Vote on this issue" %}</h4>
         <form action="{{clean_request_path_for_form|safe}}" method="POST">
         <label for="id_motivation">{% trans "Motivation" %} : </label>{{voteblankform.motivation}}
+        <label for="id_keep_private">{% trans "Keep private" %} : </label>{{voteblankform.keep_private}}
         <input type='submit' value='submit' />
         </form>
     {% endif %}
