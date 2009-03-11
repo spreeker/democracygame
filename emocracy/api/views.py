@@ -137,6 +137,13 @@ class IssueCollection(Resource):
         return HttpResponse(simplejson.dumps(data), mimetype = 'text/html') 
         # text/html is here for debugging, should be application/javascript or application/json
 
+class IssueVoteCollection(Resource):
+    def POST(self, request, *args, **kwargs):
+        pass
+    def GET(self, request, *args, **kwargs):
+        pass
+
+
 class VoteCollection(Resource):
     def GET(self, request):
         object_ids = Vote.objects.values_list('pk', flat = True) 
