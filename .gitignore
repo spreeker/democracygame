@@ -4,3 +4,5 @@ emocracy_log.txt
 *.pyo
 *.DS_Store
 *.mo
+*.swp
+*~
