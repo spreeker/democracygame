@@ -3,9 +3,6 @@
 {% comment %}
 This template is used by the issue detail view and the polling view that
 also only shows 1 issue at a time.
-
-TODO XSS : See wether the request.get_full_path opens up any security problems
-by allowing the user to send extra request parameters. 
 {% endcomment %}
 
 
@@ -25,23 +22,25 @@ by allowing the user to send extra request parameters.
 <div style="margin-top:1em;" id="voteform_{{issue.pk}}" class="voteform_target system">
     {% if voteform %}
         <h4>{% trans "Vote on this issue" %}</h4>
-        <form action="{{request.get_full_path|safe}}" method="POST">
+        <form action="{{clean_request_path_for_form|safe}}" method="POST">
         <label for="id_vote">{% trans "Vote" %} : </label>{{voteform.vote}}
+        <label for="id_keep_private">{% trans "Keep private" %} : </label>{{voteform.keep_private}}
         <input type='submit' value='submit' />
         </form>
     {% endif %}
     
     {% if voteblankform %}
         <h4>{% trans "Vote on this issue" %}</h4>
-        <form action="{{request.get_full_path|safe}}" method="POST">
+        <form action="{{clean_request_path_for_form|safe}}" method="POST">
         <label for="id_motivation">{% trans "Motivation" %} : </label>{{voteblankform.motivation}}
+        <label for="id_keep_private">{% trans "Keep private" %} : </label>{{voteblankform.keep_private}}
         <input type='submit' value='submit' />
         </form>
     {% endif %}
     
     {% if tagform %}{% if user.is_authenticated %}
         <h4>{% trans "Tag this issue" %}</h4>
-        <form action="{{request.get_full_path|safe}}" method="POST">
+        <form action="{{clean_request_path_for_form|safe}}" method="POST">
         <label for="id_popular_tags"> {% trans "Popular tags" %} : </label>{{tagform.popular_tags}}
         <label for="id_tags"> {% trans "other tag" %} : </label>{{tagform.tags}}
         <input type="submit" value="submit" />
