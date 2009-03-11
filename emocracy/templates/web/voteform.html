@@ -1,6 +1,6 @@
 {% load i18n %}
                 <form action="" method="post">
-                <h3>Stem op dit onderwerp</h3>
+                <h3>{% trans "Vote on this issue" %} </h3>
                 <div>{% trans "cast a vote" %} : {{voteform.vote}}{{voteform.motivation}}
                 {{voteform.issue_no}}
                 <input type="submit" value="cast vote" id="castvote"/>
