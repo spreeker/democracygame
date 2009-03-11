@@ -58,11 +58,13 @@ class NormalVoteForm(forms.Form):
     vote = forms.IntegerField(widget = forms.Select(
         choices = [(u"-1", _(u"Against")), (u"0", _(u"Blank...")), (u"1", _(u"For"))]
     ))
+    keep_private = forms.BooleanField(required = False, initial = False)
 
 class BlankVoteForm(forms.Form):
     motivation = forms.IntegerField(widget = forms.Select(
         choices = blank_votes
     ))
+    keep_private = forms.BooleanField(required = False, initial = False)
 
 class CastVoteFormFull(forms.Form):
     """
