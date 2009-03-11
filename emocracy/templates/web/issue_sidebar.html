@@ -14,11 +14,6 @@ to remove the duplication that is inside of the if show_more_info_link block.
                 , do not add page=.. to the request parameters.
                 {% endcomment %}
                 <a href="{% url issue_detail issue.pk %}">{% trans "more information" %}</a><br />
-                {% ifnotequal issue.owner user %}
-                        {% if user.is_authenticated %}{% if not tagform %}
-                                <a href="{% url issue_detail issue.pk %}?form_type=tagform" class="taglink" id="taglink_{{issue.pk}}">{% trans "add tag" %}</a><br />
-                        {% endif %}{% endif %}
-                {% endifnotequal %}
         {% else %}
                 {% comment %}
                 Meaning this sidebar is in a view showing only one issue if
