@@ -40,7 +40,7 @@ class HttpResponseCreated(HttpResponse):
 
 # ------------------------------------------------------------------------------
 
-def paginated_collection_helper(request, object_ids, collection_base_URI, url_name_pk , paginate_by = 10):
+def paginated_collection_helper(request, object_ids, collection_base_URI, url_name_pk, paginate_by = 10):
     """This function constructs a dictionary with URIs to resources and
     the URIs of the next and previous page of URIs. 
     
@@ -81,6 +81,10 @@ class Resource(object):
             allowed_methods = [x for x in http_verbs if hasattr(self, x)]
             return HttpResponseNotAllowed(allowed_methods)
         return getattr(self, method)(request, *args, **kwargs)
+
+class Collection(Resource):
+    def paginateGET():
+        pass
 
 # ------------------------------------------------------------------------------
 
@@ -137,7 +141,9 @@ class IssueCollection(Resource):
         issue_ids = Issue.objects.values_list('pk', flat = True)
         data = paginated_collection_helper(request, issue_ids, reverse('api_issue'), 
             'api_issue_pk')
-        return HttpResponse(simplejson.dumps(data), mimetype = 'text/html') 
+        response = HttpResponse(simplejson.dumps(data), mimetype = 'text/html') 
+        response['charset'] = 'utf-8'
+        return response
         # text/html is here for debugging, should be application/javascript or application/json
 
 class IssueVoteCollection(Resource):
@@ -149,7 +155,7 @@ class IssueVoteCollection(Resource):
         # Check wether a user is in a public office, if so => all votes are public
         vote_ids = Vote.objects.filter(issue = issue, keep_private = False, is_archived = False).values_list('pk', flat = True)
         data = paginated_collection_helper(request, vote_ids, reverse('api_issue_pk_vote', args =[pk]), 'api_vote_pk')
-        return HttpResponse(simplejson.dumps(data), mimetype = 'text/html') 
+        return HttpResponse(simplejson.dumps(data), mimetype = 'text/html')
 
 
 class VoteCollection(Resource):
