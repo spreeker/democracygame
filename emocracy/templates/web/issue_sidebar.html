@@ -18,9 +18,6 @@ to remove the duplication that is inside of the if show_more_info_link block.
                         {% if user.is_authenticated %}{% if not tagform %}
                                 <a href="{% url issue_detail issue.pk %}?form_type=tagform" class="taglink" id="taglink_{{issue.pk}}">{% trans "add tag" %}</a><br />
                         {% endif %}{% endif %}
-                        {% if not voteform %}{% if not voteblankform %}
-                                <a href="{% url issue_detail issue.pk %}?form_type=voteform" class="votelink" id="votelink_{{issue.pk}}">vote on this</a><br />
-                        {% endif %}{% endif %}
                 {% endifnotequal %}
         {% else %}
                 {% comment %}
