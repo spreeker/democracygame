@@ -1,5 +1,4 @@
 {% load i18n %}
-
 <div class="issuebody" style="width:75%">
     <h3 style="position:relative;right:0em">{{issue.title}}</h3>
     <span class="system">{% trans "by" %} <a href="{% url userprofile issue.owner.username %}">{{issue.owner.username}}</a> {% trans "on" %} {{issue.time_stamp|date:"l d n Y"}} {% trans "at" %} {{issue.time_stamp|time:"H:i"}}</span>
@@ -15,9 +14,5 @@
             <a href="{% url issue_detail issue.pk %}?form_type=tagform" class="taglink" id="taglink_{{issue.pk}}">{% trans "add tag" %}</a><br />
         {% endif %}{% endif %}
     {% endifnotequal %}
-
-
-
     </div>
-
 </div>
