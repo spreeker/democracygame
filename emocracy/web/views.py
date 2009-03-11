@@ -95,7 +95,7 @@ class ListIssueBaseView(object):
             'show_more_info_link' : True,
             'object_list' : zip(current_page.object_list, user_votes, vote_css_class, tags_for_objects),
         })
-        return render_to_response('web/issue_list_new.html',
+        return render_to_response('web/issue_list.html',
             RequestContext(request, extra_context))
 
 issue_list = ListIssueBaseView()
