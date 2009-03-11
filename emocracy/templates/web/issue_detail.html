@@ -15,12 +15,12 @@ also only shows 1 issue at a time.
 <div class="issue_block">
     {% include "web/issue_sidebar.html" %}
     {% with issue.payload as issue %}
-    {% include "web/issue_body.html" %}
-    {% endwith %}
+    	{% include "web/issue_body.html" %}
+	{% endwith %}
 </div>
 
 <div style="margin-top:1em;" id="voteform_{{issue.pk}}" class="voteform_target system">
-    {% if voteform %}
+	    {% if voteform %}
         <h4>{% trans "Vote on this issue" %}</h4>
         <form action="{{clean_request_path_for_form|safe}}" method="POST">
         <label for="id_vote">{% trans "Vote" %} : </label>{{voteform.vote}}
