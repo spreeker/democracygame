@@ -103,7 +103,7 @@ class IssueResource(Resource):
             'url' : issue.payload.url,
             'time_stamp' : unicode(issue.time_stamp),
         }
-        return HttpResponse(simplejson.dumps(data, ensure_ascii = False), mimetype = 'text/html')
+        return HttpResponse(simplejson.dumps(data, ensure_ascii = False), mimetype = 'text/html; charset=utf-8')
         
         
 class IssueCollection(Resource):
@@ -127,7 +127,7 @@ class IssueCollection(Resource):
                 # If a new resource is created succesfully send a 201 response and
                 # embed a pointer to the newly created resource.
                 data = {'resource' :  u'http://' + request.META['HTTP_HOST'] + reverse('api_issue_pk', args = [new_issue.pk]),}
-                return HttpResponseCreated(simplejson.dumps(data, ensure_ascii = False), mimetype = 'text/html')
+                return HttpResponseCreated(simplejson.dumps(data, ensure_ascii = False), mimetype = 'text/html; charset=utf-8')
             else:
                 return HttpReponseBadRequest()
         else:
@@ -141,8 +141,7 @@ class IssueCollection(Resource):
         issue_ids = Issue.objects.values_list('pk', flat = True)
         data = paginated_collection_helper(request, issue_ids, reverse('api_issue'), 
             'api_issue_pk')
-        response = HttpResponse(simplejson.dumps(data), mimetype = 'text/html') 
-        response['charset'] = 'utf-8'
+        response = HttpResponse(simplejson.dumps(data), mimetype = 'text/plain; charset=utf-8') 
         return response
         # text/html is here for debugging, should be application/javascript or application/json
 
@@ -155,7 +154,7 @@ class IssueVoteCollection(Resource):
         # Check wether a user is in a public office, if so => all votes are public
         vote_ids = Vote.objects.filter(issue = issue, keep_private = False, is_archived = False).values_list('pk', flat = True)
         data = paginated_collection_helper(request, vote_ids, reverse('api_issue_pk_vote', args =[pk]), 'api_vote_pk')
-        return HttpResponse(simplejson.dumps(data), mimetype = 'text/html')
+        return HttpResponse(simplejson.dumps(data), mimetype = 'text/html; charset=utf-8')
 
 
 class VoteCollection(Resource):
@@ -163,7 +162,7 @@ class VoteCollection(Resource):
         object_ids = Vote.objects.values_list('pk', flat = True) 
         data = paginated_collection_helper(request, object_ids, reverse('api_vote'),
             'api_vote_pk')
-        return HttpResponse(simplejson.dumps(data), mimetype = 'text/html') 
+        return HttpResponse(simplejson.dumps(data), mimetype = 'text/html; charset=utf-8') 
             
 class VoteResource(Resource):
     def GET(self, request, pk, *args, **kwargs):
@@ -178,14 +177,14 @@ class VoteResource(Resource):
             'issue' :  u'http://' + request.META['HTTP_HOST'] + reverse('api_issue_pk', args = [vote.issue_id]),
             'issueset' : 'NOT IMPLEMENTED YET',
         }
-        return HttpResponse(simplejson.dumps(data, ensure_ascii = False), mimetype = 'text/html')
+        return HttpResponse(simplejson.dumps(data, ensure_ascii = False), mimetype = 'text/html; charset=utf-8')
 
 class UserCollection(Resource):
     def GET(self, request, *args, **kwargs):
         object_ids = User.objects.values_list('pk', flat = True)
         data = paginated_collection_helper(request, object_ids, reverse('api_user'),
             'api_user_pk')
-        return HttpResponse(simplejson.dumps(data), mimetype = 'text/html') 
+        return HttpResponse(simplejson.dumps(data), mimetype = 'text/html; charset=utf-8') 
         
 
 class UserResource(Resource):
@@ -199,5 +198,5 @@ class UserResource(Resource):
             'username' : user.username,
             'score' : userprofile.score,
         }
-        return HttpResponse(simplejson.dumps(data, ensure_ascii = False), mimetype = 'text/html')
+        return HttpResponse(simplejson.dumps(data, ensure_ascii = False), mimetype = 'text/html; charset=utf-8')
         
