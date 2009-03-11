@@ -40,7 +40,7 @@ class HttpResponseCreated(HttpResponse):
 
 # ------------------------------------------------------------------------------
 
-def paginated_collection_helper(request, object_ids, url_name, url_name_pk , paginate_by = 10):
+def paginated_collection_helper(request, object_ids, collection_base_URI, url_name_pk , paginate_by = 10):
     """This function constructs a dictionary with URIs to resources and
     the URIs of the next and previous page of URIs. 
     
@@ -56,11 +56,14 @@ def paginated_collection_helper(request, object_ids, url_name, url_name_pk , pag
         current_page = paginator.page(page_no)
     except (EmptyPage, InvalidPage):
         current_page = paginator.page(paginator.num_pages)
-    data = {'resources' : [TEMP_SERVER_NAME + reverse(url_name_pk, args =[pk]) for pk in current_page.object_list]}
+        
+    server_base_name = u'http://' + request.META['HTTP_HOST']
+    
+    data = {'resources' : [server_base_name + reverse(url_name_pk, args =[pk]) for pk in current_page.object_list]}
     if current_page.has_next():
-        data['next'] = TEMP_SERVER_NAME + reverse(url_name) + u'?page=%d' % (page_no + 1,)
+        data['next'] = server_base_name + collection_base_URI + u'?page=%d' % (page_no + 1,)
     if current_page.has_previous():
-        data['previous'] = TEMP_SERVER_NAME + reverse(url_name) + u'?page=%d' % (page_no - 1,)
+        data['previous'] = server_base_name + collection_base_URI + u'?page=%d' % (page_no - 1,)
     return data
 
 # ------------------------------------------------------------------------------
@@ -91,7 +94,7 @@ class IssueResource(Resource):
         data = {
             'title' : issue.title,
             'body' : issue.payload.body,
-            'owner' : TEMP_SERVER_NAME + u"/api/user/" + unicode(issue.owner_id) + "/", # convert to link to User Resource
+            'owner' :  u'http://' + request.META['HTTP_HOST'] + u"/api/user/" + unicode(issue.owner_id) + "/", # convert to link to User Resource
             'source_type' : issue.payload.source_type,
             'url' : issue.payload.url,
             'time_stamp' : unicode(issue.time_stamp),
@@ -119,7 +122,7 @@ class IssueCollection(Resource):
             if new_issue:
                 # If a new resource is created succesfully send a 201 response and
                 # embed a pointer to the newly created resource.
-                data = {'resource' : TEMP_SERVER_NAME + reverse('api_issue_pk', args = [new_issue.pk]),}
+                data = {'resource' :  u'http://' + request.META['HTTP_HOST'] + reverse('api_issue_pk', args = [new_issue.pk]),}
                 return HttpResponseCreated(simplejson.dumps(data, ensure_ascii = False), mimetype = 'text/html')
             else:
                 return HttpReponseBadRequest()
@@ -131,23 +134,28 @@ class IssueCollection(Resource):
         """Send paginated list of issue URIs to client as JSON."""
         # If ValueListQuerySets are evaluated to a lists by Django the following
         # line needs to change (TODO find out):
-        issue_ids = Issue.objects.values_list('pk', flat = True) 
-        data = paginated_collection_helper(request, issue_ids, 'api_issue', 
+        issue_ids = Issue.objects.values_list('pk', flat = True)
+        data = paginated_collection_helper(request, issue_ids, reverse('api_issue'), 
             'api_issue_pk')
         return HttpResponse(simplejson.dumps(data), mimetype = 'text/html') 
         # text/html is here for debugging, should be application/javascript or application/json
 
 class IssueVoteCollection(Resource):
-    def POST(self, request, *args, **kwargs):
-        pass
-    def GET(self, request, *args, **kwargs):
-        pass
+    def GET(self, request, pk, *args, **kwargs):
+        try:
+            issue = Issue.objects.get(pk = pk)
+        except Issue.DoesNotExist:
+            return HttpResponseNotFound()
+        # Check wether a user is in a public office, if so => all votes are public
+        vote_ids = Vote.objects.filter(issue = issue, keep_private = False, is_archived = False).values_list('pk', flat = True)
+        data = paginated_collection_helper(request, vote_ids, reverse('api_issue_pk_vote', args =[pk]), 'api_vote_pk')
+        return HttpResponse(simplejson.dumps(data), mimetype = 'text/html') 
 
 
 class VoteCollection(Resource):
     def GET(self, request):
         object_ids = Vote.objects.values_list('pk', flat = True) 
-        data = paginated_collection_helper(request, object_ids, 'api_vote',
+        data = paginated_collection_helper(request, object_ids, reverse('api_vote'),
             'api_vote_pk')
         return HttpResponse(simplejson.dumps(data), mimetype = 'text/html') 
             
@@ -161,7 +169,7 @@ class VoteResource(Resource):
             'vote_int' : vote.vote,
             # The vote.issue_id does not follow the relation (would cause 
             # extra and unnecessary work for the db).
-            'issue' : TEMP_SERVER_NAME + reverse('api_issue_pk', args = [vote.issue_id]),
+            'issue' :  u'http://' + request.META['HTTP_HOST'] + reverse('api_issue_pk', args = [vote.issue_id]),
             'issueset' : 'NOT IMPLEMENTED YET',
         }
         return HttpResponse(simplejson.dumps(data, ensure_ascii = False), mimetype = 'text/html')
@@ -169,7 +177,7 @@ class VoteResource(Resource):
 class UserCollection(Resource):
     def GET(self, request, *args, **kwargs):
         object_ids = User.objects.values_list('pk', flat = True)
-        data = paginated_collection_helper(request, object_ids, 'api_user', 
+        data = paginated_collection_helper(request, object_ids, reverse('api_user'),
             'api_user_pk')
         return HttpResponse(simplejson.dumps(data), mimetype = 'text/html') 
         
