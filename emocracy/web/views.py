@@ -9,7 +9,6 @@ from django.contrib.auth.models import User
 from django.shortcuts import render_to_response
 from django.shortcuts import get_object_or_404, get_list_or_404
 from django.http import HttpResponseRedirect
-from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.template import RequestContext
 from django.views.generic.list_detail import object_list, object_detail
