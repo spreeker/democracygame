@@ -23,9 +23,9 @@ urlpatterns = patterns('web.views',
     # Polling TODO : needs a clean up
     url(r'^polls/$', 'poll_list', name = 'web_poll_list'), # generic view
     url(r'^polls/(?P<poll_no>\d+)/result/$', 'poll_result', name = 'web_poll_result'), # special view, needs some calculations done
-    url(r'^poll/(?P<pk>\d+)/take/$', 'poll_take', name = 'poll_take'),
+    url(r'^poll/(?P<pk>\d+)/take/$', 'poll_take', name = 'web_poll_take'),
     # Start of a mandate a user view
-    url(r'^mandate/(?P<rep>\w+)/$', 'mandate', name = 'mandate'),
+    url(r'^mandate/(?P<rep>\w+)/$', 'mandate', name = 'web_mandate'),
     # Start of a become candidate view
     url(r'^become_candidate/', 'become_candidate', name = 'become_candidate'),
     # Start of a tag searching function TODO : check for unicode in request paramaters,
