@@ -197,7 +197,6 @@ class OneIssueBaseView(object):
         if request.method == 'POST':
             qd = self.clean_GET_parameters(request)
             form = BlankVoteForm(request.POST)
-            print form
             if form.is_valid():
                 # Register the vote in the DB and assign score
                 if request.user.is_authenticated():
@@ -297,7 +296,6 @@ class DetailView(OneIssueBaseView):
             form, redirect = self.handle_voteform(request, issue)
             if redirect: return redirect
         elif form_type == 'voteblankform':
-            print "JOY"
             form, redirect = self.handle_voteblankform(request, issue)
             if redirect: return redirect
         elif form_type == 'tagform':
@@ -347,7 +345,7 @@ def issue_propose(request):
                 form.cleaned_data[u'source_type'],
             )
 
-            return HttpResponseRedirect(reverse('issue_detail', args = [new_issue.pk]))
+            return HttpResponseRedirect(reverse('web_issue_detail', args = [new_issue.pk]))
     else:
         form = IssueFormNew()
         
