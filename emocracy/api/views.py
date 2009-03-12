@@ -114,6 +114,21 @@ class IssueResource(Resource):
         
         
 class IssueCollection(Collection):
+    def _sort_order_helper(self, request):
+        """Helper function that checks the HTTP GET data for sort_order this 
+        collection URI."""
+        
+        order_choices = ["votes", "score", "time_stamp", "hotness"]
+        default_sort_order = "time_stamp"
+        try:
+            sort_order = request.GET["sort_order"]
+        except KeyError:
+            sort_order = default_sort_order        
+        else:
+            if not sort_order in order_choices:
+                sort_order = default_sort_order
+        return sort_order
+
     def POST(self, request, *args, **kwargs):
         # The authentication check should be moved to django-oauth ASAP
         if not request.user.is_authenticated():
@@ -145,7 +160,9 @@ class IssueCollection(Collection):
         """Send paginated list of issue URIs to client as JSON."""
         # If ValueListQuerySets are evaluated to a lists by Django the following
         # line needs to change (TODO find out):
-        issue_ids = Issue.objects.values_list('pk', flat = True)
+        sort_order = self._sort_order_helper(request)
+        print sort_order
+        issue_ids = Issue.objects.order_by(sort_order).reverse().values_list('pk', flat = True)
         data = self._paginated_collection_helper(request, issue_ids, reverse('api_issue'), 
             'api_issue_pk')
         return HttpResponse(simplejson.dumps(data), mimetype = 'text/plain; charset=utf-8')
