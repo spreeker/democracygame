@@ -27,7 +27,7 @@ import gamelogic.actions, anonymous_actions
 from web.forms import TagForm, CastVoteFormFull, IssueFormNew, HiddenOkForm, TagSearchForm, TagForm2
 from web.forms import NormalVoteForm, BlankVoteForm
 from emocracy.gamelogic.models import votes_to_description
-from emocracy.gamelogic.models import IssueTag, TaggedIssue
+from emocracy.gamelogic.models import Tag, TaggedIssue
 from emocracy.gamelogic.models import Issue, IssueBody, IssueSet
 import settings
 
@@ -86,7 +86,7 @@ class ListIssueBaseView(object):
         else:
             user_votes, vote_css_class = vote_helper_anonymous(request, current_page.object_list)
         # grab the tags for each Issue
-        tags_for_objects = [IssueTag.objects.get_for_issue(x) for x in current_page.object_list]
+        tags_for_objects = [Tag.objects.get_for_issue(x) for x in current_page.object_list]
         
         extra_context.update({
             'sort_order' : sort_order,
@@ -106,7 +106,7 @@ class IssuesForTagView(ListIssueBaseView):
     """
     def get_extra_context_and_queryset(self, request, *args, **kwargs):
         tag_pk = kwargs.pop('tag_pk')
-        tag = get_object_or_404(IssueTag, pk = tag_pk)
+        tag = get_object_or_404(Tag, pk = tag_pk)
         queryset = tag.get_issues()
         extra_context = {'page_title' : _(u'Issues tagged with %(tagname)s' % {'tagname' : tag.name})}
         return extra_context, queryset
@@ -277,7 +277,7 @@ class PollTakeView(OneIssueBaseView):
             'poll_pk' : poll.pk,
             'current_page' : current_page,
             'num_pages' : paginator.num_pages,
-            'tags' : IssueTag.objects.get_for_issue(current_page.object_list[0]),
+            'tags' : Tag.objects.get_for_issue(current_page.object_list[0]),
             'clean_request_path_for_form' : request.path + u'?' + self.clean_GET_parameters(request).urlencode(),
         }        
          
@@ -316,7 +316,7 @@ class DetailView(OneIssueBaseView):
             'vote_class' : css[0],
             'vote_text' : votes[0],
             'title' : u'ISSUE DETAIL VIEW',
-            'tags' : IssueTag.objects.get_for_issue(issue),
+            'tags' : Tag.objects.get_for_issue(issue),
             'clean_request_path_for_form' : request.path + u'?' + self.clean_GET_parameters(request).urlencode(),            
         }        
         if form_type in ['voteform','voteblankform', 'tagform']:
@@ -453,7 +453,7 @@ def tagform(request, issue_pk):
     """
     pk = int(issue_pk)
     form = TagForm({'issue_no' : pk})
-    popular_tags = IssueTag.objects.get_popular(10)
+    popular_tags = Tag.objects.get_popular(10)
     extra_context = RequestContext(request, {
         'form' : form,
         'tags' : popular_tags,
@@ -495,9 +495,9 @@ def search_tag(request):
         search_string = request.GET.get(u'search_string', u'')
 
     if not search_string == u'':
-        qs = IssueTag.objects.filter(name__icontains = search_string)
+        qs = Tag.objects.filter(name__icontains = search_string)
     else:
-        qs = IssueTag.objects.none()
+        qs = Tag.objects.none()
     
     paginator = Paginator(qs, 20)
     
