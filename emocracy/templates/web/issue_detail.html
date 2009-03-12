@@ -62,7 +62,7 @@ also only shows 1 issue at a time.
         {% if current_page.has_next %}
         <a href="?page={{current_page.next_page_number}}">{% trans "next" %}</a>
         {% else %}
-        <a href="{% url poll_result poll_pk %}">{% trans "show results" %}</a>
+        <a href="{% url web_poll_result poll_pk %}">{% trans "show results" %}</a>
         {% endif %}
     </div>
 {% endif %}
