@@ -15,7 +15,6 @@ from gamelogic import actions
 from forms import IssueCollectionForm
 
 
-TEMP_SERVER_NAME = u'http://127.0.0.1:8000'
 
 # Useful information related to REST API design / implementation
 
