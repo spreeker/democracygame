@@ -7,7 +7,7 @@ from django.views.generic.simple import redirect_to
 
 urlpatterns = patterns('web.views',
     # urls that go with viewing of Issues
-    url(r'^issues/for_user/(?P<username>\w+)/$', 'issues_list_user', name = 'issues_for_user'),
+    url(r'^issues/for_user/(?P<username>\w+)/$', 'issues_list_user', name = 'web_issues_for_user'),
     url(r'^issues/for_tag/(?P<tag_pk>\d+)/$', 'issue_list_tag', name = 'issue_list_tag'),
     url(r'^issues/(?P<pk>\d+)/$', 'newdetail', name = 'issue_detail' ),
     url(r'^issues/$', 'issue_list', name = 'issue_list'),
