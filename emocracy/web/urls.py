@@ -21,7 +21,7 @@ urlpatterns = patterns('web.views',
     # Show list of votes for a user.
     url(r'^votes/(?P<user_name>\w+)/$', 'vote_list_user', name = 'web_votes_for_user'),
     # Polling TODO : needs a clean up
-    url(r'^polls/$', 'poll_list', name = 'poll_list'), # generic view
+    url(r'^polls/$', 'poll_list', name = 'web_poll_list'), # generic view
     url(r'^polls/(?P<poll_no>\d+)/result/$', 'poll_result', name = 'poll_result'), # special view, needs some calculations done
     url(r'^poll/(?P<pk>\d+)/take/$', 'poll_take', name = 'poll_take'),
     # Start of a mandate a user view
