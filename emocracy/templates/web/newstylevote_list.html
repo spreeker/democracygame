@@ -8,16 +8,16 @@
 {% for vote in object_list%}
 {% ifequal vote.vote  1 %}
 On {{vote.time_stamp|date:"D d M Y"}} at {{vote.time_stamp|date:"H:i"}} <a href="/accounts/profile/{{vote.owner.username}}/">{{vote.owner}}</a> voted <span class="for">for</span>
-<a href="{% url issue_detail vote.issue.pk %}">{{vote.issue.title}}</a><br>
+<a href="{% url web_issue_detail vote.issue.pk %}">{{vote.issue.title}}</a><br>
 {% endifequal %}
 {% ifequal vote.vote  -1 %}
 On {{vote.time_stamp|date:"D d M Y"}} at {{vote.time_stamp|date:"H:i"}} <a href="/accounts/profile/{{vote.owner.username}}/">{{vote.owner}}</a> voted <span class="against">against</span> 
-<a href="{% url issue_detail vote.issue.pk %}">{{vote.issue.title}}</a><br>
+<a href="{% url web_issue_detail vote.issue.pk %}">{{vote.issue.title}}</a><br>
 {% endifequal %}
 
 {% ifequal vote.vote  0 %}
 On {{vote.time_stamp|date:"D d M Y"}} at {{vote.time_stamp|date:"H:i"}} <a href="/accounts/profile/{{vote.owner.username}}/">{{vote.owner}}</a> voted blank on 
-<a href="{% url issue_detail vote.issue.pk %}">{{vote.issue.title}}</a> with the motivation <em>{{vote.motivation}}</em><br>
+<a href="{% url web_issue_detail vote.issue.pk %}">{{vote.issue.title}}</a> with the motivation <em>{{vote.motivation}}</em><br>
 {% endifequal %}
 
 {% endfor%}
