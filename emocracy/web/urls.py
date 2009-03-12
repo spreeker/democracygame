@@ -27,10 +27,10 @@ urlpatterns = patterns('web.views',
     # Start of a mandate a user view
     url(r'^mandate/(?P<rep>\w+)/$', 'mandate', name = 'web_mandate'),
     # Start of a become candidate view
-    url(r'^become_candidate/', 'become_candidate', name = 'become_candidate'),
+    url(r'^become_candidate/', 'become_candidate', name = 'web_become_candidate'),
     # Start of a tag searching function TODO : check for unicode in request paramaters,
     # which is not allowed according to Conrado...
-    url(r'^search_tag/$', 'search_tag', name = 'search_tag'),
+    url(r'^search_tag/$', 'search_tag', name = 'web_search_tag'),
     
     # For Demo purposes: redirect all the wrong stuff to the issue_list views...
 #    (r'$', redirect_to, {'url' : '/web/issue/'}),
