@@ -8,10 +8,10 @@
     {% ifnotequal issue.owner user %}
 	<br /><br />
         {% if not voteform %}{% if not voteblankform %}
-            <a href="{% url issue_detail issue.pk %}?form_type=voteform" class="votelink" id="votelink_{{issue.pk}}">vote on this</a>
+            <a href="{% url web_issue_detail issue.pk %}?form_type=voteform" class="votelink" id="votelink_{{issue.pk}}">vote on this</a>
         {% endif %}{% endif %}
         {% if user.is_authenticated %}{% if not tagform %}
-            <a href="{% url issue_detail issue.pk %}?form_type=tagform" class="taglink" id="taglink_{{issue.pk}}">{% trans "add tag" %}</a><br />
+            <a href="{% url web_issue_detail issue.pk %}?form_type=tagform" class="taglink" id="taglink_{{issue.pk}}">{% trans "add tag" %}</a><br />
         {% endif %}{% endif %}
     {% endifnotequal %}
     </div>
