@@ -7,10 +7,10 @@ from django.views.generic.simple import redirect_to
 
 urlpatterns = patterns('web.views',
     # urls that go with viewing of Issues
-    url(r'^issue/for_user/(?P<username>\w+)/$', 'issues_list_user', name = 'issues_for_user'),
-    url(r'^issue/for_tag/(?P<tag_pk>\d+)/$', 'issue_list_tag', name = 'issue_list_tag'),
-    url(r'^issue/(?P<pk>\d+)/$', 'newdetail', name = 'issue_detail' ),
-    url(r'^issue/$', 'issue_list', name = 'issue_list'),
+    url(r'^issues/for_user/(?P<username>\w+)/$', 'issues_list_user', name = 'issues_for_user'),
+    url(r'^issues/for_tag/(?P<tag_pk>\d+)/$', 'issue_list_tag', name = 'issue_list_tag'),
+    url(r'^issues/(?P<pk>\d+)/$', 'newdetail', name = 'issue_detail' ),
+    url(r'^issues/$', 'issue_list', name = 'issue_list'),
     # helper views that deal with jQuery based voting/tagging:
     url(r'^ajax/voteform/(?P<issue_no>\d+)/$', 'voteform', name = 'voteform'),
     url(r'^ajax/vote/$', 'ajaxvote', name = 'ajaxvote'),     
