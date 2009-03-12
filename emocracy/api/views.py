@@ -1,4 +1,6 @@
 import re
+import datetime
+
 from django.shortcuts import render_to_response
 from django.http import Http404
 from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseServerError, HttpResponseNotFound, HttpResponseBadRequest
@@ -83,8 +85,45 @@ class Resource(object):
         return getattr(self, method)(request, *args, **kwargs)
 
 class Collection(Resource):
-    def paginateGET():
-        pass
+    def GET(self, request, *args, **kwargs):
+        resource_url_name = kwargs.get('resource_url_name', None)
+        paginate_by = kwargs.get('paginate_by', 10)
+        # Should raise real exceptions here!
+        pk = kwargs.get('pk', None)
+        if not pk: return HttpResponseServerError()
+
+        if not resource_url_name:
+            return HttpResponseServerError()        
+        qs = self.GET_queryset(request, *args, **kwargs)
+        paginator = Paginator(qs.values_list('pk', flat = True), paginate_by)
+        try:
+            page_no = int(request.GET.get('page', '1'))
+        except ValueError:
+            page_no = 1
+        try:
+            current_page = paginator.page(page_no)
+        except (EmptyPage, InvalidPage):
+            current_page = paginator.page(paginator.num_pages)
+            
+        server_base_name = u'http://' + request.META['HTTP_HOST']
+        collection_path = self.collection_path(self, request, *args, **kwargs)
+        
+        data = {'resources' : [server_base_name + reverse(resource_url_name, args = [pk]) for pk in current_page.object_list]}
+        if current_page.has_next():
+            data['next'] = server_base_name + collection_path + u'?page=%d' % (page_no + 1,)
+        if current_page.has_previous():
+            data['previous'] = server_base_name + collection_path + u'?page=%d' % (page_no - 1,)
+        return HttpResponse(simplejson.dumps(data), mimetype = 'text/html; charset=utf-8')
+
+class TESTCOLLECTION(Collection):
+    def collection_path(self, request, *args, **kwargs):
+        pk = kwargs.get('pk', None)
+        return reverse('NARF', args = [pk])
+        
+    def GET_queryset(self, request, pk, *args, **kwargs):
+        return Vote.objects.all()
+        
+        
 
 # ------------------------------------------------------------------------------
 
