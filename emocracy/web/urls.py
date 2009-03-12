@@ -3,6 +3,7 @@ import settings
 from django.conf.urls.defaults import *
 from django.views.generic.simple import redirect_to
 
+# TODO 'namespace' the url names (prepend the app name)
 
 urlpatterns = patterns('web.views',
     # urls that go with viewing of Issues

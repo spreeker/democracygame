@@ -206,8 +206,13 @@ class Motion(models.Model):
 # Emocracy are Issues/stuff you can vote on - so there is no need to user the
 # generic foreign key facilities in Django
 
+# TODO look at the way the IssueTag objects are found, see wether that
+# can be done more cleanly (/better /faster). Probably through some 
+# custom SQL ...
 # Possible way to speed up get_for_issue: have a IssueTagField on an Issue
 # (that would get rid of the TaggedIssue query).
+
+# TODO RENAME IssueTag -> Tag, IssueTagmanager -> TagManager (all over codebase)
 
 class IssueTagManager(models.Manager):
     def get_for_issue(self, issue, max_num = 10):        
