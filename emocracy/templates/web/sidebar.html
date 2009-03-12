@@ -17,7 +17,7 @@ TODO : Create a translated block for the logged in version of the sidebar.
 		{% endif %}
 		
 		<a href="{% url issue_list %}">{% trans "all issues" %}</a><br />
-		<a href="{% url issues_for_user user.username %}">{% trans "my issues" %}</a><br />
+		<a href="{% url web_issues_for_user user.username %}">{% trans "my issues" %}</a><br />
 		<a href="{% url issue_propose %}">{% trans "propose issue" %}</a><br /><br />
 		<a href="{% url votes_for_user user.username %}">{% trans "my votes" %}</a><br /><br />
 		<a href="{% url poll_list %}">{% trans "polls" %}</a><br /><br />
