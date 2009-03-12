@@ -7,7 +7,7 @@
             <h3 style="position:relative;right:1em">{{poll.title}}</h3>
             {{poll.description|striptags|linebreaks}}
             <span class="system">
-                <a href="{% url poll_take poll.pk %}">Take this poll</a><br />
+                <a href="{% url web_poll_take poll.pk %}">Take this poll</a><br />
             <span>
         </div>
         <div style="margin:0em 2em 0em 3em " class="system">
