@@ -41,34 +41,6 @@ class HttpResponseCreated(HttpResponse):
 
 # ------------------------------------------------------------------------------
 
-def paginated_collection_helper(request, object_ids, collection_base_URI, url_name_pk, paginate_by = 10):
-    """This function constructs a dictionary with URIs to resources and
-    the URIs of the next and previous page of URIs. 
-    
-    Assumes that the url conf to a single resource is expects a keyword argument
-    called pk.
-    """
-    paginator = Paginator(object_ids, paginate_by)
-    try:
-        page_no = int(request.GET.get('page', '1'))
-    except ValueError:
-        page_no = 1
-    try:
-        current_page = paginator.page(page_no)
-    except (EmptyPage, InvalidPage):
-        current_page = paginator.page(paginator.num_pages)
-        
-    server_base_name = u'http://' + request.META['HTTP_HOST']
-    
-    data = {'resources' : [server_base_name + reverse(url_name_pk, args =[pk]) for pk in current_page.object_list]}
-    if current_page.has_next():
-        data['next'] = server_base_name + collection_base_URI + u'?page=%d' % (page_no + 1,)
-    if current_page.has_previous():
-        data['previous'] = server_base_name + collection_base_URI + u'?page=%d' % (page_no - 1,)
-    return data
-
-# ------------------------------------------------------------------------------
-
 http_verbs = ('GET', 'POST') # Not exhaustive! Just what Emocracy uses for now.
 nonalpha_re = re.compile('[^A-Z]')
 
@@ -83,6 +55,43 @@ class Resource(object):
             return HttpResponseNotAllowed(allowed_methods)
         return getattr(self, method)(request, *args, **kwargs)
 
+class Collection(Resource):
+    """This class can be used as the base class for REST API Collection views. 
+    It provides a few helper methods to help with pagination and the like.
+    Subclasses need to provide their own GET POST etc views."""
+    
+    def _paginator_helper(self, request, object_ids, paginate_by):
+        """This helper function deals with the django paginator and its page= GET
+        parameter."""
+        paginator = Paginator(object_ids, paginate_by)
+        try:
+            page_no = int(request.GET.get('page', '1'))
+        except ValueError:
+            page_no = 1
+        try:
+            current_page = paginator.page(page_no)
+        except (EmptyPage, InvalidPage):
+            current_page = paginator.page(paginator.num_pages)
+        return current_page, page_no
+
+    def _paginated_collection_helper(self, request, object_ids, collection_base_URI, url_name_pk, paginate_by = 10):
+        """This function constructs a dictionary with URIs to resources and
+        the URIs of the next and previous page of URIs. 
+        
+        Assumes that the url conf to a single resource expects a keyword argument
+        called pk.
+        """
+            
+        current_page, page_no = self._paginator_helper(request, object_ids, paginate_by)
+        server_base_name = u'http://' + request.META['HTTP_HOST']
+        
+        data = {'resources' : [server_base_name + reverse(url_name_pk, args = [pk]) for pk in current_page.object_list]}
+        if current_page.has_next():
+            data['next'] = server_base_name + collection_base_URI + u'?page=%d' % (page_no + 1,)
+        if current_page.has_previous():
+            data['previous'] = server_base_name + collection_base_URI + u'?page=%d' % (page_no - 1,)
+        return data
+    
 
 # ------------------------------------------------------------------------------
 
@@ -104,7 +113,7 @@ class IssueResource(Resource):
         return HttpResponse(simplejson.dumps(data, ensure_ascii = False), mimetype = 'text/html; charset=utf-8')
         
         
-class IssueCollection(Resource):
+class IssueCollection(Collection):
     def POST(self, request, *args, **kwargs):
         # The authentication check should be moved to django-oauth ASAP
         if not request.user.is_authenticated():
@@ -137,13 +146,12 @@ class IssueCollection(Resource):
         # If ValueListQuerySets are evaluated to a lists by Django the following
         # line needs to change (TODO find out):
         issue_ids = Issue.objects.values_list('pk', flat = True)
-        data = paginated_collection_helper(request, issue_ids, reverse('api_issue'), 
+        data = self._paginated_collection_helper(request, issue_ids, reverse('api_issue'), 
             'api_issue_pk')
-        response = HttpResponse(simplejson.dumps(data), mimetype = 'text/plain; charset=utf-8') 
-        return response
+        return HttpResponse(simplejson.dumps(data), mimetype = 'text/plain; charset=utf-8')
         # text/html is here for debugging, should be application/javascript or application/json
 
-class IssueVoteCollection(Resource):
+class IssueVoteCollection(Collection):
     def GET(self, request, pk, *args, **kwargs):
         try:
             issue = Issue.objects.get(pk = pk)
@@ -151,14 +159,14 @@ class IssueVoteCollection(Resource):
             return HttpResponseNotFound()
         # Check wether a user is in a public office, if so => all votes are public
         vote_ids = Vote.objects.filter(issue = issue, keep_private = False, is_archived = False).values_list('pk', flat = True)
-        data = paginated_collection_helper(request, vote_ids, reverse('api_issue_pk_vote', args =[pk]), 'api_vote_pk')
+        data = self._paginated_collection_helper(request, vote_ids, reverse('api_issue_pk_vote', args =[pk]), 'api_vote_pk')
         return HttpResponse(simplejson.dumps(data), mimetype = 'text/html; charset=utf-8')
 
 
-class VoteCollection(Resource):
+class VoteCollection(Collection):
     def GET(self, request):
         object_ids = Vote.objects.values_list('pk', flat = True) 
-        data = paginated_collection_helper(request, object_ids, reverse('api_vote'),
+        data = self._paginated_collection_helper(request, object_ids, reverse('api_vote'),
             'api_vote_pk')
         return HttpResponse(simplejson.dumps(data), mimetype = 'text/html; charset=utf-8') 
             
@@ -177,10 +185,10 @@ class VoteResource(Resource):
         }
         return HttpResponse(simplejson.dumps(data, ensure_ascii = False), mimetype = 'text/html; charset=utf-8')
 
-class UserCollection(Resource):
+class UserCollection(Collection):
     def GET(self, request, *args, **kwargs):
         object_ids = User.objects.values_list('pk', flat = True)
-        data = paginated_collection_helper(request, object_ids, reverse('api_user'),
+        data = self._paginated_collection_helper(request, object_ids, reverse('api_user'),
             'api_user_pk')
         return HttpResponse(simplejson.dumps(data), mimetype = 'text/html; charset=utf-8') 
         
