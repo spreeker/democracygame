@@ -12,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
 
-from gamelogic.models import Issue, IssueBody, Vote, IssueTag, TaggedIssue
+from gamelogic.models import Issue, IssueBody, Vote, TaggedIssue, Tag
 from gamelogic import actions
 from forms import IssueCollectionForm
 
@@ -185,21 +185,17 @@ class IssueTagCollection(Collection):
             issue = Issue.objects.get(pk = pk)
         except Issue.DoesNotExist:
             return HttpResponseNotFound()
-        # TODO look at the way the IssueTag objects are found, see wether that
+        # TODO look at the way the Tag objects are found, see wether that
         # can be done more cleanly (/better /faster). Probably through some 
         # custom SQL ... (in gamelogic.models ).
-        print issue
-        print list(TaggedIssue.objects.filter(issue = issue))
-        print list(IssueTag.objects.get_for_issue(issue))
-        tag_ids = IssueTag.objects.get_for_issue(issue, 100).values_list('pk', flat = True)
-        print tag_ids
+        tag_ids = Tag.objects.get_for_issue(issue, 100).values_list('pk', flat = True)
         data = self._paginated_collection_helper(request, tag_ids, reverse('api_issue_pk_tag', args = [pk]), 'api_tag_pk')
         return HttpResponse(simplejson.dumps(data), mimetype = 'text/html; charset=utf-8')
 
 class TagResource(Resource):
     def GET(self, request, pk, *args, **kwargs):
         try:
-            tag = IssueTag.objects.get(pk = pk)
+            tag = Tag.objects.get(pk = pk)
         except:
             return HttpResponseNotFound()
         data = {
