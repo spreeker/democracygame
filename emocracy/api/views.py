@@ -12,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
 
-from gamelogic.models import Issue, IssueBody, Vote
+from gamelogic.models import Issue, IssueBody, Vote, IssueTag, TaggedIssue
 from gamelogic import actions
 from forms import IssueCollectionForm
 
@@ -115,8 +115,8 @@ class IssueResource(Resource):
         
 class IssueCollection(Collection):
     def _sort_order_helper(self, request):
-        """Helper function that checks the HTTP GET data for sort_order this 
-        collection URI."""
+        """Helper function that checks the HTTP GET parameters for sort_order 
+        this collection URI."""
         
         order_choices = ["votes", "score", "time_stamp", "hotness"]
         default_sort_order = "time_stamp"
@@ -176,12 +176,40 @@ class IssueVoteCollection(Collection):
             return HttpResponseNotFound()
         # Check wether a user is in a public office, if so => all votes are public
         vote_ids = Vote.objects.filter(issue = issue, keep_private = False, is_archived = False).values_list('pk', flat = True)
-        data = self._paginated_collection_helper(request, vote_ids, reverse('api_issue_pk_vote', args =[pk]), 'api_vote_pk')
+        data = self._paginated_collection_helper(request, vote_ids, reverse('api_issue_pk_vote', args = [pk]), 'api_vote_pk')
         return HttpResponse(simplejson.dumps(data), mimetype = 'text/html; charset=utf-8')
 
+class IssueTagCollection(Collection):
+    def GET(self, request, pk, *args, **kwargs):
+        try:
+            issue = Issue.objects.get(pk = pk)
+        except Issue.DoesNotExist:
+            return HttpResponseNotFound()
+        # TODO look at the way the IssueTag objects are found, see wether that
+        # can be done more cleanly (/better /faster). Probably through some 
+        # custom SQL ... (in gamelogic.models ).
+        print issue
+        print list(TaggedIssue.objects.filter(issue = issue))
+        print list(IssueTag.objects.get_for_issue(issue))
+        tag_ids = IssueTag.objects.get_for_issue(issue, 100).values_list('pk', flat = True)
+        print tag_ids
+        data = self._paginated_collection_helper(request, tag_ids, reverse('api_issue_pk_tag', args = [pk]), 'api_tag_pk')
+        return HttpResponse(simplejson.dumps(data), mimetype = 'text/html; charset=utf-8')
+
+class TagResource(Resource):
+    def GET(self, request, pk, *args, **kwargs):
+        try:
+            tag = IssueTag.objects.get(pk = pk)
+        except:
+            return HttpResponseNotFound()
+        data = {
+            'tagname' : tag.name,
+            'count' : tag.count,
+        }
+        return HttpResponse(simplejson.dumps(data), mimetype = 'text/html; charset=utf-8')
 
 class VoteCollection(Collection):
-    def GET(self, request):
+    def GET(self, request, *args, **kwargs):
         object_ids = Vote.objects.values_list('pk', flat = True) 
         data = self._paginated_collection_helper(request, object_ids, reverse('api_vote'),
             'api_vote_pk')
