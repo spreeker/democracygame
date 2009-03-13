@@ -123,7 +123,7 @@ class IssueCollection(Collection):
         try:
             sort_order = request.GET["sort_order"]
         except KeyError:
-            sort_order = default_sort_order        
+            sort_order = default_sort_order
         else:
             if not sort_order in order_choices:
                 sort_order = default_sort_order
@@ -150,10 +150,7 @@ class IssueCollection(Collection):
                 # embed a pointer to the newly created resource.
                 data = {'resource' :  u'http://' + request.META['HTTP_HOST'] + reverse('api_issue_pk', args = [new_issue.pk]),}
                 return HttpResponseCreated(simplejson.dumps(data, ensure_ascii = False), mimetype = 'text/html; charset=utf-8')
-            else:
-                return HttpReponseBadRequest()
-        else:
-            return HttpResponseBadRequest()
+        return HttpResponseBadRequest()
         
     
     def GET(self, request, *args, **kwargs):
