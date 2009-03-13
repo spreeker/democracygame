@@ -1,0 +1,69 @@
+{% extends "web/index.html" %}
+{% load i18n %}
+{% comment %}
+This template is used by the issue detail view and the polling view that
+also only shows 1 issue at a time.
+{% endcomment %}
+
+
+{% block content %}
+<script type="text/javascript" src="/media/ajaxvote.js"></script>
+{% if user.is_authenticated %}
+<script type="text/javascript" src="/media/ajaxtag.js"></script>
+{% endif %}
+<h2>{{page_title}}</h2>
+<div class="issue_block">
+    {% include "web/issue_sidebar.html" %}
+    {% with issue.payload as issue %}
+    	{% include "web/issue_body.html" %}
+	{% endwith %}
+</div>
+
+<div style="margin-top:1em;" id="voteform_{{issue.pk}}" class="voteform_target system">
+	    {% if voteform %}
+        <h4>{% trans "Vote on this issue" %}</h4>
+        <form action="{{clean_request_path_for_form|safe}}" method="POST">
+        <label for="id_vote">{% trans "Vote" %} : </label>{{voteform.vote}}
+        <label for="id_keep_private">{% trans "Keep private" %} : </label>{{voteform.keep_private}}
+        <input type='submit' value='submit' />
+        </form>
+    {% endif %}
+    
+    {% if voteblankform %}
+        <h4>{% trans "Vote on this issue" %}</h4>
+        <form action="{{clean_request_path_for_form|safe}}" method="POST">
+        <label for="id_motivation">{% trans "Motivation" %} : </label>{{voteblankform.motivation}}
+        <label for="id_keep_private">{% trans "Keep private" %} : </label>{{voteblankform.keep_private}}
+        <input type='submit' value='submit' />
+        </form>
+    {% endif %}
+    
+    {% if tagform %}{% if user.is_authenticated %}
+        <h4>{% trans "Tag this issue" %}</h4>
+        <form action="{{clean_request_path_for_form|safe}}" method="POST">
+        <label for="id_popular_tags"> {% trans "Popular tags" %} : </label>{{tagform.popular_tags}}
+        <label for="id_tags"> {% trans "other tag" %} : </label>{{tagform.tags}}
+        <input type="submit" value="submit" />
+        {% if tagform.errors %}
+        <h4>{% trans "Errors" %}:</h4>
+        {{tagform.non_field_errors }}
+        {% endif %}
+    {% endif %}{% endif %}
+</div>
+
+{% if poll_pk %}
+    <div class="system" style="clear:both;margin:1em 0em 1em 0em">
+        {% if current_page.has_previous %}
+        <a href="?page={{current_page.previous_page_number}}">{% trans "previous" %}</a>
+        {% endif %}
+        {% blocktrans with current_page.number as N and numpages as numpages %}
+        question {{N}} of {{num_pages}}
+        {% endblocktrans %}
+        {% if current_page.has_next %}
+        <a href="?page={{current_page.next_page_number}}">{% trans "next" %}</a>
+        {% else %}
+        <a href="{% url poll_result poll_pk %}">{% trans "show results" %}</a>
+        {% endif %}
+    </div>
+{% endif %}
+{% endblock %}

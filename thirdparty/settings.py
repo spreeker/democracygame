@@ -1,5 +1,6 @@
 # Django settings for thirdparty project.
 
+import logging
 import os
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
@@ -25,7 +26,7 @@ DATABASE_PORT = ''             # Set to empty string for default. Not used with 
 # although not all choices may be available on all operating systems.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'Europe/Amsterdam'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -49,7 +50,7 @@ MEDIA_URL = ''
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = '/media/'
+ADMIN_MEDIA_PREFIX = '/admin/media/'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'iwkgrl8-xd&)jig$_#7du+uj3lrx-*ki-yizt59yqv10&ojnij'
@@ -76,6 +77,14 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'templates')
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.request',
+)
+
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -83,3 +92,19 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'thirdparty.web',
 )
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+
+# loggin setup:
+# (see: http://simonwillison.net/2008/May/22/debugging/ )
+# and python docs
+
+LOG_FILE_NAME = os.path.join(PROJECT_PATH, "thirdparty_log.txt")
+
+logging.basicConfig(
+    level = logging.INFO,
+    format = '%(asctime)s %(levelname)s %(message)s',
+    filename = LOG_FILE_NAME,
+)
+
