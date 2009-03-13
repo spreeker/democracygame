@@ -109,10 +109,10 @@ class Issue(models.Model):
     def tag(self, user, tag_string):
         # Get the tag object and if it does not exist yet, create it.
         try:
-            tag = IssueTag.objects.get(name = tag_string)
+            tag = Tag.objects.get(name = tag_string)
             tag.count += 1
-        except IssueTag.DoesNotExist:
-            tag = IssueTag.objects.create(
+        except Tag.DoesNotExist:
+            tag = Tag.objects.create(
                 name = tag_string,
                 first_suggested_by = user,
                 count = 1
@@ -206,10 +206,14 @@ class Motion(models.Model):
 # Emocracy are Issues/stuff you can vote on - so there is no need to user the
 # generic foreign key facilities in Django
 
-# Possible way to speed up get_for_issue: have a IssueTagField on an Issue
+# TODO look at the way the Tag objects are found, see wether that
+# can be done more cleanly (/better /faster). Probably through some 
+# custom SQL ...
+# Possible way to speed up get_for_issue: have a TagField on an Issue
 # (that would get rid of the TaggedIssue query).
 
-class IssueTagManager(models.Manager):
+
+class TagManager(models.Manager):
     def get_for_issue(self, issue, max_num = 10):        
         tag_ids = TaggedIssue.objects.filter(issue = issue).values_list('tag', flat = True)
         return self.filter(pk__in = tag_ids).filter(visible = True).distinct().order_by('count').reverse()[:max_num]
@@ -217,14 +221,14 @@ class IssueTagManager(models.Manager):
         return self.all().order_by('count').reverse()[:max_num]
         
 
-class IssueTag(models.Model):
+class Tag(models.Model):
     """This is a tag, a """
     name = models.CharField(max_length = 50, unique = True)
     first_suggested_by = models.ForeignKey(User, null = True)
     points_awarded = models.BooleanField(default = False)
     visible = models.BooleanField(default = False)
     count = models.IntegerField(default = 0) # denormalized ... 
-    objects = IssueTagManager()
+    objects = TagManager()
     
     def __unicode__(self):
         return self.name
@@ -236,5 +240,5 @@ class IssueTag(models.Model):
     
 class TaggedIssue(models.Model):
     issue = models.ForeignKey(Issue)
-    tag = models.ForeignKey(IssueTag)
+    tag = models.ForeignKey(Tag)
     user = models.ForeignKey(User)

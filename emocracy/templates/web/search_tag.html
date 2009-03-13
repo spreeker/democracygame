@@ -8,7 +8,7 @@
 {% if current_page.object_list %}
 <ul>
     {% for tag in current_page.object_list %}
-    <li><a href="{% url issue_list_tag tag.pk %}">{{tag.name}}</a></li>
+    <li><a href="{% url web_issue_list_tag tag.pk %}">{{tag.name}}</a></li>
     {% endfor %}
 </ul>
 {% else %}
