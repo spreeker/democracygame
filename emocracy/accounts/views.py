@@ -76,7 +76,7 @@ def migrate_votes(user, dict):
     through the web interface and upon registration copies them to the Emocracy
     database.
     """
-    print dict
+	#print dict
     userprofile = user.get_profile()
     for poll_pk, vote in dict.items():
         try:
