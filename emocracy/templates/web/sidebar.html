@@ -16,11 +16,11 @@ TODO : Create a translated block for the logged in version of the sidebar.
 		You voted blank {{userprofile.total_blank}} times.<br /><br />
 		{% endif %}
 		
-		<a href="{% url issue_list %}">{% trans "all issues" %}</a><br />
-		<a href="{% url issues_for_user user.username %}">{% trans "my issues" %}</a><br />
-		<a href="{% url issue_propose %}">{% trans "propose issue" %}</a><br /><br />
-		<a href="{% url votes_for_user user.username %}">{% trans "my votes" %}</a><br /><br />
-		<a href="{% url poll_list %}">{% trans "polls" %}</a><br /><br />
+		<a href="{% url web_issue_list %}">{% trans "all issues" %}</a><br />
+		<a href="{% url web_issues_for_user user.username %}">{% trans "my issues" %}</a><br />
+		<a href="{% url web_issue_propose %}">{% trans "propose issue" %}</a><br /><br />
+		<a href="{% url web_votes_for_user user.username %}">{% trans "my votes" %}</a><br /><br />
+		<a href="{% url web_poll_list %}">{% trans "polls" %}</a><br /><br />
 		<a href="{% url userprofile user.username %}">{% trans "my profile" %}</a><br />
 		<a href="{% url logout %}">{% trans "log out" %}</a> 
 		</p>
@@ -33,8 +33,8 @@ TODO : Create a translated block for the logged in version of the sidebar.
 			a new account or you can <a href="{% url login %}">log in</a>.</p>
 			<p>Anonymous users can still vote on issues.</p>
 			<span class="system">
-				<a href="{% url issue_list %}">all issues</a><br />
-				<a href="{% url poll_list %}">polls</a><br /><br />
+				<a href="{% url web_issue_list %}">all issues</a><br />
+				<a href="{% url web_poll_list %}">polls</a><br /><br />
 			</span>
 		</div>
     {% endifequal %}
@@ -45,8 +45,8 @@ TODO : Create a translated block for the logged in version of the sidebar.
 			of als je al een account hebt kun je <a href="{% url login %}">inloggen</a>.</p>
 			<p>Als anonimus kun je nog steeds stemmen.</p>
 			<span class="system">
-				<a href="{% url issue_list %}">all issues</a><br />
-				<a href="{% url poll_list %}">polls</a><br /><br />
+				<a href="{% url web_issue_list %}">all issues</a><br />
+				<a href="{% url web_poll_list %}">polls</a><br /><br />
 			</span>
 		</div>
     {% endifequal %}

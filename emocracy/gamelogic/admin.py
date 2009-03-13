@@ -1,12 +1,12 @@
 # by Thijs Coenen  for the Emocracy project
 from django.contrib import admin
 
-from models import Mandate, IssueTag, TaggedIssue
+from models import Mandate, Tag, TaggedIssue
 from models import Issue, LawProposal, Motion, IssueBody, IssueSet
 
 
 admin.site.register(Mandate)
-admin.site.register(IssueTag)
+admin.site.register(Tag)
 admin.site.register(TaggedIssue)
 
 admin.site.register(IssueSet)

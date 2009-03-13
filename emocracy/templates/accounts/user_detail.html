@@ -14,7 +14,7 @@ No url given.
 {% endif %}
 
 <h3 style="font-family:serif;position:relative;right:1em">Details for {{user_to_show.username}}</h3>
-<a href="{% url issues_for_user user_to_show.username %}">Show {{user_to_show.username}}'s issues</a><br />
-<a href="{% url votes_for_user user_to_show.username %}">Show {{user_to_show.username}}'s votes</a><br />
+<a href="{% url web_issues_for_user user_to_show.username %}">Show {{user_to_show.username}}'s issues</a><br />
+<a href="{% url web_votes_for_user user_to_show.username %}">Show {{user_to_show.username}}'s votes</a><br />
 </div>
 {% endblock %}

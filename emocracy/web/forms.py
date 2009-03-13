@@ -1,5 +1,5 @@
 # by Thijs Coenen for the Emocracy project october 2008
-from emocracy.gamelogic.models import blank_votes, blank_votes, IssueTag, source_types, normal_votes
+from emocracy.gamelogic.models import blank_votes, blank_votes, Tag, source_types, normal_votes
 
 from django import forms
 from django.forms import ModelForm
@@ -28,8 +28,8 @@ class TagForm(forms.Form):
     tags = forms.CharField(max_length = 50)
     issue_no = forms.IntegerField(widget = forms.HiddenInput())
 
-def issuetag_selection_helper():
-    qs = IssueTag.objects.get_popular(10)
+def tag_selection_helper():
+    qs = Tag.objects.get_popular(10)
     l = [(u'', u'--------')]
     l.extend([(unicode(x), unicode(x)) for x in qs]) # TODO make HTML safe! XXX
     return l
@@ -42,7 +42,7 @@ class TagForm2(forms.Form):
         """Initializes form instances, is needed to be able to set the popular
         tags field dynamically (on a per instance basis)."""
         super(TagForm2, self).__init__(*args, **kwargs)
-        self.fields['popular_tags'] = forms.ChoiceField(choices = issuetag_selection_helper(), required=False)
+        self.fields['popular_tags'] = forms.ChoiceField(choices = tag_selection_helper(), required=False)
     
     def clean(self):
         cleaned_data = self.cleaned_data
