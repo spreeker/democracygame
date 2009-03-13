@@ -123,7 +123,7 @@ class IssueCollection(Collection):
         try:
             sort_order = request.GET["sort_order"]
         except KeyError:
-            sort_order = default_sort_order        
+            sort_order = default_sort_order
         else:
             if not sort_order in order_choices:
                 sort_order = default_sort_order
