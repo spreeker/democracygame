@@ -82,8 +82,9 @@ of now not all resources have been defined yet.
                     \item{\texttt{200}
                     \begin{itemize}
                         \item{Request parameters encoded as GET parameters. 
-                        \texttt{page} for the page of results and \texttt{sort\_order}
-                        for the ordering of the returned issues.}
+                        \texttt{page} for the page of results. \texttt{sort\_order}
+                        for the ordering of the returned issues possible values are
+                        \texttt{time\_stamp}, \texttt{votes}, \texttt{score} or \texttt{hotness}.}
                         \item{Response data are a JSON encoded paginated list of 
                         resource URIs (\texttt{resources}) and the URIs of the 
                         previous and next page (\texttt{previous} and \texttt{next}
@@ -145,7 +146,7 @@ of now not all resources have been defined yet.
     \item{\textsl{implemented by} : \texttt{api.views.IssueTagCollection}}
     \item{\textsl{http methods} :
         \begin{itemize}
-            \item{\texttt{GET} : Tags for issue with primary key \textsf{pk}
+            \item{\texttt{GET} : 100 most popular tags for issue with primary key \textsf{pk}
                 \begin{itemize}
                     \item{\texttt{404}}
                     \item{\texttt{200}\\

@@ -13,7 +13,7 @@ to remove the duplication that is inside of the if show_more_info_link block.
                 Meaning this sidebar is included from view with several issues
                 , do not add page=.. to the request parameters.
                 {% endcomment %}
-                <a href="{% url issue_detail issue.pk %}">{% trans "more information" %}</a><br />
+                <a href="{% url web_issue_detail issue.pk %}">{% trans "more information" %}</a><br />
         {% else %}
                 {% comment %}
                 Meaning this sidebar is in a view showing only one issue if
@@ -34,6 +34,6 @@ to remove the duplication that is inside of the if show_more_info_link block.
         {% trans "votes" %} : <span id="votes_{{issue.pk}}">{{issue.votes}}</span> <br /><br />
         Tags :
         {% for tag in tags %}
-        <a href="{% url issue_list_tag tag.pk %}">{{tag}}</a>
+        <a href="{% url web_issue_list_tag tag.pk %}">{{tag}}</a>
         {% endfor %}
 </div>
