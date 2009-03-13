@@ -1,3 +1,9 @@
+"""
+This module contains Django forms.Form definitions that are used to validate the
+incoming post data sent to the API. By reusing the forms from Django it is not
+necessary to build some custom post data validation.
+"""
+
 from django import forms
 from django.forms import ModelForm
 from django.utils.translation import ugettext as _
