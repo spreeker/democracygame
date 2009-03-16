@@ -17,6 +17,9 @@ from gamelogic import actions
 from forms import IssueCollectionForm
 
 
+# BIG TODO ITEM, only send http 200 (OK) if needed and embed the http status in
+# the message body. This must be done for flash / javascript apps running inside
+# of a browser. See the Twitter API suppress_reponse_codes option.
 
 # Useful information related to REST API design / implementation
 
@@ -176,6 +179,25 @@ class IssueVoteCollection(Collection):
         data = self._paginated_collection_helper(request, vote_ids, reverse('api_issue_pk_vote', args = [pk]), 'api_vote_pk')
         return HttpResponse(simplejson.dumps(data), mimetype = 'text/html; charset=utf-8')
 
+class IssueVoteUserResource(Resource):
+    def GET(self, request, issue_pk, user_pk, *args, **kwargs):
+        try:
+            issue = Issue.objects.get(pk = issue_pk)
+        except Issue.DoesNotExist:
+            return HttpResponseNotFound()
+        try:
+            user = User.objects.get(pk = user_pk)
+        except User.DoesNotExist:
+            return HttpResponseNotFound()
+        vote = Vote.objects.filter(owner = user, issue = issue, is_archived = False).order_by('time_stamp').reverse()
+        if vote:
+            data = {
+                'resource' : u'http://' + request.META['HTTP_HOST'] + reverse('api_vote_pk', args = [vote.pk]),
+            }
+            return HttpResponse(simplejson.dumps(data), mimetype = 'text/html; charset=utf-8')
+        else:
+            return HttpResponseNotFound()
+
 class IssueTagCollection(Collection):
     def GET(self, request, pk, *args, **kwargs):
         try:
@@ -188,6 +210,7 @@ class IssueTagCollection(Collection):
         tag_ids = Tag.objects.get_for_issue(issue, 100).values_list('pk', flat = True)
         data = self._paginated_collection_helper(request, tag_ids, reverse('api_issue_pk_tag', args = [pk]), 'api_tag_pk')
         return HttpResponse(simplejson.dumps(data), mimetype = 'text/html; charset=utf-8')
+
 
 class TagResource(Resource):
     def GET(self, request, pk, *args, **kwargs):
