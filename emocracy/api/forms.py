@@ -7,7 +7,9 @@ necessary to build some custom post data validation.
 from django import forms
 from django.forms import ModelForm
 from django.utils.translation import ugettext as _
+from django.contrib.auth.models import User
 from gamelogic.models import source_types, possible_votes, normal_votes
+from gamelogic.models import Issue
 
 class IssueCollectionForm(forms.Form):
     # TODO : see wether this can done more cleanly (as there is some duplication
@@ -26,5 +28,13 @@ class IssueCollectionForm(forms.Form):
             raise forms.ValidationError('vote_int not valid')
         return data
         
-    
-    
+class IssueVoteCollectionForm(forms.Form):
+    vote_int = forms.IntegerField()
+
+    def clean_vote_int(self):
+        """Verify that we are dealing with a valid for or against vote. """
+        allowed_values = [x[0] for x in normal_votes]
+        data = self.cleaned_data['vote_int']
+        if not data in allowed_values:
+            raise forms.ValidationError('vote_int not valid')
+        return data
