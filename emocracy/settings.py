@@ -9,9 +9,11 @@
 import logging
 import os
 
+import sys
 
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
+sys.path.append(os.path.split(PROJECT_PATH)[0] + '/external_apps/' ) 
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -117,7 +119,6 @@ INSTALLED_APPS = (
     'emocracy.accounts',
     'emocracy.api',
     'emocracy.web',
-
 )
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
