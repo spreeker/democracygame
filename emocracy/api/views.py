@@ -14,12 +14,14 @@ from django.core.urlresolvers import reverse
 
 from gamelogic.models import Issue, IssueBody, Vote, TaggedIssue, Tag
 from gamelogic import actions
-from forms import IssueCollectionForm
+from forms import IssueCollectionForm, IssueVoteCollectionForm
 
 
 # BIG TODO ITEM, only send http 200 (OK) if needed and embed the http status in
 # the message body. This must be done for flash / javascript apps running inside
 # of a browser. See the Twitter API suppress_reponse_codes option.
+
+# TODO research how to deal with language issues in the API.
 
 # Useful information related to REST API design / implementation
 
@@ -178,6 +180,30 @@ class IssueVoteCollection(Collection):
         vote_ids = Vote.objects.filter(issue = issue, keep_private = False, is_archived = False).values_list('pk', flat = True)
         data = self._paginated_collection_helper(request, vote_ids, reverse('api_issue_pk_vote', args = [pk]), 'api_vote_pk')
         return HttpResponse(simplejson.dumps(data), mimetype = 'text/html; charset=utf-8')
+
+    def POST(self, request, pk, *args, **kwargs):
+        try:
+            issue = Issue.objects.get(pk = pk)
+        except Issue.DoesNotExist:
+            return HttpResponseNotFound()
+        form = IssueVoteCollectionForm(request.POST)
+        # TODO deal with authentication correctly (that is through Oauth)
+        if not reqeust.user.is_authenticated():
+            return HttpResponseNotAllowed()
+        if form.is_valid():
+            new_vote = actions.vote(
+                request.user, 
+                issue,
+                form.cleaned_data['vote_int'],
+                False
+                )
+            data = {
+                'resource' : 'http://' + request.META['HTTP_HOST'] + reverse('api_vote_pk', args = [new_vote.pk])
+            }
+            return HttpResponseCreated(simplejson.dumps(data), mimetype = 'text/html; charset=utf-8')
+        return HttpResponseBadRequest()
+        
+        
 
 class IssueVoteUserResource(Resource):
     def GET(self, request, issue_pk, user_pk, *args, **kwargs):
