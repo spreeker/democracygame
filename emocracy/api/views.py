@@ -192,7 +192,7 @@ class IssueVoteUserResource(Resource):
         vote = Vote.objects.filter(owner = user, issue = issue, is_archived = False).order_by('time_stamp').reverse()
         if vote:
             data = {
-                'resource' : u'http://' + request.META['HTTP_HOST'] + reverse('api_vote_pk', args = [vote.pk]),
+                'resource' : u'http://' + request.META['HTTP_HOST'] + reverse('api_vote_pk', args = [vote[0].pk]),
             }
             return HttpResponse(simplejson.dumps(data), mimetype = 'text/html; charset=utf-8')
         else:
