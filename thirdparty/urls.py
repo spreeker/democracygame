@@ -20,11 +20,11 @@ urlpatterns = patterns('',
 
     # Development stuff, media served by django itself. Remove for a real
     # Emocracy installation (and have Apache handle media).
+    (r'^', include('thirdparty.web.urls')),
     (r'^media/(.*)', 'django.views.static.serve', {
         'document_root' : os.path.join(settings.PROJECT_PATH, 'media')
     }),
 
     # Uncomment the next line to enable the admin:
     # (r'^admin/(.*)', admin.site.root),
-    (r'^issues/', include('thirdparty.web.urls')),
 )
