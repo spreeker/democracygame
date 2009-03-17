@@ -1,8 +1,29 @@
-<html>
-<head>
-<title>Issue List</title>
-</head>
-<body>
-{{issue_data}}
-</body>
-</html>
+{% comment %}
+
+Author: Conrado Buhrer <conrado@buhrer.net>
+Date: 16th of March 2009
+Copyright: Emocracy Project - http://emocracy.nl
+
+Description:
+
+Third Party Application example.
+
+Application top level menu
+
+{% endcomment %}
+{% include "header.html" %}
+<div id="user">
+  <div style="padding: 2em; background-color: rgb(112, 147, 151); color: rgb(51, 51, 51); background-image: url(/media/iphone/bg.gif);" class="view" id="issue">
+    <div id="issuedetails">
+      <a href="/user/{{user.id}}/"><img src="/media/johnnybravo_1_normal.jpg"></a><strong>{{ title }}</strong>
+      <div id="user_about">
+        <strong>Name: </strong><a href="/user/{{user.id}}/">{{user.username}}</a><br/>
+        <strong>Source: </strong><a href="{{url}}">{{url}}</a><br/>
+        <strong>Posted: </strong>{{time_stamp}}</a><br/>
+      </div>
+
+      <div class="even">{{ body }}</div>
+    </div>
+  </div>
+</div>
+{% include "footer.html" %}
