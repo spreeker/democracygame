@@ -8,9 +8,7 @@
 
 import logging
 import os
-
 import sys
-
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
 sys.path.append(os.path.split(PROJECT_PATH)[0] + '/external_apps/' ) 
@@ -101,7 +99,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.media',
     'django.core.context_processors.request',
     'emocracy.web.context_processors.profile',
-    
 )
 
 LOGIN_REDIRECT_URL = '/web/issue/'
@@ -119,6 +116,7 @@ INSTALLED_APPS = (
     'emocracy.accounts',
     'emocracy.api',
     'emocracy.web',
+	'registration'
 )
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -134,3 +132,10 @@ logging.basicConfig(
     format = '%(asctime)s %(levelname)s %(message)s',
     filename = LOG_FILE_NAME,
 )
+
+ACCOUNT_ACTIVATION_DAYS = 1
+
+try :
+	from settings_local import *
+except exception:
+	print "create your local settings_local.py settings file with password sensitive information ect"
