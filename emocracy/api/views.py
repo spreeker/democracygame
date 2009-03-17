@@ -110,7 +110,7 @@ class IssueResource(Resource):
         data = {
             'title' : issue.title,
             'body' : issue.payload.body,
-            'owner' :  u'http://' + request.META['HTTP_HOST'] + u"/api/users/" + unicode(issue.owner_id) + "/", # convert to link to User Resource
+            'owner' :  u'http://' + request.META['HTTP_HOST'] + reverse('api_user_pk', args = [issue.owner_id]), # convert to link to User Resource
             'source_type' : issue.payload.source_type,
             'url' : issue.payload.url,
             'time_stamp' : unicode(issue.time_stamp),

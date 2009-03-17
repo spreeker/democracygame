@@ -117,6 +117,7 @@ INSTALLED_APPS = (
     'emocracy.accounts',
     'emocracy.api',
     'emocracy.web',
+    'oauth_provider',
 
 )
 
