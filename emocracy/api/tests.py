@@ -3,6 +3,7 @@ from django.test.client import Client
 
 import time
 from oauth_provider.models import Consumer, Resource, Token
+import oauth
 
 #c = Client()
 #response = c.get("http://127.0.0.1:8000/api/oauth_test/")
@@ -33,6 +34,7 @@ class AuthTest(unittest.TestCase):
         }
         c = Client()
         response = c.get("/oauth/request_token/", p)
+        
         print Token.objects.all()
         self.assertEquals(int(response.status_code), 200)
         print response.status_code 
