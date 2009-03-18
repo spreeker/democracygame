@@ -38,17 +38,26 @@ def issues_list_popular(request):
     req = urllib2.Request(EMOCRACY_API_SERVER+"issues/?page=%s" %page)
     response = urllib2.urlopen(req)
     data = response.read()
+    print data
     extra_context = json.loads( data )
+    print extra_context
     if extra_context.has_key('next'):
+        print 'next: ' + extra_context['next']
         next = extra_context['next']
         next = next.split('/')
         next = next[-1:]
         extra_context['next'] = next[0]
+    else:
+        extra_context['next'] = ''
     if extra_context.has_key('previous'):
+        print 'previous: ' + extra_context['previous']
         previous = extra_context['previous']
         previous = previous.split('/')
         previous = previous[-1:]
         extra_context['previous'] = previous[0]
+    else:
+        extra_context['previous'] = ''
+    print extra_context
     fetch = []
     for resource in extra_context['resources']:
         issueid = resource.split('/')
