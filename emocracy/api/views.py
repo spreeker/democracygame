@@ -11,6 +11,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
+from oauth_provider.models import Resource, Consumer
+from oauth_provider.decorators import oauth_required
 
 from gamelogic.models import Issue, IssueBody, Vote, TaggedIssue, Tag
 from gamelogic import actions
@@ -77,6 +79,7 @@ class RESTCollection(RESTResource):
             current_page = paginator.page(page_no)
         except (EmptyPage, InvalidPage):
             current_page = paginator.page(paginator.num_pages)
+            page_no = paginator.num_pages
         return current_page, page_no
 
     def _paginated_collection_helper(self, request, object_ids, collection_base_URI, url_name_pk, paginate_by = 10):
@@ -293,3 +296,8 @@ class UserResource(RESTResource):
         }
         return HttpResponse(simplejson.dumps(data, ensure_ascii = False), mimetype = 'text/html; charset=utf-8')
         
+# ------------------------------------------------------------------------------
+
+@oauth_required
+def oauth_test(request):
+    return HttpResponse("It worked")
