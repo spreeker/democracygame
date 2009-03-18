@@ -102,7 +102,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     
 )
 
-LOGIN_REDIRECT_URL = '/web/issue/'
+LOGIN_REDIRECT_URL = '/web/issues/'
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -117,7 +117,7 @@ INSTALLED_APPS = (
     'emocracy.accounts',
     'emocracy.api',
     'emocracy.web',
-    'oauth_provider',
+    'oauth_provider',   
 
 )
 
@@ -134,3 +134,10 @@ logging.basicConfig(
     format = '%(asctime)s %(levelname)s %(message)s',
     filename = LOG_FILE_NAME,
 )
+
+# ------------------------------------------------------------------------------
+# django-oauth related stuff (see external_apps/oauth_provider)
+# http://code.welldev.org/django-oauth/wiki/Home
+
+#OAUTH_AUTHORIZE_VIEW = 'myapp.views.oauth_authorize'
+#OAUTH_REALM_KEY_NAME = 'http://emocracy.nl/api/'
