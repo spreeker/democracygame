@@ -77,6 +77,7 @@ class Collection(Resource):
             current_page = paginator.page(page_no)
         except (EmptyPage, InvalidPage):
             current_page = paginator.page(paginator.num_pages)
+            page_no = paginator.num_pages
         return current_page, page_no
 
     def _paginated_collection_helper(self, request, object_ids, collection_base_URI, url_name_pk, paginate_by = 10):
