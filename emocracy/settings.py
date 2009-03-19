@@ -1,16 +1,22 @@
 # Django settings for emocracy project.
-
-# This version is specific to an Emocracy install, as things stand this file is 
-# tailored to Thijs' computer. 
-# Current setup is that of an development server, that is: media server by 
-# Django, HTTP request handled by Django, site running on top of SQLite.
-# For media stuff look at the base urls.py.
-
 import logging
 import os
 import sys
 
+# Be sure to create a settings_local.py module with the following entries:
+# SECRET_KEY
+# etc ..
+try:
+    from settings_local import *
+except ImportError:
+    print "Create your local settings_local.py settings file with password sensitive information ect"
+    # Re-raise the import error. The server should not run!
+    raise 
+
+
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
+# Add the external dependencies of Emocracy to the python path. (The external
+# dependencies are included with the Emocracy source to ease deployment.)
 sys.path.append(os.path.split(PROJECT_PATH)[0] + '/external_apps/' ) 
 sys.path.append(os.path.split(PROJECT_PATH)[0] + '/external_libraries/' ) 
 
@@ -24,7 +30,6 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-#DATABASE_NAME = 'database.sqlite3'             # Or path to database file if using sqlite3.
 DATABASE_NAME = os.path.join(PROJECT_PATH, "database.sqlite3")
 
 DATABASE_USER = ''             # Not used with sqlite3.
@@ -63,9 +68,6 @@ MEDIA_URL = ''
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
 ADMIN_MEDIA_PREFIX = '/admin/media/'
-
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = 'SHOULD BE IN A SEPARATE SERVER SPECIFIC SETTINGS FILE'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -111,7 +113,6 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.admindocs',
-    'django.contrib.webdesign', # for lorem ipsum generator :)
     'django.contrib.sessions',
     'emocracy.gamelogic',
     'emocracy.profiles',
@@ -137,10 +138,6 @@ logging.basicConfig(
 
 ACCOUNT_ACTIVATION_DAYS = 1
 
-try :
-	from settings_local import *
-except exception:
-	print "create your local settings_local.py settings file with password sensitive information ect"
 # ------------------------------------------------------------------------------
 # django-oauth related stuff (see external_apps/oauth_provider)
 # http://code.welldev.org/django-oauth/wiki/Home
