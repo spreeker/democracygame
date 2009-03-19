@@ -1,0 +1,5 @@
+
+-What about issues in different languases? Turkish , Arabaic, English? Should we be able to filer those for a user?
+using i18n settings?
+
+-

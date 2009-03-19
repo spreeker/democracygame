@@ -29,8 +29,8 @@ TODO : Create a translated block for the logged in version of the sidebar.
     {% ifequal LANGUAGE_CODE "en-us" %}
 		<div class="sidebarblock">
 			<h3>Dear Anonymous</h3>
-			<p>You are not logged in. You can <a href="{% url register %}">register</a>
-			a new account or you can <a href="{% url login %}">log in</a>.</p>
+			<p>You are not logged in. You can <a href="{% url registration_register %}">register</a>
+			a new account or you can <a href="{% url auth_login %}">log in</a>.</p>
 			<p>Anonymous users can still vote on issues.</p>
 			<span class="system">
 				<a href="{% url web_issue_list %}">all issues</a><br />
@@ -41,8 +41,8 @@ TODO : Create a translated block for the logged in version of the sidebar.
     {% ifequal LANGUAGE_CODE "nl" %}    
 		<div class="sidebarblock">
 			<h3>Geachte anonimus</h3>
-			<p>Je bent niet ingelogd. Je kunt je <a href="{% url register %}">registeren</a>
-			of als je al een account hebt kun je <a href="{% url login %}">inloggen</a>.</p>
+			<p>Je bent niet ingelogd. Je kunt je <a href="{% url registration_register %}">registeren</a>
+			of als je al een account hebt kun je <a href="{% url auth_login %}">inloggen</a>.</p>
 			<p>Als anonimus kun je nog steeds stemmen.</p>
 			<span class="system">
 				<a href="{% url web_issue_list %}">all issues</a><br />
