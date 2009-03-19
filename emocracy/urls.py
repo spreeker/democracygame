@@ -25,6 +25,6 @@ urlpatterns = patterns('',
         'document_root' : os.path.join(settings.PROJECT_PATH, 'media')
     }),
 
-    (r'^accounts/', include('emocracy.accounts.urls')),
+    (r'^profile/', include('emocracy.profiles.urls')),
 #    (r'$', redirect_to, {'url' : '/web/issues/'}) # for demo purposes
 )
