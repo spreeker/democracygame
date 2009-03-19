@@ -101,7 +101,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'emocracy.web.context_processors.profile',
 )
 
-LOGIN_REDIRECT_URL = '/web/issue/'
+LOGIN_REDIRECT_URL = '/web/issues/'
 
 INSTALLED_APPS = (
     'django.contrib.auth',
