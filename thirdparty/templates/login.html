@@ -1,0 +1,54 @@
+{% comment %}
+
+Author: Conrado Buhrer <conrado@buhrer.net>
+Date: 16th of March 2009
+Copyright: Emocracy Project - http://emocracy.nl
+
+Description:
+
+Third Party Application example.
+
+Login Page
+
+{% endcomment %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <!-- <meta name="viewport" content="width = 320" />  -->
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; minimum-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+    <title>Emocracy</title>
+    <link href="/media/iphone/emocracy.css" media="screen" rel="stylesheet" type="text/css" />
+    
+    
+  </head>
+  
+  <body style="background:#000; height: 344px;">
+    
+    
+    <div id="login">
+  <h1></h1>
+  <form action="/login" method="post"><div style="margin:0;padding:0"><input name="authenticity_token" type="hidden" value="1" /></div>
+    <div id="form">
+      <div id="username_container">
+        <label style="margin-top:5px">Username:</label>
+        <input id="username" name="username" onfocus="scroll_to(this.parentNode, 5, 5)" type="text" />
+      </div>
+      <div id="password_container">
+        <label>Password:</label>
+        <input id="password" name="password" onfocus="scroll_to(this.parentNode, 5, 5)" type="password" />
+      </div>
+      <input name="commit" style="display:block; margin:10px auto 0; width:auto" type="submit" value="Login" />
+    </div>
+  </form>
+</div>
+
+<img src="/images/spinner.gif" height="1" width="1" />
+    
+    
+    
+    
+  </body>
+</html>

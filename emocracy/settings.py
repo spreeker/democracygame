@@ -117,6 +117,7 @@ INSTALLED_APPS = (
     'emocracy.api',
     'emocracy.web',
 	'registration'
+    'oauth_provider',   
 )
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -139,3 +140,9 @@ try :
 	from settings_local import *
 except exception:
 	print "create your local settings_local.py settings file with password sensitive information ect"
+# ------------------------------------------------------------------------------
+# django-oauth related stuff (see external_apps/oauth_provider)
+# http://code.welldev.org/django-oauth/wiki/Home
+
+#OAUTH_AUTHORIZE_VIEW = 'myapp.views.oauth_authorize'
+#OAUTH_REALM_KEY_NAME = 'http://emocracy.nl/api/'
