@@ -1,0 +1,26 @@
+{% comment %}
+
+Author: Conrado Buhrer <conrado@buhrer.net>
+Date: 16th of March 2009
+Copyright: Emocracy Project - http://emocracy.nl
+
+Description:
+
+Third Party Application example.
+
+Application top level menu
+
+{% endcomment %}
+{% include "header.html" %}
+<div id="views">
+  <div class="view" id="menu">
+    <ul>
+      <li><a href="/hot/"><img alt="Btn_footer_recent" src="/media/iphone/btn_footer_recent.png"> Hot Issues</a></li>
+      <li><a href="/pop/"><img alt="Btn_footer_update" src="/media/iphone/btn_footer_friends.png"> Popular Issues</a></li>
+      <li><a href="/new/"><img alt="Btn_footer_update" src="/media/iphone/btn_footer_left.png"> Newest Issues</a></li>
+      <li><a href="/add/"><img alt="Btn_footer_add" src="/media/iphone/btn_footer_add.png"> Add Issue</a></li>
+      <li><a href="mailto:info@emocracy.nl?subject=Emocracy%20Feedback">Feedback</a></li>
+    </ul>
+  </div>
+</div>
+{% include "menu_footer.html" %}
