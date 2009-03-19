@@ -5,21 +5,18 @@ from django.views.generic.simple import redirect_to
 from django.views.generic.simple import direct_to_template
 from django.contrib.auth import views as auth_views
 
-from registration.views import activate
+#from registration.views import activate
+from emocracy.accounts.views import activate
+from emocracy.accounts.views import userprofile_show
+from emocracy.accounts.views import change_description
+
 from registration.views import register
-
-#urlpatterns = patterns('',
-#    url(r'^register/$', 'emocracy.accounts.views.register_user', name = 'register'),
-#)
-
 
 urlpatterns = patterns('',
        # Activation keys get matched by \w+ instead of the more specific
        # [a-fA-F0-9]{40} because a bad activation key should still get to the view;
        # that way it can return a sensible "invalid key" message instead of a
        # confusing 404.
-	   #url(r'^register/$', 'emocracy.accounts.views.register_user', 
-       #	   name = 'register'),
        url(r'^activate/(?P<activation_key>\w+)/$',
            activate,
            name='registration_activate'),
@@ -30,7 +27,7 @@ urlpatterns = patterns('',
        url(r'^logout/$',
            auth_views.logout,
            {'template_name': 'accounts/logout.html'},
-           name='auth_logout'),
+           name='logout'),
        url(r'^password/change/$',
            auth_views.password_change,
            name='auth_password_change'),
@@ -57,4 +54,10 @@ urlpatterns = patterns('',
            direct_to_template,
            {'template': 'registration/registration_complete.html'},
            name='registration_complete'),
+       url(r'^userprofile/(?P<username>\w+)$',
+            userprofile_show,
+            name='userprofile',),
+       url(r'^userprofile/changedescription/$',
+            change_description,
+            name='change_description',),
        )

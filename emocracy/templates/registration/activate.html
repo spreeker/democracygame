@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block content %}
-	{% if accoutn %}
+	{% if account %}
 	{% blocktrans %}	
 	Welcome {{ account }} !
 
@@ -11,9 +11,13 @@
 	You had {{ expiration_days }} expiration days left
 
 	{% endblocktrans %}
-	{% else %}
-		{% trans Something went wrong. Your account is probably already active %}
+    {% else %}
+		{% trans "Something went wrong. Your account is probably already active" %}
+
 	{% endif %}
-	
+
+	{% if votes_saved %}
+        {% trans "Your previous anonymous votes have been saved to your profile!" %}
+    {% endif %}
 
 {% endblock %}
