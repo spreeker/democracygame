@@ -1,0 +1,28 @@
+{% comment %}
+
+Author: Conrado Buhrer <conrado@buhrer.net>
+Date: 16th of March 2009
+Copyright: Emocracy Project - http://emocracy.nl
+
+Description:
+
+Third Party Application example.
+
+Page footer with voting links.
+
+{% endcomment %}
+<div id="footer">
+  <ul>
+    <li>{% if previous %}<a href="{{ previous }}" id="previous_link"><img alt="Previous"
+    src="/media/iphone/btn_footer_left.png" /><br />Previous</a> {% endif %}
+    </li>
+    <li>
+    </li>
+    <li>
+    </li>
+    <li>{% if next %}<a href="{{ next }}" id="next_link"><img alt="Blank" src="/media/iphone/btn_footer_right.png" /><br />Next</a>{% endif %}
+    </li>
+  </ul>
+</div>
+</body>
+</html>

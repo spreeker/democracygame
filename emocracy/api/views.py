@@ -11,6 +11,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
+from oauth_provider.models import Resource, Consumer
+from oauth_provider.decorators import oauth_required
 
 from gamelogic.models import Issue, IssueBody, Vote, TaggedIssue, Tag
 from gamelogic import actions
@@ -49,7 +51,7 @@ class HttpResponseCreated(HttpResponse):
 http_verbs = ('GET', 'POST') # Not exhaustive! Just what Emocracy uses for now.
 nonalpha_re = re.compile('[^A-Z]')
 
-class Resource(object):
+class RESTResource(object):
     def __call__(self, request, *args, **kwargs):
         """Dispatch based on http method. Subclasses define methods with the 
         names of http methods that they handle."""
@@ -60,7 +62,7 @@ class Resource(object):
             return HttpResponseNotAllowed(allowed_methods)
         return getattr(self, method)(request, *args, **kwargs)
 
-class Collection(Resource):
+class RESTCollection(RESTResource):
     """This class can be used as the base class for REST API Collection views. 
     It provides a few helper methods to help with pagination and the like.
     Subclasses need to provide their own GET POST etc views."""
@@ -77,6 +79,7 @@ class Collection(Resource):
             current_page = paginator.page(page_no)
         except (EmptyPage, InvalidPage):
             current_page = paginator.page(paginator.num_pages)
+            page_no = paginator.num_pages
         return current_page, page_no
 
     def _paginated_collection_helper(self, request, object_ids, collection_base_URI, url_name_pk, paginate_by = 10):
@@ -100,7 +103,7 @@ class Collection(Resource):
 
 # ------------------------------------------------------------------------------
 
-class IssueResource(Resource):
+class IssueResource(RESTResource):
     # show issue detail
     def GET(self, request, pk, *args, **kwargs):
         try:
@@ -110,7 +113,7 @@ class IssueResource(Resource):
         data = {
             'title' : issue.title,
             'body' : issue.payload.body,
-            'owner' :  u'http://' + request.META['HTTP_HOST'] + u"/api/user/" + unicode(issue.owner_id) + "/", # convert to link to User Resource
+            'owner' :  u'http://' + request.META['HTTP_HOST'] + reverse('api_user_pk', args = [issue.owner_id]), # convert to link to User Resource
             'source_type' : issue.payload.source_type,
             'url' : issue.payload.url,
             'time_stamp' : unicode(issue.time_stamp),
@@ -118,7 +121,7 @@ class IssueResource(Resource):
         return HttpResponse(simplejson.dumps(data, ensure_ascii = False), mimetype = 'text/html; charset=utf-8')
         
         
-class IssueCollection(Collection):
+class IssueCollection(RESTCollection):
     def _sort_order_helper(self, request):
         """Helper function that checks the HTTP GET parameters for sort_order 
         this collection URI."""
@@ -170,7 +173,7 @@ class IssueCollection(Collection):
         return HttpResponse(simplejson.dumps(data), mimetype = 'text/plain; charset=utf-8')
         # text/html is here for debugging, should be application/javascript or application/json
 
-class IssueVoteCollection(Collection):
+class IssueVoteCollection(RESTCollection):
     def GET(self, request, pk, *args, **kwargs):
         try:
             issue = Issue.objects.get(pk = pk)
@@ -205,7 +208,7 @@ class IssueVoteCollection(Collection):
         
         
 
-class IssueVoteUserResource(Resource):
+class IssueVoteUserResource(RESTResource):
     def GET(self, request, issue_pk, user_pk, *args, **kwargs):
         try:
             issue = Issue.objects.get(pk = issue_pk)
@@ -224,7 +227,7 @@ class IssueVoteUserResource(Resource):
         else:
             return HttpResponseNotFound()
 
-class IssueTagCollection(Collection):
+class IssueTagCollection(RESTCollection):
     def GET(self, request, pk, *args, **kwargs):
         try:
             issue = Issue.objects.get(pk = pk)
@@ -238,7 +241,7 @@ class IssueTagCollection(Collection):
         return HttpResponse(simplejson.dumps(data), mimetype = 'text/html; charset=utf-8')
 
 
-class TagResource(Resource):
+class TagResource(RESTResource):
     def GET(self, request, pk, *args, **kwargs):
         try:
             tag = Tag.objects.get(pk = pk)
@@ -250,14 +253,14 @@ class TagResource(Resource):
         }
         return HttpResponse(simplejson.dumps(data), mimetype = 'text/html; charset=utf-8')
 
-class VoteCollection(Collection):
+class VoteCollection(RESTCollection):
     def GET(self, request, *args, **kwargs):
         object_ids = Vote.objects.values_list('pk', flat = True) 
         data = self._paginated_collection_helper(request, object_ids, reverse('api_vote'),
             'api_vote_pk')
         return HttpResponse(simplejson.dumps(data), mimetype = 'text/html; charset=utf-8') 
             
-class VoteResource(Resource):
+class VoteResource(RESTResource):
     def GET(self, request, pk, *args, **kwargs):
         try:
             vote = Vote.objects.get(pk = pk)
@@ -272,7 +275,7 @@ class VoteResource(Resource):
         }
         return HttpResponse(simplejson.dumps(data, ensure_ascii = False), mimetype = 'text/html; charset=utf-8')
 
-class UserCollection(Collection):
+class UserCollection(RESTCollection):
     def GET(self, request, *args, **kwargs):
         object_ids = User.objects.values_list('pk', flat = True)
         data = self._paginated_collection_helper(request, object_ids, reverse('api_user'),
@@ -280,7 +283,7 @@ class UserCollection(Collection):
         return HttpResponse(simplejson.dumps(data), mimetype = 'text/html; charset=utf-8') 
         
 
-class UserResource(Resource):
+class UserResource(RESTResource):
     def GET(self, request, pk, *args, **kwargs):
         try:
             user = User.objects.get(pk = pk)
@@ -293,3 +296,8 @@ class UserResource(Resource):
         }
         return HttpResponse(simplejson.dumps(data, ensure_ascii = False), mimetype = 'text/html; charset=utf-8')
         
+# ------------------------------------------------------------------------------
+
+@oauth_required
+def oauth_test(request):
+    return HttpResponse("It worked")

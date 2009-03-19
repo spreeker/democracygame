@@ -1,0 +1,28 @@
+{% comment %}
+
+Author: Conrado Buhrer <conrado@buhrer.net>
+Date: 16th of March 2009
+Copyright: Emocracy Project - http://emocracy.nl
+
+Description:
+
+Third Party Application example.
+
+view list, odd/even
+
+{% endcomment %}
+{% include "list_header.html" %}
+<div id="views">
+  <div class="view list" id="statuses">
+{% for issue in issues %}
+    <div class="{% cycle odd,even %}" id="issue{{issue.id}}">
+      <a href="/user/{{issue.userid}}/"><img class="avatar" src="/media/johnnybravo_1_normal.jpg"></a>
+      <p class="timestamp">{{issue.age}}</p>
+      <h1><a href="/user/{{issue.userid}}/">{{issue.user.username}}</a></h1>
+      <p><a href="/{{issue.id}}/">{{issue.title}}</a></p>
+      <div style="clear: both;"></div>
+    </div>
+{% endfor %}
+  </div>
+</div>
+{% include "list_footer.html" %}
