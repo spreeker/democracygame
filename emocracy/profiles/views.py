@@ -17,13 +17,11 @@ from django.contrib.auth.forms import PasswordResetForm
 from models import UserProfile
 from gamelogic.models import Issue
 
-#imports for activate view
+# Imports for activate view
 from registration.models import RegistrationProfile
 from django.conf import settings
 
 import datetime
-
-# TODO : see wether some of the custom code can be replaced with django-registration
 
 def create_userprofile(sender, **kwargs):
     """
@@ -146,9 +144,9 @@ def userprofile_show(request, username):
         'profile' : user.get_profile(),
     })
     if user == request.user:
-        return render_to_response('accounts/self_detail.html', context)
+        return render_to_response('profiles/self_detail.html', context)
     else:
-        return render_to_response('accounts/user_detail.html', context)
+        return render_to_response('profiles/user_detail.html', context)
 
 @login_required
 def change_description(request):
@@ -166,7 +164,7 @@ def change_description(request):
     context = RequestContext(request, {
         'form' : form,        
     })
-    return render_to_response('accounts/change_description.html', context)
+    return render_to_response('profiles/change_description.html', context)
 
 def search_user(request):
     """This view let's users search for other users by username..."""
@@ -212,4 +210,4 @@ def search_user(request):
         'search_string' : search_string,
         'num_pages' : paginator.num_pages,
     })
-    return render_to_response('accounts/search_user.html', context)
+    return render_to_response('profiles/search_user.html', context)
