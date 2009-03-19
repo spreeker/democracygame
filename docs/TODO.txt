@@ -1,0 +1,6 @@
+TODO
+
+oauth
+registration renaming
+iphone interface
+api functionality
