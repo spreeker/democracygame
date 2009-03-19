@@ -5,7 +5,7 @@ setup_environ(settings)
 # now continue as per usual:
 import datetime, random, codecs, sys
 from django.contrib.auth.models import User
-from accounts.models import UserProfile
+from profiles.models import UserProfile
 
 user_names = """
 ana alexander bert barbara carmen chantal dirk diederik ditke dedeke ernie frederik ferdinand
