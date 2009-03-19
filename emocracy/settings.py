@@ -8,10 +8,11 @@
 
 import logging
 import os
-
-
+import sys
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
+sys.path.append(os.path.split(PROJECT_PATH)[0] + '/external_apps/' ) 
+sys.path.append(os.path.split(PROJECT_PATH)[0] + '/external_libraries/' ) 
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -89,7 +90,7 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'templates')
 )
 
-AUTH_PROFILE_MODULE = 'accounts.userprofile'
+AUTH_PROFILE_MODULE = 'profiles.userprofile'
 
 # Set the context processors used by RequestContext objects: 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -99,7 +100,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.media',
     'django.core.context_processors.request',
     'emocracy.web.context_processors.profile',
-    
 )
 
 LOGIN_REDIRECT_URL = '/web/issues/'
@@ -114,11 +114,11 @@ INSTALLED_APPS = (
     'django.contrib.webdesign', # for lorem ipsum generator :)
     'django.contrib.sessions',
     'emocracy.gamelogic',
-    'emocracy.accounts',
+    'emocracy.profiles',
     'emocracy.api',
     'emocracy.web',
+	'registration',
     'oauth_provider',   
-
 )
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -135,6 +135,12 @@ logging.basicConfig(
     filename = LOG_FILE_NAME,
 )
 
+ACCOUNT_ACTIVATION_DAYS = 1
+
+try :
+	from settings_local import *
+except exception:
+	print "create your local settings_local.py settings file with password sensitive information ect"
 # ------------------------------------------------------------------------------
 # django-oauth related stuff (see external_apps/oauth_provider)
 # http://code.welldev.org/django-oauth/wiki/Home
