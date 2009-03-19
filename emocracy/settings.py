@@ -89,7 +89,7 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'templates')
 )
 
-AUTH_PROFILE_MODULE = 'accounts.userprofile'
+AUTH_PROFILE_MODULE = 'profiles.userprofile'
 
 # Set the context processors used by RequestContext objects: 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -113,10 +113,10 @@ INSTALLED_APPS = (
     'django.contrib.webdesign', # for lorem ipsum generator :)
     'django.contrib.sessions',
     'emocracy.gamelogic',
-    'emocracy.accounts',
+    'emocracy.profiles',
     'emocracy.api',
     'emocracy.web',
-	'registration'
+	'registration',
     'oauth_provider',   
 )
 
