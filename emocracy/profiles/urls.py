@@ -6,9 +6,9 @@ from django.views.generic.simple import direct_to_template
 from django.contrib.auth import views as auth_views
 
 #from registration.views import activate
-from emocracy.accounts.views import activate
-from emocracy.accounts.views import userprofile_show
-from emocracy.accounts.views import change_description
+from emocracy.profiles.views import activate
+from emocracy.profiles.views import userprofile_show
+from emocracy.profiles.views import change_description
 
 from registration.views import register
 
@@ -22,11 +22,11 @@ urlpatterns = patterns('',
            name='registration_activate'),
        url(r'^login/$',
            auth_views.login,
-           {'template_name': 'accounts/login.html'},
+           {'template_name': 'profiles/login.html'},
            name='auth_login'),
        url(r'^logout/$',
            auth_views.logout,
-           {'template_name': 'accounts/logout.html'},
+           {'template_name': 'profiles/logout.html'},
            name='logout'),
        url(r'^password/change/$',
            auth_views.password_change,
