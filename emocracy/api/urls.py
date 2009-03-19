@@ -18,4 +18,5 @@ urlpatterns = patterns('api.views',
     url(r'^users/$', UserCollection(), name = 'api_user'),
     url(r'^users/(?P<pk>\d+)/$', UserResource(), name = 'api_user_pk'),
     url(r'^tags/(?P<pk>\d+)/$', TagResource(), name = 'api_tag_pk'),
+    url(r'^oauth_test/$', 'oauth_test', name = 'oauth_test'),
 )
