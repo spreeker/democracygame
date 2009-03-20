@@ -92,7 +92,11 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_PATH, 'templates')
 )
 
+# authorization / profile settings:
 AUTH_PROFILE_MODULE = 'profiles.userprofile'
+LOGIN_URL = '/profile/login/'
+LOGIN_REDIRECT_URL = '/web/issues/'
+
 
 # Set the context processors used by RequestContext objects: 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -104,7 +108,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'emocracy.web.context_processors.profile',
 )
 
-LOGIN_REDIRECT_URL = '/web/issues/'
 
 INSTALLED_APPS = (
     'django.contrib.auth',
