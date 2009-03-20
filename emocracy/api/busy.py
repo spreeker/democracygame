@@ -1,4 +1,4 @@
-import urllib2
+import httplib, urlparse
 
 from oauth import oauth
 # This file will evolve into some utility functions to talk to the Emocracy
@@ -25,9 +25,11 @@ ACCESS_TOKEN_URL = 'http://127.0.0.1:8000/oauth/access_token/'
 REQUEST_TOKEN_URL = 'http://127.0.0.1:8000/oauth/request_token/'
 AUTHORIZATION_URL = 'http://127.0.0.1:8000/oauth/authorize/'
 
+connection = httplib.HTTPConnection(SERVER, PORT)
 
 # ------------------------------------------------------------------------------
 # -- utility / helper functions for oauth --------------------------------------
+
 
 def fetch_request_token():
     oauth_request = oauth.OAuthRequest.from_consumer_and_token(consumer,
@@ -35,12 +37,12 @@ def fetch_request_token():
     oauth_request.sign_request(signature_method, consumer, None)
 
     URL = oauth_request.to_url()
-    try:
-        oauth_response = urllib2.urlopen(URL)
-    except urllib2.HTTPError, e:
-        oauth_response = e
-    content = oauth_response.read()
+    parts = urlparse.urlsplit(URL)
+    relative_URL = "%s?%s" % (parts[2], parts[3]) 
 
+    connection.request('GET', relative_URL)
+    oauth_response = connection.getresponse()
+    content = oauth_response.read()
     return oauth.OAuthToken.from_string(content)
 
 def fetch_access_token(request_token):
@@ -48,15 +50,12 @@ def fetch_access_token(request_token):
     oauth_request = oauth.OAuthRequest.from_consumer_and_token(consumer,
         token = request_token, http_url = ACCESS_TOKEN_URL)
     oauth_request.sign_request(signature_method, consumer, request_token)
-    URL = oauth_request.to_url()
-    print URL
-    try:
-        oauth_response = urllib2.urlopen(URL)
-    except urllib2.HTTPError, e:
-        oauth_response = e
-    content = oauth_response.read()
 
-    print "---->", content
+    URL = oauth_request.to_url()
+    parts = urlparse.urlsplit(URL)
+    relative_URL = "%s?%s" % (parts[2], parts[3]) 
+
+    connection.request('GET', relative_URL)
     return oauth.OAuthToken.from_string(content)
     
 
