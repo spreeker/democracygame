@@ -1,0 +1,10 @@
+{% extends "web/index.html" %}
+{% load i18n %}
+
+{% block content %}
+<ul>
+{% for v in object_list %}
+<li>{{v}}</li>
+{% endfor %}
+</ul>
+{% endblock content %}
