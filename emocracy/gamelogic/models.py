@@ -90,7 +90,7 @@ class Issue(models.Model):
     
     objects = IssueManager()
     
-    class Meta():
+    class Meta:
         unique_together = ('content_type', 'object_id') # UNIQUENESS CONSTRAINT SEEMS TO BE IGNORED? FIXME
 
     def vote(self, user, vote_int, keep_private, issueset = None):
