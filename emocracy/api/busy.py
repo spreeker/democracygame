@@ -1,4 +1,4 @@
-import httplib
+import urllib2
 
 from oauth import oauth
 # This file will evolve into some utility functions to talk to the Emocracy
@@ -21,13 +21,10 @@ consumer = oauth.OAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET)
 SERVER = '127.0.0.1'
 PORT = '8000'
 # The following should move to using https:
-#ACCES_TOKEN_URL = 'http://127.0.0.1:8000/oauth/acces_token/'
-ACCES_TOKEN_URL = '/oauth/acces_token/'
-REQUEST_TOKEN_URL = '/oauth/request_token/'
-#REQUEST_TOKEN_URL = 'http://127.0.0.1:8000/oauth/request_token/'
-AUTHORIZATION_URL = 'http://127.0.0.1:8000/authorize/'
+ACCESS_TOKEN_URL = 'http://127.0.0.1:8000/oauth/access_token/'
+REQUEST_TOKEN_URL = 'http://127.0.0.1:8000/oauth/request_token/'
+AUTHORIZATION_URL = 'http://127.0.0.1:8000/oauth/authorize/'
 
-connection = httplib.HTTPConnection(SERVER, PORT)
 
 # ------------------------------------------------------------------------------
 # -- utility / helper functions for oauth --------------------------------------
@@ -38,39 +35,28 @@ def fetch_request_token():
     oauth_request.sign_request(signature_method, consumer, None)
 
     URL = oauth_request.to_url()
-    connection.request('GET', URL[3:]) # THIS IS A HACK!
-    oauth_response = connection.getresponse()
+    try:
+        oauth_response = urllib2.urlopen(URL)
+    except urllib2.HTTPError, e:
+        oauth_response = e
     content = oauth_response.read()
-    # some debug mess:
-    if oauth_response.status == 500:
-        f = open("error.html", "w")
-        f.write(content)
-        f.close()
-        print "Server error"
-    else:
-        print "No problem"
+
     return oauth.OAuthToken.from_string(content)
 
 def fetch_access_token(request_token):
     # takes a request token and exchanges it for an accces token
     oauth_request = oauth.OAuthRequest.from_consumer_and_token(consumer,
-        token = request_token, http_url = ACCES_TOKEN_URL)
+        token = request_token, http_url = ACCESS_TOKEN_URL)
     oauth_request.sign_request(signature_method, consumer, request_token)
-    URL = oauth_request.to_url()[3:]
-    print "->", URL
-    connection.request(oauth_request.http_method, URL)
-    oauth_response = connection.getresponse()
+    URL = oauth_request.to_url()
+    print URL
+    try:
+        oauth_response = urllib2.urlopen(URL)
+    except urllib2.HTTPError, e:
+        oauth_response = e
     content = oauth_response.read()
 
-    if oauth_response.status == 500:
-        f = open("error_acces.html", "w")
-        f.write(content)
-        f.close()
-        print "Server error"
-    else:
-        print "No problem"
-
-    print "joY!"
+    print "---->", content
     return oauth.OAuthToken.from_string(content)
     
 
@@ -79,9 +65,10 @@ def authorize():
 
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":    
     request_token = fetch_request_token()
     print request_token
+    raw_input(">")
     acces_token = fetch_access_token(request_token)
-    print access_token
+#    print access_token
     
