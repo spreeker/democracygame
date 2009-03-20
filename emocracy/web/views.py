@@ -40,7 +40,8 @@ def vote_list_user(request, user_name):
         user_votes = Vote.objects.filter(owner = user, is_archived = False).order_by("time_stamp").reverse()
     else:
         user_votes = Vote.objects.filter(owner = user, is_archived = False, keep_private = False).order_by("time_stamp").reverse()
-    return object_list(request, queryset = user_votes, paginate_by = 25)
+    return object_list(request, queryset = user_votes, paginate_by = 25,
+        template_name = 'web/vote_list.html')
 
 # ------------------------------------------------------------------------------
 # -- View functions that show several Issues : ---------------------------------
