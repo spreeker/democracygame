@@ -10,6 +10,8 @@ from emocracy.profiles.views import activate
 from emocracy.profiles.views import userprofile_show
 from emocracy.profiles.views import change_description
 
+from emocracy.profiles.forms import RegistrationTermsOfServiceUniqueEmail
+
 from registration.views import register
 
 urlpatterns = patterns('',
@@ -48,6 +50,7 @@ urlpatterns = patterns('',
            name='auth_password_reset_done'),
        url(r'^register/$',
            register,
+           {'form_class' : RegistrationTermsOfServiceUniqueEmail} ,
            name='registration_register'),
        url(r'^register/complete/$',
            direct_to_template,
