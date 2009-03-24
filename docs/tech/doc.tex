@@ -17,10 +17,10 @@ The API for the game is implemented as a REST (REpresentational State Transfer)
 API. REST was formalized by Roy Fielding in his doctoral thesis (see : 
 \url{http://www.ics.uci.edu/\~fielding/pubs/dissertation/top.htm}). REST APIs do
 not define an extra protocol layer on top of HTTP (like XML-RPC and other 
-webservices protocols do).
+web-services protocols do).
 
 \section{Documentation conventions}
-In this document \texttt{this typeface} is used for API resource indentifiers 
+In this document \texttt{this typeface} is used for API resource identifiers 
 and parameter names. For variable parts of resource identifiers \emph{this 
 typeface}. For each resource that the REST API provides, the documentation lists
 the accepted HTTP methods (see \ref{httpmethods}) and the HTTP response codes 
@@ -46,7 +46,7 @@ latter for creating, changing or deleting resources.
 For more information see \mbox{\url{http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html}}
 \section{HTTP Status Codes used by Emocracy REST API}\label{httpstatuscodes}
 REST APIs use the status codes that the HTTP protocol defines to communicate the
-succes or failure of a request. The game API uses a subset of HTTP status
+success or failure of a request. The game API uses a subset of HTTP status
 codes listed below:
 \begin{itemize}
     \item{\texttt{200, Ok}\\
@@ -74,13 +74,13 @@ codes listed below:
     Request method is not allowed on this resource.
     }
     \item{\texttt{500, Internal Server Error}\\
-    An error ocurred in the server.
+    An error occurred in the server.
     }
 \end{itemize}
 
 Some REST APIs support suppressing the status codes. They always send HTTP 
 status 200 and put the actual response status in the response body. This is 
-done to allow browser based apps (implemented in Flash or Javascript) to acces
+done to allow browser based apps (implemented in Flash or Javascript) to access
 the status codes that a browser normally filters out. See the 
 \texttt{suppress\_response\_codes} parameter that the Twitter REST API supports
 for more information (\mbox{\url{http://apiwiki.twitter.com/REST+API+Documentation}}).\\\\
@@ -354,7 +354,9 @@ of now not all resources have been defined yet.
             }
         \end{itemize}
     }
-    \item{\textsl{note} : User creation through API not allowed as yet.}
+    \item{\textsl{note} : User creation through API not allowed as yet. A way to
+    support it in the future is to send a confirmation email to the address of the
+    new user. Security implications need to be thought through.}
 \end{itemize}
 
 \subsection{\texttt{http://emocracy.nl/api/v0/users/\emph{user\_pk}/}}
@@ -640,7 +642,7 @@ is a new standard that is freely implementable for authentication of APIs.
 
 OAuth comes with some jargon of its own. Users of the API are called consumers, 
 they are identified by a consumer key. Request to the API are only allowed if
-they are accompanied by an authenticated acces token. To get an acces token the
+they are accompanied by an authenticated access token. To get an acces token the
 consumer needs to get a request token that needs to be authorized. OAuth can be 
 used in two modes. One is called two legged and the other is called three 
 legged. The two legged authentication is used in case there are only an API 
