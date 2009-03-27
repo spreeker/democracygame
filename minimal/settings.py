@@ -1,4 +1,11 @@
 # Django settings for minimal project.
+import sys, os
+
+PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
+# Add the external dependencies of Emocracy to the python path. (The external
+# dependencies are included with the Emocracy source to ease deployment.)
+sys.path.append(os.path.split(PROJECT_PATH)[0] + '/external_apps/' ) 
+sys.path.append(os.path.split(PROJECT_PATH)[0] + '/external_libraries/' ) 
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -69,6 +76,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    os.path.join(PROJECT_PATH, 'templates')
 )
 
 INSTALLED_APPS = (
@@ -76,4 +84,11 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
+    'django.contrib.admin',
+    'django.contrib.admindocs',
 )
+
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/web/'
+LOGOUT_URL = '/logout/'
+
