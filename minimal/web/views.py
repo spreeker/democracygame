@@ -9,18 +9,18 @@ from oauth import oauth
 
 signature_method = oauth.OAuthSignatureMethod_PLAINTEXT()
 
-CONSUMER_KEY = 'MINIMAL'
-CONSUMER_SECRET = 'MINIMAL'
+CONSUMER_KEY = 'iphone666macevil'
+CONSUMER_SECRET = 'iphone666macevil'
 consumer = oauth.OAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET)
 
 # HARD CODED FOR NOW:
-SERVER = '127.0.0.1'
-PORT = 8000
+SERVER = 'emo.buhrer.net'
+PORT = 8080
 connection = httplib.HTTPConnection(SERVER, PORT)
 
-REQUEST_TOKEN_URL = 'http://127.0.0.1:8000/oauth/request_token/'
-ACCES_TOKEN_URL = 'http://127.0.0.1:8000/oauth/access_token/'
-AUTHORIZE_URL = 'http://127.0.0.1:8000/oauth/authorize/'
+REQUEST_TOKEN_URL = 'http://emo.buhrer.net:8080/oauth/request_token/'
+ACCES_TOKEN_URL = 'http://emo.buhrer.net:8080/oauth/access_token/'
+AUTHORIZE_URL = 'http://emo.buhrer.net:8080/oauth/authorize/'
 
 def get_request_token():
     oauth_request = oauth.OAuthRequest.from_consumer_and_token(consumer, 
