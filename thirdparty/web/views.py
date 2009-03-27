@@ -21,7 +21,7 @@ class HttpResponseCreated(HttpResponse):
     status_code = 201
 
 #-----------------------------------------------------------------------------
-EMOCRACY_API_SERVER = "http://emo.preeker.net/api/"
+EMOCRACY_API_SERVER = "http://emo.buhrer.net:8080/api/"
 
 
 def issues_list_popular(request):
@@ -31,7 +31,18 @@ def issues_list_popular(request):
     except ValueError:
         page = 1
     req = urllib2.Request(EMOCRACY_API_SERVER+"issues/?page=%s" %page)
-    response = urllib2.urlopen(req)
+    try:
+        response = urllib2.urlopen(req)
+    except HTTPError, e:
+        if __debug__:
+            print 'The server couldn\'t fulfill the request.'
+            print 'Error code: ', e.code
+    except URLError, e:
+        if __debug__:
+            print 'We failed to reach the server.'
+            print 'Reason: ', e.reason
+    else:
+        pass
     data = response.read()
     print data
     extra_context = json.loads( data )
@@ -39,16 +50,14 @@ def issues_list_popular(request):
     if extra_context.has_key('next'):
         print 'next: ' + extra_context['next']
         next = extra_context['next']
-        next = next.split('/')
-        next = next[-1:]
+        next = next.split('/')[-1:]
         extra_context['next'] = next[0]
     else:
         extra_context['next'] = ''
     if extra_context.has_key('previous'):
         print 'previous: ' + extra_context['previous']
         previous = extra_context['previous']
-        previous = previous.split('/')
-        previous = previous[-1:]
+        previous = previous.split('/')[-1:]
         extra_context['previous'] = previous[0]
     else:
         extra_context['previous'] = ''
