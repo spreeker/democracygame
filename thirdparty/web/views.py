@@ -41,6 +41,7 @@ def issues_list_popular(request):
         if __debug__:
             print 'We failed to reach the server.'
             print 'Reason: ', e.reason
+        return url_error_view(request, e)
     else:
         pass
     data = response.read()
