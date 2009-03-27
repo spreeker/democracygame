@@ -4,9 +4,8 @@ from django.utils.translation import ugettext as _
 
 from models import UserProfile
 
-class NewUserForm(UserCreationForm):
-    email = forms.EmailField()
-    migrate_votes = forms.BooleanField(required = False)
+from registration.forms import RegistrationFormTermsOfService
+from registration.forms import RegistrationFormUniqueEmail
 
 class ChangeSettingsForm(forms.Form):
     votes_public = forms.BooleanField()
@@ -19,3 +18,12 @@ class ChangeDescriptionForm(forms.ModelForm):
     
 class UserSearchForm(forms.Form):
     search_string = forms.CharField(max_length = 30, initial = _(u'Username'))
+
+class RegistrationTermsOfServiceUniqueEmail(
+        RegistrationFormTermsOfService, 
+        RegistrationFormUniqueEmail):
+        """
+        Subclass of RegistrationForms which enforces
+        both terms of service and an unique email.
+        """
+        
