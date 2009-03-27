@@ -80,6 +80,7 @@ TEMPLATE_DIRS = (
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.auth',
     'django.core.context_processors.debug',
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
@@ -109,4 +110,8 @@ logging.basicConfig(
     format = '%(asctime)s %(levelname)s %(message)s',
     filename = LOG_FILE_NAME,
 )
+
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_URL = '/logout/'
 

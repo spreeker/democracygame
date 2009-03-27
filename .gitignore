@@ -7,3 +7,4 @@ settings_local.py
 *.mo
 *.swp
 *~
+*.sqlite3

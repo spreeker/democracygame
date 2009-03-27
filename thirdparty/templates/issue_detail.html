@@ -1,3 +1,4 @@
+{% extends "main.html" %}
 {% comment %}
 
 Author: Conrado Buhrer <conrado@buhrer.net>
@@ -11,7 +12,7 @@ Third Party Application example.
 Application top level menu
 
 {% endcomment %}
-{% include "header.html" %}
+{% block content %}
 <div id="user">
   <div style="padding: 2em; background-color: rgb(112, 147, 151); color: rgb(51, 51, 51); background-image: url(/media/iphone/bg.gif);" class="view" id="issue">
     <div id="issuedetails">
@@ -26,4 +27,5 @@ Application top level menu
     </div>
   </div>
 </div>
-{% include "footer.html" %}
+{% include "issue_footer.html" %}
+{% endblock %}

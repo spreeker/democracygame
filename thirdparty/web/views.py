@@ -21,13 +21,8 @@ class HttpResponseCreated(HttpResponse):
     status_code = 201
 
 #-----------------------------------------------------------------------------
-EMOCRACY_API_SERVER = "http://127.0.0.1:8000/api/"
+EMOCRACY_API_SERVER = "http://emo.preeker.net/api/"
 
-# ^api/ ^issues/(?P<pk>\d+)/$
-# ^api/ ^votes/$
-# ^api/ ^votes/(?P<pk>\d+)/$
-# ^api/ ^users/$
-# ^api/ ^users/(?P<pk>\d+)/$
 
 def issues_list_popular(request):
     #request.user.is_authenticated()
@@ -135,4 +130,5 @@ def user_details(request, pk):
             RequestContext(request, extra_context))
 
 def top_level_menu(request):
-    return render_to_response('menu.html')
+    return render_to_response('menu.html',
+            RequestContext(request, {'is_menu' : True}))
