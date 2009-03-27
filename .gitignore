@@ -8,3 +8,4 @@ settings_local.py
 *.swp
 *~
 *.sqlite3
+*.log
