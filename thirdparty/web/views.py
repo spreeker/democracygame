@@ -132,3 +132,9 @@ def user_details(request, pk):
 def top_level_menu(request):
     return render_to_response('menu.html',
             RequestContext(request, {'is_menu' : True}))
+
+def url_error_view(request, error):
+    return render_to_response(
+        'url_error_view.html',
+        RequestContext(request, {'error' : error})
+    )
