@@ -4,6 +4,8 @@ import urllib2
 import datetime
 import time
 
+from urllib2 import HTTPError, URLError
+
 from django.core import serializers
 from django.utils import simplejson as json
 from django.shortcuts import render_to_response
@@ -21,7 +23,7 @@ class HttpResponseCreated(HttpResponse):
     status_code = 201
 
 #-----------------------------------------------------------------------------
-EMOCRACY_API_SERVER = "http://emo.buhrer.net:8080/api/"
+EMOCRACY_API_SERVER = "http://emo.buhrer.net:80/api/"
 
 
 def issues_list_popular(request):
