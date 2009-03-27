@@ -7,8 +7,14 @@ from django.utils.translation import ugettext as _
 
 possible_motivations = [x[0] for x in blank_votes]
 
+class AuthorizeRequestTokenForm(forms.Form):
+    authorize_access = forms.IntegerField(
+        initial = 1,
+        widget = forms.HiddenInput(attrs = {'id' : 'authorize_access'})
+        )
+
 class HiddenOkForm(forms.Form):
-    ok = forms.BooleanField(initial = True, widget = forms.HiddenInput())
+    ok = forms.IntegerField(initial = 1, widget = forms.HiddenInput())
 
 class IssueFormNew(forms.Form):
     title = forms.CharField(max_length = 100)
