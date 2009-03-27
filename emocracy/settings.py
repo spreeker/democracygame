@@ -141,6 +141,8 @@ logging.basicConfig(
 
 ACCOUNT_ACTIVATION_DAYS = 1
 
+OAUTH_AUTHORIZE_VIEW = 'emocracy.web.views.authorize'
+
 # ------------------------------------------------------------------------------
 # django-oauth related stuff (see external_apps/oauth_provider)
 # http://code.welldev.org/django-oauth/wiki/Home
