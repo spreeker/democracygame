@@ -12,7 +12,7 @@ from django.utils.translation import ugettext as _
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.core.urlresolvers import reverse
 
-from forms import NewUserForm, ChangeSettingsForm, ChangeDescriptionForm, UserSearchForm
+from forms import ChangeSettingsForm, ChangeDescriptionForm, UserSearchForm
 from django.contrib.auth.forms import PasswordResetForm
 from models import UserProfile
 from gamelogic.models import Issue
@@ -116,26 +116,6 @@ def activate(request, activation_key,
                               { 'account': account,
                                 'expiration_days': settings.ACCOUNT_ACTIVATION_DAYS },
                               context_instance=context)
-
-def migrate_votes(user, dict):
-    """
-    This function takes the votes in the session for an anonymous user playing
-    through the web interface and upon registration copies them to the Emocracy
-    database.
-    """
-    userprofile = user.get_profile()
-    for poll_pk, vote in dict.items():
-        try:
-            issue = Issue.objects.get(pk = poll_pk)
-        except Issue.DoesNotExist:
-            pass
-        else:
-            issue.vote(user, dict[poll_pk], False)
-            if vote == 1:
-                userprofile.total_for += 1
-            elif vote == -1:
-                userprofile.total_against += 1
-    userprofile.save()
 
 def userprofile_show(request, username):
     user = get_object_or_404(User, username = username) 

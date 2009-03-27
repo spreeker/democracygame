@@ -1,6 +1,36 @@
 TODO
 
 oauth
+-step 1 : build minimal app that can do the "consumer -> request token -> 
+ redirect user -> aprove token -> get acces token -> acces emocracy trivial API
+ test resource" song and dance
+-step 2 : Change the mobile phone interface to go through the process described
+ in step 1.
+
 registration renaming
 iphone interface
+-see oauth, needs authentication
 api functionality
+
+The Issue model needs a origin entry, that keeps track of where an issue 
+originated (which interface created it). This will allow there to be one big 
+issue database whilst still allowing users to filter out all 'Eve online' issues
+(for example).
+
+Emcracy also needs to be able to 'delete' issues that are inapropriate (from a 
+legal perspective).
+
+Move to Django 1.1 to solve the CSRF middleware situation.
+
+Documentation: 
+-notatie confentie beschrijven 
+
+-PUT / DELETE lezen hoe data wordt weergegeven
+-issue -> issues (meervoud)
+-sortering collection resources (meegeven in request ondersteunen)
+-perpage parameter voor collection resource
+-userResourse spellings fouten
+-replace emocracy with the game as appropriate
+-considerations / rationale
+-UserCollection, POST ondersteunen -> aanmaken gebruiker en email naar adres van
+ user to be
