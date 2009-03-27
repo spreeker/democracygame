@@ -81,7 +81,7 @@ def issues_list_popular(request):
         resource_data['userid'] = userid[0]
         fetch.append(resource_data)
     extra_context['issues'] = fetch
-    return render_to_response('viewlist.html', 
+    return render_to_response('issue_list.html', 
             RequestContext(request, extra_context))
 
 def issues_issue_detail(request, pk):
@@ -126,7 +126,7 @@ def user_details(request, pk):
     issuedata = response.read()
     extra_context = json.loads( issuedata )
     extra_context['userid'] = pk
-    return render_to_response('viewuser.html',
+    return render_to_response('user_detail.html',
             RequestContext(request, extra_context))
 
 def top_level_menu(request):
