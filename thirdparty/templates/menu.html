@@ -1,3 +1,4 @@
+{% extends "main.html" %}
 {% comment %}
 
 Author: Conrado Buhrer <conrado@buhrer.net>
@@ -11,7 +12,7 @@ Third Party Application example.
 Application top level menu
 
 {% endcomment %}
-{% include "header.html" %}
+{% block content %}
 <div id="views">
   <div class="view" id="menu">
     <ul>
@@ -24,3 +25,4 @@ Application top level menu
   </div>
 </div>
 {% include "menu_footer.html" %}
+{% endblock %}
