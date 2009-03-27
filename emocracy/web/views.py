@@ -21,10 +21,11 @@ from django import forms
 from django.template.loader import render_to_string
 from django.http import QueryDict
 
+from oauth_provider.models import *
 
 from util import *
 import gamelogic.actions, anonymous_actions
-from web.forms import TagForm, CastVoteFormFull, IssueFormNew, HiddenOkForm, TagSearchForm, TagForm2
+from web.forms import TagForm, CastVoteFormFull, IssueFormNew, HiddenOkForm, TagSearchForm, TagForm2,  AuthorizeRequestTokenForm
 from web.forms import NormalVoteForm, BlankVoteForm
 from emocracy.gamelogic.models import votes_to_description
 from emocracy.gamelogic.models import Tag, TaggedIssue
@@ -612,3 +613,28 @@ def become_candidate(request):
     })
     return render_to_response('web/become_candidate.html', context)
     
+# ------------------------------------------------------------------------------
+
+@login_required
+def authorize(request, *args):
+    print args
+    if request.method == 'GET':
+        oauth_token = request.GET.get('oauth_token', '')
+        try:
+            request_token = Token.objects.get(key = oauth_token)
+        except Token.DoesNotExist:
+            msg = u'Token in URL not OK'
+            request_token = 'FUCK'
+            form = None
+        else:
+            msg = u'Token in URL OK'
+            consumer_key = request_token.consumer.key
+            form =  AuthorizeRequestTokenForm()
+    else:
+        return Http404("TOKEN NOT FOUND")
+    context = {
+        'msg' : msg,
+        'request_token' : request_token, 
+        'form' : form
+    }
+    return render_to_response('web/authorize.html', context)
