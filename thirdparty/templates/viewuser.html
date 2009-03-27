@@ -1,3 +1,4 @@
+{% extends "main.html" %}
 {% comment %}
 
 Author: Conrado Buhrer <conrado@buhrer.net>
@@ -11,7 +12,7 @@ Third Party Application example.
 view list, odd/even
 
 {% endcomment %}
-{% include "list_header.html" %}
+{% block content %}
 <div id="views">
   
   <div style="padding: 2em; background-color: rgb(112, 147, 151); color: rgb(51, 51, 51); background-image: url(/media/iphone/bg.gif);" class="view" id="user">
@@ -46,3 +47,4 @@ view list, odd/even
   </div>
 </div>
 {% include "footer.html" %}
+{% endblock %}
