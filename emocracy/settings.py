@@ -5,7 +5,6 @@ import sys
 
 # Be sure to create a settings_local.py module with the following entries:
 # SECRET_KEY
-# etc ..
 try:
     from settings_local import *
 except ImportError:
@@ -13,15 +12,14 @@ except ImportError:
     # Re-raise the import error. The server should not run!
     raise 
 
-
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
 # Add the external dependencies of Emocracy to the python path. (The external
 # dependencies are included with the Emocracy source to ease deployment.)
 sys.path.append(os.path.split(PROJECT_PATH)[0] + '/external_apps/' ) 
 sys.path.append(os.path.split(PROJECT_PATH)[0] + '/external_libraries/' ) 
 
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
+DEBUG = True    #on production server this should be FASLE
+TEMPLATE_DEBUG = DEBUG # on production this should be disabeled
 
 ADMINS = (
     # ('Stephan Preeker', 'stephan@preeker.net'),
