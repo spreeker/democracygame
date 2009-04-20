@@ -5,7 +5,7 @@ import datetime
 import time
 
 from urllib2 import HTTPError, URLError
-
+from django.conf import settings
 from django.core import serializers
 from django.utils import simplejson as json
 from django.shortcuts import render_to_response
@@ -23,7 +23,6 @@ class HttpResponseCreated(HttpResponse):
     status_code = 201
 
 #-----------------------------------------------------------------------------
-EMOCRACY_API_SERVER = "http://emo.buhrer.net:80/api/"
 
 
 def issues_list_popular(request):
@@ -32,7 +31,7 @@ def issues_list_popular(request):
         page = int(request.GET.get('page', '1'))
     except ValueError:
         page = 1
-    req = urllib2.Request(EMOCRACY_API_SERVER+"issues/?page=%s" %page)
+    req = urllib2.Request(settings.EMOCRACY_API_SERVER+"issues/?page=%s" %page)
     try:
         response = urllib2.urlopen(req)
     except HTTPError, e:
@@ -97,7 +96,7 @@ def issues_list_popular(request):
             RequestContext(request, extra_context))
 
 def issues_issue_detail(request, pk):
-    req = urllib2.Request(EMOCRACY_API_SERVER+"issues/%s/" % pk)
+    req = urllib2.Request(settings.EMOCRACY_API_SERVER+"issues/%s/" % pk)
     response = urllib2.urlopen(req)
     issuedata = response.read()
     extra_context = json.loads( issuedata )
@@ -116,7 +115,7 @@ def issues_issue_detail(request, pk):
 
 
 def issues_issue_vote(request, pk):
-    req = urllib2.Request(EMOCRACY_API_SERVER+"issues/")
+    req = urllib2.Request(settings.EMOCRACY_API_SERVER+"issues/")
     response = urllib2.urlopen(req)
     data = response.read()
     extra_context = {"issue_data": data}
@@ -133,7 +132,7 @@ def user_login(request):
     return render_to_response('login.html')
 
 def user_details(request, pk):
-    req = urllib2.Request(EMOCRACY_API_SERVER+"users/%s/" % pk)
+    req = urllib2.Request(settings.EMOCRACY_API_SERVER+"users/%s/" % pk)
     response = urllib2.urlopen(req)
     issuedata = response.read()
     extra_context = json.loads( issuedata )
