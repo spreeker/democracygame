@@ -1,0 +1,34 @@
+{% extends "web/index.html" %}
+
+
+{% block content %}
+
+
+<h3>{{profile.title}}</h3>
+<div >
+{{profile.description|striptags|linebreaks|truncatewords_html:200}}
+</div>
+
+{% if profile.url%}
+url {{profile.url|urlizetrunc:30}}
+{% else %}
+No url given.
+{% endif %}
+
+<b>Character</b><br />
+Name: {{ profile.eve_CHARNAME }} <br />
+Character ID: {{ profile.eve_CHARID }} <br />
+Corporation: {{ profile.eve_CORPNAME }} <br />
+Corporation ID: {{ profile.eve_CORPID }} <br />
+Corp roles: {{ profile.eve_CORPROLE }} <br />
+Alliance: {{ profile.eve_ALLIANCENAME }} <br />
+Alliance ID: {{ profile.eve_ALLIANCEID }} <br />
+<b>Location</b><br />
+Nearest location: {{ profile.eve_NEARESTLOCATION }} <br />
+Station: {{ profile.eve_STATIONNAME }} <br />
+Solarsystem: {{ profile.eve_SOLARSYSTEMNAME }} <br />
+Constellation: {{ profile.eve_CONSTELLATIONNAME }} <br />
+Region: {{ profile.eve_REGIONNAME }} <br />
+
+<br /><a href="{% url change_description %}">Change my description</a><br />
+{% endblock %}
