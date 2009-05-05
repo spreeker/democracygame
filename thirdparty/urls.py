@@ -16,7 +16,7 @@ urlpatterns = patterns('',
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:
-    # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
+    (r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Development stuff, media served by django itself. Remove for a real
     # Emocracy installation (and have Apache handle media).
@@ -26,7 +26,8 @@ urlpatterns = patterns('',
     (r'^media/(.*)', 'django.views.static.serve', {
         'document_root' : os.path.join(settings.PROJECT_PATH, 'media')
     }),
-
+    (r'^oauth/', include('thirdparty.oauth_consumer.urls')),
+    (r'^profile/', include('thirdparty.profiles.urls')),
     # Uncomment the next line to enable the admin:
     (r'^admin/(.*)', admin.site.root),
 )
