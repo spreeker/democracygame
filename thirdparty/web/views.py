@@ -12,6 +12,8 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from django.template import RequestContext
 
+from settings import EMOCRACY_API_SERVER
+
 #-----------------------------------------------------------------------------
 # Some extra response codes not defined in:
 # http://code.djangoproject.com/browser/django/tags/releases/1.0.2/django/http/__init__.py
@@ -31,7 +33,7 @@ def issues_list_popular(request):
         page = int(request.GET.get('page', '1'))
     except ValueError:
         page = 1
-    req = urllib2.Request(settings.EMOCRACY_API_SERVER+"issues/?page=%s" %page)
+    req = urllib2.Request(EMOCRACY_API_SERVER+"issues/?page=%s" %page)
     try:
         response = urllib2.urlopen(req)
     except HTTPError, e:
@@ -128,6 +130,8 @@ def issues_list_hottest(request):
 def issues_list_newest(request):
     return issues_list_popular(request)
 
+def user_logout(request):
+    return render_to_response('login.html')
 def user_login(request):
     return render_to_response('login.html')
 

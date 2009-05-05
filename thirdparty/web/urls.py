@@ -12,6 +12,7 @@ urlpatterns = patterns('thirdparty.web.views',
 #    url(r'^add/$', 'issues_add_issue', name="issues_add_issue"),
     url(r'^user/(?P<pk>\d+)/$', 'user_details', name="user_details"),
     url(r'^login/$', 'user_login', name="user_login"),
+    url(r'^logout/$', 'user_logout', name="user_logout"),
     url(r'^(?P<pk>\d+)/$', 'issues_issue_detail', name="issues_issue_detail"),
     url(r'^(?P<pk>\d+)/vote/?P<vote>\w+$', 'issues_issue_vote', name="issues_issue_vote"),
 
