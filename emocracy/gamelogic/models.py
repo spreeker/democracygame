@@ -43,6 +43,9 @@ class IssueBody(models.Model):
     source_type = models.CharField(max_length = 20, choices = source_types)
     url = models.URLField(verify_exists = False)
     time_stamp = models.DateTimeField()
+    
+    class Meta:
+        verbose_name_plural = "issue bodies"
 
 class LawProposal(models.Model):
     owner = models.ForeignKey(User)
