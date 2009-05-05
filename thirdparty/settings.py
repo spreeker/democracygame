@@ -2,8 +2,12 @@
 
 import logging
 import os
+import sys
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
+
+sys.path.append(os.path.split(PROJECT_PATH)[0] + '/external_apps/' ) 
+sys.path.append(os.path.split(PROJECT_PATH)[0] + '/external_libraries/' ) 
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -23,7 +27,7 @@ DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
-EMOCRACY_API_SERVER = "http://emo.preeker.net:80/api/"
+EMOCRACY_API_SERVER = "http://emo.buhrer.net/api/"
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -96,7 +100,9 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.admin',
     'django.contrib.sites',
-    'thirdparty.web',
+    'web',
+    'profiles',
+    'registration',
 )
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -118,3 +124,5 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_URL = '/logout/'
 
+ACCOUNT_ACTIVATION_DAYS = 1
+AUTH_PROFILE_MODULE = 'profiles.userprofile'
