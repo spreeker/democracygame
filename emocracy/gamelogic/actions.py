@@ -112,9 +112,11 @@ def tag(user, issue, tag_string):
     
 
     if tag.count > tag_count_threshold:
-        # TODO add some extra logic to only switch the tag.visible attribute
-        # once so that a tag can be made to disappear again if it is
-        # inappropriate.
+        # Make tag visible if it is used more than a minimun number of times
+        # on any issue.
+        if tag.count > tag_count_threshold:
+            tag.visible = True
+        
         if not tag.points_awarded:
             score.tag(user, tag)
             tag.points_awarded = True
