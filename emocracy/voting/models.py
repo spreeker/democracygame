@@ -90,6 +90,7 @@ class Issue(models.Model):
     score = models.IntegerField(default = 0)
     votes = models.IntegerField(default = 0)
     hotness = models.IntegerField(default = 0)
+    # TODO add a denomalized count of anonymous votes.
     
     objects = IssueManager()
     
@@ -108,6 +109,10 @@ class Issue(models.Model):
         self.votes += 1 # See how this interacts with Emocracy design TODO
         self.save()
         return new_vote
+        
+    def anonymous_vote():
+        # TODO needs to register an anonymous vote in the anonymous vote table.
+        pass
     
     def tag(self, user, tag_string):
         # Get the tag object and if it does not exist yet, create it.
@@ -145,9 +150,17 @@ class IssueSet(models.Model):
     
     def __unicode__(self):
         return self.title
+        
+# ------------------------------------------------------------------------------
+# Vote Models:
+#
+# If api_interface is blank/null that means vote came in through the Emocracy 
+# web interface.
 
 class Vote(models.Model):
+    api_interface = models.CharField(max_length = 50, blank = True)
     owner = models.ForeignKey(User)
+    
     issue = models.ForeignKey(Issue)
     issueset = models.ForeignKey(IssueSet, null = True)
     vote = models.IntegerField(choices = possible_votes)
@@ -157,6 +170,15 @@ class Vote(models.Model):
     
     def __unicode__(self):
         return unicode(self.vote) + u" on \"" + self.issue.title + u"\" by " + self.owner.username
+
+class AnonymousVote(models.Model):
+    api_interface = models.CharField(max_length = 50, blank = True)
+    session_id = models.CharField(max_length = 50) # TODO find out what length Django session identifiers have
+
+    issue = models.ForeignKey(Issue)
+    issueset = models.ForeignKey(IssueSet, null = True)
+    vote = models.IntegerField(choices = possible_votes)
+    time_stamp = models.DateTimeField(editable = False)
 
 # ------------------------------------------------------------------------------
 # -- Bare bones Tagging implementation -----------------------------------------
