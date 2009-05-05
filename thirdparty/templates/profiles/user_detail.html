@@ -1,0 +1,32 @@
+{% extends "web/index.html" %}
+
+
+{% block content %}
+<div style="border-color:gray;border-width:0px 0px 0px 0px;border-style:solid;margin:0em 2em 1em 2em;padding-bottom:2em">
+<h3>{{profile.title}}</h3>
+<div>
+{{profile.description|striptags|linebreaks|truncatewords_html:200}}
+</div>
+{% if profile.url%}
+url {{profile.url|urlizetrunc:30}}
+{% else %}
+No url given.
+{% endif %}
+
+<h3>Details for {{user_to_show.username}}</h3>
+<b>Character</b><br />
+Name: {{ profile.eve_CHARNAME }} <br />
+Character ID: {{ profile.eve_CHARID }} <br />
+Corporation: {{ profile.eve_CORPNAME }} <br />
+Corporation ID: {{ profile.eve_CORPID }} <br />
+Corp roles: {{ profile.eve_CORPROLE }} <br />
+Alliance: {{ profile.eve_ALLIANCENAME }} <br />
+Alliance ID: {{ profile.eve_ALLIANCEID }} <br />
+<b>Location</b><br />
+Nearest location: {{ profile.eve_NEARESTLOCATION }} <br />
+Station: {{ profile.eve_STATIONNAME }} <br />
+Solarsystem: {{ profile.eve_SOLARSYSTEMNAME }} <br />
+Constellation: {{ profile.eve_CONSTELLATIONNAME }} <br />
+Region: {{ profile.eve_REGIONNAME }} <br />
+</div>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% load i18n %}
+
+{% blocktrans %}
+Hi there new pilot, we're almost done with registration.
+
+Please activate your e-mail by following this link: 
+{% endblocktrans %}
+
+http://{{ site }}{% url registration_activate activation_key %}
