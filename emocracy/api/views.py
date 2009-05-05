@@ -191,7 +191,7 @@ class IssueVoteCollection(RESTCollection):
             return HttpResponseNotFound()
         form = IssueVoteCollectionForm(request.POST)
         # TODO deal with authentication correctly (that is through Oauth)
-        if not reqeust.user.is_authenticated():
+        if not request.user.is_authenticated():
             return HttpResponseNotAllowed()
         if form.is_valid():
             new_vote = actions.vote(
