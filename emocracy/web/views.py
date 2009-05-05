@@ -27,9 +27,9 @@ from util import *
 import gamelogic.actions, anonymous_actions
 from web.forms import TagForm, CastVoteFormFull, IssueFormNew, HiddenOkForm, TagSearchForm, TagForm2,  AuthorizeRequestTokenForm
 from web.forms import NormalVoteForm, BlankVoteForm
-from emocracy.gamelogic.models import votes_to_description
-from emocracy.gamelogic.models import Tag, TaggedIssue
-from emocracy.gamelogic.models import Issue, IssueBody, IssueSet
+from emocracy.voting.models import votes_to_description
+from emocracy.voting.models import Tag, TaggedIssue, Issue, IssueSet
+from emocracy.gamelogic.models import IssueBody 
 import settings
 
 # ------------------------------------------------------------------------------
