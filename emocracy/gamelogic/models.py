@@ -29,12 +29,14 @@ class Mandate(models.Model):
 source_types = (
     (u"video", _(u"video")),
     (u"audio", _(u"audio")),
-    (u"boek", _(u"boek")),
+    (u"book", _(u"book")),
     (u"document", _(u"document")),
     (u"image", _(u"image")),
     (u"deeplink", _(u"deeplink")),
     (u"website", _(u"website")),
 )
+
+# ------------------------------------------------------------------------------
 
 class IssueBody(models.Model):
     owner = models.ForeignKey(User)
