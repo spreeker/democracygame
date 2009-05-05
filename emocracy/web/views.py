@@ -22,6 +22,7 @@ from django.template.loader import render_to_string
 from django.http import QueryDict
 
 from oauth_provider.models import *
+from oauth_provider.decorators import oauth_required
 
 from util import *
 import gamelogic.actions, anonymous_actions
@@ -638,3 +639,19 @@ def authorize(request, *args):
         'form' : form
     }
     return render_to_response('web/authorize.html', context)
+
+def callback(request):
+    oauth_token = request.GET.get('oauth_token', '')
+    try:
+        request_token = Token.objects.get(key = oauth_token)
+    except Token.DoesNotExist:
+        msg = r'Token in URL not OK'
+        request_token = 'FUCK'
+        form = None
+    print request_token.consumer
+    print request_token.consumer.callback
+    return HttpResponseRedirect(request_token.consumer.callback+'/?unauthed_token='+request_token.to_string())
+
+@oauth_required
+def get_photo(request):
+    return HttpResponse("Protected Resource access!")

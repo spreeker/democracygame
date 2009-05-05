@@ -28,10 +28,10 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = os.path.join(PROJECT_PATH, "database.sqlite3")
+DATABASE_NAME = '/home/conrado/emo/emocracy/database.sqlite3'
 
-DATABASE_USER = ''             # Not used with sqlite3.
-DATABASE_PASSWORD = ''         # Not used with sqlite3.
+DATABASE_USER = 'conrado'             # Not used with sqlite3.
+DATABASE_PASSWORD = 'conrado'         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
@@ -140,10 +140,11 @@ logging.basicConfig(
 ACCOUNT_ACTIVATION_DAYS = 1
 
 OAUTH_AUTHORIZE_VIEW = 'emocracy.web.views.authorize'
+OAUTH_CALLBACK_VIEW = 'emocracy.web.views.callback'
 
 # ------------------------------------------------------------------------------
 # django-oauth related stuff (see external_apps/oauth_provider)
 # http://code.welldev.org/django-oauth/wiki/Home
 
 #OAUTH_AUTHORIZE_VIEW = 'myapp.views.oauth_authorize'
-#OAUTH_REALM_KEY_NAME = 'http://emocracy.nl/api/'
+#OAUTH_REALM_KEY_NAME = 'http://emo.buhrer.net'
