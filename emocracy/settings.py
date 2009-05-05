@@ -79,6 +79,9 @@ MIDDLEWARE_CLASSES = (
 #    'django.contrib.csrf.middleware.CsrfMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    # for the transaction middleware see :
+    # http://docs.djangoproject.com/en/dev/topics/db/transactions/
+    'django.middleware.transaction.TransactionMiddleware',
 )
 
 ROOT_URLCONF = 'emocracy.urls'
@@ -119,6 +122,9 @@ INSTALLED_APPS = (
     'emocracy.profiles',
     'emocracy.api',
     'emocracy.web',
+    'emocracy.voting',
+    # There are currently 2 tests failing for registration due to template 
+    # inheritance. 
 	'registration',
     'oauth_provider',   
 )
