@@ -173,7 +173,7 @@ class Vote(models.Model):
 
 class AnonymousVote(models.Model):
     api_interface = models.CharField(max_length = 50, blank = True)
-    session_id = models.CharField(max_length = 50) # TODO find out what length Django session identifiers have
+    session_id = models.CharField(max_length = 32) # Django session identifiers have
 
     issue = models.ForeignKey(Issue)
     issueset = models.ForeignKey(IssueSet, null = True)
