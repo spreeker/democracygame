@@ -3,14 +3,7 @@ import logging
 import os
 import sys
 
-# Be sure to create a settings_local.py module with the following entries:
-# SECRET_KEY
-try:
-    from settings_local import *
-except ImportError:
-    print "Create your local settings_local.py settings file with password sensitive information ect"
-    # Re-raise the import error. The server should not run!
-    raise 
+# Be sure to create a settings_local.py module with your local settings!
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
 # Add the external dependencies of Emocracy to the python path. (The external
@@ -28,10 +21,10 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = '/home/conrado/emo/emocracy/database.sqlite3'
+DATABASE_NAME = 'database.sqlite3'
 
-DATABASE_USER = 'conrado'             # Not used with sqlite3.
-DATABASE_PASSWORD = 'conrado'         # Not used with sqlite3.
+DATABASE_USER = ''             # Not used with sqlite3.
+DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
@@ -154,3 +147,10 @@ OAUTH_CALLBACK_VIEW = 'emocracy.web.views.callback'
 
 #OAUTH_AUTHORIZE_VIEW = 'myapp.views.oauth_authorize'
 #OAUTH_REALM_KEY_NAME = 'http://emo.buhrer.net'
+
+try:
+    from settings_local import *
+except ImportError:
+    print "Create your local settings_local.py settings file with password sensitive information ect"
+    # Re-raise the import error. The server should not run!
+    raise
