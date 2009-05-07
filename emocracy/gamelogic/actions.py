@@ -24,8 +24,11 @@ from django.contrib.contenttypes.models import ContentType
 
 import allow
 import score
-from models import votes_to_description, Mandate, tag_count_threshold
-from models import Vote, IssueBody, Issue
+from models import Mandate, tag_count_threshold
+from voting.models import Vote
+from voting.models import Vote, Issue
+from voting.models import votes_to_description
+from issues.models import IssueBody
 
 
 
