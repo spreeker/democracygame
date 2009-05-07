@@ -12,10 +12,12 @@ from django.utils.translation import ugettext as _
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.core.urlresolvers import reverse
 
-from forms import ChangeSettingsForm, ChangeDescriptionForm, UserSearchForm
+from forms import ChangeSettingsForm
+from forms import ChangeDescriptionForm
+from forms import UserSearchForm
 from django.contrib.auth.forms import PasswordResetForm
 from models import UserProfile
-from gamelogic.models import Issue
+from voting.models import Issue
 
 # Imports for activate view
 from registration.models import RegistrationProfile
