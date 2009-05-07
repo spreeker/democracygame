@@ -8,8 +8,10 @@ from django import forms
 from django.forms import ModelForm
 from django.utils.translation import ugettext as _
 from django.contrib.auth.models import User
-from gamelogic.models import source_types, possible_votes, normal_votes
-from gamelogic.models import Issue
+from issues.models import source_types 
+from voting.models import possible_votes 
+from voting.models import normal_votes
+from voting.models import Issue
 
 class IssueCollectionForm(forms.Form):
     # TODO : see wether this can done more cleanly (as there is some duplication

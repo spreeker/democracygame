@@ -66,10 +66,10 @@ class IssueManager(models.Manager):
 
 class Issue(models.Model):
     """
-    Emocracy issue.
-
+    voting issue. 
+    
     # create an issue. 
-    >>> from gamelogic.models import IssueBody
+    >>> from issues.models import IssueBody
     >>> tuser = User.objects.create_user('john', 'john@john.com', 'pass')
     >>> tissue = IssueBody.objects.create( owner = tuser, title = 'tissue',body = 'body',url = 'tissue.org',source_type = 'website', time_stamp = datetime.datetime.now())
     >>> tissue = Issue.objects.create_for_object(tissue, title=tissue.title, owner=tissue.owner)

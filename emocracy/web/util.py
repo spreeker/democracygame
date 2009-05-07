@@ -6,7 +6,7 @@ import logging
 
 from django.utils.translation import ugettext as _
 
-from gamelogic.models import Vote, votes_to_description
+from voting.models import Vote, votes_to_description
 
 def vote_helper_anonymous(request, issues):
     """Returns a list of votes for <request.user> and the selected <issue>."""

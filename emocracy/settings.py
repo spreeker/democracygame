@@ -116,6 +116,7 @@ INSTALLED_APPS = (
     'emocracy.api',
     'emocracy.web',
     'emocracy.voting',
+    'emocracy.issues',
     # There are currently 2 tests failing for registration due to template 
     # inheritance. 
 	'registration',
