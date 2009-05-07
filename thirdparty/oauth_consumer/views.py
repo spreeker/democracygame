@@ -47,7 +47,6 @@ def auth(request):
     consumer = oauth.OAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET)
     client = easyoauth.OAuthEasyClient(consumer, OAUTH_URLS, SIGNATURE_METHOD, SERVER, PORT)
     token = client.get_request_token()
-    print token
     auth_url = client.get_authorization_url(token, CALLBACK_URL)
     response = HttpResponseRedirect(auth_url)
     request.session['unauthed_token'] = token.to_string()
