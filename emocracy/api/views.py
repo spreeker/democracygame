@@ -14,7 +14,11 @@ from django.core.urlresolvers import reverse
 from oauth_provider.models import Resource, Consumer
 from oauth_provider.decorators import oauth_required
 
-from gamelogic.models import Issue, IssueBody, Vote, TaggedIssue, Tag
+from voting.models import Issue
+from voting.models import Vote 
+from voting.models import TaggedIssue
+from voting.models import Tag
+from issues.models import IssueBody
 from gamelogic import actions
 from forms import IssueCollectionForm, IssueVoteCollectionForm
 

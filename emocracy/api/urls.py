@@ -1,9 +1,13 @@
 import settings
 from django.conf.urls.defaults import *
 from views import IssueResource, IssueCollection 
-from views import IssueVoteCollection, IssueTagCollection, IssueVoteUserResource
-from views import VoteResource, VoteCollection
-from views import UserResource, UserCollection
+from views import IssueVoteCollection
+from views import IssueTagCollection
+from views import IssueVoteUserResource
+from views import VoteResource 
+from views import VoteCollection
+from views import UserResource
+from views import UserCollection
 from views import TagResource
 
 
