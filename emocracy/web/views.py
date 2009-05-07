@@ -26,11 +26,23 @@ from oauth_provider.decorators import oauth_required
 
 from util import *
 import gamelogic.actions, anonymous_actions
-from web.forms import TagForm, CastVoteFormFull, IssueFormNew, HiddenOkForm, TagSearchForm, TagForm2,  AuthorizeRequestTokenForm
-from web.forms import NormalVoteForm, BlankVoteForm
+from web.forms import TagForm
+from web.forms import CastVoteFormFull
+from web.forms import IssueFormNew
+from web.forms import HiddenOkForm
+from web.forms import TagSearchForm
+from web.forms import TagForm2
+from web.forms import AuthorizeRequestTokenForm
+from web.forms import NormalVoteForm
+from web.forms import BlankVoteForm
 from emocracy.voting.models import votes_to_description
-from emocracy.voting.models import Tag, TaggedIssue, Issue, IssueSet
-from emocracy.gamelogic.models import IssueBody 
+from emocracy.voting.models import Tag
+from emocracy.voting.models import TaggedIssue
+from emocracy.voting.models import Issue
+from emocracy.voting.models import IssueSet
+from emocracy.voting.models import Vote
+from emocracy.issues.models import IssueBody
+
 import settings
 
 # ------------------------------------------------------------------------------
@@ -101,7 +113,7 @@ class ListIssueBaseView(object):
         return render_to_response('web/issue_list.html',
             RequestContext(request, extra_context))
 
-issue_list = ListIssueBaseView()
+list_issues = ListIssueBaseView()
 
 class IssuesForTagView(ListIssueBaseView):
     """

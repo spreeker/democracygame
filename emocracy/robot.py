@@ -4,7 +4,10 @@ import settings
 setup_environ(settings)
 # now continue as per usual:
 import datetime, random, codecs, sys
-from emocracy.gamelogic.models import IssueBody, Issue, Vote
+from emocracy.voting.models import Issue
+from emocracy.voting.models import Vote
+from emocracy.issues.models import IssueBody
+
 from django.contrib.auth.models import User
 
 def homerus(n_issues = 10):
