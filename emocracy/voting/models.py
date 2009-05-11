@@ -69,7 +69,7 @@ class Issue(models.Model):
     voting issue. 
     
     # create an issue. 
-    >>> from issues.models import IssueBody
+    >>> from issues_content.models import IssueBody
     >>> tuser = User.objects.create_user('john', 'john@john.com', 'pass')
     >>> tissue = IssueBody.objects.create( owner = tuser, title = 'tissue',body = 'body',url = 'tissue.org',source_type = 'website', time_stamp = datetime.datetime.now())
     >>> tissue = Issue.objects.create_for_object(tissue, title=tissue.title, owner=tissue.owner)

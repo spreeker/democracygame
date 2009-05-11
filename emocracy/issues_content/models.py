@@ -4,7 +4,7 @@ Emocracy issue data. These models define issues on which people can vote.
 (whished) functionality
 -We define possible source types here and content.
 -Update possibilities on issues? history and undo?
--
+-location (geo django) data?
 """
 
 from django.db import models
@@ -32,8 +32,6 @@ class IssueBody(models.Model):
     source_type = models.CharField(max_length = 20, choices = source_types)
     url = models.URLField(verify_exists = False)
     time_stamp = models.DateTimeField()
-    #id_child = 
-    #id_parent = 
 
     class Meta:
         verbose_name_plural = "issue bodies"

@@ -41,7 +41,7 @@ from emocracy.voting.models import TaggedIssue
 from emocracy.voting.models import Issue
 from emocracy.voting.models import IssueSet
 from emocracy.voting.models import Vote
-from emocracy.issues.models import IssueBody
+from emocracy.issues_content.models import IssueBody
 
 import settings
 
