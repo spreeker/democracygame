@@ -18,7 +18,7 @@ from voting.models import Issue
 from voting.models import Vote 
 from voting.models import TaggedIssue
 from voting.models import Tag
-from issues.models import IssueBody
+from issues_content.models import IssueBody
 from gamelogic import actions
 from forms import IssueCollectionForm, IssueVoteCollectionForm
 
