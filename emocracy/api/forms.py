@@ -8,7 +8,7 @@ from django import forms
 from django.forms import ModelForm
 from django.utils.translation import ugettext as _
 from django.contrib.auth.models import User
-from issues.models import source_types 
+from issues_content.models import source_types 
 from voting.models import possible_votes 
 from voting.models import normal_votes
 from voting.models import Issue
