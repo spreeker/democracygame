@@ -6,7 +6,7 @@ setup_environ(settings)
 import datetime, random, codecs, sys
 from emocracy.voting.models import Issue
 from emocracy.voting.models import Vote
-from emocracy.issues.models import IssueBody
+from emocracy.issues_content.models import IssueBody
 
 from django.contrib.auth.models import User
 
