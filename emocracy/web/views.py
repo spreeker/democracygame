@@ -24,7 +24,10 @@ from django.http import QueryDict
 from oauth_provider.models import *
 from oauth_provider.decorators import oauth_required
 
-from util import *
+from util import vote_helper_anonymous
+from util import vote_helper_authenticated
+from util import issue_sort_order_helper
+
 import gamelogic.actions, anonymous_actions
 from web.forms import TagForm
 from web.forms import CastVoteFormFull
