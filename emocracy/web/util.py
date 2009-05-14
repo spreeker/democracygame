@@ -19,16 +19,16 @@ def vote_helper_anonymous(request, issues):
                 # Assuming there is no garbage in the user's session.  
                 # (So that <request.session["vote_history"][issue.no]> will
                 # always cast to an integer.)
-                tmp = int(request.session["vote_history"][issue.pk])
+                vote_value = int(request.session["vote_history"][issue.pk])
                 try:
-                    user_votes.append(votes_to_description[tmp])
+                    user_votes.append(votes_to_description[vote_value])
                     
-                    if tmp == -1: vote_class.append(u'against')
-                    elif tmp == 1: vote_class.append(u'for')
+                    if vote_value == -1: vote_class.append(u'against')
+                    elif vote_value == 1: vote_class.append(u'for')
                     else: vote_class.append(u'blank')
                     
                 except KeyError:
-                    logging.info(u"NON EXISTANT VOTE INTEGER " + tmp)
+                    logging.info(u"NON EXISTANT VOTE INTEGER " + vote_value)
                     user_votes.append(u'KEY ERROR')
                     vote_class.append(u'blank')
             except KeyError:
@@ -51,16 +51,16 @@ def vote_helper_authenticated(user, issues):
     for issue in issues:
         vote = Vote.objects.filter(owner = user).filter(issue = issue.pk).filter(is_archived = False)
         if vote:
-            tmp = vote[0].vote
+            vote_value = vote[0].vote
             try:
-                vote_text.append(votes_to_description[tmp])
+                vote_text.append(votes_to_description[vote_value])
 
-                if tmp == -1: vote_class.append(u'against')
-                elif tmp == 1: vote_class.append(u'for')
+                if vote_value == -1: vote_class.append(u'against')
+                elif vote_value == 1: vote_class.append(u'for')
                 else: vote_class.append(u'blank')
                 
             except KeyError:
-                logging.info(u"NON EXISTANT VOTE INTEGER " + unicode(tmp))
+                logging.info(u"NON EXISTANT VOTE INTEGER " + unicode(vote_value))
                 vote_text.append(u'KEY ERROR')
                 vote_class.append(u'blank')
         else:
