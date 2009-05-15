@@ -34,13 +34,17 @@ class IssueFormNew(forms.Form):
     ))    
 
 class TagForm(forms.Form):
-    tags = forms.CharField(max_length = 50)
+    tags = forms.RegexField(
+            regex = "^[a-z]+$" ,
+            max_length = 50 ,
+            error_messages = { 'invalid' : "please enter a single lowercase tag word" },
+    )
     issue_no = forms.IntegerField(widget = forms.HiddenInput())
 
 def tag_selection_helper():
     qs = Tag.objects.get_popular(10)
     l = [(u'', u'--------')]
-    l.extend([(unicode(x), unicode(x)) for x in qs]) # TODO make HTML safe! XXX
+    l.extend([(unicode(x), unicode(x)) for x in qs])
     return l
 
 class TagForm2(forms.Form):
@@ -91,7 +95,6 @@ class CastVoteFormFull(forms.Form):
     # second_step is used for non AJAX submissions (to show or not show certain
     # fields)
     second_step = forms.BooleanField(required = False, initial = False, widget = forms.HiddenInput())
-    
     
     def clean(self):
         """
