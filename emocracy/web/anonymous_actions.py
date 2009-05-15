@@ -10,4 +10,3 @@ def vote(request, issue, vote_int):
     except KeyError:
         request.session["vote_history"] = {issue.pk : vote_int}
     request.session.modified = True
-    # TODO register an AnonymousVote with the database
