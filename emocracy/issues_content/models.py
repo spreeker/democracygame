@@ -17,7 +17,6 @@ source_types = (
     (u"book", _(u"book")),
     (u"document", _(u"document")),
     (u"image", _(u"image")),
-    (u"deeplink", _(u"deeplink")),
     (u"website", _(u"website")),
 )
 
