@@ -6,7 +6,7 @@ This module implements:
 -voting database interactions
 -tagging database interactions
 
-Note that the game rules should not be added to this module.
+Note that game rules should not be added to this module.
 """
 
 import datetime
@@ -16,7 +16,6 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.utils.translation import ugettext as _
-
 
 # ADD NEW POSSIBILITIES WITH NEW INTEGERS, THEY NEED TO BE UNIQUE
 # LEAVE OLD ENTRIES SO AS NOT TO MESS THE DATABASE UP!
@@ -69,7 +68,7 @@ class Issue(models.Model):
     voting issue. 
     
     # create an issue. 
-    >>> from issues.models import IssueBody
+    >>> from issues_content.models import IssueBody
     >>> tuser = User.objects.create_user('john', 'john@john.com', 'pass')
     >>> tissue = IssueBody.objects.create( owner = tuser, title = 'tissue',body = 'body',url = 'tissue.org',source_type = 'website', time_stamp = datetime.datetime.now())
     >>> tissue = Issue.objects.create_for_object(tissue, title=tissue.title, owner=tissue.owner)
@@ -85,12 +84,11 @@ class Issue(models.Model):
     object_id = models.PositiveIntegerField() # or just a IntegerField -> TODO find out!
     payload = generic.GenericForeignKey('content_type', 'object_id')
     
-    # Denormalized data - for sort order and to give the DB a break ;)
+    # Denormalized data - for sort order
     offensiveness = models.IntegerField(default = 0)
     score = models.IntegerField(default = 0)
     votes = models.IntegerField(default = 0)
     hotness = models.IntegerField(default = 0)
-    # TODO add a denomalized count of anonymous votes.
     
     objects = IssueManager()
     
@@ -138,11 +136,12 @@ class Issue(models.Model):
         except IntegrityError:
             first_time = False
         return tag, first_time
-            
+
+
             
 class IssueSet(models.Model):
     owner = models.ForeignKey(User)
-    title = models.CharField(max_length = 200)
+    title = models.CharField( unique = True , max_length = 200)
     body = models.TextField(max_length = 2000)
     time_stamp = models.DateTimeField()
     issues = models.ManyToManyField(Issue) # add a trough keyword later ...
@@ -220,7 +219,6 @@ class Tag(models.Model):
     def get_issues(self):
         issue_ids = TaggedIssue.objects.filter(tag = self).values_list('issue', flat = True)
         return Issue.objects.filter(pk__in = issue_ids).distinct()
-    
     
     
 class TaggedIssue(models.Model):
