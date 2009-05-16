@@ -1,4 +1,4 @@
-import oauth
+import oauth.oauth as oauth
 import httplib, time, datetime
 
 import easyoauth
@@ -87,6 +87,6 @@ def friend_list(request):
     token = oauth.OAuthToken.from_string(access_token)   
     
     # Check if the token works on Twitter
-    auth = client.get_resource('/api/oauth_test/', token)
+    auth = client.get_resource('/api/issues/', token)
     return HttpResponse(auth)
     #return render_to_response('oauth_test.html', {'context': auth})
