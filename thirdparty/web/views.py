@@ -51,67 +51,57 @@ def issues_list_popular(request):
     print data
     extra_context = json.loads( data )
     print extra_context
-    if extra_context.has_key('next'):
-        print 'next: ' + extra_context['next']
-        next = extra_context['next']
-        next = next.split('/')[-1:]
-        extra_context['next'] = next[0]
-    else:
-        extra_context['next'] = ''
-    if extra_context.has_key('previous'):
-        print 'previous: ' + extra_context['previous']
-        previous = extra_context['previous']
-        previous = previous.split('/')[-1:]
-        extra_context['previous'] = previous[0]
-    else:
-        extra_context['previous'] = ''
+    #if extra_context.has_key('next'):
+    #    print 'next: ' + extra_context['next']
+    #    next = extra_context['next']
+    #    next = next.split('/')[-1:]
+    #    extra_context['next'] = next[0]
+    #else:
+    #    extra_context['next'] = ''
+    #if extra_context.has_key('previous'):
+    #    print 'previous: ' + extra_context['previous']
+    #    previous = extra_context['previous']
+    #    previous = previous.split('/')[-1:]
+    #    extra_context['previous'] = previous[0]
+    #else:
+    #    extra_context['previous'] = ''
     print extra_context
     fetch = []
-    for resource in extra_context['resources']:
-        issueid = resource.split('/')
+    for resource in extra_context:
+        issueid = resource['issue_uri'].split('/')
         issueid = issueid[-2:]
         issueid = issueid[0]
-        req = urllib2.Request(resource)
-        response = urllib2.urlopen(req)
-        data = response.read()
-        resource_data = json.loads( data )
+        resource_data = {}
         resource_data['id'] = issueid
         # FIXME next line deals with microseconds. bad hack, fix with python 2.6
-        resource_datetime = datetime.datetime(*time.strptime(
-            resource_data['time_stamp'].split('.')[0],'%Y-%m-%d %H:%M:%S')[:6])
+        resource_datetime = datetime.datetime.strptime(resource['time_stamp'],"%Y-%m-%d %H:%M:%S")
         now = datetime.datetime.now()
         dt = now - resource_datetime
+        resource_data['title'] = resource['title']
         if not dt.days:
             resource_data['age'] = 'Today'
         else:
             resource_data['age'] = '%s days ago' % dt.days
-        req = urllib2.Request(resource_data['owner'])
-        response = urllib2.urlopen(req)
-        data = response.read()
-        resource_data['user'] = json.loads( data )
-        userid = resource_data['owner'].split('/')
+        resource_data['user'] = resource['owner']['username']
+        userid = resource['owner']['user_uri'].split('/')
         userid = userid[-2:]
         resource_data['userid'] = userid[0]
         fetch.append(resource_data)
-    extra_context['issues'] = fetch
+    context = {}
+    context['issues'] = fetch
     return render_to_response('issue_list.html', 
-            RequestContext(request, extra_context))
+            RequestContext(request, context))
 
 def issues_issue_detail(request, pk):
     req = urllib2.Request(settings.EMOCRACY_API_SERVER+"issues/%s/" % pk)
     response = urllib2.urlopen(req)
     issuedata = response.read()
-    extra_context = json.loads( issuedata )
-    req = urllib2.Request(extra_context['owner'])
-    response = urllib2.urlopen(req)
-    ownerdata = response.read()
-    owner_context = json.loads( ownerdata )
+    extra_context = json.loads( issuedata )[0]
     #print extra_context
     #print owner_context
-    extra_context['user'] = owner_context
-    userid = extra_context['owner'].split('/')
+    userid = extra_context['owner']['user_uri'].split('/')
     userid = userid[-2:]
-    extra_context['user']['id'] = userid[0]
+    extra_context['owner']['id'] = userid[0]
     return render_to_response('issue_detail.html', 
             RequestContext(request, extra_context))
 
@@ -139,7 +129,7 @@ def user_details(request, pk):
     req = urllib2.Request(settings.EMOCRACY_API_SERVER+"users/%s/" % pk)
     response = urllib2.urlopen(req)
     issuedata = response.read()
-    extra_context = json.loads( issuedata )
+    extra_context = json.loads( issuedata )[0]
     extra_context['userid'] = pk
     return render_to_response('user_detail.html',
             RequestContext(request, extra_context))
