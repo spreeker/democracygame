@@ -114,13 +114,14 @@ INSTALLED_APPS = (
     'emocracy.gamelogic',
     'emocracy.profiles',
     'emocracy.api',
+    'emocracy.api_old',
     'emocracy.web',
     'emocracy.voting',
     'emocracy.issues',
     # There are currently 2 tests failing for registration due to template 
     # inheritance. 
 	'registration',
-    'oauth_provider',   
+    'piston',   
 )
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -139,8 +140,8 @@ logging.basicConfig(
 
 ACCOUNT_ACTIVATION_DAYS = 1
 
-OAUTH_AUTHORIZE_VIEW = 'emocracy.web.views.authorize'
-OAUTH_CALLBACK_VIEW = 'emocracy.web.views.callback'
+OAUTH_AUTH_VIEW = 'web.views.oauth_user_auth'
+OAUTH_CALLBACK_VIEW = 'web.views.oauth_callback'
 
 # ------------------------------------------------------------------------------
 # django-oauth related stuff (see external_apps/oauth_provider)
