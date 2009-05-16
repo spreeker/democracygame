@@ -1,4 +1,4 @@
-from oauth import oauth
+import oauth.oauth as oauth
 import httplib
 
 # An easier to use OAuth library forked from python-oauth
