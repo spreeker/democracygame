@@ -1,4 +1,4 @@
-import oauth
+import oauth.oauth as oauth
 from django.conf import settings
 
 import easyoauth
