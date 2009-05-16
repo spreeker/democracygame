@@ -28,7 +28,7 @@ from models import Mandate, tag_count_threshold
 from voting.models import Vote
 from voting.models import Vote, Issue
 from voting.models import votes_to_description
-from issues.models import IssueBody
+from issues_content.models import IssueBody
 
 
 

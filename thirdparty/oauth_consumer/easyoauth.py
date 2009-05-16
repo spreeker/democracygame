@@ -4,7 +4,7 @@ import httplib
 # An easier to use OAuth library forked from python-oauth
 
 # OAuthURLS - request token, authorize, and access token URLs on service provider
-class OAuthURLS:
+class OAuthURLS(object):
     request_token_url = None
     authorization_url = None
     access_token_url = None
@@ -15,7 +15,7 @@ class OAuthURLS:
         self.access_token_url = access_token_url
 
 # OAuthClient - for the consumer
-class OAuthEasyClient:
+class OAuthEasyClient(object):
     consumer = None
     urls = None
     signature_method = None
