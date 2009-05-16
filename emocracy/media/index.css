@@ -42,6 +42,11 @@ a   {
     color: white;
 }
 
+#header > #thegame {
+   letter-spacing : 0.5em; 
+   font-style : italic;
+}
+
 /* messagebar*/
 #messagebar {
     color:black;
