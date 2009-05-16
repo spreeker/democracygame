@@ -37,3 +37,6 @@ class IssueBody(models.Model):
 
     class Meta:
         verbose_name_plural = "issue bodies"
+
+    def get_api_url():
+        return "/api/issues/"+self.id+"/"
