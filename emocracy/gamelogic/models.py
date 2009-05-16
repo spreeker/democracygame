@@ -6,8 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 
-#from emocracy.voting.models import *
-from emocracy.issues.models import IssueBody
+from emocracy.issues_content.models import IssueBody
 
 tag_count_threshold = 10
 
