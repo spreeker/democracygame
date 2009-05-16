@@ -11,8 +11,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
-from oauth_provider.models import Resource, Consumer
-from oauth_provider.decorators import oauth_required
 
 from voting.models import Issue
 from voting.models import Vote 
@@ -301,7 +299,3 @@ class UserResource(RESTResource):
         return HttpResponse(simplejson.dumps(data, ensure_ascii = False), mimetype = 'text/html; charset=utf-8')
         
 # ------------------------------------------------------------------------------
-
-@oauth_required
-def oauth_test(request):
-    return HttpResponse("It worked")
