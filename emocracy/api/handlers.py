@@ -4,7 +4,7 @@ from django.db.models import Q
 from piston.handler import BaseHandler, AnonymousBaseHandler
 from piston.utils import rc
 
-from emocracy.issues.models import IssueBody
+from emocracy.issues_content.models import IssueBody
 from emocracy.voting.models import Vote
 
 class AnonymousVoteHandler(AnonymousBaseHandler):
