@@ -148,3 +148,16 @@ def url_error_view(request, error):
         'url_error_view.html',
         RequestContext(request, {'error' : error})
     )
+"""
+def ajax_vote(request):
+    '''
+    function used by the vote bar
+    '''
+    vote = request.POST['vote']
+    issue = request.POST['issue']
+    try:
+        blank = request.POST['blank']
+    except:
+        blank = "no reason specified"
+    req = urllib2.Request(EMOCRACY_API_SERVER+"votes/?page=%s" %page) 
+"""
