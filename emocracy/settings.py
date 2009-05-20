@@ -46,6 +46,14 @@ SITE_ID = 1
 # to load the internationalization machinery.
 USE_I18N = True
 
+ugettext = lambda s: s
+LANGUAGES = (
+    ('en' , ugettext('English')),
+    ('es' , ugettext('Spanish')),
+    ('de' , ugettext('German')),
+    ('nl' , ugettext('Dutch')),
+)
+
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
 MEDIA_ROOT = ''
@@ -72,6 +80,7 @@ MIDDLEWARE_CLASSES = (
 #    'django.contrib.csrf.middleware.CsrfMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     # for the transaction middleware see :
     # http://docs.djangoproject.com/en/dev/topics/db/transactions/
     'django.middleware.transaction.TransactionMiddleware',
