@@ -48,9 +48,9 @@ def issues_list_popular(request):
     else:
         pass
     data = response.read()
-    print data
+    #print data
     extra_context = json.loads( data )
-    print extra_context
+    #print extra_context
     #if extra_context.has_key('next'):
     #    print 'next: ' + extra_context['next']
     #    next = extra_context['next']
@@ -65,7 +65,7 @@ def issues_list_popular(request):
     #    extra_context['previous'] = previous[0]
     #else:
     #    extra_context['previous'] = ''
-    print extra_context
+    #print extra_context
     fetch = []
     for resource in extra_context:
         issueid = resource['issue_uri'].split('/')
@@ -78,6 +78,10 @@ def issues_list_popular(request):
         now = datetime.datetime.now()
         dt = now - resource_datetime
         resource_data['title'] = resource['title']
+        resource_data['body'] = resource['body']
+        resource_data['votes_for'] = resource['votes_for']
+        resource_data['votes_abstain'] = resource['votes_abstain']
+        resource_data['votes_against'] = resource['votes_against']
         if not dt.days:
             resource_data['age'] = 'Today'
         else:
@@ -102,6 +106,7 @@ def issues_issue_detail(request, pk):
     userid = extra_context['owner']['user_uri'].split('/')
     userid = userid[-2:]
     extra_context['owner']['id'] = userid[0]
+    extra_context['id'] = pk
     return render_to_response('issue_detail.html', 
             RequestContext(request, extra_context))
 
