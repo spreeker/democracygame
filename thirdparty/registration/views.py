@@ -145,7 +145,6 @@ def register(request, success_url=None,
         if form.is_valid():
             new_user = form.save(profile_callback=profile_callback)
             profile = new_user.get_profile()
-            profile.store_meta(request)
             profile.save()
             # success_url needs to be dynamically generated here; setting a
             # a default value using reverse() will cause circular-import

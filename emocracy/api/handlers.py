@@ -161,11 +161,26 @@ class AnonymousIssueListHandler(AnonymousBaseHandler):
 class IssueListHandler(BaseHandler):
     allowed_methods = ('GET',)
     anonymous = AnonymousIssueListHandler
-    fields = ('issue_uri', 'title', 'body', ('owner', ('username', 'user_uri',)), 'time_stamp', 'souce_type', 'url')
+    fields = ('issue_uri', 'title', 'body', ('owner', ('username', 'user_uri',)), 'time_stamp', 'souce_type', 'url', 'votes_for', 'votes_abstain', 'votes_against')
     model = IssueBody
     
     def read(self, request, *args, **kwargs):
         return self.model.objects.filter()
+
+    @staticmethod
+    def votes_for(issue):
+        votes_for = Vote.objects.filter(Q(issue=issue) & Q(vote=1))
+        return len(votes_for)
+        
+    @staticmethod
+    def votes_abstain(issue):
+        votes_abstain = Vote.objects.filter(Q(issue=issue) & Q(vote=0))
+        return len(votes_abstain)
+    
+    @staticmethod
+    def votes_against(issue):
+        votes_against = Vote.objects.filter(Q(issue=issue) & Q(vote=-1))
+        return len(votes_against)
 
     @staticmethod
     def user_uri(user):
