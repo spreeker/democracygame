@@ -1,6 +1,9 @@
-{% extends "web/index.html" %}
+{% extends "main.html" %}
 {% load i18n %}
 
 {% block content %}
+<div class="blockmessage">
 {% blocktrans %}You are now logged out.{% endblocktrans %}
+</div>
+{% include "footer.html" %}
 {% endblock %}

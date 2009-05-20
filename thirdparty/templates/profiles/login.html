@@ -1,15 +1,19 @@
-{% extends "web/index.html" %}
+{% extends "main.html" %}
 
 {% block content %}
-
+<div class="blockmessage">
 <form method="post" action=".">
 <table>
 <tr>
 <td>{{form.username.label_tag}}</td>
+</tr>
+<tr>
 <td>{{form.username}}</td>
 </tr>
 <tr>
 <td>{{form.password.label_tag}}</td>
+</tr>
+<tr>
 <td>{{form.password}}</td>
 </tr>
 </table>
@@ -20,5 +24,6 @@ Try again, username and password don't match.
 <input type="submit" value="login">
 <input type="hidden" value="{{next}}" name="next">
 </form>
-
+</div>
+{% include "footer.html" %}
 {% endblock %}

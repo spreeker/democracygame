@@ -13,8 +13,10 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@domain.com'),
+    ('Conrado Buhrer', 'conrado@buhrer.net'),
 )
+
+DEFAULT_FROM_EMAIL='conrado.buhrer@telfort.nl'
 
 MANAGERS = ADMINS
 

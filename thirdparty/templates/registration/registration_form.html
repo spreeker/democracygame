@@ -1,15 +1,34 @@
-{% extends "web/index.html" %}
+{% extends "main.html" %}
 
 {% block content %}
+<div class="blockmessage">
 <form method="post" action=".">
-<table>
-{{form.as_table}}
-</table>
+<div id="username_container">
+<label style="margin-top:5px">Username:</label><br />
+{{ form.username }}
+</div>
+<div id="email_container">
+<label style="margin-top:5px">E-mail:</label><br />
+{{ form.email }}
+</div>
+<div id="password1_container">
+<label style="margin-top:5px">Password:</label><br />
+{{ form.password1 }}
+</div>
+<div id="password2_container">
+<label style="margin-top:5px">Password (again):</label><br />
+{{ form.password2 }}
+</div>
+<div id="tos_container">
+<label style="margin-top:5px">Tick this:</label>
+{{ form.tos }}
+</div>
 {% if form.errors %}
-Some problem ocurred, big deal.
+Some field not valid. <br />
 {% endif %}
 
 <input type="submit" value="register">
 </form>
-
+</div>
+{% include "footer.html" %}
 {% endblock %}
