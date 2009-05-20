@@ -8,6 +8,8 @@ from emocracy.api.handlers import IssueHandler
 from emocracy.api.handlers import IssueListHandler
 from emocracy.api.handlers import UserListHandler
 from emocracy.api.handlers import UserHandler
+from emocracy.api.handlers import VoteHandler
+from emocracy.api.handlers import VoteListHandler
 
 # Emitter registrered to set wrong mime-type for visibility purposes
 # just comment these two lines out for production
@@ -20,10 +22,14 @@ issues = Resource(handler=IssueListHandler, authentication=auth)
 issue = Resource(handler=IssueHandler, authentication=auth)
 users = Resource(handler=UserListHandler, authentication=auth)
 user = Resource(handler=UserHandler, authentication=auth)
+votes = Resource(handler=VoteListHandler, authentication=auth)
+vote = Resource(handler=VoteHandler, authentication=auth)
 
 urlpatterns = patterns('',
     url(r'^issues/$', issues),
     url(r'^issues/(?P<id>\d+)/$', issue),
     url(r'^users/$', users),
     url(r'^users/(?P<id>\d+)/$', user),
+    url(r'^votes/$', votes),
+    url(r'^votes/(?P<id>\d+)/$', vote),
 )
