@@ -1,7 +1,7 @@
 {% load i18n %}
 
 {% blocktrans %}
-Hi there new pilot, we're almost done with registration.
+Hi there new voter,
 
 Please activate your e-mail by following this link: 
 {% endblocktrans %}

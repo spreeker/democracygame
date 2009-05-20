@@ -1,10 +1,11 @@
-{% extends "web/index.html" %}
+{% extends "main.html" %}
 {% load i18n %}
 
 {% block content %}
+<div class="blockmessage">
 	{% blocktrans %}
 	<p>
-	You have been almost registered with Dark Cadre.
+	You have almost completed your registration with Thirdparty
 	</p>
 	<p>
 	Check your email for a confirmation email in which you can find
@@ -12,5 +13,6 @@
 	your registration work.
 	</p>
 	{% endblocktrans %}
-
+</div>
+{% include "footer.html" %}
 {% endblock %}
