@@ -13,13 +13,13 @@ Page footer with voting links.
 {% endcomment %}
 <div id="footer">
   <ul>
-    <li><a href="/tag/<pk>/" id="tag_link"><img alt="Tag" src="/media/iphone/btn_footer_recent.png" /><br />Tag</a>
+    <li><a href="/tag/{{id}}/" id="tag_link"><img alt="Tag" src="/media/iphone/btn_footer_recent.png" /><br />Tag</a>
     </li>
-    <li><a href="/vote/<pk>/for/" id="vote_for_link"><img alt="For" src="/media/iphone/btn_footer_update.png" /><br />For</a>
+    <li><a href="/vote/{{id}}/for/" id="vote_for_link"><img alt="For" src="/media/iphone/btn_footer_update.png" /><br />For</a>
     </li>
-    <li><a href="/vote/<pk>/against/" id="vote_against_link"><img alt="Against" src="/media/iphone/btn_footer_down.png" /><br />Against</a>
+    <li><a href="/vote/{{id}}/against/" id="vote_against_link"><img alt="Against" src="/media/iphone/btn_footer_down.png" /><br />Against</a>
     </li>
-    <li><a href="/vote/<pk>/blank/" id="vote_blank_link"><img alt="Blank" src="/media/iphone/btn_footer_right.png" /><br />Blank</a>
+    <li><a href="/vote/{{id}}/blank/" id="vote_blank_link"><img alt="Blank" src="/media/iphone/btn_footer_right.png" /><br />Blank</a>
     </li>
   </ul>
 </div>
