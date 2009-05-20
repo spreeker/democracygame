@@ -20,7 +20,8 @@ urlpatterns = patterns('',
 
     # Development stuff, media served by django itself. Remove for a real
     # Emocracy installation (and have Apache handle media).
-    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name':'login.html'}, name = 'login'),
+    #url(r'^login/$', 'django.contrib.auth.views.login', {'template_name':'login.html'}, name = 'login'),
+    url(r'^login/$', 'profiles.views.login', name = 'login'),
     url(r'^logout/$', 'django.contrib.auth.views.logout', {'template_name':'logout.html'}, name = 'logout'),
     (r'^', include('thirdparty.web.urls')),
     (r'^media/(.*)', 'django.views.static.serve', {

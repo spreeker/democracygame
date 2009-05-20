@@ -202,7 +202,10 @@ def login(request):
             # Correct password, and the user is marked "active"
             auth.login(request, user)
             # Redirect to a success page.
-            return HttpResponseRedirect("/profile/")
+            if user.get_profile().access_token:
+                return HttpResponseRedirect("/profile/")
+            else:
+                return HttpResponseRedirect("/oauth/")
         else:
             # Show an error page
             return HttpResponseRedirect("/profile/login/")

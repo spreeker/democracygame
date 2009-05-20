@@ -252,11 +252,17 @@ a img {
   border: none;
 }
 
+.blockmessage {
+    padding: 1em 1em 1em 1em;
+    font: 1.2em;
+    background: #fff;
+    min-height: 260px;
+}
 
 .votes{
   width: 100%;
   font:0.7em Arial;
-  border:0px 0px 0px 0px solid #ccc;
+  border:0;
   border-collapse: collapse;
   border-spacing: 0px;
   border-style: none;
