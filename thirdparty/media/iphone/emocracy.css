@@ -157,6 +157,7 @@ a img {
 
 
 .list {
+  padding: 1em 0;
   background:#FFF;
   min-height:260px;
 }
@@ -181,10 +182,13 @@ a img {
 }
 
 
-.list div {
-  padding:1em 1em 0;
+
+.list .panel {
+  padding:1em 0 1em 0;
 }
 
+.list .odd {
+}
 .list .even {
   background:#ebfeff;
   border-top:1px solid #b2fafa;
@@ -211,8 +215,24 @@ a img {
   margin:0 10px 0 0;
 }
 
+.list .title {
+  margin:0 0 0 0px;
+  padding: 1em 1em 1em 1em;
+  font-size:12px;
+  color:#0000ee;
+  background:#ebfeff;
+  border-top:1px solid #b2fafa;
+  border-bottom:1px solid #b2fafa;
+}
+.list .body {
+  margin:0 0 0 0px;
+  padding: 1em 1em 0em 1em;
+  font-size:12px;
+  color:#555;
+}
+
 .list p {
-  margin:0 0 0 60px;
+  margin:0 0 0 0px;
   font-size:12px;
   color:#555;
 }
@@ -231,6 +251,40 @@ a img {
 a img {
   border: none;
 }
+
+
+.votes{
+  width: 100%;
+  font:0.7em Arial;
+  border:0px 0px 0px 0px solid #ccc;
+  border-collapse: collapse;
+  border-spacing: 0px;
+  border-style: none;
+}
+.votes td{
+  padding:0px 0px 0px 0px;
+  border-width: 0px 0px 0px 0px;
+  margin:0px 0px 0px 0px;
+  height: 32px;
+  -moz-border-radius: 0px 0px 0px 0px;
+}
+.votes .for{
+  background-color: #a1f2a3;
+  text-align:center;
+  width: 107px;
+}
+.votes .abstain{
+  background-color: #9ef8fb;
+  text-align:center;
+  width: 106px;
+}
+.votes .against{
+  background-color: #f99f9b;
+  text-align:center;
+  width: 107px;
+}
+
+
 
 #menu {
   overflow:hidden;
