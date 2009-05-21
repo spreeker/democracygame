@@ -9,7 +9,7 @@ urlpatterns = patterns('web.views',
     # urls that go with viewing of Issues
     url(r'^issues/for_user/(?P<username>\w+)/$', 'issues_list_user', name = 'web_issues_for_user'),
     url(r'^issues/for_tag/(?P<tag_pk>\d+)/$', 'issue_list_tag', name = 'web_issue_list_tag'),
-    url(r'^issues/(?P<pk>\d+)/$', 'newdetail', name = 'web_issue_detail' ),
+    url(r'^issues/(?P<pk>\d+)/$', 'issue_detail', name = 'web_issue_detail' ),
     url(r'^issues/$', 'list_issues', name = 'web_issue_list'),
     # helper views that deal with jQuery based voting/tagging:
     url(r'^ajax/voteform/(?P<issue_no>\d+)/$', 'voteform', name = 'web_voteform'),
