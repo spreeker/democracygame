@@ -84,7 +84,7 @@ class Issue(models.Model):
     object_id = models.PositiveIntegerField() # or just a IntegerField -> TODO find out!
     payload = generic.GenericForeignKey('content_type', 'object_id')
 
-    draft = models.BooleanField(default = True)
+    is_draft = models.BooleanField(default = True)
 
     # Denormalized data - for sort order
     offensiveness = models.IntegerField(default = 0)
