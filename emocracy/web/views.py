@@ -340,7 +340,7 @@ class DetailView(OneIssueBaseView):
         return render_to_response('web/issue_detail.html',
             RequestContext(request, extra_context))
         
-newdetail = DetailView()
+issue_detail = DetailView()
 
 # ------------------------------------------------------------------------------
 
