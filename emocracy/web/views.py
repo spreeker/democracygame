@@ -349,8 +349,8 @@ def issue_propose(request, issue_no = None):
     """
     This view handles proposing new issues.
     """
-    is issue_no != None: # view was called to edit an issue
-        issue = get_object_or_404(Issue, issue_no)
+    if issue_no != None: # view was called to edit an issue
+        issue = get_object_or_404(Issue, issue = issue_no)
         try:
             # TODO
             # If users were to be allowed to change their opinion on their own
@@ -361,7 +361,8 @@ def issue_propose(request, issue_no = None):
             owners_vote = 1
         if issue.owner != request.user: # check that user is owner
             # TODO add is_draft check
-            # TODO add more app
+            # TODO add more appropriate Http Response code if user tries to 
+            # change an issue that is not theirs.
             raise Http404
         # TODO check type of payload in some future where there might be more 
         # than just IssueBody objects linked to Issue objects.
@@ -372,11 +373,9 @@ def issue_propose(request, issue_no = None):
             'body' : payload.body,
             'owners_vote' : owners_vote,
             'url' : payload.url,
-            'soure_type', payload.source_type,
+            'soure_type' :  payload.source_type,
+            'is_draft': issue.is_draft
         }
-    else:
-        # might need to copy the request.POST explicitly
-        data = request.POST
     
     if request.method == "POST":
         form = IssueFormNew(data)
@@ -389,11 +388,15 @@ def issue_propose(request, issue_no = None):
                 form.cleaned_data[u'owners_vote'],
                 form.cleaned_data[u'url'],
                 form.cleaned_data[u'source_type'],
+                form.cleaned_data[u'is_draft'],
             )
 
             return HttpResponseRedirect(reverse('web_issue_detail', args = [new_issue.pk]))
     else:
-        form = IssueFormNew()
+        if issue_no == None:
+            form = IssueFormNew()
+        else:
+            form = IssueFormNew(data)
         
     context = RequestContext(request, {"form" : form})
     return render_to_response("web/issue_propose.html", context)
