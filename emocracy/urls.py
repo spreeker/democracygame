@@ -34,4 +34,6 @@ urlpatterns = patterns('',
     (r'^profile/', include('emocracy.profiles.urls')),
 #    (r'$', redirect_to, {'url' : '/web/issues/'}) # for demo purposes
     (r'^i18n/', include('django.conf.urls.i18n')),
+    # For Demo purposes: redirect all the wrong stuff to the issue_list views...
+    (r'$', redirect_to, {'url' : '/web/issues/'}),
 )

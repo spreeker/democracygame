@@ -31,7 +31,4 @@ urlpatterns = patterns('web.views',
     # Start of a tag searching function TODO : check for unicode in request paramaters,
     # which is not allowed according to Conrado...
     url(r'^search_tag/$', 'search_tag', name = 'web_search_tag'),
-    
-    # For Demo purposes: redirect all the wrong stuff to the issue_list views...
-#    (r'$', redirect_to, {'url' : '/web/issue/'}),
 )

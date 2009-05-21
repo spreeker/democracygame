@@ -9,11 +9,11 @@ TODO : Create a translated block for the logged in version of the sidebar.
 		<h3>{{user.username}}</h3>
 		<p>
 		{% if userprofile %}
-        {% blocktrans with userprofile.role as role and userprofile.score as score and userprofile.total_for as total_for and userprofile.total_agains as total_against and userprofile.total_blank as total_blank %} Your are currently a <a href="http://emocracy.nl/wiki/index.php/Burger">{{role}}</a>.<br />
+        {% blocktrans with userprofile.role as role and userprofile.score as score and userprofile.total_for as total_for and userprofile.total_against as total_against and userprofile.total_blank as total_blank %} Your are currently a <a href="http://emocracy.nl/wiki/index.php/Burger">{{role}}</a>.<br />
 		Your current <a href="http://emocracy.nl/wiki/index.php/Punten">score</a> is {{score}}<br /><br />
-		You voted for {{total_for}} times.<br />
-		You voted against {{total_against}} times.<br />
-		You voted blank {{total_blank}} times.<br /><br />
+		votes for : {{total_for}} <br />
+		votes against : {{total_against}}<br />
+		votes blank : {{total_blank}}<br /><br />
         {% endblocktrans %}
 		{% endif %}
 		
