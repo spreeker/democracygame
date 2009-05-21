@@ -35,6 +35,8 @@ from issues_content.models import IssueBody
 
 # -- Authenticated voting: -----------------------------------------------------
 
+
+
 def vote(user, issue, vote_int, keep_private):
     """Unified voting (both blank and normal votes)."""
     logging.info(u"actions.vote called")
@@ -59,7 +61,8 @@ def vote(user, issue, vote_int, keep_private):
 
 def archive_votes(issue, user, vote_int):
     """This function archives old votes by switching the is_archived flag to True
-    for all the previous votes on <issue> by <user>."""
+    for all the previous votes on <issue> by <user>.
+    """
     
     # TODO : clean up this function and its interaction with the voting 
     # functions. See wether it should be a manager function in models.py!
@@ -157,19 +160,27 @@ def tag(user, issue, tag_string):
     
     return tag, _(u'Tag %(tagname)s added to this issue. The new tag might not show up immediately' % {'tagname' : tag.name})
 
-def mandate(user, representative):
-    if not allow.mandate(user, representative): return
-    try:
-        m = Mandate.objects.get(user = user)
-        m.representative = representative
-        m.save()
-    except ObjectDoesNotExist:
-        m = Mandate(user = user, representative = representative)
-        m.save()
-    except:
-        raise
-    
-def become_candidate(user):
-    if not allow.become_candidate(user): return
-    return
-    # make total profile public (minus real life info)
+def multiply():
+    pass
+
+role_to_actions = {
+    'anonymous citizen' : {
+        'vote' : vote,
+    },
+    'citizen' : {
+        'vote' : vote,
+        'tag' : tag,
+    },
+    'active citizen' : {
+        'vote' : vote,
+        'tag' : tag,
+        'propose' : propose,
+    },
+    'opinion leader' : {
+        'vote' : vote,
+        'tag' : tag,
+        'propose' : propose,
+        'multiply' : multiply,
+    }
+}
+
