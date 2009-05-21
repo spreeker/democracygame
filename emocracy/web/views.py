@@ -374,9 +374,6 @@ def issue_propose(request, issue_no = None):
             'url' : payload.url,
             'soure_type', payload.source_type,
         }
-    else:
-        # might need to copy the request.POST explicitly
-        data = request.POST
     
     if request.method == "POST":
         form = IssueFormNew(data)
@@ -393,7 +390,10 @@ def issue_propose(request, issue_no = None):
 
             return HttpResponseRedirect(reverse('web_issue_detail', args = [new_issue.pk]))
     else:
-        form = IssueFormNew()
+        if not data:
+            form = IssueFormNew()
+        else:
+            form = IssueFormNew(data)
         
     context = RequestContext(request, {"form" : form})
     return render_to_response("web/issue_propose.html", context)
