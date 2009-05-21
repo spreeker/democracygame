@@ -32,7 +32,7 @@ class IssueFormNew(forms.Form):
     owners_vote = forms.IntegerField(widget = forms.Select(
         choices = normal_votes,
     ))
-    is_draft = forms.BooleanField(initial = True)
+    is_draft = forms.BooleanField(initial = True, required = False)
 
 class TagForm(forms.Form):
     tags = forms.RegexField(
