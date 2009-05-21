@@ -12,12 +12,12 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 
 source_types = (
+    (u"website", _(u"website")),
     (u"video", _(u"video")),
     (u"audio", _(u"audio")),
     (u"book", _(u"book")),
     (u"document", _(u"document")),
     (u"image", _(u"image")),
-    (u"website", _(u"website")),
 )
 
 # TODO
@@ -37,3 +37,7 @@ class IssueBody(models.Model):
 
     def get_api_url():
         return "/api/issues/"+self.id+"/"
+
+    def __unicode__(self):
+        return self.title
+
