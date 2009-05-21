@@ -350,15 +350,15 @@ def issue_propose(request, issue_no = None):
     This view handles proposing new issues.
     """
     if issue_no != None: # view was called to edit an issue
-        issue = get_object_or_404(Issue, issue = issue_no)
+        issue = get_object_or_404(Issue, pk = issue_no)
         try:
             # TODO
             # If users were to be allowed to change their opinion on their own
             # issue the following line needs to use a filter() instead of get().
             v = Vote.objects.get(issue = issue, owner = request.user)
-            owners_vote = v.vote_int
+            owners_vote_int = v.vote_int
         except:
-            owners_vote = 1
+            owners_vote_int = 1
         if issue.owner != request.user: # check that user is owner
             # TODO add is_draft check
             # TODO add more appropriate Http Response code if user tries to 
@@ -369,16 +369,16 @@ def issue_propose(request, issue_no = None):
         issue_body = issue.payload
         # note the following ties into the IssueFormNew definition in web/forms.py
         data = {
-            'title' : payload.title,
-            'body' : payload.body,
-            'owners_vote' : owners_vote,
-            'url' : payload.url,
-            'soure_type' :  payload.source_type,
+            'title' : issue.payload.title,
+            'body' : issue.payload.body,
+            'url' : issue.payload.url,
+            'source_type' : issue.payload.source_type,
+            'owners_vote' : owners_vote_int,
             'is_draft': issue.is_draft
         }
     
     if request.method == "POST":
-        form = IssueFormNew(data)
+        form = IssueFormNew(request.POST)
         if form.is_valid():
         
             new_issue = gamelogic.actions.propose(
@@ -389,6 +389,7 @@ def issue_propose(request, issue_no = None):
                 form.cleaned_data[u'url'],
                 form.cleaned_data[u'source_type'],
                 form.cleaned_data[u'is_draft'],
+                issue_no,
             )
 
             return HttpResponseRedirect(reverse('web_issue_detail', args = [new_issue.pk]))
