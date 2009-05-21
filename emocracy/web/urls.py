@@ -18,6 +18,7 @@ urlpatterns = patterns('web.views',
     url(r'^ajax/tagform/(?P<issue_pk>\d+)/$', 'tagform', name='web_tagform'),
     # Propose new Issues
     url(r'^propose/$', 'issue_propose', name = 'web_issue_propose'),
+    url(r'^propose/(?P<issue_no>\d+)/$', 'issue_propose', name = 'web_issue_edit'),
     # Show list of votes for a user.
     url(r'^votes/(?P<user_name>\w+)/$', 'vote_list_user', name = 'web_votes_for_user'),
     # Polling TODO : needs a clean up

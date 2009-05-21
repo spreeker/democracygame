@@ -345,12 +345,41 @@ issue_detail = DetailView()
 # ------------------------------------------------------------------------------
 
 @login_required
-def issue_propose(request):
+def issue_propose(request, issue_no = None):
     """
     This view handles proposing new issues.
     """
+    is issue_no != None: # view was called to edit an issue
+        issue = get_object_or_404(Issue, issue_no)
+        try:
+            # TODO
+            # If users were to be allowed to change their opinion on their own
+            # issue the following line needs to use a filter() instead of get().
+            v = Vote.objects.get(issue = issue, owner = request.user)
+            owners_vote = v.vote_int
+        except:
+            owners_vote = 1
+        if issue.owner != request.user: # check that user is owner
+            # TODO add is_draft check
+            # TODO add more app
+            raise Http404
+        # TODO check type of payload in some future where there might be more 
+        # than just IssueBody objects linked to Issue objects.
+        issue_body = issue.payload
+        # note the following ties into the IssueFormNew definition in web/forms.py
+        data = {
+            'title' : payload.title,
+            'body' : payload.body,
+            'owners_vote' : owners_vote,
+            'url' : payload.url,
+            'soure_type', payload.source_type,
+        }
+    else:
+        # might need to copy the request.POST explicitly
+        data = request.POST
+    
     if request.method == "POST":
-        form = IssueFormNew(request.POST)
+        form = IssueFormNew(data)
         if form.is_valid():
         
             new_issue = gamelogic.actions.propose(
