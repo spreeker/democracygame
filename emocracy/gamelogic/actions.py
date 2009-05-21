@@ -17,6 +17,7 @@ import datetime
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
@@ -74,22 +75,51 @@ def archive_votes(issue, user, vote_int):
         voted_already = True
     return voted_already, repeated_vote
 
-def propose(user, title, body, vote_int, source_url, source_type):
-    if not allow.propose(user, title, body, vote_int, source_url, source_type): return None
+def propose(user, title, body, vote_int, source_url, source_type, is_draft = False, issue_no = None):
+    if issue_no == None:
+        # original old code
+        if not allow.propose(user, title, body, vote_int, source_url, source_type): return None
 
-    new_issue = IssueBody.objects.create(
-        owner = user,
-        title = title,
-        body = body,
-        url = source_url,
-        source_type = source_type,
-        time_stamp = datetime.datetime.now(),
-    )
-    
-    new_issue = Issue.objects.create_for_object(new_issue, title = new_issue.title, owner = user)
-    new_issue.vote(user, vote_int, keep_private = False)    
+        new_issue = IssueBody.objects.create(
+            owner = user,
+            title = title,
+            body = body,
+            url = source_url,
+            source_type = source_type,
+            time_stamp = datetime.datetime.now(),
+        )
+        
+        new_issue = Issue.objects.create_for_object(new_issue, title = new_issue.title, owner = user, is_draft = is_draft)
+        new_issue.vote(user, vote_int, keep_private = False)    
 
-    score.propose(user)
+        score.propose(user)
+    else:
+        # Grab the existing issue from db.
+        issue = get_object_or_404(Issue, pk = issue_no)
+        # If an old vote exists, remove it and perform a new vote.
+        try:
+            # TODO
+            # If users were to be allowed to change their opinion on their own
+            # issue the following line needs to use a filter() instead of get().
+            owners_vote = Vote.objects.get(issue = issue, owner = user)
+            owners_vote.delete()
+        except Vote.DoesNotExist:
+            pass
+        issue.vote(user, vote_int, keep_private = False)
+        # Now change the issue and issue body to the appropriate values.
+        issue.title = title
+        issue.time_stamp = datetime.datetime.now()
+        issue.is_draft = is_draft
+        
+        issue.payload.title = title
+        issue.payload.body = body
+        issue.payload.time_stamp = datetime.datetime.now()
+        issue.payload.source_type = source_type
+        issue.payload.source_url = source_url
+        
+        issue.payload.save()
+        issue.save()
+        new_issue = issue
     return new_issue
 
 def tag(user, issue, tag_string):
