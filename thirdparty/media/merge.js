@@ -34,9 +34,6 @@ $(document).ready(function(){
   //div's dynamic height.  Need to set the
   //height style so the slide functions work
   //correctly.
-  $("div.body").each(function(){
-    $(this).css("height", $(this).height() + "px");
-    });
   $("div.body").each(function() {
 	  $(this).hide();
 	 });
@@ -47,9 +44,6 @@ $(document).ready(function(){
     var body = $(this).parent().children("div.body");
 
     //slide the panel
-    if(body.is(":hidden"))
-      body.slideDown();
-    else
-      body.slideUp();
+    body.slideToggle();
   });
 });
