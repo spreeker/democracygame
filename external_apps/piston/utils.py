@@ -6,7 +6,7 @@ from decorator import decorator
 
 from datetime import datetime, timedelta
 
-__version__ = '0.2'
+__version__ = '0.2.1'
 
 def get_version():
     return __version__
@@ -50,9 +50,8 @@ class FormValidationError(Exception):
         self.form = form
 
 class HttpStatusCode(Exception):
-    def __init__(self, message, code=200):
-        self.message = message
-        self.code = code
+    def __init__(self, response):
+        self.response = response
 
 def validate(v_form, operation='POST'):
     @decorator
@@ -126,12 +125,26 @@ def throttle(max_requests, timeout=60*60, extra=''):
     return wrap
 
 def coerce_put_post(request):
+    """
+    Django doesn't particularly understand REST.
+    In case we send data over PUT, Django won't
+    actually look at the data and load it. We need
+    to twist its arm here.
+    
+    The try/except abominiation here is due to a bug
+    in mod_python. This should fix it.
+    """
     if request.method == "PUT":
-        request.method = "POST"
-        request._load_post_and_files()
-        request.method = "PUT"
+        try:
+            request.method = "POST"
+            request._load_post_and_files()
+            request.method = "PUT"
+        except AttributeError:
+            request.META['REQUEST_METHOD'] = 'POST'
+            request._load_post_and_files()
+            request.META['REQUEST_METHOD'] = 'PUT'
+            
         request.PUT = request.POST
-        del request._post
 
 class Mimer(object):
     TYPES = dict()
@@ -140,7 +153,10 @@ class Mimer(object):
         self.request = request
         
     def is_multipart(self):
-        return 'Content-Disposition: form-data;' in self.request.raw_post_data
+        content_type = self.content_type()
+        if content_type is not None:
+            return content_type.lstrip().startswith('multipart')
+        return False
 
     def loader_for_type(self, ctype):
         """
