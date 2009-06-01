@@ -63,8 +63,13 @@ class Resource(object):
         NB: Sends a `Vary` header so we don't cache requests
         that are different (OAuth stuff in `Authorization` header.)
         """
+        rm = request.method.upper()
+
         if not self.authentication.is_authenticated(request):
-            if hasattr(self.handler, 'anonymous') and callable(self.handler.anonymous):
+            if hasattr(self.handler, 'anonymous') and \
+                callable(self.handler.anonymous) and \
+                rm in self.handler.anonymous.allowed_methods:
+
                 handler = self.handler.anonymous()
                 anonymous = True
             else:
@@ -72,9 +77,7 @@ class Resource(object):
         else:
             handler = self.handler
             anonymous = handler.is_anonymous
-        
-        rm = request.method.upper()
-        
+                
         # Django's internal mechanism doesn't pick up
         # PUT request, so we trick it a little here.
         if rm == "PUT":
@@ -123,7 +126,8 @@ class Resource(object):
                 
             result.content = format_error(msg)
         except HttpStatusCode, e:
-            result = e
+            #result = e ## why is this being passed on and not just dealt with now?
+            return e.response
         except Exception, e:
             """
             On errors (like code errors), we'd like to be able to
@@ -169,7 +173,7 @@ class Resource(object):
 
             return resp
         except HttpStatusCode, e:
-            return HttpResponse(e.message, status=e.code)
+            return e.response
 
     @staticmethod
     def cleanup_request(request):
