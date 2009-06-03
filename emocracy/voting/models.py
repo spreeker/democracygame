@@ -97,6 +97,9 @@ class Issue(models.Model):
     class Meta:
         unique_together = ('content_type', 'object_id') # UNIQUENESS CONSTRAINT SEEMS TO BE IGNORED? FIXME
 
+    def __unicode__(self):
+        return self.title
+
     def vote(self, user, vote_int, keep_private, issueset = None):
         new_vote = Vote.objects.create(
             owner = user,
@@ -163,7 +166,10 @@ class Vote(models.Model):
     owner = models.ForeignKey(User)
     
     issue = models.ForeignKey(Issue)
+    # votes should be able to belong to more issue sets.
+    # many to many field would be better
     issueset = models.ForeignKey(IssueSet, null = True)
+
     vote = models.IntegerField(choices = possible_votes)
     time_stamp = models.DateTimeField(editable = False)
     is_archived = models.BooleanField(default = False)
@@ -171,15 +177,6 @@ class Vote(models.Model):
     
     def __unicode__(self):
         return unicode(self.vote) + u" on \"" + self.issue.title + u"\" by " + self.owner.username
-
-class AnonymousVote(models.Model):
-    api_interface = models.CharField(max_length = 50, blank = True)
-    session_id = models.CharField(max_length = 32) # Django session identifiers have
-
-    issue = models.ForeignKey(Issue)
-    issueset = models.ForeignKey(IssueSet, null = True)
-    vote = models.IntegerField(choices = possible_votes)
-    time_stamp = models.DateTimeField(editable = False)
 
 # ------------------------------------------------------------------------------
 # -- Bare bones Tagging implementation -----------------------------------------
