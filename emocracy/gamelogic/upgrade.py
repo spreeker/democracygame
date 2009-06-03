@@ -2,6 +2,8 @@ NUMBER_OF_OPINION_LEADERS = 10
 MIN_SCORE_ACTIVE_CITIZENS = 50
 
 def anonymous_citizen(user):
+    """No code needed , upgrade is to citizen is done when you are registering an account
+    """
     return 'anonymous citizen'
 
 def citizen(userprofile):
