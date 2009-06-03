@@ -1,3 +1,5 @@
+# The game level upgrade functions which are exectuted on score change 
+
 NUMBER_OF_OPINION_LEADERS = 10
 MIN_SCORE_ACTIVE_CITIZENS = 50
 
@@ -23,15 +25,19 @@ def active_citizen(userprofile):
         to_be_downgraded.role = 'active citizen'
         to_be_downgraded.save()
         return 'opinion leader'
-    else
+    else :
         return 'active citizen'
 
 def opinion_leader(user):
     pass
 
 upgrade = {
-    'anonymous citizen' : {anonymous_citizen},
-    'citizen' : {citizen},
-    'active citizen' : {active_citizen},
-    'opinion leader' : {opinion_leader}
+    'anonymous citizen' : anonymous_citizen,
+    'citizen' : citizen,
+    'active citizen' : active_citizen,
+    'opinion leader' : opinion_leader
 }
+
+def update_level(sender , **kwargs):
+    """ a handler for a save on UserProfile """
+    upgrade[sender.role](sender)
