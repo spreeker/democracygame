@@ -1,6 +1,8 @@
 """
 This module implements the Emocracy game rules as far as score keeping is
 concerned. The rest of the game rules are in actions.py
+
+this module needs to get a lot bigger..
 """
 
 def vote(user, issue, new_vote, voted_already):

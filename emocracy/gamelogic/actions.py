@@ -1,14 +1,13 @@
-# By Thijs Coenen for the Emocracy project.
-
 """
 This module contains the functions that implement the actions that a user can
 take inside of the emocracy game. Functionality in this module should not depend
 on request objects. Scripts on the server, the API views and the web views 
 should all call into this module to play the emocracy game.
 
-This module itself uses functions from the allow.py and score.py to see wether 
+This module itself uses functions from the score.py and levels.py see if
 an action is allowed and how it affects the score of the players / the emocracy
 world.
+
 """
 
 import logging
@@ -23,28 +22,26 @@ from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 
 
-import allow
 import score
-from models import Mandate, tag_count_threshold
+import levels
+
+from models import Mandate
+from models import tag_count_threshold
 from voting.models import Vote
-from voting.models import Vote, Issue
+from voting.models import Issue
 from voting.models import votes_to_description
 from issues_content.models import IssueBody
 
 
-
-# -- Authenticated voting: -----------------------------------------------------
-
-
-
 def vote(user, issue, vote_int, keep_private):
     """Unified voting (both blank and normal votes)."""
-    logging.info(u"actions.vote called")
-    # TODO reenable the check on whether the action is allowed
-    #if not allow.vote(user, issue, vote_int, keep_private): return
+    logging.debug(u"actions.vote called")
+    userprofile = user.get_profile()
+    if not role_to_actions[userprofile.role].has_key('vote') : return None
+
     voted_already, repeated_vote = archive_votes(issue, user, vote_int)
     if repeated_vote: return
-    # TODO make this use the appropriate instance method of the Issue object
+
     new_vote = Vote(
         owner = user,
         issue = issue,
@@ -53,24 +50,25 @@ def vote(user, issue, vote_int, keep_private):
         keep_private = keep_private
     )
     new_vote.save()
-    logging.info(u"User " + user.username + u" voted " + unicode(new_vote.vote) + u" on issue object with pk =" + unicode(issue.id) + ".")
+    logging.debug(u"User " + user.username + u" voted " + unicode(new_vote.vote) + u" on issue object with pk =" + unicode(issue.id) + ".")
     
     score.vote(user, issue, new_vote, voted_already)
+    levels.upgrade[userprofile.role](userprofile)
 
     return new_vote
 
 def archive_votes(issue, user, vote_int):
-    """This function archives old votes by switching the is_archived flag to True
+    """archive old votes by switching the is_archived flag to True
     for all the previous votes on <issue> by <user>.
+    And we check for and dismiss a repeated vote.
     """
-    
     # TODO : clean up this function and its interaction with the voting 
     # functions. See wether it should be a manager function in models.py!
     votes = Vote.objects.filter(owner = user, is_archived = False, issue = issue)
     voted_already = False
     repeated_vote = False
     for v in votes:
-        if vote_int == v.vote:
+        if vote_int == v.vote: #check if you do the same vote again.
             repeated_vote = True
         else:
             v.is_archived = True
@@ -79,9 +77,11 @@ def archive_votes(issue, user, vote_int):
     return voted_already, repeated_vote
 
 def propose(user, title, body, vote_int, source_url, source_type, is_draft = False, issue_no = None):
+    """ Propose an issue into the game
+    """
     if issue_no == None:
-        # original old code
-        if not allow.propose(user, title, body, vote_int, source_url, source_type): return None
+        userprofile = user.get_profile()
+        if not role_to_actions[userprofile.role].has_key('propose'): return None
 
         new_issue = IssueBody.objects.create(
             owner = user,
@@ -96,6 +96,8 @@ def propose(user, title, body, vote_int, source_url, source_type, is_draft = Fal
         new_issue.vote(user, vote_int, keep_private = False)    
 
         score.propose(user)
+        levels.upgrade[userprofile.role](userprofile)
+
     else:
         # Grab the existing issue from db.
         issue = get_object_or_404(Issue, pk = issue_no)
@@ -146,7 +148,6 @@ def tag(user, issue, tag_string):
     
     tag, first_time = issue.tag(user, tag_string)
     
-
     if tag.count > tag_count_threshold:
         # Make tag visible if it is used more than a minimun number of times
         # on any issue.
@@ -161,6 +162,13 @@ def tag(user, issue, tag_string):
     return tag, _(u'Tag %(tagname)s added to this issue. The new tag might not show up immediately' % {'tagname' : tag.name})
 
 def multiply():
+    """
+    Opinion leaders have the option to mutiply the values of issues. 
+    at most X multyplies can be given.
+
+    check if there are multipliers left.
+    add multiplier to issue.but not your own.
+    """
     pass
 
 role_to_actions = {
