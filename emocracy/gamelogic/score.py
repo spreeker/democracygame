@@ -1,6 +1,6 @@
 """
 This module implements the Emocracy game rules as far as score keeping is
-concerned. The rest of the game rules are in actions.py and allow.py .
+concerned. The rest of the game rules are in actions.py
 """
 
 def vote(user, issue, new_vote, voted_already):
