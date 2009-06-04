@@ -23,12 +23,13 @@ urlpatterns = patterns('',
     #url(r'^login/$', 'django.contrib.auth.views.login', {'template_name':'login.html'}, name = 'login'),
     url(r'^login/$', 'profiles.views.login', name = 'login'),
     url(r'^logout/$', 'django.contrib.auth.views.logout', {'template_name':'logout.html'}, name = 'logout'),
-    (r'^', include('thirdparty.web.urls')),
     (r'^media/(.*)', 'django.views.static.serve', {
         'document_root' : os.path.join(settings.PROJECT_PATH, 'media')
     }),
     (r'^oauth/', include('thirdparty.oauth_consumer.urls')),
     (r'^profile/', include('thirdparty.profiles.urls')),
+    (r'^ajax/', include('thirdparty.ajax.urls')),
     # Uncomment the next line to enable the admin:
     (r'^admin/(.*)', admin.site.root),
+    (r'', include('thirdparty.web.urls')),
 )
