@@ -1,29 +1,12 @@
 from django.conf.urls.defaults import *
 
 from oauth_consumer.views import *
+from oauth_consumer import EmoOAuthConsumerApp
 
-urlpatterns = patterns('oauth_consumer.views',
-    url(r'^$',
-        view=main,
-        name='oauth_main'),
-    
-    url(r'^auth/$',
-        view=auth,
-        name='oauth_auth'),
+emoauth = EmoOAuthConsumerApp()
 
-    url(r'^callback/$',
-        view=return_,
-        name='oauth_return'),
-  
-    url(r'^return/$',
-        view=return_,
-        name='oauth_return'),
-  
-    url(r'^list/$',
-        view=friend_list,
-        name='oauth_friend_list'),
-    
-    url(r'^clear/$',
-        view=unauth,
-        name='oauth_unauth'),
+urlpatterns = patterns('',
+    url(r'^auth/', emoauth.need_authorization, name=emoauth.NEEDS_AUTH_VIEW_NAME),
+    url(r'^success/(?P<oauth_token>.*)/', emoauth.success_auth, name=emoauth.SUCCESS_VIEW_NAME),
+    url(r'$', 'oauth_consumer.views.index', name='index'),
 )
