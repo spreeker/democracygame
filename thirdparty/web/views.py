@@ -4,6 +4,7 @@ import urllib2
 import datetime
 import time
 
+
 from urllib2 import HTTPError, URLError
 from django.conf import settings
 from django.core import serializers
@@ -12,7 +13,10 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from django.template import RequestContext
 
-from settings import EMOCRACY_API_SERVER
+
+from oauth_consumer import EmoOAuthConsumerApp
+
+emo = EmoOAuthConsumerApp()
 
 #-----------------------------------------------------------------------------
 # Some extra response codes not defined in:
@@ -26,6 +30,48 @@ class HttpResponseCreated(HttpResponse):
 
 #-----------------------------------------------------------------------------
 
+
+def issues_list_hottest(request):
+    response = emo.get_issue_list(request)
+    data = response.read()
+    print data
+    extra_context = json.loads( data )
+    fetch = []
+    for resource in extra_context:
+        issueid = resource['issue_uri'].split('/')
+        issueid = issueid[-2:]
+        issueid = issueid[0]
+        resource_data = {}
+        resource_data['id'] = issueid
+        resource_datetime = datetime.datetime.strptime(resource['time_stamp'],"%Y-%m-%d %H:%M:%S")
+        now = datetime.datetime.now()
+        dt = now - resource_datetime
+        print resource
+        if request.user.is_anonymous():
+            pass
+        else:
+            if not resource['my_vote'] == []:
+                resource_data['my_vote'] = resource['my_vote'][0]['vote']
+            else:
+                resource_data['my_vote'] = None
+        resource_data['title'] = resource['title']
+        resource_data['body'] = resource['body']
+        resource_data['votes_for'] = resource['votes_for']
+        resource_data['votes_abstain'] = resource['votes_abstain']
+        resource_data['votes_against'] = resource['votes_against']
+        if not dt.days:
+            resource_data['age'] = 'Today'
+        else:
+            resource_data['age'] = '%s days ago' % dt.days
+        resource_data['user'] = resource['owner']['username']
+        userid = resource['owner']['user_uri'].split('/')
+        userid = userid[-2:]
+        resource_data['userid'] = userid[0]
+        fetch.append(resource_data)
+    context = {}
+    context['issues'] = fetch
+    return render_to_response('issue_list.html', 
+            RequestContext(request, context))
 
 def issues_list_popular(request):
     #request.user.is_authenticated()
@@ -73,10 +119,10 @@ def issues_list_popular(request):
         issueid = issueid[0]
         resource_data = {}
         resource_data['id'] = issueid
-        # FIXME next line deals with microseconds. bad hack, fix with python 2.6
         resource_datetime = datetime.datetime.strptime(resource['time_stamp'],"%Y-%m-%d %H:%M:%S")
         now = datetime.datetime.now()
         dt = now - resource_datetime
+        print resource
         resource_data['title'] = resource['title']
         resource_data['body'] = resource['body']
         resource_data['votes_for'] = resource['votes_for']
@@ -110,18 +156,6 @@ def issues_issue_detail(request, pk):
     return render_to_response('issue_detail.html', 
             RequestContext(request, extra_context))
 
-
-def issues_issue_vote(request, pk):
-    req = urllib2.Request(settings.EMOCRACY_API_SERVER+"issues/")
-    response = urllib2.urlopen(req)
-    data = response.read()
-    extra_context = {"issue_data": data}
-    return render_to_response('issue_vote.html', 
-            RequestContext(request, extra_context))
-
-def issues_list_hottest(request):
-    return issues_list_popular(request)
-
 def issues_list_newest(request):
     return issues_list_popular(request)
 
@@ -148,16 +182,3 @@ def url_error_view(request, error):
         'url_error_view.html',
         RequestContext(request, {'error' : error})
     )
-"""
-def ajax_vote(request):
-    '''
-    function used by the vote bar
-    '''
-    vote = request.POST['vote']
-    issue = request.POST['issue']
-    try:
-        blank = request.POST['blank']
-    except:
-        blank = "no reason specified"
-    req = urllib2.Request(EMOCRACY_API_SERVER+"votes/?page=%s" %page) 
-"""

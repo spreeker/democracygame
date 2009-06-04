@@ -20,13 +20,18 @@ view list, odd/even
       <div class="title">{{issue.title}}</div>
       <div class="body">{{issue.body}}</div>
       <div class="panel">
+        <form action="{% url ajax_vote_cast %}" id="vote_form_{{issue.id}}" method="post">
+        <input type="hidden" id="my_vote" name="vote" value="{{issue.my_vote}}">
+        <input type="hidden" id="my_vote_issue" name="issue" value="{{issue.id}}">
+        <input type="hidden" id="my_vote_privacy" name="keep_private" value="False">
         <table class="votes" id="vote{{issue.id}}"><tbody>
           <tr>
-            <td class="for">{{issue.votes_for}}</td>
-            <td class="abstain">{{issue.votes_abstain}}</td>
-            <td class="against">{{issue.votes_against}}</td>
+            <td class="for"><a href="#">{{issue.votes_for}}</a></td>
+            <td class="abstain"><a href="#">{{issue.votes_abstain}}</a></td>
+            <td class="against"><a href="#">{{issue.votes_against}}</a></td>
           </tr>
         </tbody></table>
+        </form>
       </div>
       <div style="clear: both;"></div>
     </div>

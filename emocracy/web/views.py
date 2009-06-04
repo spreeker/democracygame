@@ -662,4 +662,4 @@ def oauth_user_auth(request, *args):
     return render_to_response('web/authorize.html', context)
 
 def oauth_callback(request, token):
-    return HttpResponseRedirect(token.consumer.callback+'?'+token.to_string())
+    return HttpResponseRedirect(token.consumer.callback+token.to_string()+'/')
