@@ -254,7 +254,7 @@ a img {
 
 .blockmessage {
     padding: 1em 1em 1em 1em;
-    font: 1.2em;
+    font-size: 1.2em;
     background: #fff;
     min-height: 260px;
 }
@@ -274,6 +274,23 @@ a img {
   height: 32px;
   -moz-border-radius: 0px 0px 0px 0px;
 }
+.votes td a {
+    display: block;
+    text-decoration: none;
+    line-height: 32px;
+    padding: 0px 0px 0px 0px;
+    color: #fff;
+}
+.votes td.for a:hover {
+    background: #49f24d;
+}
+.votes td.abstain a:hover {
+    background: #4cf5fb;
+}
+.votes td.against a:hover {
+    background: #f9645e;
+}
+
 .votes .for{
   background-color: #a1f2a3;
   text-align:center;
