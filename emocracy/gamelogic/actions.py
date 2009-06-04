@@ -17,15 +17,14 @@ from django.utils.translation import ugettext as _
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
-
+from django.http import Http404
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 
-
 import score
 import levels
+from emocracy.gamelogic.models import roles
 
-from models import Mandate
 from models import tag_count_threshold
 from voting.models import Vote
 from voting.models import Issue
@@ -81,7 +80,7 @@ def propose(user, title, body, vote_int, source_url, source_type, is_draft = Fal
     """
     if issue_no == None:
         userprofile = user.get_profile()
-        if not role_to_actions[userprofile.role].has_key('propose'): return None
+        if not role_to_actions[userprofile.role].has_key('propose'): raise Http404 
 
         new_issue = IssueBody.objects.create(
             owner = user,
@@ -192,3 +191,27 @@ role_to_actions = {
     }
 }
 
+def get_actions(user):
+    """ return all possible game actions for a user """
+    if not user.is_authenticated()  : return role_to_actions['anonymous citizen']
+    userprofile = user.get_profile()
+    actions = role_to_actions[userprofile.role]
+    return actions
+
+def get_unavailable_actions(user = None):
+    """ return dict with all gameactions a user cannot do with the
+        required role as value
+    """
+    if not user.is_authenticated(): userprofile = {}
+    else : userprofile = user.get_profile()
+
+    all_actions = {}
+    
+    for role in roles: 
+        actions = role_to_actions.get(role , {} )
+        for action , function in actions.iteritems():
+            all_actions.setdefault( action , role )
+    for action , function in get_actions(user).iteritems():
+        all_actions.pop(action)
+
+    return all_actions
