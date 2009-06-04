@@ -130,7 +130,7 @@ INSTALLED_APPS = (
     # There are currently 2 tests failing for registration due to template 
     # inheritance. 
 	'registration',
-    'piston',   
+    'piston',
 )
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
