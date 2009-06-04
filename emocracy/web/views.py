@@ -1,9 +1,7 @@
-# By Thijs Coenen for the Emocracy project (october 2008).
 from __future__ import division
 import datetime
 import logging
 
-# TODO clean up by now unused imports ...
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render_to_response
@@ -25,7 +23,9 @@ from util import vote_helper_anonymous
 from util import vote_helper_authenticated
 from util import issue_sort_order_helper
 
-import gamelogic.actions, anonymous_actions
+import gamelogic.actions
+import anonymous_actions
+
 from web.forms import TagForm
 from web.forms import CastVoteFormFull
 from web.forms import IssueFormNew
@@ -111,6 +111,8 @@ class ListIssueBaseView(object):
             'num_pages' : paginator.num_pages,
             'show_more_info_link' : True,
             'object_list' : zip(current_page.object_list, user_votes, vote_css_class, tags_for_objects),
+            'actions'   : gamelogic.actions.get_actions(request.user),
+            'unavailable_actions' : gamelogic.actions.get_unavailable_actions(request.user),
         })
         return render_to_response('web/issue_list.html',
             RequestContext(request, extra_context))
@@ -633,34 +635,6 @@ def ajaxvote(request):
         return HttpResponseServerError(reply, mimetype = 'application/json')
         
 
-# ------------------------------------------------------------------------------
-
-@login_required
-def mandate(request, rep):
-    representative = get_object_or_404(User, username = rep)
-    if request.method == 'POST':
-        form = HiddenOkForm(request.POST)
-        if form.is_valid():
-            gamelogic.actions.mandate(request.user, representative)
-    form = HiddenOkForm()
-    context = RequestContext(request, {
-        'representative' : representative,
-        'form' : form,
-    })
-    return render_to_response('web/mandate.html', context)
-
-@login_required
-def become_candidate(request):
-    if request.method == 'POST':
-        form = HiddenOkForm(request.POST)
-        if form.is_valid():
-            gamelogic.actions.become_candidate(request.user)
-    form = HiddenOkForm()
-    context = RequestContext(request, {
-        'form' : form,
-    })
-    return render_to_response('web/become_candidate.html', context)
-    
 # ------------------------------------------------------------------------------
 
 @login_required
