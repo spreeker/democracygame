@@ -1,10 +1,13 @@
 
+import datetime
+
 from django.contrib.auth.models import User
 from django.db.models import Q
 from piston.handler import BaseHandler, AnonymousBaseHandler
 from piston.utils import rc
 
 from emocracy.issues_content.models import IssueBody
+from emocracy.voting.models import Issue
 from emocracy.voting.models import Vote
 
 class AnonymousVoteHandler(AnonymousBaseHandler):
@@ -18,6 +21,7 @@ class AnonymousVoteHandler(AnonymousBaseHandler):
     @staticmethod
     def issue_uri(vote):
         return "http://emo.buhrer.net/api/issues/%s/" %vote.issue.id
+    
     @staticmethod
     def user_uri(vote):
         return "http://emo.buhrer.net/api/users/%s/" %vote.owner.id
@@ -39,35 +43,50 @@ class VoteHandler(BaseHandler):
     def read(self, request, id, *args, **kwargs):
         return self.model.objects.filter(issue=id)
 
-    def create(self, request, id):
-        attrs = self.flatten_dict(request.POST)
-
-        if self.exists(**attrs):
-            return rc.DUPLICATE_ENTRY
-        else:
-            vote = Vote(vote=attrs['vote'], 
-                            issue=IssueBody.objects.get(pk=id),
-                            keep_private=attrs['keep_private'],
-                            owner=request.user)
-            vote.save()
-            
-            return vote
-
     @staticmethod
     def issue_uri(vote):
         return "http://emo.buhrer.net/api/issues/%s/" %vote.issue.id
+    
     @staticmethod
     def user_uri(vote):
         return "http://emo.buhrer.net/api/users/%s/" %vote.owner.id
 
 class VoteListHandler(VoteHandler):
-    allowed_methods = ('GET',)
+    allowed_methods = ('GET', 'POST',)
     fields = ('vote', 'time_stamp', 'issue_uri', 'keep_private', 'user_uri')
     model = Vote
     anonymous = AnonymousVoteListHandler
 
     def read(self, request, *args, **kwargs):
         return self.model.objects.filter()
+
+    def create(self, request):
+        attrs = self.flatten_dict(request.POST)
+        attrs['is_archived'] = False
+        attrs['owner'] = request.user.id
+
+        if self.exists(**attrs):
+            return rc.DUPLICATE_ENTRY
+        else:
+            current = Vote.objects.filter(
+                Q(issue=attrs['issue']) &
+                Q(owner=request.user) &
+                Q(is_archived=False)
+            )
+            if len(current) == 0:
+                pass
+            else:
+                current = current[0]
+                current.is_archived = True
+                current.save()
+            vote = Vote(vote=attrs['vote'], 
+                            issue=Issue.objects.get(id=attrs['issue']),
+                            keep_private=attrs['keep_private'],
+                            owner=request.user,
+                            time_stamp = datetime.datetime.now())
+            vote.save()
+            
+            return vote
 
 class AnonymousUserListHandler(AnonymousBaseHandler):
     allowed_methods = ('GET',)
@@ -120,11 +139,13 @@ class UserHandler(BaseHandler):
 
     def read(self, request, id, *args, **kwargs):
         return self.model.objects.filter(id=id)
-
-    def score(self, user):
+    
+    @staticmethod
+    def score(user):
         return user.get_profile().score
-
-    def resource_uri(self, user):
+    
+    @staticmethod
+    def user_uri(user):
         return 'http://emo.buhrer.net/api/users/%s/' %user.id
 
 class AnonymousIssueListHandler(AnonymousBaseHandler):
@@ -137,50 +158,59 @@ class AnonymousIssueListHandler(AnonymousBaseHandler):
 
     @staticmethod
     def votes_for(issue):
-        votes_for = Vote.objects.filter(Q(issue=issue) & Q(vote=1))
-        return len(votes_for)
-        
+        return Vote.objects.filter(Q(issue=issue) & Q(vote=1) & Q(is_archived=False)).count()
+
     @staticmethod
     def votes_abstain(issue):
-        votes_abstain = Vote.objects.filter(Q(issue=issue) & Q(vote=0))
-        return len(votes_abstain)
+        return Vote.objects.filter(Q(issue=issue) & Q(vote__gt=9) & Q(is_archived=False)).count()
     
     @staticmethod
     def votes_against(issue):
-        votes_against = Vote.objects.filter(Q(issue=issue) & Q(vote=-1))
-        return len(votes_against)
-
+        votes_against = Vote.objects.filter(Q(issue=issue) & Q(vote=-1) &Q(is_archived=False)).count()
+        return votes_against
+    
     @staticmethod
     def user_uri(user):
         return 'http://emo.buhrer.net/api/users/%s/' %user.id
-
+    
     @staticmethod
     def issue_uri(issue):
         return 'http://emo.buhrer.net/api/issues/%s/' %issue.id
 
 class IssueListHandler(BaseHandler):
     allowed_methods = ('GET',)
+
     anonymous = AnonymousIssueListHandler
-    fields = ('issue_uri', 'title', 'body', ('owner', ('username', 'user_uri',)), 'time_stamp', 'souce_type', 'url', 'votes_for', 'votes_abstain', 'votes_against')
+    fields = ('issue_uri', 'title', 'body', ('owner', ('username', 'user_uri',)), 'time_stamp', 'souce_type', 'url', 'votes_for', 'votes_abstain', 'votes_against', 'my_vote')
     model = IssueBody
     
     def read(self, request, *args, **kwargs):
-        return self.model.objects.filter()
+
+        issues= self.model.objects.filter()
+        issue_list = []
+        for issue in issues:
+            vote = Vote.objects.filter(Q(issue=issue) & Q(owner=request.user) &Q(is_archived=False))
+            issue.my_vote = vote
+            issue_list.append(issue)
+        return issue_list
+
+    @staticmethod
+    def my_vote(issue):
+        return issue.my_vote
 
     @staticmethod
     def votes_for(issue):
-        votes_for = Vote.objects.filter(Q(issue=issue) & Q(vote=1))
-        return len(votes_for)
-        
+        return Vote.objects.filter(Q(issue=issue) & Q(vote=1) &Q(is_archived=False)).count()
+
     @staticmethod
     def votes_abstain(issue):
-        votes_abstain = Vote.objects.filter(Q(issue=issue) & Q(vote=0))
-        return len(votes_abstain)
-    
+        votes_abstain = Vote.objects.filter(Q(issue=issue) & Q(vote__gt=9) &Q(is_archived=False)).count()
+        return votes_abstain
+
     @staticmethod
     def votes_against(issue):
-        votes_against = Vote.objects.filter(Q(issue=issue) & Q(vote=-1))
-        return len(votes_against)
+        votes_against = Vote.objects.filter(Q(issue=issue) & Q(vote=-1) &Q(is_archived=False)).count()
+        return votes_against
 
     @staticmethod
     def user_uri(user):

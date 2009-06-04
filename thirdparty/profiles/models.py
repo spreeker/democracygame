@@ -8,4 +8,5 @@ class UserProfile(models.Model):
     id_is_verified = models.BooleanField(default = False)
     timezone = models.CharField(max_length = 100, default="Europe/London")
     access_token = models.CharField(max_length=400, blank=True)
+    access_secret = models.CharField(max_length=400, blank=True)
     
