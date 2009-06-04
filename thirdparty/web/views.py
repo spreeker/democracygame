@@ -119,7 +119,6 @@ def issues_list_popular(request):
         issueid = issueid[0]
         resource_data = {}
         resource_data['id'] = issueid
-        # FIXME next line deals with microseconds. bad hack, fix with python 2.6
         resource_datetime = datetime.datetime.strptime(resource['time_stamp'],"%Y-%m-%d %H:%M:%S")
         now = datetime.datetime.now()
         dt = now - resource_datetime
@@ -157,15 +156,6 @@ def issues_issue_detail(request, pk):
     return render_to_response('issue_detail.html', 
             RequestContext(request, extra_context))
 
-
-def issues_issue_vote(request, pk):
-    req = urllib2.Request(settings.EMOCRACY_API_SERVER+"issues/")
-    response = urllib2.urlopen(req)
-    data = response.read()
-    extra_context = {"issue_data": data}
-    return render_to_response('issue_vote.html', 
-            RequestContext(request, extra_context))
-
 def issues_list_newest(request):
     return issues_list_popular(request)
 
@@ -192,16 +182,3 @@ def url_error_view(request, error):
         'url_error_view.html',
         RequestContext(request, {'error' : error})
     )
-"""
-def ajax_vote(request):
-    '''
-    function used by the vote bar
-    '''
-    vote = request.POST['vote']
-    issue = request.POST['issue']
-    try:
-        blank = request.POST['blank']
-    except:
-        blank = "no reason specified"
-    req = urllib2.Request(EMOCRACY_API_SERVER+"votes/?page=%s" %page) 
-"""
