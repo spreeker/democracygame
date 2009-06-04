@@ -8,14 +8,14 @@ from django.db.models.signals import post_save
 
 from emocracy.issues_content.models import IssueBody
 from emocracy.voting.models import Issue
-from emocracy.profile.models import UserProfile
+from emocracy.profiles.models import UserProfile
 from levels import update_level
 
 tag_count_threshold = 10
 
 post_save.connect(update_level , sender=UserProfile)
 
-roles = [u"anonymous citizen", u"citizen", u"active citizen", u"opinion leader", u"candidate", u"parliament member", u"minister", u'prime minister']
+roles = ["anonymous citizen", "citizen", "active citizen", "opinion leader", "candidate", "parliament member", "minister", 'prime minister']
 
 class OpinionLeaderMultiply(models.Model):
     user = models.ForeignKey(User, unique = True)
