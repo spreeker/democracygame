@@ -12,7 +12,6 @@ import settings
 urlpatterns = patterns('',
     (r'^web/', include('emocracy.web.urls')),
     (r'^api/', include('api.urls')),
-    (r'^api_old/', include('api_old.urls')),
     #(r'^oauth/', include('oauth.urls')),
     # Example:
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
