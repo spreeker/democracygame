@@ -11,7 +11,7 @@ from emocracy.voting.models import Issue
 from emocracy.profiles.models import UserProfile
 from levels import update_level
 
-tag_count_threshold = 10
+tag_count_threshold = 1
 
 post_save.connect(update_level , sender=UserProfile)
 
