@@ -123,7 +123,6 @@ INSTALLED_APPS = (
     'emocracy.gamelogic',
     'emocracy.profiles',
     'emocracy.api',
-    'emocracy.api_old',
     'emocracy.web',
     'emocracy.voting',
     'emocracy.issues_content',
