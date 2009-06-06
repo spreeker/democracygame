@@ -18,12 +18,12 @@ class AnonymousVoteHandler(AnonymousBaseHandler):
     def read(self, request, id, *args, **kwargs):
         return self.model.objects.filter(issue=id)
 
-    @staticmethod
-    def issue_uri(vote):
+    @classmethod
+    def issue_uri(cls, vote):
         return "http://emo.buhrer.net/api/issues/%s/" %vote.issue.id
     
-    @staticmethod
-    def user_uri(vote):
+    @classmethod
+    def user_uri(cls, vote):
         return "http://emo.buhrer.net/api/users/%s/" %vote.owner.id
 
 class AnonymousVoteListHandler(AnonymousVoteHandler):
@@ -43,12 +43,12 @@ class VoteHandler(BaseHandler):
     def read(self, request, id, *args, **kwargs):
         return self.model.objects.filter(issue=id)
 
-    @staticmethod
-    def issue_uri(vote):
+    @classmethod
+    def issue_uri(cls, vote):
         return "http://emo.buhrer.net/api/issues/%s/" %vote.issue.id
     
-    @staticmethod
-    def user_uri(vote):
+    @classmethod
+    def user_uri(cls, vote):
         return "http://emo.buhrer.net/api/users/%s/" %vote.owner.id
 
 class VoteListHandler(VoteHandler):
@@ -97,8 +97,8 @@ class AnonymousUserListHandler(AnonymousBaseHandler):
     def read(self, request, *args, **kwargs):
         return self.model.objects.filter()
 
-    @staticmethod
-    def user_uri(user):
+    @classmethod
+    def user_uri(cls, user):
         return 'http://emo.buhrer.net/api/users/%s/' %user.id
 
 class UserListHandler(BaseHandler):
@@ -107,12 +107,11 @@ class UserListHandler(BaseHandler):
     anonymous = AnonymousUserListHandler
     model = User
 
-    @staticmethod
     def read(self, request, *args, **kwargs):
         return self.model.objects.filter()
 
-    @staticmethod
-    def user_uri(user):
+    @classmethod
+    def user_uri(cls, user):
         return 'http://emo.buhrer.net/api/users/%s/' %user.id
 
 class AnonymousUserHandler(AnonymousBaseHandler):
@@ -123,12 +122,12 @@ class AnonymousUserHandler(AnonymousBaseHandler):
     def read(self, request, id, *args, **kwargs):
         return self.model.objects.filter(id=id)
 
-    @staticmethod
-    def score(user):
+    @classmethod
+    def score(cls, user):
         return user.get_profile().score
 
-    @staticmethod
-    def user_uri(user):
+    @classmethod
+    def user_uri(cls, user):
         return 'http://emo.buhrer.net/api/users/%s/' %user.id
 
 class UserHandler(BaseHandler):
@@ -140,12 +139,12 @@ class UserHandler(BaseHandler):
     def read(self, request, id, *args, **kwargs):
         return self.model.objects.filter(id=id)
     
-    @staticmethod
-    def score(user):
+    @classmethod
+    def score(cls, user):
         return user.get_profile().score
     
-    @staticmethod
-    def user_uri(user):
+    @classmethod
+    def user_uri(cls, user):
         return 'http://emo.buhrer.net/api/users/%s/' %user.id
 
 class AnonymousIssueListHandler(AnonymousBaseHandler):
@@ -156,25 +155,25 @@ class AnonymousIssueListHandler(AnonymousBaseHandler):
     def read(self, request, *args, **kwargs):
         return self.model.objects.filter()
 
-    @staticmethod
-    def votes_for(issue):
+    @classmethod
+    def votes_for(cls, issue):
         return Vote.objects.filter(Q(issue=issue) & Q(vote=1) & Q(is_archived=False)).count()
 
-    @staticmethod
-    def votes_abstain(issue):
+    @classmethod
+    def votes_abstain(cls, issue):
         return Vote.objects.filter(Q(issue=issue) & Q(vote__gt=9) & Q(is_archived=False)).count()
     
-    @staticmethod
-    def votes_against(issue):
+    @classmethod
+    def votes_against(cls, issue):
         votes_against = Vote.objects.filter(Q(issue=issue) & Q(vote=-1) &Q(is_archived=False)).count()
         return votes_against
     
-    @staticmethod
-    def user_uri(user):
+    @classmethod
+    def user_uri(cls, user):
         return 'http://emo.buhrer.net/api/users/%s/' %user.id
     
-    @staticmethod
-    def issue_uri(issue):
+    @classmethod
+    def issue_uri(cls, issue):
         return 'http://emo.buhrer.net/api/issues/%s/' %issue.id
 
 class IssueListHandler(BaseHandler):
@@ -192,55 +191,56 @@ class IssueListHandler(BaseHandler):
             vote = Vote.objects.filter(Q(issue=issue) & Q(owner=request.user) &Q(is_archived=False))
             issue.my_vote = vote
             issue_list.append(issue)
+            print "lala"
         return issue_list
 
-    @staticmethod
-    def my_vote(issue):
+    @classmethod
+    def my_vote(cls, issue):
         return issue.my_vote
 
-    @staticmethod
-    def votes_for(issue):
+    @classmethod
+    def votes_for(cls, issue):
         return Vote.objects.filter(Q(issue=issue) & Q(vote=1) &Q(is_archived=False)).count()
 
-    @staticmethod
-    def votes_abstain(issue):
+    @classmethod
+    def votes_abstain(cls, issue):
         votes_abstain = Vote.objects.filter(Q(issue=issue) & Q(vote__gt=9) &Q(is_archived=False)).count()
         return votes_abstain
 
-    @staticmethod
-    def votes_against(issue):
+    @classmethod
+    def votes_against(cls, issue):
         votes_against = Vote.objects.filter(Q(issue=issue) & Q(vote=-1) &Q(is_archived=False)).count()
         return votes_against
 
-    @staticmethod
-    def user_uri(user):
+    @classmethod
+    def user_uri(cls, user):
         return 'http://emo.burher.net/api/users/%s/' %user.id
 
-    @staticmethod
-    def issue_uri(issue):
+    @classmethod
+    def issue_uri(cls, issue):
         return 'http://emo.buhrer.net/api/issues/%s/' %issue.id
 
 class AnonymousIssueHandler(AnonymousBaseHandler):
     allowed_methods = ('GET',)
     fields = ('issue_uri', 'title', 'body', ('owner', ('username', 'user_uri',)), 'time_stamp', 'source_type', 'url')
-    model = IssueBody
+    #model = IssueBody
 
     def read(self, request, id, *args, **kwargs):
         return self.model.objects.filter(id=id)
 
-    @staticmethod
-    def user_uri(user):
+    @classmethod
+    def user_uri(cls, user):
         return 'http://emo.buhrer.net/api/users/%s/' %user.id
 
-    @staticmethod
-    def issue_uri(issue):
+    @classmethod
+    def issue_uri(cls, issue):
         return 'http://emo.buhrer.net/api/issues/%s/' %issue.id
 
 class IssueHandler(BaseHandler):
     allowed_methods = ('GET',)
     anonymous = AnonymousIssueHandler
     fields = ('issue_uri', 'title', 'body', ('owner', ('username', 'user_uri',)), 'time_stamp', 'souce_type', 'url')
-    model = IssueBody
+    #model = IssueBody
         
     def create(self, request):
         attrs = self.flatten_dict(request.POST)
@@ -263,10 +263,10 @@ class IssueHandler(BaseHandler):
         else:
             return self.model.objects.filter(id=id)
     
-    @staticmethod
-    def user_uri(user):
+    @classmethod
+    def user_uri(cls, user):
         return 'http://emo.buhrer.net/api/users/%s/' %user.id
 
-    @staticmethod
-    def issue_uri(issue):
+    @classmethod
+    def issue_uri(cls, issue):
         return 'http://emo.buhrer.net/api/issues/%s/' %issue.id
