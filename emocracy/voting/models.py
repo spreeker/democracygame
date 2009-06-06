@@ -28,15 +28,16 @@ normal_votes = (
 blank_votes = [
     # content related problems with issues:
     (10, _(u'Unconvincing')),
-    (11, _(u'Can\'t completely agree')),
+    (11, _(u'Too Personal')),
+    (12, _(u'Can\'t completely agree')),
     # form related problems with issues":
-    (12, _(u"Needs more work")),
-    (13, _(u"Badly worded")),
-    (14,  _(u"Duplicate")),
-    (15, _(u'Unrelated source')),
+    (13, _(u"Needs more work")),
+    (14, _(u"Badly worded")),
+    (15,  _(u"Duplicate")),
+    (16, _(u'Unrelated source')),
     # personal considerations:
-    (16, _(u'I need to know more')),
-    (17, _(u'Ask me later')),
+    (17, _(u'I need to know more')),
+    (18, _(u'Ask me later')),
 ]
 
 possible_votes = list(normal_votes)
