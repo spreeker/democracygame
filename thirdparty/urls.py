@@ -28,6 +28,7 @@ urlpatterns = patterns('',
     }),
     (r'^oauth/', include('thirdparty.oauth_consumer.urls')),
     (r'^profile/', include('thirdparty.profiles.urls')),
+    (r'^registration/', include('thirdparty.registration.urls')),
     (r'^ajax/', include('thirdparty.ajax.urls')),
     # Uncomment the next line to enable the admin:
     (r'^admin/(.*)', admin.site.root),

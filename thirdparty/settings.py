@@ -7,7 +7,6 @@ import sys
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
 
 sys.path.append(os.path.split(PROJECT_PATH)[0] + '/external_apps/' ) 
-sys.path.append(os.path.split(PROJECT_PATH)[0] + '/external_libraries/' ) 
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
