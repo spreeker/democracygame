@@ -28,7 +28,7 @@ normal_votes = (
 blank_votes = [
     # content related problems with issues:
     (10, _(u'Unconvincing')),
-    (11, _(u'Too Personal')),
+    (11, _(u'Not political')),
     (12, _(u'Can\'t completely agree')),
     # form related problems with issues":
     (13, _(u"Needs more work")),
