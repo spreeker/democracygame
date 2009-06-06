@@ -9,16 +9,13 @@ $(document).ready(function(){
         render_bars(my_issue, my_vote);
 
         $("td.for", this).mouseup(function(){
-            var old_vote = parseInt($("#my_vote", this).val());
-            process_vote(my_issue, old_vote, 1);
+            process_vote(my_issue, 1);
         });
         $("td.abstain", this).mouseup(function(){
-            var old_vote = parseInt($("#my_vote", this).val());
-            process_vote(my_issue, old_vote, 17);
+            process_vote(my_issue, 17);
         });
         $("td.against", this).mouseup(function(){
-            var old_vote = parseInt($("#my_vote", this).val());
-            process_vote(my_issue, old_vote, -1);
+            process_vote(my_issue, -1);
         });
     });
     // hide all issue bodies
@@ -36,7 +33,8 @@ $(document).ready(function(){
     });
 });
 
-function process_vote(issue, old_vote, new_vote) {
+function process_vote(issue, new_vote) {
+    var old_vote = parseInt($("#issue"+issue).find("#my_vote").val());
     if(old_vote == new_vote) {
         return
     }
@@ -49,7 +47,7 @@ function process_vote(issue, old_vote, new_vote) {
             if(data.status=="success"){
             // fix layouts here
                 $("#issue"+issue).find("#my_vote").html(""+new_vote);
-                render_bars(issue, old_vote, new_vote);
+                render_bars(issue, new_vote);
             } else if(data.status=="debug") {
                 if(debug) {
                 // debug stuff (server errors)
@@ -61,11 +59,14 @@ function process_vote(issue, old_vote, new_vote) {
     }
 }
 
-function render_bars(issue, old_vote, new_vote){
+function render_bars(issue, new_vote){
+    var old_vote = parseInt($("#issue"+issue).find("#my_vote").val());
+    // reset the bar colors to their unvoted colors
     $("#issue"+issue).find("td.for").css({'background-color' : '#a1f2a3'});
     $("#issue"+issue).find("td.abstain").css({'background-color' : '#9ef8fb'});
     $("#issue"+issue).find("td.against").css({'background-color' : '#f99f9b'});
     if(new_vote==null) {
+    // first page render, set voted color, if any
         if(old_vote ==1) {
             $("#issue"+issue).find("td.for").css({'background-color' : '#49f24d'});
         }
@@ -76,31 +77,28 @@ function render_bars(issue, old_vote, new_vote){
             $("#issue"+issue).find("td.against").css({'background-color' : '#f9645e'});
         }
     }
-    var vfor = parseInt($("#issue"+issue).find("td.for > a", this).html());
-    var vabs = parseInt($("#issue"+issue).find("td.abstain > a", this).html());
-    var vaga = parseInt($("#issue"+issue).find("td.against > a", this).html());
+    // get vote totals
+    var vfor = parseInt($("#issue"+issue).find("td.for > a").html());
+    var vabs = parseInt($("#issue"+issue).find("td.abstain > a").html());
+    var vaga = parseInt($("#issue"+issue).find("td.against > a").html());
+    // update vote totals, subtract from old vote totals and reset colors.
     if(new_vote == 1) {
         $("#issue"+issue).find("td.for").css({'background-color' : '#49f24d'});
         vfor += 1;
         if(old_vote >=10) {
             vabs -= 1;
-            $("#issue"+issue).find("td.absstain > a", this).html(""+vabs)
         }
         if(old_vote ==-1) {
             vaga -= 1;
-            $("#issue"+issue).find("td.against > a", this).html(""+vaga)
         }
     }
     if(new_vote >= 10) {
-        $("#issue"+issue).find("td.abstain").css({'background-color' : '#4cf5fb'});
         vabs += 1;
         if(old_vote ==1) {
             vfor -= 1;
-            $("#issue"+issue).find("td.for > a", this).html(""+vfor)
         }
         if(old_vote ==-1) {
             vaga -= 1;
-            $("#issue"+issue).find("td.against > a", this).html(""+vaga)
         }
     }
     if(new_vote == -1) {
@@ -108,16 +106,15 @@ function render_bars(issue, old_vote, new_vote){
         vaga += 1;
         if(old_vote ==1) {
             vfor -= 1;
-            $("#issue"+issue).find("td.for > a", this).html(""+vfor)
         }
         if(old_vote >=10) {
             vabs -= 1;
-            $("#issue"+issue).find("td.abstain > a", this).html(""+vabs)
         }
     }
     $("#issue"+issue).find("td.for").find("a").html(""+vfor);
     $("#issue"+issue).find("td.abstain").find("a").html(""+vabs);
     $("#issue"+issue).find("td.against").find("a").html(""+vaga);
+    $("#issue"+issue).find("#my_vote").val(new_vote);
     var total = vfor + vabs + vaga;
     var per = new Array();
     per['for'] = vfor / total;
