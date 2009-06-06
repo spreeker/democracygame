@@ -55,7 +55,7 @@ function process_vote(issue, old_vote, new_vote) {
                 // debug stuff (server errors)
                 }
             } else {
-            // form errors
+                handle_errors(data.error);
             }
         }, "json");
     }
@@ -143,4 +143,13 @@ function render_bars(issue, old_vote, new_vote){
     $("#issue"+issue).find("td.for").width(per['for']+"%");
     $("#issue"+issue).find("td.abstain").width(per['abs']+"%");
     $("#issue"+issue).find("td.against").width(per['aga']+"%");
+}
+
+function handle_errors(error) {
+    if(error == "Must be logged in.") {
+        window.location = "/login/";
+    }
+    if(error == "Must have access token.") {
+        window.location = "/oauth/auth/";
+    }
 }
