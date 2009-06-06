@@ -61,8 +61,6 @@ def archive_votes(issue, user, vote_int):
     for all the previous votes on <issue> by <user>.
     And we check for and dismiss a repeated vote.
     """
-    # TODO : clean up this function and its interaction with the voting 
-    # functions. See wether it should be a manager function in models.py!
     votes = Vote.objects.filter(owner = user, is_archived = False, issue = issue)
     voted_already = False
     repeated_vote = False
@@ -169,6 +167,7 @@ def multiply():
     add multiplier to issue.but not your own.
     """
     pass
+
 
 role_to_actions = {
     'anonymous citizen' : {
