@@ -4,46 +4,70 @@
 
 from emocracy.profiles.models import UserProfile
 
+import logging
+
 # put these values in a database??
-NUMBER_OF_OPINION_LEADERS = 2
+MAX_OPINION_LEADERS = 2
 MIN_SCORE_ACTIVE_CITIZENS = 10
 
-def anonymous_citizen(user):
+def anonymous_citizen(userprofile):
     """No code needed , upgrade is to citizen is done when you are registering an account
     """
     return 'anonymous citizen'
 
 def citizen(userprofile):
-    if userprofile.score > MIN_SCORE_ACTIVE_CITIZENS:
+    if userprofile.score >= MIN_SCORE_ACTIVE_CITIZENS:
         userprofile.role = 'active citizen'
-        userprofile.save()
         return 'active citizen'
-    else:
-        return 'citizen'
-        
+     
 def active_citizen(userprofile):
+    """ here the following can happen to a user:
+        -downgraded too citizen
+        -upgraded to opinion leader
+        -upgraded to opinion leader if there are not enough of them 
+    """
+    if userprofile.score < MIN_SCORE_ACTIVE_CITIZENS:
+        userprofile.role = 'citizen'    
+        return 'citizen'
+    
+    # if there are too little opinion leaders , active cititzens get upgraded 
     count_opinion_leaders = UserProfile.objects.filter(role = 'opinion leader').count()
-    if count_opinion_leaders < NUMBER_OF_OPINION_LEADERS : 
+
+    if count_opinion_leaders < MAX_OPINION_LEADERS: 
         # there are not enough opinion leaders
         # so you will become one automatically.
         userprofile.role = 'opinion leader'
-        userprofile.save()
         return 'opinion leader'
+        
+    opinion_leaders = UserProfile.objects.filter(role = 'opinion leader').\
+            order_by('score')
 
-    opinion_leaders = UserProfile.objects.filter(role = 'opinion leader').order_by('score')[:NUMBER_OF_OPINION_LEADERS]
-    if userprofile.score > opinion_leaders[NUMBER_OF_OPINION_LEADERS-1].score:
+    lowest_opinion_leader = opinion_leaders[0]   
+ 
+    if userprofile.score > lowest_opinion_leader.score: 
         userprofile.role = 'opinion leader'
-        userprofile.save()
-        to_be_downgraded = opinion_leaders[NUMBER_OF_OPINION_LEADERS-1]
-        to_be_downgraded.role = 'active citizen'
-        to_be_downgraded.save()
-        return 'opinion leader'
-    else :
-        return 'active citizen'
+        lowest_opinion_leader.role = 'active citizen'
+        lowest_opinion_leader.save()
+        return 'opinion leader' 
 
-def opinion_leader(user):
-    pass
+    
+def opinion_leader(userprofile):
+    """ opinion leaders get downgraded if there are too many of them
+    """
+    count_opinion_leaders = UserProfile.objects.filter(role = 'opinion leader').count() 
+    
+    if count_opinion_leaders > MAX_OPINION_LEADERS: 
+        opinion_leaders = UserProfile.objects.filter(role = 'opinion leader').\
+           order_by('-score')
+        for ol in opinion_leaders[MAX_OPINION_LEADERS:]:
+            ol.role = 'active citizen'       
+            ol.save()
 
+    if userprofile.score < MIN_SCORE_ACTIVE_CITIZENS:
+        userprofile.role = 'citizen'    
+        return 'citizen'
+    
+ 
 upgrade = {
     'anonymous citizen' : anonymous_citizen,
     'citizen' : citizen,
@@ -51,6 +75,12 @@ upgrade = {
     'opinion leader' : opinion_leader
 }
 
-def update_level(sender, instance , **kwargs):
-    """ a handler for a save on UserProfile """
-    upgrade[instance.role](instance)
+def change_score(userprofile, score):
+
+    userprofile.score += score
+    while upgrade[userprofile.role](userprofile): 
+        #does the level update checks
+        #keep updating until there is no change
+        pass
+    userprofile.save()
+
