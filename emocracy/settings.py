@@ -141,7 +141,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 LOG_FILE_NAME = os.path.join(PROJECT_PATH, "emocracy_log.txt")
 
 logging.basicConfig(
-    level = logging.INFO,
+    level = logging.DEBUG,
     format = '%(asctime)s %(levelname)s %(message)s',
     filename = LOG_FILE_NAME,
 )
