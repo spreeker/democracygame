@@ -17,8 +17,6 @@ from forms import VoteForm
 
 emo = EmoOAuthConsumerApp()
 
-@emo.require_access_token
-@login_required
 def ajax_vote_cast(request, next=None, xhr="WTF?"):
     """
     Cast a vote
@@ -26,6 +24,16 @@ def ajax_vote_cast(request, next=None, xhr="WTF?"):
     HTTP POST is required.
     """
     # Fill out some initial data fields from an authenticated user, if present
+
+    if request.user.is_anonymous():
+        error = "Must be logged in."
+        status = simplejson.dumps({'status' : 'error', 'error' : error})
+        return http.HttpResponse(status, mimetype="application/json")
+    else:
+        if not request.user.get_profile().access_token:
+            error = "Must have access token."
+            status = simplejson.dumps({'status' : 'error', 'error' : error})
+            return http.HttpResponse(status, mimetype="application/json")
 
     data = request.POST.copy()
 
