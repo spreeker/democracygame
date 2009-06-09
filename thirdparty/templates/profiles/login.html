@@ -21,7 +21,8 @@
 Try again, username and password don't match.
 {% endif %}
 
-<input type="submit" value="login">
+<input type="submit" value="Login">
+<a href="{% url registration_register %}"><input type="submit" value="Register" /></a>
 <input type="hidden" value="{{next}}" name="next">
 </form>
 </div>
