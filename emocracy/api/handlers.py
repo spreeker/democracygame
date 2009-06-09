@@ -191,7 +191,6 @@ class IssueListHandler(BaseHandler):
             vote = Vote.objects.filter(Q(issue=issue) & Q(owner=request.user) &Q(is_archived=False))
             issue.my_vote = vote
             issue_list.append(issue)
-            print "lala"
         return issue_list
 
     @classmethod
