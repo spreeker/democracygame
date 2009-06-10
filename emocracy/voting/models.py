@@ -38,6 +38,7 @@ blank_votes = [
     # personal considerations:
     (17, _(u'I need to know more')),
     (18, _(u'Ask me later')),
+    (19, _(u'Too personal')),
 ]
 
 possible_votes = list(normal_votes)
@@ -96,7 +97,7 @@ class Issue(models.Model):
     objects = IssueManager()
     
     class Meta:
-        unique_together = ('content_type', 'object_id') # UNIQUENESS CONSTRAINT SEEMS TO BE IGNORED? FIXME
+        unique_together = (('content_type', 'object_id') , ("owner" ,"title" ) ) 
 
     def __unicode__(self):
         return self.title
@@ -115,7 +116,6 @@ class Issue(models.Model):
         return new_vote
         
     def anonymous_vote():
-        # TODO needs to register an anonymous vote in the anonymous vote table.
         pass
     
     def tag(self, user, tag_string):
@@ -142,7 +142,6 @@ class Issue(models.Model):
         except IntegrityError:
             first_time = False
         return tag, first_time
-
 
             
 class IssueSet(models.Model):
