@@ -25,7 +25,8 @@ import score
 import levels
 from emocracy.gamelogic.models import roles
 
-from models import tag_count_threshold
+from gamelogic.models import tag_count_threshold
+from gamelogic.models import MultiplyIssue
 from voting.models import Vote
 from voting.models import Issue
 from voting.models import votes_to_description
@@ -79,6 +80,13 @@ def propose(user, title, body, vote_int, source_url, source_type, is_draft = Fal
     if issue_no == None:
         userprofile = user.get_profile()
         if not role_to_actions[userprofile.role].has_key('propose'): raise Http404 
+
+        # user may not have another issue with the same title
+        try :
+            Issue.objects.get( title = title , owner = user )
+            return " trying to create the same issue"
+        except Issue.DoesNotExist :
+            pass 
 
         new_issue = IssueBody.objects.create(
             owner = user,
@@ -158,15 +166,18 @@ def tag(user, issue, tag_string):
     
     return tag, _(u'Tag %(tagname)s added to this issue. The new tag might not show up immediately' % {'tagname' : tag.name})
 
-def multiply():
+def multiply(user , issue , downgrade = False ):
     """
     Opinion leaders have the option to mutiply the values of issues. 
     at most X multyplies can be given.
 
     check if there are multipliers left.
     add multiplier to issue.but not your own.
+
+    checks are done at model level.
     """
-    pass
+    m = MultiplyIssue.objecs.create( user = user , issue = issue , downgrade = downgrade )
+    m.save()
 
 
 role_to_actions = {
