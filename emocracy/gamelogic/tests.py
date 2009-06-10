@@ -1,12 +1,21 @@
 from psycopg2 import IntegrityError
 from emocracy.gamelogic import levels
+from emocracy.gamelogic import actions 
+from emocracy.gamelogic import score
 from emocracy.profiles.models import UserProfile
+from emocracy.voting.models import Issue
+
 from django.contrib.auth.models import User
 from django.db import transaction
 
 import unittest
 
 def safe_sql(Model , **cargs ):
+    """ if something goes wrong i can rollback changes.
+        needed if you test code on exciting postgress database
+        for normal testpurposes it overkill because those work on
+        an empty database.
+    """
     try:
         sid = transaction.savepoint()
         instance = Model( cargs )
@@ -54,7 +63,6 @@ class TestUsers(unittest.TestCase):
             sid = transaction.savepoint()
             user = User.objects.create_user( name , '%s@example.com' % name  , 'testpw' )
             transaction.savepoint_commit(sid)
-            user.save()
             return user
         except IntegrityError :
             transaction.savepoint_rollback(sid)
@@ -66,7 +74,6 @@ class TestUsers(unittest.TestCase):
             sid = transaction.savepoint()
             profile = UserProfile.objects.create( user = user , score = 0 , role = 'citizen' )
             transaction.savepoint_commit(sid)
-            profile.save()
             return profile
         except IntegrityError :
             transaction.savepoint_rollback(sid)
@@ -77,11 +84,24 @@ class TestUsers(unittest.TestCase):
         for user in users:
             user.delete()
 
-    def test_create_op(self):
+    def reset(self , score = 0 , role = "citizen" ):
+        """ set all users on score and role 
+        """
         for p in self.profiles:
-            p.score = 0 
-            p.role = "citizen"
+            p.score = score
+            p.role = role 
             p.save()
+
+    def runTest(self):
+        pass
+
+
+class TestLeveling(TestUsers):
+    """ test the leveling aka role change of users """
+
+
+    def test_create_op(self):
+        self.reset()
 
         levels.change_score( self.profiles[0] , 11 )    
         self.load_users()
@@ -136,8 +156,54 @@ class TestUsers(unittest.TestCase):
         self.assertEqual( self.profiles[2].role , 'opinion leader')
         self.assertEqual( self.profiles[0].role , 'active citizen' )
 
-    def runTest(self):
+class TestActions(TestUsers):
+    """ test all different actions a user can do """
+
+    issues = [ "issue1" , "issue2" , "issue3" ]
+
+    def setUp(self):
+        """ we need issues to vote on and do other actions with
+        """
+        super(TestActions , self).setUp()
+        self.reset( levels.MIN_SCORE_ACTIVE_CITIZENS , "active citizen" )
+        self.load_users()
+        # made sure default values in db are now ok
+        self.assertEqual( User.objects.count() , 3 )
+        self.assertEqual( self.profiles[0].score , levels.MIN_SCORE_ACTIVE_CITIZENS )
+        
+        # add issues
+        for i , issue in enumerate(self.issues):
+            actions.propose(self.users[i] , issue , 10*issue , 1 , "example.com" , "url" )
+
+
+        # test the adding of issues was succesfull
+        # this get run multiple times , dubplicate issues should not be created
+        self.assertEqual( Issue.objects.count() , len(self.issues))
+        
+    def test_vote(self):
+
+        issue = Issue.objects.get( title = "issue2" )  
+
+        vote_func = actions.role_to_actions[self.profiles[0].role]['vote'] 
+        vote_func( self.users[0] , issue , 1 , False) 
+        self.load_users()
+        delta = score.PROPOSE_SCORE + levels.MIN_SCORE_ACTIVE_CITIZENS
+        self.assertEqual( self.profiles[0].score - delta , score.VOTE_SCORE )
+
+    def test_multiply(self):
+        # only Opinion leaders can multiply 
+        try :
+            actions.role_to_actions[self.profiles[2].role]['multiply']
+            self.fail(" %s %s should not be able to Multiply " % (self.users[2].username , self.profiles[2].role ))
+        except KeyError :
+            pass
+
+    def test_tag(self):
         pass
+
+    def tearDown(self):
+        qs = Issue.objects.filter( title__startswith = "issue" )
+        qs.delete()
 
 """
 tu.= TestUsers()
