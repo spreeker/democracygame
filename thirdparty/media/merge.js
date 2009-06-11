@@ -1,3 +1,4 @@
+var debug = true;
 $(document).ready(function(){
   
     $("div.issue").each(function(){
@@ -50,7 +51,7 @@ function process_vote(issue, new_vote) {
                 render_bars(issue, new_vote);
             } else if(data.status=="debug") {
                 if(debug) {
-                // debug stuff (server errors)
+                    alert(data.error);
                 }
             } else {
                 handle_errors(data.error);
@@ -93,6 +94,7 @@ function render_bars(issue, new_vote){
         }
     }
     if(new_vote >= 10) {
+        $("#issue"+issue).find("td.abstain").css({'background-color' : '#4cf5fb'});
         vabs += 1;
         if(old_vote ==1) {
             vfor -= 1;

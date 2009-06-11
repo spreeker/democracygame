@@ -10,10 +10,12 @@ from emocracy.issues_content.models import IssueBody
 from emocracy.voting.models import Issue
 from emocracy.voting.models import Vote
 
+import gamelogic.actions
+
 class AnonymousVoteHandler(AnonymousBaseHandler):
     allowed_methods = ('GET',)
     fields = ('vote', 'time_stamp', 'issue_uri', 'keep_private', 'user_uri')
-    model = Vote
+    #model = Vote
 
     def read(self, request, id, *args, **kwargs):
         return self.model.objects.filter(issue=id)
@@ -38,7 +40,7 @@ class VoteHandler(BaseHandler):
     allowed_methods = ('GET',)
     fields = ('vote', 'time_stamp', 'issue_uri', 'keep_private', 'user_uri')
     model = Vote
-    anonymous = AnonymousVoteHandler
+    #anonymous = AnonymousVoteHandler
 
     def read(self, request, id, *args, **kwargs):
         return self.model.objects.filter(issue=id)
@@ -117,7 +119,7 @@ class UserListHandler(BaseHandler):
 class AnonymousUserHandler(AnonymousBaseHandler):
     allowed_methods = ('GET',)
     fields = ('username', 'score', 'user_uri')
-    model = User
+    #model = User
 
     def read(self, request, id, *args, **kwargs):
         return self.model.objects.filter(id=id)
@@ -134,7 +136,7 @@ class UserHandler(BaseHandler):
     allowed_methods = ('GET',)
     fields = ('username', 'score', 'user_uri')
     anonymous = AnonymousUserHandler
-    model = User
+    #model = User
 
     def read(self, request, id, *args, **kwargs):
         return self.model.objects.filter(id=id)
@@ -236,24 +238,30 @@ class AnonymousIssueHandler(AnonymousBaseHandler):
         return 'http://emo.buhrer.net/api/issues/%s/' %issue.id
 
 class IssueHandler(BaseHandler):
-    allowed_methods = ('GET',)
+    allowed_methods = ('GET', 'POST',)
     anonymous = AnonymousIssueHandler
     fields = ('issue_uri', 'title', 'body', ('owner', ('username', 'user_uri',)), 'time_stamp', 'souce_type', 'url')
     #model = IssueBody
         
+    print 'lala'
     def create(self, request):
+        print 'lalala'
         attrs = self.flatten_dict(request.POST)
 
         if self.exists(**attrs):
             return rc.DUPLICATE_ENTRY
         else:
-            issue = IssueBody(title=attrs['title'], 
-                            content=attrs['body'],
-                            url=attrs['url'],
-                            source_type=attrs['source_type'],
-                            owner=request.user)
+            issue = gamelogic.actions.propose(
+                request.user,
+                attrs['title'],
+                attrs['body'],
+                attrs['owners_vote'],
+                attrs['url'],
+                attrs['source_type'],
+                attrs['is_draft'],
+                None,
+            )
             issue.save()
-            
             return issue
     
     def read(self, request, id):
