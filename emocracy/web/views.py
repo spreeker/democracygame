@@ -351,7 +351,7 @@ def issue_propose(request, issue_no = None):
     """
     This view handles proposing new issues.
     """
-    if issue_no != None: # view was called to edit an issue
+    if issue_no is not None: # view was called to edit an issue
         issue = get_object_or_404(Issue, pk = issue_no)
         try:
             # TODO
