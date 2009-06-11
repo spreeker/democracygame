@@ -197,23 +197,25 @@ def login(request):
     if request.method == "POST":
         username = request.POST['username']
         password = request.POST['password']
+
         user = auth.authenticate(username=username, password=password)
         if user is not None and user.is_active:
             # Correct password, and the user is marked "active"
             auth.login(request, user)
             # Redirect to a success page.
             if user.get_profile().access_token:
-                return HttpResponseRedirect("/profile/")
+                return HttpResponseRedirect(request.POST.get('next'))
             else:
                 return HttpResponseRedirect("/oauth/")
         else:
             # Show an error page
-            return HttpResponseRedirect("/profile/login/")
+            return HttpResponseRedirect(reverse("top_level_menu"))
     else:
         form = AuthenticationForm(request)
+        print request.GET.get('next')
         context = RequestContext(request, {
             'form' : form,
-            'next' : '/profiles/',
+            'next' : request.GET.get('next',reverse("top_level_menu")),
         })
         return render_to_response('profiles/login.html', context)
 
