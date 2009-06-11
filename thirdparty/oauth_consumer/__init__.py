@@ -1,6 +1,8 @@
 import django_oauth_consumer
 from django_oauth_consumer import NoAccessToken
 
+from django.utils import simplejson as json
+
 CONSUMER_KEY = "noct"
 CONSUMER_SECRET = "noct"
 
@@ -36,6 +38,8 @@ class EmoOAuthConsumerApp(django_oauth_consumer.OAuthConsumerApp):
         realm=realm,
         signature_method=signature_method)
 
+        self.response = None
+
     def store_access_token(self, request, token):
         if not request.user.is_anonymous():
             profile = request.user.get_profile()
@@ -68,6 +72,11 @@ class EmoOAuthConsumerApp(django_oauth_consumer.OAuthConsumerApp):
         except NoAccessToken:
             return self.make_signed_req(url=resource)
 
+    def ld(self):
+        """Load data - parse json from last request"""
+        data = self.response.read()
+        return json.loads(data)
+
     def post_resource(self, request, resource, content=None):
         if resource==None:
             return false
@@ -88,10 +97,20 @@ class EmoOAuthConsumerApp(django_oauth_consumer.OAuthConsumerApp):
             }
         """
         api_url = API_SERVER+'votes/'
-        response = self.post_resource(request, api_url, content=vote_data)
-        return response
+        self.response = self.post_resource(request, api_url, content=vote_data)
+        return self.response.status
 
     def get_issue_list(self, request):
         api_url = API_SERVER+'issues/'
-        return self.get_resource(request, api_url)
+        self.response = self.get_resource(request, api_url)
+        return self.ld()
 
+    def get_issue(self, request, issue_no):
+        api_url = API_SERVER+'issues/'+issue_no+'/'
+        self.response = self.get_resource(request, api_url)
+        return self.ld()
+
+    def post_issue(self, request, issue_data):
+        api_url = API_SERVER+'issues/'
+        self.response = self.post_resource(request, api_url, content=issue_data)
+        return self.response.status

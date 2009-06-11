@@ -8,6 +8,8 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.contrib.auth import login
+from django.contrib.auth.models import User
 
 from registration.forms import RegistrationForm
 from registration.models import RegistrationProfile
@@ -66,8 +68,12 @@ def activate(request, activation_key,
     context = RequestContext(request)
     for key, value in extra_context.items():
         context[key] = callable(value) and value() or value
+    print account
+    if account:
+        account.backend='django.contrib.auth.backends.ModelBackend'
+        login(request,account)
     return render_to_response(template_name,
-                              { 'account': account,
+                              { 'user': account,
                                 'expiration_days': settings.ACCOUNT_ACTIVATION_DAYS },
                               context_instance=context)
 
