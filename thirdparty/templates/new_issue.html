@@ -1,0 +1,19 @@
+{% extends "main.html" %}
+
+{% block content %}
+<div class="blockmessage">
+<form method="post" action=".">
+<table>
+{% for field in form %}
+<tr><td>{{field.label_tag}}</td></tr>
+{% if field.errors %}
+<tr><td>{{ field.errors }}</td></tr>
+{% endif %}
+<tr><td>{{ field }}</td></tr>
+{% endfor %}
+</table>
+<input type="submit" value="Submit Issue">
+</form>
+</div>
+{% include "footer.html" %}
+{% endblock %}
