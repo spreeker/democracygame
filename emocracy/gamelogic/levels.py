@@ -1,10 +1,6 @@
-# The game level upgrade functions which are exectuted on score change 
-# if a userprofile is saved a post_signal is send to below upgrade_level
-# function. the signal registration is done in models.py.
+# The game level upgrade functions which are exectuted on a score change 
 
 from emocracy.profiles.models import UserProfile
-
-import logging
 
 # put these values in a database??
 MAX_OPINION_LEADERS = 2
