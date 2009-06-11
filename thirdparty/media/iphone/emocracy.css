@@ -98,7 +98,7 @@ a img {
 
 #header {
   position:relative;
-  height:38px;
+  height:50px;
   background:url(./bg_header.png) repeat-x;
 }
 
@@ -157,7 +157,7 @@ a img {
 
 
 .list {
-  padding: 1em 0;
+  padding: 0.4em 0;
   background:#FFF;
   min-height:260px;
 }
@@ -184,7 +184,7 @@ a img {
 
 
 .list .panel {
-  padding:1em 0 1em 0;
+  padding:0.2em 0 0.2em 0;
 }
 
 .list .odd {
@@ -217,17 +217,29 @@ a img {
 
 .list .title {
   margin:0 0 0 0px;
-  padding: 1em 1em 1em 1em;
-  font-size:12px;
-  color:#0000ee;
+  padding: 0.2em 0.2em 0.2em 0.2em;
+  font-size:2em;
+  color:#111;
   background:#ebfeff;
-  border-top:1px solid #b2fafa;
-  border-bottom:1px solid #b2fafa;
+  /*border-top:1px solid #b2fafa;*/
+  /*border-bottom:1px solid #b2fafa;*/
 }
+
+.list .title:hover {
+  margin:0 0 0 0px;
+  padding: 0.2em 0.2em 0.2em 0.2em;
+  font-size:2em;
+  color:#111;
+  background:#c9dcdd;
+/*  border-top:1px solid #b2fafa; */
+/*  border-bottom:1px solid #b2fafa; */
+}
+
+
 .list .body {
   margin:0 0 0 0px;
-  padding: 1em 1em 0em 1em;
-  font-size:12px;
+  padding: 0.2em 0.2em 0em 0.2em;
+  font-size:14px;
   color:#555;
 }
 
@@ -254,7 +266,7 @@ a img {
 
 .blockmessage {
     padding: 1em 1em 1em 1em;
-    font-size: 1.2em;
+    font-size: 2em;
     background: #fff;
     min-height: 260px;
 }
@@ -277,9 +289,10 @@ a img {
 .votes td a {
     display: block;
     text-decoration: none;
+    font-size: 2.5em;
     line-height: 32px;
     padding: 0px 0px 0px 0px;
-    color: #fff;
+    color: #111;
 }
 .votes td.for a:hover {
     background: #49f24d;
@@ -314,14 +327,32 @@ a img {
 }
 
 #menu ul {
-  margin:.5em 0 0 .5em;
+  margin:0 0 0 0;
   padding:0;
 }
 
 #menu li {
-  background:url(./button.png) no-repeat;
+  /*background:url(./button.png) no-repeat;*/
   margin:0;
   height:58px;
+  text-align:center;
+  border-top: 0.2em solid black;
+}
+#menu li.myissues {
+  background-color: #66fecb;
+}
+#menu li.hotissues {
+  background-color: #ff51a8;
+}
+#menu li.newissues {
+  background-color: #00ff00;
+}
+#menu li.genissues {
+  background-color: #ad5bfe;
+}
+#menu li.addissue {
+  background-color: #0099ff;
+  border-bottom: 0.2em solid black;
 }
 
 #menu li img {
@@ -332,8 +363,8 @@ a img {
 
 #menu a {
   font-size:2.5em;
-  color:#FFF;
-  font-weight:normal;
+  color:#000;
+  font-weight:bold;
   display:block;
   padding:14px 0 10px 20px;
 }

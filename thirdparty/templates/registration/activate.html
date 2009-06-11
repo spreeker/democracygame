@@ -3,11 +3,15 @@
 
 {% block content %}
 <div class="blockmessage">
-	{% if account %}
+	{% if user %}
 	{% blocktrans %}	
-	Welcome {{ account }} !
+	Welcome {{ user }} !
 
-	Your account on Thirdparty is now active.
+    <p>Your account on Thirdparty is now active.</p>
+
+    <p>You have also been logged in automatically.</p>
+
+    <h2><a href="/oauth/auth/">Now please AUTHENTICATE with Emocracy.</a></h2>
 
 	{% endblocktrans %}
     {% else %}
