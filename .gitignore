@@ -1,6 +1,7 @@
 database.sqlite3
 emocracy_log.txt
 settings_local.py
+.ropeproject/
 *.pyc
 *.pyo
 *.DS_Store
@@ -9,3 +10,4 @@ settings_local.py
 *~
 *.sqlite3
 *.log
+
