@@ -2,8 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class UserProfile(models.Model):
+
     user = models.ForeignKey(User, unique = True)
-    score = models.IntegerField(default = 0)
+    score = models.IntegerField(default = 0 ) 
     total_for = models.IntegerField(default = 0)
     total_against = models.IntegerField(default = 0)
     total_blank = models.IntegerField(default = 0)
@@ -14,4 +15,7 @@ class UserProfile(models.Model):
     votes_public = models.BooleanField(default = False)
     id_is_verified = models.BooleanField(default = False)
     show_identity = models.BooleanField(default = False)
- 
+
+
+
+
