@@ -8,5 +8,5 @@ emoauth = EmoOAuthConsumerApp()
 
 @emoauth.require_access_token
 def index(request):
-    return HttpResponseRedirect("http://tp.buhrer.net:8080/")
+    return HttpResponseRedirect("http://127.0.0.1:8000/")
     
