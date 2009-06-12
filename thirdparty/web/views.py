@@ -36,7 +36,6 @@ class HttpResponseCreated(HttpResponse):
 
 def issues_list_hottest(request):
     issue_list = emo.get_issue_list(request)
-    print issue_list
     fetch = []
     for resource in issue_list:
         issueid = resource['issue_uri'].split('/')
@@ -47,7 +46,6 @@ def issues_list_hottest(request):
         resource_datetime = datetime.datetime.strptime(resource['time_stamp'],"%Y-%m-%d %H:%M:%S")
         now = datetime.datetime.now()
         dt = now - resource_datetime
-        print resource
         if request.user.is_anonymous():
             pass
         else:
@@ -102,7 +100,6 @@ def issues_add_issue(request, issue_no=None):
     """
     if issue_no is not None: # view was called to edit an issue
         issue = emo.get_issue(request, issue_no)
-        print issue
         #issue = get_object_or_404(Issue, pk = issue_no)
         try:
             # TODO
