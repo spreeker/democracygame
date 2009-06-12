@@ -1,7 +1,9 @@
-
 import datetime
 
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
+from django.core.urlresolvers import reverse
+
 from django.db.models import Q
 from piston.handler import BaseHandler, AnonymousBaseHandler
 from piston.utils import rc
@@ -11,6 +13,8 @@ from emocracy.voting.models import Issue
 from emocracy.voting.models import Vote
 
 import gamelogic.actions
+
+domain = Site.objects.get_current().domain
 
 class AnonymousVoteHandler(AnonymousBaseHandler):
     allowed_methods = ('GET',)
@@ -22,11 +26,11 @@ class AnonymousVoteHandler(AnonymousBaseHandler):
 
     @classmethod
     def issue_uri(cls, vote):
-        return "http://emo.buhrer.net/api/issues/%s/" %vote.issue.id
+        return "http://%s%s" %(domain, reverse('api_issue' , args=[vote.issue.id]))
     
     @classmethod
     def user_uri(cls, vote):
-        return "http://emo.buhrer.net/api/users/%s/" %vote.owner.id
+        return "http://%s%s" %(domain , reverse('api_user' , args=[vote.owner.id]))
 
 class AnonymousVoteListHandler(AnonymousVoteHandler):
     allowed_methods = ('GET',)
@@ -47,11 +51,12 @@ class VoteHandler(BaseHandler):
 
     @classmethod
     def issue_uri(cls, vote):
-        return "http://emo.buhrer.net/api/issues/%s/" %vote.issue.id
+        return "http://%s%s" % (domain , reverse('api_issue' , args=[vote.issue.id]))
     
     @classmethod
     def user_uri(cls, vote):
-        return "http://emo.buhrer.net/api/users/%s/" %vote.owner.id
+        return "http://%s%s" %(domain , reverse('api_user' , args=[vote.owner.id]))
+
 
 class VoteListHandler(VoteHandler):
     allowed_methods = ('GET', 'POST',)
@@ -101,7 +106,9 @@ class AnonymousUserListHandler(AnonymousBaseHandler):
 
     @classmethod
     def user_uri(cls, user):
-        return 'http://emo.buhrer.net/api/users/%s/' %user.id
+        pass
+        return "http://%s%s" % (domain , reverse('api_user' , args=[user.id]))
+    
 
 class UserListHandler(BaseHandler):
     allowed_methods = ('GET',)
@@ -114,7 +121,8 @@ class UserListHandler(BaseHandler):
 
     @classmethod
     def user_uri(cls, user):
-        return 'http://emo.buhrer.net/api/users/%s/' %user.id
+        return "http://%s%s" % (domain , reverse('api_user' , args=[user.id]))
+    
 
 class AnonymousUserHandler(AnonymousBaseHandler):
     allowed_methods = ('GET',)
@@ -130,7 +138,8 @@ class AnonymousUserHandler(AnonymousBaseHandler):
 
     @classmethod
     def user_uri(cls, user):
-        return 'http://emo.buhrer.net/api/users/%s/' %user.id
+        return "http://%s%s" % (domain , reverse('api_user' , args=[user.id]))
+    
 
 class UserHandler(BaseHandler):
     allowed_methods = ('GET',)
@@ -147,7 +156,8 @@ class UserHandler(BaseHandler):
     
     @classmethod
     def user_uri(cls, user):
-        return 'http://emo.buhrer.net/api/users/%s/' %user.id
+        return "http://%s%s" % (domain , reverse('api_user' , args=[user.id]))
+    
 
 class AnonymousIssueListHandler(AnonymousBaseHandler):
     allowed_methods = ('GET',)
@@ -172,12 +182,13 @@ class AnonymousIssueListHandler(AnonymousBaseHandler):
     
     @classmethod
     def user_uri(cls, user):
-        return 'http://emo.buhrer.net/api/users/%s/' %user.id
+        return "http://%s%s" % (domain , reverse('api_user' , args=[user.id]))
+    
     
     @classmethod
     def issue_uri(cls, issue):
-        return 'http://emo.buhrer.net/api/issues/%s/' %issue.id
-
+        return "http://%s%s" % (domain , reverse('api_issue' , args=[issue.id]))
+        
 class IssueListHandler(BaseHandler):
     allowed_methods = ('GET',)
 
@@ -215,11 +226,13 @@ class IssueListHandler(BaseHandler):
 
     @classmethod
     def user_uri(cls, user):
-        return 'http://emo.burher.net/api/users/%s/' %user.id
+        return "http://%s%s" % (domain , reverse('api_user' , args=[user.id]))
+        
 
     @classmethod
     def issue_uri(cls, issue):
-        return 'http://emo.buhrer.net/api/issues/%s/' %issue.id
+        return "http://%s%s" % (domain , reverse('api_issue' , args=[issue.id]))
+        
 
 class AnonymousIssueHandler(AnonymousBaseHandler):
     allowed_methods = ('GET',)
@@ -231,11 +244,13 @@ class AnonymousIssueHandler(AnonymousBaseHandler):
 
     @classmethod
     def user_uri(cls, user):
-        return 'http://emo.buhrer.net/api/users/%s/' %user.id
+        return "http://%s%s" % (domain , reverse('api_issue' , args=[issue.id]))
+        
 
     @classmethod
     def issue_uri(cls, issue):
-        return 'http://emo.buhrer.net/api/issues/%s/' %issue.id
+        return "http://%s%s" % (domain , reverse('api_issue' , args=[issue.id]))
+        
 
 class IssueHandler(BaseHandler):
     allowed_methods = ('GET', 'POST',)
@@ -272,8 +287,8 @@ class IssueHandler(BaseHandler):
     
     @classmethod
     def user_uri(cls, user):
-        return 'http://emo.buhrer.net/api/users/%s/' %user.id
+        return "http://%s%s" % (domain , reverse('api_user' , args=[user.id]))
 
     @classmethod
     def issue_uri(cls, issue):
-        return 'http://emo.buhrer.net/api/issues/%s/' %issue.id
+        return "http://%s%s" % (domain , reverse('api_issue' , args=[issue.id]))
