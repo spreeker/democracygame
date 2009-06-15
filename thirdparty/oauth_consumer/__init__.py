@@ -15,7 +15,7 @@ API_SERVER = SERVER + "api/"
 REQUEST_TOKEN_URL = '%soauth/request_token/' % SERVER
 ACCESS_TOKEN_URL = '%soauth/access_token/' % SERVER
 AUTHORIZATION_URL = '%soauth/authorize/' % SERVER
-REALM = 'emo.buhrer.net'
+REALM = settings.REALM
 SIGNATURE_METHOD = 'oauth.signature_method.plaintext.OAuthSignatureMethod_PLAINTEXT'
 
 
