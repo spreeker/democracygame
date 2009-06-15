@@ -99,11 +99,11 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.admin',
     'django.contrib.sites',
-    'ajax',
-    'web',
-    'profiles',
-    'registration',
-    'oauth_consumer',
+    'thirdparty.ajax',
+    'thirdparty.web',
+    'thirdparty.profiles',
+    'thirdparty.registration',
+    'thirdparty.oauth_consumer',
 )
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
