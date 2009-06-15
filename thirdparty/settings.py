@@ -129,4 +129,10 @@ LOGOUT_URL = '/logout/'
 ACCOUNT_ACTIVATION_DAYS = 1
 AUTH_PROFILE_MODULE = 'profiles.userprofile'
 
+try:
+    from settings_local import *
+except ImportError:
+    print "Create your local settings_local.py settings file with password sensitive information ect"
+    # Re-raise the import error. The server should not run!
+    raise
 
