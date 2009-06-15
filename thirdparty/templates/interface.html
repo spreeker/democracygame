@@ -1,0 +1,31 @@
+{% extends "main.html" %}
+{% comment %}
+
+Author: Conrado Buhrer <conrado@buhrer.net>
+Date: 16th of March 2009
+Copyright: Emocracy Project - http://emocracy.nl
+
+Description:
+
+Third Party Application example.
+
+Application top level menu
+
+{% endcomment %}
+{% block content %}
+<div id="views">
+  <div class="view" id="menu">
+    <ul>
+        <li class="myissues"><a href="/hot/">My Issues</a></li>
+        <div class="folder" id="myissuesfolder">
+            lala
+        </div>
+      <li class="hotissues"><a href="/pop/">Hot Issues</a></li>
+      <li class="newissues"><a href="/new/">Newest Issues</a></li>
+      <li class="genissues"><a href="/new/">General Issues</a></li>
+      <li class="addissue"><a href="/add/">Add Issue</a></li>
+    </ul>
+  </div>
+</div>
+{% include "menu_footer.html" %}
+{% endblock %}
