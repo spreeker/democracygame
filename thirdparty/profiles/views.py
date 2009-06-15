@@ -212,7 +212,6 @@ def login(request):
             return HttpResponseRedirect(reverse("top_level_menu"))
     else:
         form = AuthenticationForm(request)
-        print request.GET.get('next')
         context = RequestContext(request, {
             'form' : form,
             'next' : request.GET.get('next',reverse("top_level_menu")),
