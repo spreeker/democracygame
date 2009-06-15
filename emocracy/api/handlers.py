@@ -258,9 +258,7 @@ class IssueHandler(BaseHandler):
     fields = ('issue_uri', 'title', 'body', ('owner', ('username', 'user_uri',)), 'time_stamp', 'souce_type', 'url')
     #model = IssueBody
         
-    print 'lala'
     def create(self, request):
-        print 'lalala'
         attrs = self.flatten_dict(request.POST)
 
         if self.exists(**attrs):
