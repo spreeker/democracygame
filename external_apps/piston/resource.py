@@ -1,6 +1,7 @@
 import sys, inspect
 
-from django.http import HttpResponse, Http404, HttpResponseNotAllowed, HttpResponseForbidden
+from django.http import (HttpResponse, Http404, HttpResponseNotAllowed,
+    HttpResponseForbidden, HttpResponseServerError)
 from django.views.debug import ExceptionReporter
 from django.views.decorators.vary import vary_on_headers
 from django.conf import settings
@@ -11,7 +12,7 @@ from handler import typemapper
 from doc import HandlerMethod
 from authentication import NoAuthentication
 from utils import coerce_put_post, FormValidationError, HttpStatusCode
-from utils import rc, format_error, translate_mime
+from utils import rc, format_error, translate_mime, MimerDataException
 
 class Resource(object):
     """
@@ -65,6 +66,11 @@ class Resource(object):
         """
         rm = request.method.upper()
 
+        # Django's internal mechanism doesn't pick up
+        # PUT request, so we trick it a little here.
+        if rm == "PUT":
+            coerce_put_post(request)
+
         if not self.authentication.is_authenticated(request):
             if hasattr(self.handler, 'anonymous') and \
                 callable(self.handler.anonymous) and \
@@ -77,14 +83,13 @@ class Resource(object):
         else:
             handler = self.handler
             anonymous = handler.is_anonymous
-                
-        # Django's internal mechanism doesn't pick up
-        # PUT request, so we trick it a little here.
-        if rm == "PUT":
-            coerce_put_post(request)
         
         # Translate nested datastructs into `request.data` here.
-        translate_mime(request)
+        if rm in ('POST', 'PUT'):
+            try:
+                translate_mime(request)
+            except MimerDataException:
+                return rc.BAD_REQUEST
         
         if not rm in handler.allowed_methods:
             return HttpResponseNotAllowed(handler.allowed_methods)
@@ -143,20 +148,19 @@ class Resource(object):
             If `PISTON_DISPLAY_ERRORS` is not enabled, the caller will
             receive a basic "500 Internal Server Error" message.
             """
+            exc_type, exc_value, tb = sys.exc_info()
+            rep = ExceptionReporter(request, exc_type, exc_value, tb.tb_next)
             if self.email_errors:
-                exc_type, exc_value, tb = sys.exc_info()
-                rep = ExceptionReporter(request, exc_type, exc_value, tb.tb_next)
-
                 self.email_exception(rep)
-
             if self.display_errors:
-                result = format_error('\n'.join(rep.format_exception()))
+                return HttpResponseServerError(
+                    format_error('\n'.join(rep.format_exception())))
             else:
                 raise
 
         emitter, ct = Emitter.get(em_format)
         srl = emitter(result, typemapper, handler, handler.fields, anonymous)
-        
+
         try:
             """
             Decide whether or not we want a generator here,

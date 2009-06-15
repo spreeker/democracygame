@@ -1,4 +1,4 @@
-from django.http import HttpResponseNotAllowed, HttpResponseForbidden, HttpResponse
+from django.http import HttpResponseNotAllowed, HttpResponseForbidden, HttpResponse, HttpResponseBadRequest
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
 from django import get_version as django_version
@@ -6,7 +6,7 @@ from decorator import decorator
 
 from datetime import datetime, timedelta
 
-__version__ = '0.2.1'
+__version__ = '0.2.2'
 
 def get_version():
     return __version__
@@ -146,6 +146,13 @@ def coerce_put_post(request):
             
         request.PUT = request.POST
 
+
+class MimerDataException(Exception):
+    """
+    Raised if the content_type and data don't match
+    """
+    pass
+
 class Mimer(object):
     TYPES = dict()
     
@@ -168,7 +175,19 @@ class Mimer(object):
                 return loadee
 
     def content_type(self):
-        return self.request.META.get('CONTENT_TYPE', None)
+        """
+        Returns the content type of the request in all cases where it is
+        different than a submitted form - application/x-www-form-urlencoded
+        """
+        type_formencoded = "application/x-www-form-urlencoded"
+
+        ctype = self.request.META.get('CONTENT_TYPE', type_formencoded)
+        
+        if ctype == type_formencoded:
+            return None
+        
+        return ctype
+        
 
     def translate(self):
         """
@@ -179,9 +198,9 @@ class Mimer(object):
         `request.data` instead, and the handler will have to read from
         there.
         
-        It will also set `request.mimetype` so the handler has an easy
-        way to tell what's going on. `request.mimetype` will always be
-        None for multipart form data (what your browser sends.)
+        It will also set `request.content_type` so the handler has an easy
+        way to tell what's going on. `request.content_type` will always be
+        None for form-encoded and/or multipart form data (what your browser sends.)
         """    
         ctype = self.content_type()
         self.request.content_type = ctype
@@ -195,11 +214,9 @@ class Mimer(object):
                 # Reset both POST and PUT from request, as its
                 # misleading having their presence around.
                 self.request.POST = self.request.PUT = dict()
-            except TypeError:
-                return rc.BAD_REQUEST # TODO: Handle this in super
-            except Exception, e:
-                raise
-                
+            except (TypeError, ValueError):
+                raise MimerDataException
+
         return self.request
                 
     @classmethod
