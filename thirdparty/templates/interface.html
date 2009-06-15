@@ -1,0 +1,119 @@
+{% extends "main.html" %}
+{% comment %}
+
+Author: Conrado Buhrer <conrado@buhrer.net>
+Date: 16th of March 2009
+Copyright: Emocracy Project - http://emocracy.nl
+
+Description:
+
+Third Party Application example.
+
+Application top level menu
+
+{% endcomment %}
+{% block content %}
+<div id="views">
+  <div class="view" id="menu">
+      <div class="myissues">My Issues</div>
+        <div class="folder" id="myissuesfolder">
+{% for issue in issues %}
+    <div class="issue i-{{issue.id}}" id="myissue{{issue.id}}">
+      <div class="title">{{issue.title}}</div>
+      <div class="body">{{issue.body}}</div>
+      <div class="panel">
+        <form action="{% url ajax_vote_cast %}" id="vote_form_{{issue.id}}" method="post">
+        <input type="hidden" id="my_vote" name="vote" value="{{issue.my_vote}}">
+        <input type="hidden" id="my_vote_issue" name="issue" value="{{issue.id}}">
+        <input type="hidden" id="my_vote_privacy" name="keep_private" value="False">
+        <table class="votes" id="vote{{issue.id}}"><tbody>
+          <tr>
+            <td class="for">{{issue.votes_for}}</td>
+            <td class="abstain">{{issue.votes_abstain}}</td>
+            <td class="against">{{issue.votes_against}}</td>
+          </tr>
+        </tbody></table>
+        </form>
+      </div>
+      <div style="clear: both;"></div>
+    </div>
+{% endfor %}
+
+        </div>
+      <div class="hotissues">Hot Issues</div>
+        <div class="folder" id="hotissuesfolder">
+{% for issue in issues %}
+    <div class="issue i-{{issue.id}}" id="hotissue{{issue.id}}">
+      <div class="title">{{issue.title}}</div>
+      <div class="body">{{issue.body}}</div>
+      <div class="panel">
+        <form action="{% url ajax_vote_cast %}" id="vote_form_{{issue.id}}" method="post">
+        <input type="hidden" id="my_vote" name="vote" value="{{issue.my_vote}}">
+        <input type="hidden" id="my_vote_issue" name="issue" value="{{issue.id}}">
+        <input type="hidden" id="my_vote_privacy" name="keep_private" value="False">
+        <table class="votes" id="vote{{issue.id}}"><tbody>
+          <tr>
+            <td class="for">{{issue.votes_for}}</td>
+            <td class="abstain">{{issue.votes_abstain}}</td>
+            <td class="against">{{issue.votes_against}}</td>
+          </tr>
+        </tbody></table>
+        </form>
+      </div>
+      <div style="clear: both;"></div>
+    </div>
+{% endfor %}
+        </div>
+      <div class="newissues">New Issues</div>
+        <div class="folder" id="newissuesfolder">
+{% for issue in issues %}
+    <div class="issue i-{{issue.id}}" id="newissue{{issue.id}}">
+      <div class="title">{{issue.title}}</div>
+      <div class="body">{{issue.body}}</div>
+      <div class="panel">
+        <form action="{% url ajax_vote_cast %}" id="vote_form_{{issue.id}}" method="post">
+        <input type="hidden" id="my_vote" name="vote" value="{{issue.my_vote}}">
+        <input type="hidden" id="my_vote_issue" name="issue" value="{{issue.id}}">
+        <input type="hidden" id="my_vote_privacy" name="keep_private" value="False">
+        <table class="votes" id="vote{{issue.id}}"><tbody>
+          <tr>
+            <td class="for">{{issue.votes_for}}</td>
+            <td class="abstain">{{issue.votes_abstain}}</td>
+            <td class="against">{{issue.votes_against}}</td>
+          </tr>
+        </tbody></table>
+        </form>
+      </div>
+      <div style="clear: both;"></div>
+    </div>
+{% endfor %}
+        </div>
+      <div class="genissues">General Issues</div>
+        <div class="folder" id="genissuesfolder">
+{% for issue in issues %}
+    <div class="issue i-{{issue.id}}" id="genissue{{issue.id}}">
+      <div class="title">{{issue.title}}</div>
+      <div class="body">{{issue.body}}</div>
+      <div class="panel">
+        <form action="{% url ajax_vote_cast %}" id="vote_form_{{issue.id}}" method="post">
+        <input type="hidden" id="my_vote" name="vote" value="{{issue.my_vote}}">
+        <input type="hidden" id="my_vote_issue" name="issue" value="{{issue.id}}">
+        <input type="hidden" id="my_vote_privacy" name="keep_private" value="False">
+        <table class="votes" id="vote{{issue.id}}"><tbody>
+          <tr>
+            <td class="for">{{issue.votes_for}}</td>
+            <td class="abstain">{{issue.votes_abstain}}</td>
+            <td class="against">{{issue.votes_against}}</td>
+          </tr>
+        </tbody></table>
+        </form>
+      </div>
+      <div style="clear: both;"></div>
+    </div>
+{% endfor %}
+        </div>
+      <div class="addissue">Add Issues</div>
+  </div>
+</div>
+{% include "menu_footer.html" %}
+{% endblock %}

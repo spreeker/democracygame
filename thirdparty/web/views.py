@@ -36,7 +36,6 @@ class HttpResponseCreated(HttpResponse):
 
 def issues_list_hottest(request):
     issue_list = emo.get_issue_list(request)
-    print issue_list
     fetch = []
     for resource in issue_list:
         issueid = resource['issue_uri'].split('/')
@@ -47,7 +46,6 @@ def issues_list_hottest(request):
         resource_datetime = datetime.datetime.strptime(resource['time_stamp'],"%Y-%m-%d %H:%M:%S")
         now = datetime.datetime.now()
         dt = now - resource_datetime
-        print resource
         if request.user.is_anonymous():
             pass
         else:
@@ -102,7 +100,6 @@ def issues_add_issue(request, issue_no=None):
     """
     if issue_no is not None: # view was called to edit an issue
         issue = emo.get_issue(request, issue_no)
-        print issue
         #issue = get_object_or_404(Issue, pk = issue_no)
         try:
             # TODO
@@ -179,8 +176,43 @@ def user_details(request, pk):
             RequestContext(request, extra_context))
 
 def top_level_menu(request):
-    return render_to_response('menu.html',
-            RequestContext(request, {'is_menu' : True}))
+    issue_list = emo.get_issue_list(request)
+    fetch = []
+    for resource in issue_list:
+        issueid = resource['issue_uri'].split('/')
+        issueid = issueid[-2:]
+        issueid = issueid[0]
+        resource_data = {}
+        resource_data['id'] = issueid
+        resource_datetime = datetime.datetime.strptime(resource['time_stamp'],"%Y-%m-%d %H:%M:%S")
+        now = datetime.datetime.now()
+        dt = now - resource_datetime
+        if request.user.is_anonymous():
+            pass
+        else:
+            if not resource['my_vote'] == []:
+                resource_data['my_vote'] = resource['my_vote'][0]['vote']
+            else:
+                resource_data['my_vote'] = None
+        resource_data['title'] = resource['title']
+        resource_data['body'] = resource['body']
+        resource_data['votes_for'] = resource['votes_for']
+        resource_data['votes_abstain'] = resource['votes_abstain']
+        resource_data['votes_against'] = resource['votes_against']
+        if not dt.days:
+            resource_data['age'] = 'Today'
+        else:
+            resource_data['age'] = '%s days ago' % dt.days
+        resource_data['user'] = resource['owner']['username']
+        userid = resource['owner']['user_uri'].split('/')
+        userid = userid[-2:]
+        resource_data['userid'] = userid[0]
+        fetch.append(resource_data)
+    context = {}
+    context['issues'] = fetch
+    context['is_menu'] = True
+    return render_to_response('interface.html',
+            RequestContext(request, context))
 
 def url_error_view(request, error):
     return render_to_response(
