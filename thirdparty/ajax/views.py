@@ -42,7 +42,6 @@ def ajax_vote_cast(request, next=None, xhr="WTF?"):
     if issue is None:
         error = "Missing issue field." 
         status = simplejson.dumps({'status': 'debug', 'error': error})
-        print "lala"
         return http.HttpResponseServerError(status, mimetype="application/json")
 
     # Construct the vote form
@@ -66,7 +65,6 @@ def ajax_vote_cast(request, next=None, xhr="WTF?"):
     if retstatus != 200:
         error = "vote cast failed, code %d, reason %s" % (response.status, response.reason)
         status = simplejson.dumps({'status': 'debug', 'error': error})
-        print emo.response.read()
         return http.HttpResponseServerError(status, mimetype="application/json")
 
     # Save the comment and signal that it was saved

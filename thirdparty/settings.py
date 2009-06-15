@@ -28,8 +28,6 @@ DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
-EMOCRACY_API_SERVER = "http://127.0.0.1:8000/"
-
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -101,11 +99,11 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.admin',
     'django.contrib.sites',
-    'ajax',
-    'web',
-    'profiles',
-    'registration',
-    'oauth_consumer',
+    'thirdparty.ajax',
+    'thirdparty.web',
+    'thirdparty.profiles',
+    'thirdparty.registration',
+    'thirdparty.oauth_consumer',
 )
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -129,4 +127,10 @@ LOGOUT_URL = '/logout/'
 ACCOUNT_ACTIVATION_DAYS = 1
 AUTH_PROFILE_MODULE = 'profiles.userprofile'
 
+try:
+    from settings_local import *
+except ImportError:
+    print "Create your local settings_local.py settings file with password sensitive information ect"
+    # Re-raise the import error. The server should not run!
+    raise
 

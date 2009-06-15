@@ -68,7 +68,6 @@ def activate(request, activation_key,
     context = RequestContext(request)
     for key, value in extra_context.items():
         context[key] = callable(value) and value() or value
-    print account
     if account:
         account.backend='django.contrib.auth.backends.ModelBackend'
         login(request,account)
