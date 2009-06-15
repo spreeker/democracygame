@@ -4,8 +4,8 @@ from django_oauth_consumer import NoAccessToken
 from django.conf import settings
 from django.utils import simplejson as json
 
-CONSUMER_KEY = "noct"
-CONSUMER_SECRET = "noct"
+CONSUMER_KEY = settings.CONSUMER_KEY
+CONSUMER_SECRET = settings.CONSUMER_SECRET
 
 NAME = 'EmOAuth'
 
