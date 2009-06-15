@@ -1,6 +1,6 @@
 from __future__ import generators
 
-import types, decimal, types, re, inspect
+import decimal, re, inspect
 
 try:
     # yaml isn't standard with python.  It shouldn't be required if it
@@ -99,9 +99,13 @@ class Emitter(object):
                 ret = _model(thing, fields=fields)
             elif isinstance(thing, HttpResponse):
                 raise HttpStatusCode(thing)
-            elif isinstance(thing, types.FunctionType):
+            elif inspect.isfunction(thing):
                 if not inspect.getargspec(thing)[0]:
                     ret = _any(thing())
+            elif hasattr(thing, '__emittable__'):
+                f = thing.__emittable__
+                if inspect.ismethod(f) and len(inspect.getargspec(f)[0]) == 1:
+                    ret = _any(f())
             else:
                 ret = smart_unicode(thing, strings_only=True)
 
@@ -210,11 +214,11 @@ class Emitter(object):
                     else:                    
                         maybe = getattr(data, maybe_field, None)
                         if maybe:
-                            if isinstance(maybe, (int, basestring)):
-                                ret[maybe_field] = _any(maybe)
-                            elif callable(maybe):
+                            if callable(maybe):
                                 if len(inspect.getargspec(maybe)[0]) == 1:
                                     ret[maybe_field] = _any(maybe())
+                            else:
+                                ret[maybe_field] = _any(maybe)
                         else:
                             handler_f = getattr(handler or self.handler, maybe_field, None)
 
