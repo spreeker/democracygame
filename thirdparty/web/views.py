@@ -176,7 +176,7 @@ def user_details(request, pk):
             RequestContext(request, extra_context))
 
 def top_level_menu(request):
-    return render_to_response('menu.html',
+    return render_to_response('interface.html',
             RequestContext(request, {'is_menu' : True}))
 
 def url_error_view(request, error):
