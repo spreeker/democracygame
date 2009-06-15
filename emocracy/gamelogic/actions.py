@@ -176,7 +176,8 @@ def multiply(user , issue , downgrade = False ):
 
     checks are done at model level.
     """
-    m = MultiplyIssue.objecs.create( user = user , issue = issue , downgrade = downgrade )
+    m = MultiplyIssue.objects.create( user = user , issue = issue , downgrade = downgrade )
+
     m.save()
 
 

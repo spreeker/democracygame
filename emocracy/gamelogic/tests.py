@@ -2,6 +2,7 @@ from psycopg2 import IntegrityError
 from emocracy.gamelogic import levels
 from emocracy.gamelogic import actions 
 from emocracy.gamelogic import score
+from emocracy.gamelogic.models import MultiplyIssue
 from emocracy.profiles.models import UserProfile
 from emocracy.voting.models import Issue
 
@@ -197,7 +198,23 @@ class TestActions(TestUsers):
             self.fail(" %s %s should not be able to Multiply " % (self.users[2].username , self.profiles[2].role ))
         except KeyError :
             pass
+       
+        issue = Issue.objects.get( title = "issue2" )
+        multiply_func = actions.role_to_actions[self.profiles[0].role]['multiply']
 
+        multiply_func( self.users[0] , issue ) 
+        # do a multiply on issue
+        count_multiplies = MultiplyIssue.objects.filter( issue = issue ).count()
+        self.assertEqual( count_multiplies , 1 ) 
+        # do too many multiplies on issue
+        import models
+        maxM = models.MAX_MULTIPLIERS
+        for x in range(maxM + 10 ):
+            multiply_func( self.users[0] , issue ) 
+
+        count_multiplies = MultiplyIssue.objects.filter( issue = issue ).count()
+        self.assertEqual( count_multiplies , maxM )
+        
     def test_tag(self):
         pass
 

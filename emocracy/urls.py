@@ -12,7 +12,6 @@ import settings
 urlpatterns = patterns('',
     (r'^web/', include('emocracy.web.urls')),
     (r'^api/', include('api.urls')),
-    #(r'^oauth/', include('oauth.urls')),
     # Example:
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:
@@ -31,8 +30,8 @@ urlpatterns = patterns('',
     (r'^oauth/access_token/$', oauth_access_token),
 
     (r'^profile/', include('emocracy.profiles.urls')),
-#    (r'$', redirect_to, {'url' : '/web/issues/'}) # for demo purposes
+
     (r'^i18n/', include('django.conf.urls.i18n')),
     # For Demo purposes: redirect all the wrong stuff to the issue_list views...
-    (r'$', redirect_to, {'url' : '/web/issues/'}),
+    #(r'$', redirect_to, {'url' : '/web/issues/'}),
 )
