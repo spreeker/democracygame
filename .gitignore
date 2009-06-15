@@ -1,5 +1,6 @@
 database.sqlite3
 emocracy_log.txt
+thirdparty_log.txt
 settings_local.py
 *.pyc
 *.pyo
