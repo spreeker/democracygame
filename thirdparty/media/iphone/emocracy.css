@@ -156,35 +156,35 @@ a img {
 }
 
 
-.list {
-  padding: 0.4em 0;
+.folder {
+  /*padding: 0.4em 0;*/
   background:#FFF;
-  min-height:260px;
+  /*min-height:260px;*/
 }
 
-.list table {
+.folder table {
   width:100%;
   background:#FFF;
   border-collapse:collapse;
-  border:6px solid #FFF;
+  /*border:6px solid #FFF;
   border-top:5px solid #FFF;
-  border-bottom:5px solid #FFF;
+  border-bottom:5px solid #FFF; */
 }
 
-.list td {
-  border-left:2px solid #FFF;
-  border-right:2px solid #FFF;
+.folder td {
+  /*border-left:2px solid #FFF;
+  border-right:2px solid #FFF;*/
   text-align:center;
 }
 
-.list td img {
+.folder td img {
   display:block;
 }
 
 
 
 .list .panel {
-  padding:0.2em 0 0.2em 0;
+  /*padding:0.1em 0 0.1em 0;*/
 }
 
 .list .odd {
@@ -215,7 +215,7 @@ a img {
   margin:0 10px 0 0;
 }
 
-.list .title {
+.folder .title {
   margin:0 0 0 0px;
   padding: 0.2em 0.2em 0.2em 0.2em;
   font-size:2em;
@@ -225,7 +225,7 @@ a img {
   /*border-bottom:1px solid #b2fafa;*/
 }
 
-.list .title:hover {
+.folder .title:hover {
   margin:0 0 0 0px;
   padding: 0.2em 0.2em 0.2em 0.2em;
   font-size:2em;
@@ -236,14 +236,14 @@ a img {
 }
 
 
-.list .body {
+.folder .body {
   margin:0 0 0 0px;
   padding: 0.2em 0.2em 0em 0.2em;
   font-size:14px;
   color:#555;
 }
 
-.list p {
+.folder p {
   margin:0 0 0 0px;
   font-size:12px;
   color:#555;
@@ -253,7 +253,7 @@ a img {
   margin-left:0;
 } 
 
-.list br {
+.folder br {
   margin:0;
   padding:0;
   height:1px;
@@ -273,7 +273,8 @@ a img {
 
 .votes{
   width: 100%;
-  font:0.7em Arial;
+  font:1.5em Arial;
+  color: black;
   border:0;
   border-collapse: collapse;
   border-spacing: 0px;
@@ -284,23 +285,23 @@ a img {
   border-width: 0px 0px 0px 0px;
   margin:0px 0px 0px 0px;
   height: 32px;
+  /*font-size: 8px;*/
   -moz-border-radius: 0px 0px 0px 0px;
 }
 .votes td a {
     display: block;
     text-decoration: none;
-    font-size: 2.5em;
     line-height: 32px;
     padding: 0px 0px 0px 0px;
     color: #111;
 }
-.votes td.for a:hover {
+.votes .for :hover {
     background: #49f24d;
 }
-.votes td.abstain a:hover {
+.votes .abstain :hover {
     background: #4cf5fb;
 }
-.votes td.against a:hover {
+.votes .against :hover {
     background: #f9645e;
 }
 
@@ -330,29 +331,70 @@ a img {
   margin:0 0 0 0;
   padding:0;
 }
-
-#menu li {
-  /*background:url(./button.png) no-repeat;*/
+/*
+#menu div {
+  /*background:url(./button.png) no-repeat;
   margin:0;
   height:58px;
   text-align:center;
   border-top: 0.2em solid black;
 }
-#menu li.myissues {
+*/
+#menu div.folder {
+  background-color: #fff;
+  margin:0;
+  border-top: 0.2em solid black;
+}
+#menu div.myissues {
   background-color: #66fecb;
+  margin:0;
+  text-align:center;
+  border-top: 0.1em solid black;
+  font-size:2.5em;
+  color:#000;
+  font-weight:bold;
+  padding:14px 0 14px 0;
 }
-#menu li.hotissues {
+#menu div.hotissues {
   background-color: #ff51a8;
+  margin:0;
+  text-align:center;
+  border-top: 0.1em solid black;
+  font-size:2.5em;
+  color:#000;
+  font-weight:bold;
+  padding:14px 0 14px 0;
 }
-#menu li.newissues {
+#menu div.newissues {
   background-color: #00ff00;
+  margin:0;
+  text-align:center;
+  border-top: 0.1em solid black;
+  font-size:2.5em;
+  color:#000;
+  font-weight:bold;
+  padding:14px 0 14px 0;
 }
-#menu li.genissues {
+#menu div.genissues {
   background-color: #ad5bfe;
+  margin:0;
+  text-align:center;
+  border-top: 0.1em solid black;
+  font-size:2.5em;
+  color:#000;
+  font-weight:bold;
+  padding:14px 0 14px 0;
 }
-#menu li.addissue {
+#menu div.addissue {
   background-color: #0099ff;
-  border-bottom: 0.2em solid black;
+  margin:0;
+  text-align:center;
+  border-top: 0.1em solid black;
+  border-bottom: 0.1em solid black;
+  font-size:2.5em;
+  color:#000;
+  font-weight:bold;
+  padding:14px 0 14px 0;
 }
 
 #menu li img {
