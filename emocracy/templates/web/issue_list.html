@@ -9,17 +9,18 @@
 <h2>{{page_title}}</h2>
 {% include "web/sort_order_block.html" %}
 {% for issue, vote_text, vote_class, tags in object_list%}
+
 <div class="issue_block">
     {% include "web/issue_sidebar.html" %}
     {% with issue.payload as issue %}
     {% include "web/issue_body.html" %}
     {% endwith %}
     
-    <div style="margin:1em 0em 0em 0em;width:75%" id="voteform_{{issue.pk}}" class="voteform_target system">
+    <div id="voteform_{{issue.pk}}" class="voteform_target system">
     </div>
 </div>
 {% endfor %}
-<div class="system" style="clear:both;margin-bottom:1em">
+<div class="system">
     {% if current_page.has_previous %}
     <a href="?page={{current_page.previous_page_number}}">previous</a>
     {% endif %}
