@@ -17,5 +17,5 @@ class UserProfile(models.Model):
     show_identity = models.BooleanField(default = False)
 
 
-
-
+    def ranking(self):
+        return UserProfile.objects.filter( score__gte = self.score ).count()
