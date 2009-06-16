@@ -11,7 +11,7 @@ from piston.utils import rc
 from emocracy.issues_content.models import IssueBody
 from emocracy.voting.models import Issue
 from emocracy.voting.models import Vote
-
+from emocracy.profiles.models import UserProfile
 import gamelogic.actions
 
 domain = Site.objects.get_current().domain
@@ -126,8 +126,8 @@ class UserListHandler(BaseHandler):
 
 class AnonymousUserHandler(AnonymousBaseHandler):
     allowed_methods = ('GET',)
-    fields = ('username', 'score', 'user_uri')
-    #model = User
+    fields = ('username', 'score', 'ranking' , 'user_uri')
+    model = User
 
     def read(self, request, id, *args, **kwargs):
         return self.model.objects.filter(id=id)
@@ -140,12 +140,16 @@ class AnonymousUserHandler(AnonymousBaseHandler):
     def user_uri(cls, user):
         return "http://%s%s" % (domain , reverse('api_user' , args=[user.id]))
     
+    @classmethod
+    def ranking(cls , user):
+        p = user.get_profile()
+        return UserProfile.objects.filter( score__gte = p.score ).count()
 
 class UserHandler(BaseHandler):
     allowed_methods = ('GET',)
     fields = ('username', 'score', 'user_uri')
     anonymous = AnonymousUserHandler
-    #model = User
+    model = User
 
     def read(self, request, id, *args, **kwargs):
         return self.model.objects.filter(id=id)
