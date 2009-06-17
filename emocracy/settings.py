@@ -148,8 +148,8 @@ logging.basicConfig(
 
 ACCOUNT_ACTIVATION_DAYS = 1
 
-OAUTH_AUTH_VIEW = 'web.views.oauth_user_auth'
-OAUTH_CALLBACK_VIEW = 'web.views.oauth_callback'
+#OAUTH_AUTH_VIEW = 'web.views.oauth_user_auth'
+#OAUTH_CALLBACK_VIEW = 'web.views.oauth_callback'
 
 # ------------------------------------------------------------------------------
 # django-oauth related stuff (see external_apps/oauth_provider)
