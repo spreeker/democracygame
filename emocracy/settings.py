@@ -148,16 +148,6 @@ logging.basicConfig(
 
 ACCOUNT_ACTIVATION_DAYS = 1
 
-#OAUTH_AUTH_VIEW = 'web.views.oauth_user_auth'
-#OAUTH_CALLBACK_VIEW = 'web.views.oauth_callback'
-
-# ------------------------------------------------------------------------------
-# django-oauth related stuff (see external_apps/oauth_provider)
-# http://code.welldev.org/django-oauth/wiki/Home
-
-#OAUTH_AUTHORIZE_VIEW = 'myapp.views.oauth_authorize'
-#OAUTH_REALM_KEY_NAME = 'http://emo.buhrer.net'
-
 try:
     from settings_local import *
 except ImportError:
