@@ -1,0 +1,14 @@
+<html>
+<head><title>Token Authorization Page.</title></head>
+<body>
+<h1>Authorize third party</h1>
+{{msg}} <br />
+token : {{request_token}} <br/>
+<form action="." method="POST">
+{{form.as_table}}
+<input type="submit" value="submit" />
+</form>
+
+
+</body>
+</html>
