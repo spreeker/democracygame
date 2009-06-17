@@ -639,7 +639,6 @@ def ajaxvote(request):
 
 @login_required
 def oauth_user_auth(request, *args):
-    print args
     if request.method == 'GET':
         oauth_token = request.GET.get('oauth_token', '')
         try:
