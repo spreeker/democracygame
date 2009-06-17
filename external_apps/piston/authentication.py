@@ -128,7 +128,7 @@ def oauth_request_token(request):
         return INVALID_PARAMS_RESPONSE
     try:
         token = oauth_server.fetch_request_token(oauth_request)
-        print token
+
         response = HttpResponse(token.to_string())
     except oauth.OAuthError, err:
         response = send_oauth_error(err)
@@ -140,7 +140,7 @@ def oauth_auth_view(request, token, callback, params):
         'oauth_token': token.key,
         'oauth_callback': callback,
         })
-    print form
+
     return render_to_response('piston/authorize_token.html',
             { 'form': form }, RequestContext(request))
 
