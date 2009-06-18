@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import *
 
 from oauth_consumer.views import *
-from oauth_consumer import EmoOAuthConsumerApp
+from oauth_consumer.consumer import EmoOAuthConsumerApp
 
 emoauth = EmoOAuthConsumerApp()
 
