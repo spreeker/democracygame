@@ -1,0 +1,35 @@
+      <div class="myissues">My Issues</div>
+      <div class="folder" id="myissue">
+{% for issue in issues %}
+        <div class="issue i-{{issue.id}}" id="myissue{{issue.id}}">
+          <div class="title">{{issue.title}}</div>
+          <div class="body">{{issue.body}}</div>
+          <div class="panel">
+            <form action="{% url ajax_vote_cast %}" id="vote_form_{{issue.id}}" method="post">
+              <input type="hidden" id="my_vote" name="vote" value="{{issue.my_vote}}">
+              <input type="hidden" id="my_vote_issue" name="issue" value="{{issue.id}}">
+              <input type="hidden" id="my_vote_privacy" name="keep_private" value="False">
+              <table class="votes" id="vote{{issue.id}}"><tbody>
+                <tr>
+                  <td class="for">{{issue.votes_for}}</td>
+                  <td class="abstain">{{issue.votes_abstain}}</td>
+                  <td class="against">{{issue.votes_against}}</td>
+                </tr>
+              </tbody></table>
+            </form>
+          </div>
+          <div class="abstainvotes abs-{{issue.id}}" id="myissuesabs-{{issue.id}}">
+            <div class="abs" id="unconvincing">Unconvincing</div>
+            <div class="abs" id="notpolitical">Not Political</div>
+            <div class="abs" id="cantagree">Can't completely agree</div>
+            <div class="abs" id="needsmorework">Needs more work</div>
+            <div class="abs" id="badlyworded">Badly worded</div>
+            <div class="abs" id="duplicate">Duplicate</div>
+            <div class="abs" id="unrelated">Unrelated source</div>
+            <div class="abs" id="needtoknowmore">Need to know more</div>
+            <div class="abs" id="askmelater">Ask me later</div>
+          </div>
+          <div style="clear: both;"></div>
+        </div>
+{% endfor %}
+      </div>
