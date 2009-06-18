@@ -56,6 +56,7 @@ a   {
     background-color:#ffff99;
     background-color:#92CC47;
     padding:0em 1em 0em 1em;
+    text-align : center ;
 }
 
 /* sidebar style declarations */
@@ -90,22 +91,26 @@ a   {
 
 /* Issue display specific styles */
 
-.issueblock {
+.issue_block {
+    
     margin : 0em 0em 2em 2em;
     overflow : hidden ;
-    color : black ;
-    background-color : white;
 }
 
 .issuebody{
-    float : left ;
+    border-right : 3px solid #092E20 ;
+    padding : 0em 1em 0em 0em ;
+    float : right ;
     width : 75% ;
     font-family:serif;
     line-height:120%;
     text-align:justify;
+    min-height : 250px ;
 }
 
 .issueinfo{
+    border-bottom : 2px solid #092E20 ;
+    padding : 0em 0em 1em 1em ;
     float : right ;
     width : 20% ;
     font-family:sans-serif;
