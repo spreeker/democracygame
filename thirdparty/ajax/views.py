@@ -10,7 +10,7 @@ from django.utils.html import escape
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 
-from oauth_consumer import EmoOAuthConsumerApp
+from oauth_consumer.consumer import EmoOAuthConsumerApp
 from forms import VoteForm
 
 emo = EmoOAuthConsumerApp()
