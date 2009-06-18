@@ -54,6 +54,7 @@ def vote(user, issue, vote_int, keep_private):
     
     score.vote(user, issue, new_vote, voted_already)
     levels.upgrade[userprofile.role](userprofile)
+    user.message_set.create(message="You voted successfully on %s" % issue.title  )
 
     return new_vote
 

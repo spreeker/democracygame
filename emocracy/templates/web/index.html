@@ -8,20 +8,26 @@
 </head>
 <body>
 <div id="header">
-    <h1 style="margin:0em"><a href="{% url web_issue_list %}">{% trans "EMOCRACY" %}</a></h1><div id="thegame"> {% trans "[ the game ]" %} </div>
+    <h1><a href="{% url web_issue_list %}">{% trans "EMOCRACY" %}</a></h1><div id="thegame"> {% trans "[ the game ]" %} </div>
 <br />
 <a href="{% url web_issue_list %}">{% trans "home" %}</a> | <a href="http://emocracy.nl/wiki/">{% trans "about" %}</a> |
 <a href="mailto:webmaster@petities.nl">{% trans "contact" %}</a> | <a href="http://emocracy.nl/wiki/index.php/Bugs">{% trans "bugs" %}</a> | <a href="http://emocracy.nl/wiki/index.php/Wensen">{% trans "wishes" %}</a>
 </div>
-<div id="messagebar">&nbsp;{%if messages %}{% for m in messages %}{{m.message}}{% endfor %}{% endif %}</div>
-<div style="float:left;width:25%;">
+<div id="messagebar"> {% for m in messages %}{{m}}{% endfor %}</div>
+<div>
     <div id="sidebar">
         {% include "web/sidebar.html" %}
     </div>
-</div>
-<div id="content" style="position:absolute;left:25%;width:75%">
+<div id="content"> 
     {% block content %}
     {% endblock %}
 </div>
+</div>
+
+<div id="footer"> 
+
+
+</div>
+
 </body>
 </html>
