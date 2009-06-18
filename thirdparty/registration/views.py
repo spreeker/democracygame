@@ -1,5 +1,8 @@
 """
 Views which allow users to create and activate accounts.
+
+modified from the original libary to automatically log you in
+when activating , so simplyfying the oauth process
 """
 
 
@@ -68,9 +71,19 @@ def activate(request, activation_key,
     context = RequestContext(request)
     for key, value in extra_context.items():
         context[key] = callable(value) and value() or value
+
+    """
+    ################ curstom code start ################
+    """
+
     if account:
         account.backend='django.contrib.auth.backends.ModelBackend'
         login(request,account)
+
+    """
+    ################ custom code end ###################
+    """
+
     return render_to_response(template_name,
                               { 'user': account,
                                 'expiration_days': settings.ACCOUNT_ACTIVATION_DAYS },
