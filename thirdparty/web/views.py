@@ -16,7 +16,7 @@ from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
-from oauth_consumer import EmoOAuthConsumerApp
+from oauth_consumer.consumer import EmoOAuthConsumerApp
 from web.forms import IssueFormNew
 
 emo = EmoOAuthConsumerApp()
