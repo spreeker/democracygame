@@ -1,5 +1,5 @@
 {% load i18n %}
-<div class="system" style="padding:0em 2em 0em 0em">
+<div class="system">
 {% ifnotequal sort_order "time_stamp" %}<a href="{{request_path}}?sort_order=time_stamp" rel="nofollow">{% trans "most recent" %}</a>{% else %}{% trans "most recent" %}{% endifnotequal %} |
 {% ifnotequal sort_order "votes" %}<a href="{{request_path}}?sort_order=votes" rel="nofollow">{% trans "most voted on" %}</a>{% else %}{% trans "most voted on" %}{% endifnotequal %} |
 {% ifnotequal sort_order "score" %}<a href="{{request_path}}?sort_order=score" rel="nofollow">{% trans "highest score" %}</a>{% else %}{% trans "highest score" %}{% endifnotequal %} |

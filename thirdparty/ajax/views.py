@@ -8,8 +8,6 @@ from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.utils.html import escape
 from django.views.decorators.http import require_POST
-from django.contrib import comments
-from django.contrib.comments import signals
 from django.contrib.auth.decorators import login_required
 
 from oauth_consumer import EmoOAuthConsumerApp
