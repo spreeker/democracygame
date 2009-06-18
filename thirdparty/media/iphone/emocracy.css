@@ -295,13 +295,13 @@ a img {
     padding: 0px 0px 0px 0px;
     color: #111;
 }
-.votes .for :hover {
+.votes .for:hover {
     background: #49f24d;
 }
-.votes .abstain :hover {
+.votes .abstain:hover {
     background: #4cf5fb;
 }
-.votes .against :hover {
+.votes .against:hover {
     background: #f9645e;
 }
 
@@ -320,7 +320,24 @@ a img {
   text-align:center;
   width: 107px;
 }
+.abstainvotes {
+  background-color: #9ef8fb;
+  text-align: center;
+  font: 14px Arial;
+  color: #000;
+}
 
+.abs:hover {
+  padding: 3px 0 3px 0;
+  background: #4cf5fb;
+}
+.abs {
+  padding: 3px 0 3px 0;
+}
+.abs_sel {
+  background: #4cf5fb;
+  padding: 3px 0 3px 0;
+}
 
 
 #menu {
