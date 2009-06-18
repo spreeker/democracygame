@@ -3,6 +3,7 @@
 	<div class="sidebarblock">
 {% if user.is_authenticated %}
 		<h3>{{user.username}}</h3>
+        <p> ranking: {{userprofile.ranking }}</p>
 		<p>
 
         {% blocktrans with userprofile.role as role and userprofile.score as score and userprofile.total_for as total_for and userprofile.total_against as total_against and userprofile.total_blank as total_blank %} 
