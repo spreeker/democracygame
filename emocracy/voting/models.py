@@ -156,6 +156,12 @@ class IssueSet(models.Model):
         return self.title
         
 # ------------------------------------------------------------------------------
+
+class VoteManager(models.Manager):
+    def get_user_votes( self , user ):
+        user_votes = Vote.objects.filter(owner = user, is_archived = False).order_by("time_stamp").reverse()
+        return user_votes 
+
 # Vote Models:
 #
 # If api_interface is blank/null that means vote came in through the Emocracy 
@@ -174,7 +180,8 @@ class Vote(models.Model):
     time_stamp = models.DateTimeField(editable = False)
     is_archived = models.BooleanField(default = False)
     keep_private = models.BooleanField(default = False)
-    
+   
+    objects = VoteManager()
     def __unicode__(self):
         return unicode(self.vote) + u" on \"" + self.issue.title + u"\" by " + self.owner.username
 
