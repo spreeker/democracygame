@@ -64,26 +64,23 @@ def vote_list_user(request, user_name):
 
 class ListIssueBaseView(object):
     """This is the baseclass for the views that show several issues on 1 page.
-    Subclasses can define their own get_extra_context_and_queryset to do
-    filtering, set the page title and anything else that needs adding to the
-    template context.
+    Subclasses can define their own issue_queryset to do
+    issue filtering, and set the page title and anything else 
+    in the self.extra_context 
     """
+    extra_context = {'page_title' : _(u'All Issues')}
     
-    def get_extra_context_and_queryset(self, request, *args, **kwargs):
-        """Extra filtering of the Issue queryset and setting of extra context
-        paramaters is done in this instance method. Override in subclass if
-        necessary."""
-        extra_context = {'page_title' : _(u'All Issues')}
+    def issue_queryset(self, request, *args, **kwargs):
         queryset = Issue.objects.all()
-        return extra_context, queryset
-    
+        return queryset
+
     def __call__(self, request, *args, **kwargs):
         """
         View instance method that does does all the standard things for
         Issue list views.
         """
         sort_order = issue_sort_order_helper(request)
-        extra_context, qs = self.get_extra_context_and_queryset(request, *args, **kwargs)
+        qs = self.issue_queryset(request , *args , **kwargs)
         queryset = qs.order_by(sort_order).reverse()
         paginator = Paginator(queryset, 5)
         
@@ -104,8 +101,7 @@ class ListIssueBaseView(object):
             user_votes, vote_css_class = vote_helper_anonymous(request, current_page.object_list)
         # grab the tags for each Issue
         tags_for_objects = [Tag.objects.get_for_issue(x) for x in current_page.object_list]
-        
-        extra_context.update({
+        self.extra_context.update({
             'sort_order' : sort_order,
             'current_page' : current_page,
             'num_pages' : paginator.num_pages,
@@ -115,7 +111,9 @@ class ListIssueBaseView(object):
             'unavailable_actions' : gamelogic.actions.get_unavailable_actions(request.user),
         })
         return render_to_response('web/issue_list.html',
-            RequestContext(request, extra_context))
+                                    self.extra_context,
+                                    context_instance=RequestContext(request),
+                                    )
 
 list_issues = ListIssueBaseView()
 
@@ -123,28 +121,30 @@ class IssuesForTagView(ListIssueBaseView):
     """
     This class shows the Issues that go with a certain tag in Emocracy.
     """
-    def get_extra_context_and_queryset(self, request, *args, **kwargs):
+
+    def issue_queryset(self, request, *args, **kwargs):
         tag_pk = kwargs.pop('tag_pk')
         tag = get_object_or_404(Tag, pk = tag_pk)
         queryset = tag.get_issues()
-        extra_context = {'page_title' : _(u'Issues tagged with %(tagname)s' % {'tagname' : tag.name})}
-        return extra_context, queryset
+        self.extra_context.update( {'page_title' : _(u'Issues tagged with %(tagname)s' % {'tagname' : tag.name})})
+        return queryset
 
 issue_list_tag = IssuesForTagView()
+
 
 class IssuesForUserView(ListIssueBaseView):
     """
     This class show the Issues that go with a certain user of Emocracy.
     """
-    def get_extra_context_and_queryset(self, request, *args, **kwargs):
+    def issue_queryset(self, request, *args, **kwargs):
         username = kwargs.pop('username')
         user = get_object_or_404(User, username = username)
         queryset = Issue.objects.filter(owner = user)
-        extra_context = {'page_title' : _(u'Issues for %(username)s' % {'username' : username})}
-        return extra_context, queryset
+        self.extra_context = {'page_title' : _(u'Issues for %(username)s' % {'username' : username})}
+        return  queryset
     
 issues_list_user = IssuesForUserView()
-
+    
 # ------------------------------------------------------------------------------
 # -- Views that show one Issue at a time : -------------------------------------
 
@@ -340,7 +340,9 @@ class DetailView(OneIssueBaseView):
             extra_context[form_type] = form
         
         return render_to_response('web/issue_detail.html',
-            RequestContext(request, extra_context))
+                                    extra_context,
+                                    context_instance=RequestContext(request),
+                                    )
         
 issue_detail = DetailView()
 
