@@ -190,8 +190,9 @@ def top_level_menu(request):
         if request.user.is_anonymous():
             pass
         else:
-            if not resource.get(['my_vote'], [] ) == []:
-                resource_data['my_vote'] = resource['my_vote'][0]['vote']
+            voteList = resource.get('my_vote', [] )
+            if voteList:
+                resource_data['my_vote'] = voteList[0]['vote']
             else:
                 resource_data['my_vote'] = None
 
