@@ -101,7 +101,6 @@ class ListIssueBaseView(object):
             user_votes, vote_css_class = vote_helper_anonymous(request, current_page.object_list)
         # grab the tags for each Issue
         tags_for_objects = [Tag.objects.get_for_issue(x) for x in current_page.object_list]
-        
         self.extra_context.update({
             'sort_order' : sort_order,
             'current_page' : current_page,
@@ -341,7 +340,9 @@ class DetailView(OneIssueBaseView):
             extra_context[form_type] = form
         
         return render_to_response('web/issue_detail.html',
-            RequestContext(request, extra_context))
+                                    extra_context,
+                                    context_instance=RequestContext(request),
+                                    )
         
 issue_detail = DetailView()
 
