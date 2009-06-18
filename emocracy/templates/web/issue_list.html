@@ -11,11 +11,14 @@
 {% for issue, vote_text, vote_class, tags in object_list%}
 
 <div class="issue_block">
+
+    <div>
     {% include "web/issue_sidebar.html" %}
     {% with issue.payload as issue %}
     {% include "web/issue_body.html" %}
     {% endwith %}
-    
+    </div> 
+
     <div id="voteform_{{issue.pk}}" class="voteform_target system">
     </div>
 </div>
