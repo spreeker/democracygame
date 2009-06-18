@@ -359,7 +359,10 @@ class OAuthConsumerApp(object):
         access_token = urlencoding.parse_qs(body)
         self.store_access_token(request, access_token)
         del request.session[self.REQUEST_TOKEN_NAME]
-        next_url = request.session.pop(self.NEXT_URL_NAME)
+        try:
+            next_url = request.session.pop(self.NEXT_URL_NAME)
+        except KeyError:
+            next_url = '/'
 
         if self._has_success_auth_template:
             try:
