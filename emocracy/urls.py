@@ -33,5 +33,5 @@ urlpatterns = patterns('',
 
     (r'^i18n/', include('django.conf.urls.i18n')),
     # For Demo purposes: redirect all the wrong stuff to the issue_list views...
-    #(r'$', redirect_to, {'url' : '/web/issues/'}),
+    (r'$', redirect_to, {'url' : '/web/issues/'}),
 )

@@ -3,7 +3,7 @@ implementation of oauth consumer app.
 Here we wrap the specific oauth resources with the
 oauth authentication headers.
 """
-
+import logging
 import django_oauth_consumer
 from django_oauth_consumer import NoAccessToken
 
@@ -86,6 +86,7 @@ class EmoOAuthConsumerApp(django_oauth_consumer.OAuthConsumerApp):
     def ld(self):
         """Load data - parse json from last request"""
         data = self.response.read()
+        logging.debug( str(data))
         return json.loads(data)
 
     def post_resource(self, request, resource, content=None):
