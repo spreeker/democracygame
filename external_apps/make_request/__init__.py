@@ -127,7 +127,13 @@ def make_request(*args, **kwargs):
         connection = httplib.HTTPConnection(opts['netloc'])
 
     connection.request(opts['method'], opts['url'], opts['content'], opts['headers'])
-    return connection.getresponse()
+
+    response = connection.getresponse()
+
+    logging.debug(str( response.getheaders()))
+    logging.debug(str(response.status))
+    logging.debug(str(dir(response)))
+    return response
 
 if __name__ == "__main__":
     import doctest
