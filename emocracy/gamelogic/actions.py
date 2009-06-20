@@ -37,20 +37,16 @@ def vote(user, issue, vote_int, keep_private):
     """Unified voting (both blank and normal votes)."""
     logging.debug(u"actions.vote called")
     userprofile = user.get_profile()
-    if not role_to_actions[userprofile.role].has_key('vote') : return None
+    if not role_to_actions[userprofile.role].has_key('vote') : return
 
     voted_already, repeated_vote = archive_votes(issue, user, vote_int)
+
     if repeated_vote: return
 
-    new_vote = Vote(
-        owner = user,
-        issue = issue,
-        time_stamp = datetime.datetime.now(),
-        vote = vote_int,
-        keep_private = keep_private
-    )
+    new_vote = Vote( owner = user, issue = issue, vote = vote_int, keep_private = keep_private)
     new_vote.save()
-    logging.debug(u"User " + user.username + u" voted " + unicode(new_vote.vote) + u" on issue object with pk =" + unicode(issue.id) + ".")
+
+    logging.debug("User " + user.username + " voted " + unicode(new_vote.vote) + " on issue object with pk =" + unicode(issue.id) + ".")
     
     score.vote(user, issue, new_vote, voted_already)
     levels.upgrade[userprofile.role](userprofile)
