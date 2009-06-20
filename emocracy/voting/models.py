@@ -9,7 +9,7 @@ This module implements:
 Note that game rules should not be added to this module.
 """
 
-import datetime
+from datetime import datetime
 
 from django.db import models, IntegrityError
 from django.contrib.auth.models import User
@@ -21,7 +21,7 @@ from django.utils.translation import ugettext as _
 # LEAVE OLD ENTRIES SO AS NOT TO MESS THE DATABASE UP!
 
 normal_votes = (
-    (-1 , _(u"Against")),
+    (0 , _(u"Against")),
     (1 , _(u"For")),
 )
 
@@ -60,7 +60,7 @@ class IssueManager(models.Manager):
         new_issue = self.create(
             owner = owner,
             title = title,
-            time_stamp = datetime.datetime.now(),
+            time_stamp = datetime.now(),
             payload = obj,
         )        
         return new_issue
@@ -72,7 +72,7 @@ class Issue(models.Model):
     # create an issue. 
     >>> from issues_content.models import IssueBody
     >>> tuser = User.objects.create_user('john', 'john@john.com', 'pass')
-    >>> tissue = IssueBody.objects.create( owner = tuser, title = 'tissue',body = 'body',url = 'tissue.org',source_type = 'website', time_stamp = datetime.datetime.now())
+    >>> tissue = IssueBody.objects.create( owner = tuser, title = 'tissue',body = 'body',url = 'tissue.org',source_type = 'website', time_stamp = datetime.now())
     >>> tissue = Issue.objects.create_for_object(tissue, title=tissue.title, owner=tissue.owner)
     >>> tissue.vote(tuser, -1, False)
     <Vote: -1 on "tissue" by john>
@@ -109,7 +109,7 @@ class Issue(models.Model):
             issueset = issueset,
             vote = vote_int,
             keep_private = keep_private,
-            time_stamp = datetime.datetime.now()
+            time_stamp = datetime.now()
         )
         self.votes += 1 # See how this interacts with Emocracy design TODO
         self.save()
@@ -177,7 +177,7 @@ class Vote(models.Model):
     issueset = models.ForeignKey(IssueSet, null = True)
 
     vote = models.IntegerField(choices = possible_votes)
-    time_stamp = models.DateTimeField(editable = False)
+    time_stamp = models.DateTimeField(editable = False , default=datetime.now )
     is_archived = models.BooleanField(default = False)
     keep_private = models.BooleanField(default = False)
    
