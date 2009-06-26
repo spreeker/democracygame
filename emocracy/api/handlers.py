@@ -3,6 +3,9 @@ import datetime
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
+from django.core.paginator import Paginator
+from django.core.paginator import InvalidPage
+from django.core.paginator import EmptyPage
 
 from django.db.models import Q
 from piston.handler import BaseHandler, AnonymousBaseHandler
@@ -16,18 +19,34 @@ import gamelogic.actions
 
 domain = Site.objects.get_current().domain
 
+# TODO: add pagination to all views
+# TODO: communicate current page number or error to consumer
+def paginate(request, qs):
+    paginator = Paginator(qs, 25)  # TODO: add to settings.py
+    try:
+        pageno = int(request.GET.get('page', '1'))
+    except ValueError:
+        pageno = 1
+    try:
+        page = paginator.page(pageno)
+    except (EmptyPage, InvalidPage):
+        page = paginator.page(paginator.num_pages) #last page
+    return page
+
 class AnonymousVoteHandler(AnonymousBaseHandler):
     allowed_methods = ('GET',)
     fields = ('vote', 'time_stamp', 'issue_uri', 'keep_private', 'user_uri')
     #model = Vote
 
     def read(self, request, id, *args, **kwargs):
-        return self.model.objects.filter(issue=id)
+        queryset = self.model.objects.filter(issue=id)
+        page = paginate(request, queryset)
+        return page.object_list
 
     @classmethod
     def issue_uri(cls, vote):
         return "http://%s%s" %(domain, reverse('api_issue' , args=[vote.issue.id]))
-    
+
     @classmethod
     def user_uri(cls, vote):
         return "http://%s%s" %(domain , reverse('api_user' , args=[vote.owner.id]))
@@ -38,7 +57,9 @@ class AnonymousVoteListHandler(AnonymousVoteHandler):
     model = Vote
 
     def read(self, request, *args, **kwargs):
-        return self.model.objects.filter()
+        queryset = self.model.objects.filter()
+        page = paginate(request, queryset)
+        return page.object_list
 
 class VoteHandler(BaseHandler):
     allowed_methods = ('GET',)
@@ -47,12 +68,14 @@ class VoteHandler(BaseHandler):
     #anonymous = AnonymousVoteHandler
 
     def read(self, request, id, *args, **kwargs):
-        return self.model.objects.filter(issue=id)
+        queryset = self.model.objects.filter(issue=id)
+        page = paginate(request, queryset)
+        return page.object_list
 
     @classmethod
     def issue_uri(cls, vote):
         return "http://%s%s" % (domain , reverse('api_issue' , args=[vote.issue.id]))
-    
+
     @classmethod
     def user_uri(cls, vote):
         return "http://%s%s" %(domain , reverse('api_user' , args=[vote.owner.id]))
@@ -65,7 +88,9 @@ class VoteListHandler(VoteHandler):
     anonymous = AnonymousVoteListHandler
 
     def read(self, request, *args, **kwargs):
-        return self.model.objects.filter()
+        queryset = self.model.objects.filter()
+        page = paginate(request, queryset)
+        return page.object_list
 
     def create(self, request):
         attrs = self.flatten_dict(request.POST)
@@ -86,13 +111,13 @@ class VoteListHandler(VoteHandler):
                 current = current[0]
                 current.is_archived = True
                 current.save()
-            vote = Vote(vote=attrs['vote'], 
+            vote = Vote(vote=attrs['vote'],
                             issue=Issue.objects.get(id=attrs['issue']),
                             keep_private=attrs['keep_private'],
                             owner=request.user,
                             time_stamp = datetime.datetime.now())
             vote.save()
-            
+
             return vote
 
 class AnonymousUserListHandler(AnonymousBaseHandler):
@@ -102,13 +127,15 @@ class AnonymousUserListHandler(AnonymousBaseHandler):
     model = User
 
     def read(self, request, *args, **kwargs):
-        return self.model.objects.filter()
+        queryset = self.model.objects.filter()
+        page = paginate(request, queryset)
+        return page.object_list
 
     @classmethod
     def user_uri(cls, user):
         pass
         return "http://%s%s" % (domain , reverse('api_user' , args=[user.id]))
-    
+
 
 class UserListHandler(BaseHandler):
     allowed_methods = ('GET',)
@@ -117,12 +144,14 @@ class UserListHandler(BaseHandler):
     model = User
 
     def read(self, request, *args, **kwargs):
-        return self.model.objects.filter()
+        queryset = self.model.objects.filter()
+        page = paginate(request, queryset)
+        return page.object_list
 
     @classmethod
     def user_uri(cls, user):
         return "http://%s%s" % (domain , reverse('api_user' , args=[user.id]))
-    
+
 
 class AnonymousUserHandler(AnonymousBaseHandler):
     allowed_methods = ('GET',)
@@ -130,7 +159,9 @@ class AnonymousUserHandler(AnonymousBaseHandler):
     model = User
 
     def read(self, request, id, *args, **kwargs):
-        return self.model.objects.filter(id=id)
+        queryset = self.model.objects.filter(id=id)
+        page = paginate(request, queryset)
+        return page.object_list
 
     @classmethod
     def score(cls, user):
@@ -139,7 +170,7 @@ class AnonymousUserHandler(AnonymousBaseHandler):
     @classmethod
     def user_uri(cls, user):
         return "http://%s%s" % (domain , reverse('api_user' , args=[user.id]))
-    
+
     @classmethod
     def ranking(cls , user):
         p = user.get_profile()
@@ -152,16 +183,18 @@ class UserHandler(BaseHandler):
     model = User
 
     def read(self, request, id, *args, **kwargs):
-        return self.model.objects.filter(id=id)
-    
+        queryset = self.model.objects.filter(id=id)
+        page = paginate(request, queryset)
+        return page.object_list
+
     @classmethod
     def score(cls, user):
         return user.get_profile().score
-    
+
     @classmethod
     def user_uri(cls, user):
         return "http://%s%s" % (domain , reverse('api_user' , args=[user.id]))
-    
+
 
 class AnonymousIssueListHandler(AnonymousBaseHandler):
     allowed_methods = ('GET',)
@@ -169,7 +202,9 @@ class AnonymousIssueListHandler(AnonymousBaseHandler):
     model = IssueBody
 
     def read(self, request, *args, **kwargs):
-        return self.model.objects.filter()
+        issueset = self.model.objects.filter()
+        page = paginate(request, issueset)
+        return page.object_list
 
     @classmethod
     def votes_for(cls, issue):
@@ -178,33 +213,34 @@ class AnonymousIssueListHandler(AnonymousBaseHandler):
     @classmethod
     def votes_abstain(cls, issue):
         return Vote.objects.filter(Q(issue=issue) & Q(vote__gt=9) & Q(is_archived=False)).count()
-    
+
     @classmethod
     def votes_against(cls, issue):
         votes_against = Vote.objects.filter(Q(issue=issue) & Q(vote=-1) &Q(is_archived=False)).count()
         return votes_against
-    
+
     @classmethod
     def user_uri(cls, user):
         return "http://%s%s" % (domain , reverse('api_user' , args=[user.id]))
-    
-    
+
+
     @classmethod
     def issue_uri(cls, issue):
         return "http://%s%s" % (domain , reverse('api_issue' , args=[issue.id]))
-        
+
 class IssueListHandler(BaseHandler):
     allowed_methods = ('GET',)
 
     anonymous = AnonymousIssueListHandler
     fields = ('issue_uri', 'title', 'body', ('owner', ('username', 'user_uri',)), 'time_stamp', 'souce_type', 'url', 'votes_for', 'votes_abstain', 'votes_against', 'my_vote')
     model = IssueBody
-    
+
     def read(self, request, *args, **kwargs):
 
         issues= self.model.objects.filter()
+        page = paginate(request, issues)
         issue_list = []
-        for issue in issues:
+        for issue in page.object_list:
             vote = Vote.objects.filter(Q(issue=issue) & Q(owner=request.user) &Q(is_archived=False))
             issue.my_vote = vote
             issue_list.append(issue)
@@ -231,12 +267,12 @@ class IssueListHandler(BaseHandler):
     @classmethod
     def user_uri(cls, user):
         return "http://%s%s" % (domain , reverse('api_user' , args=[user.id]))
-        
+
 
     @classmethod
     def issue_uri(cls, issue):
         return "http://%s%s" % (domain , reverse('api_issue' , args=[issue.id]))
-        
+
 
 class AnonymousIssueHandler(AnonymousBaseHandler):
     allowed_methods = ('GET',)
@@ -244,24 +280,26 @@ class AnonymousIssueHandler(AnonymousBaseHandler):
     #model = IssueBody
 
     def read(self, request, id, *args, **kwargs):
-        return self.model.objects.filter(id=id)
+        queryset = self.model.objects.filter(id=id)
+        page = paginate(request, queryset)
+        return page
 
     @classmethod
     def user_uri(cls, user):
         return "http://%s%s" % (domain , reverse('api_issue' , args=[issue.id]))
-        
+
 
     @classmethod
     def issue_uri(cls, issue):
         return "http://%s%s" % (domain , reverse('api_issue' , args=[issue.id]))
-        
+
 
 class IssueHandler(BaseHandler):
     allowed_methods = ('GET', 'POST',)
     anonymous = AnonymousIssueHandler
     fields = ('issue_uri', 'title', 'body', ('owner', ('username', 'user_uri',)), 'time_stamp', 'souce_type', 'url')
     #model = IssueBody
-        
+
     def create(self, request):
         attrs = self.flatten_dict(request.POST)
 
@@ -280,13 +318,15 @@ class IssueHandler(BaseHandler):
             )
             issue.save()
             return issue
-    
+
     def read(self, request, id):
         if id==None:
-            return self.model.objects.filter()
+            queryset = self.model.objects.filter()
+            page = paginate(request, queryset)
+            return page.object_list
         else:
             return self.model.objects.filter(id=id)
-    
+
     @classmethod
     def user_uri(cls, user):
         return "http://%s%s" % (domain , reverse('api_user' , args=[user.id]))
