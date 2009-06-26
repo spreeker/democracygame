@@ -2,6 +2,7 @@ from django.conf.urls.defaults import *
 from django.conf import settings
 from piston.resource import Resource
 from piston.authentication import OAuthAuthentication
+from piston.authentication import HttpBasicAuthentication
 
 from piston.emitters import Emitter
 from piston.emitters import JSONEmitter
@@ -13,13 +14,17 @@ from emocracy.api.handlers import UserHandler
 from emocracy.api.handlers import VoteHandler
 from emocracy.api.handlers import VoteListHandler
 
-# Emitter registrered to set wrong mime-type for visibility purposes
-# just comment these two lines out for production
-#if settings.DEBUG:
-#    Emitter.unregister(JSONEmitter)
-#    Emitter.register('json', JSONEmitter, 'text/html; charset=utf-8')
-    
 auth = OAuthAuthentication(realm='emo.buhrer.net')
+
+# Emitter registrered to set wrong mime-type for visibility purposes
+# just comment these lines out for production
+# setting the authtication to basic so you can test in the browser the
+# api responses
+
+if settings.DEBUG:
+    Emitter.unregister(JSONEmitter)
+    Emitter.register('json', JSONEmitter, 'text/html; charset=utf-8')
+    auth = HttpBasicAuthentication(realm='emo.buhrer.net')
 
 issues = Resource(handler=IssueListHandler, authentication=auth)
 issue = Resource(handler=IssueHandler, authentication=auth)
