@@ -2,11 +2,18 @@
 This module contains the functions that implement the actions that a user can
 take inside of the emocracy game. Functionality in this module should not depend
 on request objects. Scripts on the server, the API views and the web views 
-should all call into this module to play the emocracy game.
+should all call into this module to play the democracy game.
 
 This module itself uses functions from the score.py and levels.py see if
 an action is allowed and how it affects the score of the players / the emocracy
 world.
+
+user_action = get_actions( user )
+
+user role_to_actions to determine permission and availability of actions
+
+vote_func = role_to_actions[userprofile.role]['vote'] this will return the function required to do the 
+vote for this user. If it returns a keyerror the action for this user does not excist.
 
 """
 
@@ -39,7 +46,7 @@ def vote(user, issue, vote_int, keep_private):
     userprofile = user.get_profile()
     if not role_to_actions[userprofile.role].has_key('vote') : return
 
-    voted_already, repeated_vote = archive_votes(issue, user, vote_int)
+    voted_already, repeated_vote = archive_votes( user, issue , vote_int)
 
     if repeated_vote: return
 
@@ -54,7 +61,7 @@ def vote(user, issue, vote_int, keep_private):
 
     return new_vote
 
-def archive_votes(issue, user, vote_int):
+def archive_votes(user, issue,  vote_int):
     """archive old votes by switching the is_archived flag to True
     for all the previous votes on <issue> by <user>.
     And we check for and dismiss a repeated vote.
@@ -76,7 +83,7 @@ def propose(user, title, body, vote_int, source_url, source_type, is_draft = Fal
     """
     if issue_no == None:
         userprofile = user.get_profile()
-        if not role_to_actions[userprofile.role].has_key('propose'): raise Http404 
+        if not role_to_actions[userprofile.role].has_key('propose'): return 
 
         # user may not have another issue with the same title
         try :
@@ -97,10 +104,11 @@ def propose(user, title, body, vote_int, source_url, source_type, is_draft = Fal
         new_issue = Issue.objects.create_for_object(new_issue, title = new_issue.title, owner = user, is_draft = is_draft)
         new_issue.vote(user, vote_int, keep_private = False)    
 
+        user.message_set.create(message="You voted successfully on %s" % issue.title  )
         score.propose(user)
         levels.upgrade[userprofile.role](userprofile)
 
-    else:
+    else: # we are editing one TODO remove this possibility?
         # Grab the existing issue from db.
         issue = get_object_or_404(Issue, pk = issue_no)
         # If an old vote exists, remove it and perform a new vote.
@@ -127,13 +135,10 @@ def propose(user, title, body, vote_int, source_url, source_type, is_draft = Fal
         issue.payload.save()
         issue.save()
         new_issue = issue
+
     return new_issue
 
 def tag(user, issue, tag_string):
-    if not allow.tag(user, issue, tag_string): return
-    # TODO look into manual transaction control (either do everything below and
-    # commit or fail to do any of it).
-    
     # The idea behind tagging in emocracy:
     # User tags something, tag will only show up if it is already used a certain
     # number of times throughout Emocracy. Only then will points be
@@ -173,9 +178,12 @@ def multiply(user , issue , downgrade = False ):
 
     checks are done at model level.
     """
-    m = MultiplyIssue.objects.create( user = user , issue = issue , downgrade = downgrade )
+    if not role_to_actions[userprofile.role].has_key('multiply'): return 
 
+    m = MultiplyIssue.objects.create( user = user , issue = issue , downgrade = downgrade )
+    # TODO score change?
     m.save()
+    return m
 
 
 role_to_actions = {
@@ -199,11 +207,32 @@ role_to_actions = {
     }
 }
 
+
+def do( user , action , *args , **kwargs ):
+    """ We will look up the role of a user
+        Then Lookup if we can do the actions
+        execute the action and return the result
+
+        return False if actions failed
+    """
+    try :
+        role = user.get_profile().role
+        action = role_to_actions[role][action]
+    except KeyError :
+        logging.debug( "user %s does not have permisson to do %s " % ( user , action ))
+        return
+    except ObjectDoesNotExist :
+        logging.debug( " user %s does not have an profile BIG FAT ERROR " % ( user ))
+        raise
+
+    return action( user , *args , **kwargs )
+
+
 def get_actions(user):
     """ return all possible game actions for a user """
     if not user.is_authenticated()  : return role_to_actions['anonymous citizen']
     userprofile = user.get_profile()
-    actions = role_to_actions[userprofile.role]
+    actions = role_to_actions[userprofile.role].keys()
     return actions
 
 def get_unavailable_actions(user = None):
