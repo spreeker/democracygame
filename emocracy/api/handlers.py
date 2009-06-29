@@ -56,12 +56,15 @@ class IssueVotesHandler(AnonymousBaseHandler):
     def vote_count(cls, vote):
         return vote[1]
 
+    @staticmethod
+    def resource_uri():
+        return ('api_issue_votes' , ['id'] , {} )
 
 class VoteHandler(BaseHandler):
     """ returns the votes for an user. 
         makes it able to post to an user
     """
-    allowed_methods = ('GET',)
+    allowed_methods = ('GET', 'POST' )
     fields = ('vote', 'time_stamp', 'issue_uri', 'keep_private', 'user_uri')
     model = Vote
 
@@ -105,29 +108,18 @@ class VoteHandler(BaseHandler):
             vote.save()
 
             return vote
-
-class UserListHandler(BaseHandler):
-    allowed_methods = ('GET',)
-    fields = ('user_uri', 'username')
-    anonymous = AnonymousUserListHandler
-    model = User
-
-    def read(self, request, *args, **kwargs):
-        queryset = self.model.objects.filter()
-        page = paginate(request, queryset)
-        return page.object_list
-
-    @classmethod
-    def user_uri(cls, user):
-        return "http://%s%s" % (domain , reverse('api_user' , args=[user.id]))
+    @staticmethod
+    def resource_uri():
+        return ('api_votes' , [] , {})
 
 
+    
 class AnonymousUserHandler(AnonymousBaseHandler):
     allowed_methods = ('GET',)
     fields = ('username', 'score', 'ranking' , 'user_uri')
     model = User
 
-    def read(self, request, id, *args, **kwargs):
+    def read(self, request, id=None, *args, **kwargs):
         queryset = self.model.objects.filter(id=id)
         page = paginate(request, queryset)
         return page.object_list
@@ -144,6 +136,11 @@ class AnonymousUserHandler(AnonymousBaseHandler):
     def ranking(cls , user):
         p = user.get_profile()
         return UserProfile.objects.filter( score__gte = p.score ).count()
+
+    @staticmethod
+    def resource_uri():
+        return ('api_user' , ['id'] , {} )
+
 
 class UserHandler(BaseHandler):
     allowed_methods = ('GET',)
@@ -164,83 +161,10 @@ class UserHandler(BaseHandler):
     def user_uri(cls, user):
         return "http://%s%s" % (domain , reverse('api_user' , args=[user.id]))
 
+    @staticmethod
+    def resource_uri():
+        return ('api_user' , ['id'] , {})
 
-class AnonymousIssueListHandler(AnonymousBaseHandler):
-    allowed_methods = ('GET',)
-    fields = ('issue_uri', 'title', 'body', ('owner', ('username', 'user_uri',)), 'time_stamp', 'souce_type', 'url', 'votes_for', 'votes_abstain', 'votes_against')
-    model = IssueBody
-
-    def read(self, request, *args, **kwargs):
-        issueset = self.model.objects.filter()
-        page = paginate(request, issueset)
-        return page.object_list
-
-    @classmethod
-    def votes_for(cls, issue):
-        return Vote.objects.filter(Q(issue=issue) & Q(vote=1) & Q(is_archived=False)).count()
-
-    @classmethod
-    def votes_abstain(cls, issue):
-        return Vote.objects.filter(Q(issue=issue) & Q(vote__gt=9) & Q(is_archived=False)).count()
-
-    @classmethod
-    def votes_against(cls, issue):
-        votes_against = Vote.objects.filter(Q(issue=issue) & Q(vote=-1) &Q(is_archived=False)).count()
-        return votes_against
-
-    @classmethod
-    def user_uri(cls, user):
-        return "http://%s%s" % (domain , reverse('api_user' , args=[user.id]))
-
-
-    @classmethod
-    def issue_uri(cls, issue):
-        return "http://%s%s" % (domain , reverse('api_issue' , args=[issue.id]))
-
-class IssueListHandler(BaseHandler):
-    allowed_methods = ('GET',)
-
-    anonymous = AnonymousIssueListHandler
-    fields = ('issue_uri', 'title', 'body', ('owner', ('username', 'user_uri',)), 'time_stamp', 'souce_type', 'url', 'votes_for', 'votes_abstain', 'votes_against', 'my_vote')
-    model = IssueBody
-
-    def read(self, request, *args, **kwargs):
-
-        issues= self.model.objects.filter()
-        page = paginate(request, issues)
-        issue_list = []
-        for issue in page.object_list:
-            vote = Vote.objects.filter(Q(issue=issue) & Q(owner=request.user) &Q(is_archived=False))
-            issue.my_vote = vote
-            issue_list.append(issue)
-        return issue_list
-
-    @classmethod
-    def my_vote(cls, issue):
-        return issue.my_vote
-
-    @classmethod
-    def votes_for(cls, issue):
-        return Vote.objects.filter(Q(issue=issue) & Q(vote=1) &Q(is_archived=False)).count()
-
-    @classmethod
-    def votes_abstain(cls, issue):
-        votes_abstain = Vote.objects.filter(Q(issue=issue) & Q(vote__gt=9) &Q(is_archived=False)).count()
-        return votes_abstain
-
-    @classmethod
-    def votes_against(cls, issue):
-        votes_against = Vote.objects.filter(Q(issue=issue) & Q(vote=-1) &Q(is_archived=False)).count()
-        return votes_against
-
-    @classmethod
-    def user_uri(cls, user):
-        return "http://%s%s" % (domain , reverse('api_user' , args=[user.id]))
-
-
-    @classmethod
-    def issue_uri(cls, issue):
-        return "http://%s%s" % (domain , reverse('api_issue' , args=[issue.id]))
 
 
 class AnonymousIssueHandler(AnonymousBaseHandler):
