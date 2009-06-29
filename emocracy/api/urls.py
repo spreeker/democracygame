@@ -13,7 +13,10 @@ from emocracy.api.handlers import VoteHandler
 
 from emocracy.api.handlers import IssueVotesHandler
 
-auth = OAuthAuthentication(realm='emo.buhrer.net')
+
+from piston.doc import documentation_view
+
+auth = OAuthAuthentication(realm='m.buhrer.net')
 
 # Emitter registrered to set wrong mime-type for visibility purposes
 # just comment these lines out for production
@@ -23,13 +26,13 @@ auth = OAuthAuthentication(realm='emo.buhrer.net')
 if settings.DEBUG:
     Emitter.unregister(JSONEmitter)
     Emitter.register('json', JSONEmitter, 'text/html; charset=utf-8')
-    auth = HttpBasicAuthentication(realm='emo.buhrer.net')
+    auth = HttpBasicAuthentication(realm='m.buhrer.net')
 
 issue = Resource( handler=IssueHandler, authentication=auth )
 user = Resource( handler=UserHandler, authentication=auth )
 vote = Resource( handler=VoteHandler, authentication=auth )
 
-issue_votes = Recource( handler=IssueVotesHandler)
+issue_votes = Resource( handler=IssueVotesHandler)
 
 urlpatterns = patterns('',
     # returns paginated issues public
@@ -38,10 +41,15 @@ urlpatterns = patterns('',
     url(r'^issue/(?P<id>\d+)/$', issue ,  name="api_issue"),
     # return votes on specific issue public
     url(r'^issue/(?P<id>\d+)/votes$', vote , name="api_issue_votes" ),
-    # return users not public
+    # return users public
     url(r'^user/$', user , name="api_users" ),
-    # return specific user 
+    # return specific user and stats NOT PUBLIC 
     url(r'^user/(?P<id>\d+)/$', user , name="api_user" ),
+    # vote to an issue
+    url(r'^vote/$', vote , name="api_votes" ),
+    #
+    
+    #
+    url(r'^doc/$' , documentation_view , name="api_doc" ) ,
 
-    url(r'^vote/$', votes , name="api_votes" ),
 )
