@@ -12,17 +12,17 @@ from django.db import transaction
 import unittest
 
 class TestUsers(unittest.TestCase):
-    usernames = ['test1' , 'test2' ,'test3' ]
+    usernames = [ 'test1' , 'test2' ,'test3' ]
     profiles = [] 
     users = [] 
     
     def setUp(self):
-        self.load_users()
+        self.load_users() # loads users from DB or creates them
         levels.MIN_SCORE_ACTIVE_CITIZENS = 10
         levels.MAX_OPINION_LEADERS = 2
 
     def __str__(self):
-        data = " TestUsers Profile score and role change \n"
+        data = " User Profile.role  score \n "
         for i,u in enumerate(self.users):
             p = self.profiles[i]
             data += "%15s %15s %4d" % ( u.username , p.role , p.score )
@@ -140,7 +140,7 @@ class TestActions(TestUsers):
         super(TestActions , self).setUp()
         self.reset( levels.MIN_SCORE_ACTIVE_CITIZENS , "active citizen" )
         self.load_users()
-        # made sure default values in db are now ok
+        # make sure default values in db are now ok
         self.assertEqual( User.objects.count() , 3 )
         self.assertEqual( self.profiles[0].score , levels.MIN_SCORE_ACTIVE_CITIZENS )
         
@@ -172,6 +172,7 @@ class TestActions(TestUsers):
         vote_func( self.users[0] , issue1 , 1 , False) # in the test setup we define 3 issues. 
                                                        # and an issue owner also votes on it.
                                                        # 3 issues is 3 default votes
+        self.assertEqual( self.profiles[0].score - delta , score.VOTE_SCORE )
         vote_func( self.users[0] , issue2 , 1 , False) 
         # score should stay the same
         self.assertEqual( self.profiles[0].score - delta , score.VOTE_SCORE )
@@ -215,44 +216,3 @@ class TestActions(TestUsers):
     def test_tag(self):
         pass
 
-"""
-tu.= TestUsers()
-tu.setUp()
-
-print "initial user data"
-print tu
-
-levels.NUMBER_OF_OPINION_LEADERS = 2
-levels.MIN_SCORE_ACTIVE_CITIZENS = 10 
-
-levels.change_score( tu.profiles[0] , 11 )
-print "citizen to opinion leader"
-print tu
-
-print "test2 to opinion leader"
-levels.change_score( tu.profiles[1] , 12 )
-print tu
-print "but we have to reload users from db to see correct results"
-tu.load_users()
-print tu
-
-# now a 3rd opinion leader cannot be created
-# so now p3 becomes active citizen
-levels.change_score( tu.profiles[2] , 11 )
-tu.load_users()
-print tu.
-
-#  now we give p3 the highest score!
-levels.change_score( tu.profiles[2] , +2 )
-
-tu.load_users()
-print tu
-
-qs = UserProfile.objects.filter(user__username__startswith = 'test')
- # this should print out the same
-for p in qs:
-    print "%15s %15s %4d" % (p.user.username , p.role , p.score)
-    u = p.user
-    p.delete()
-    u.delete()
-"""
