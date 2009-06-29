@@ -23,7 +23,7 @@ from voting.managers import IssueManager
 # LEAVE OLD ENTRIES SO AS NOT TO MESS THE DATABASE UP!
 
 normal_votes = (
-    (0 , _(u"Against")),
+    (-1 , _(u"Against")),
     (1 , _(u"For")),
 )
 
