@@ -17,11 +17,13 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.utils.translation import ugettext as _
 
+from voting.managers import IssueManager
+
 # ADD NEW POSSIBILITIES WITH NEW INTEGERS, THEY NEED TO BE UNIQUE
 # LEAVE OLD ENTRIES SO AS NOT TO MESS THE DATABASE UP!
 
 normal_votes = (
-    (0 , _(u"Against")),
+    (-1 , _(u"Against")),
     (1 , _(u"For")),
 )
 
@@ -45,25 +47,6 @@ possible_votes = list(normal_votes)
 possible_votes.extend(blank_votes)
 votes_to_description = dict(possible_votes)
 
-class IssueManager(models.Manager):
-    def get_for_object(self, obj):
-        # TODO add check: is obj a Django Model and does it have ContentType entry
-        ctype = ContentType.objects.get_for_model(obj)
-        return self.filter(content_type = ctype.pk,
-            object_id = obj.pk)
-
-    def create_for_object(self, obj, *args, **kwargs):
-        # TODO add check: is obj a Django Model and does it have ContentType entry
-        # TODO enforce uniqueness (either through Django or something homebrew)
-        title = kwargs.pop('title', '')
-        owner = kwargs.pop('owner', None)
-        new_issue = self.create(
-            owner = owner,
-            title = title,
-            time_stamp = datetime.now(),
-            payload = obj,
-        )        
-        return new_issue
 
 class Issue(models.Model):
     """
@@ -83,10 +66,10 @@ class Issue(models.Model):
     time_stamp = models.DateTimeField()
     
     content_type = models.ForeignKey(ContentType)
-    object_id = models.PositiveIntegerField() # or just a IntegerField -> TODO find out!
+    object_id = models.PositiveIntegerField() 
     payload = generic.GenericForeignKey('content_type', 'object_id')
 
-    is_draft = models.BooleanField(default = True)
+    is_draft = models.BooleanField( default = True )
 
     # Denormalized data - for sort order
     offensiveness = models.IntegerField(default = 0)
@@ -102,23 +85,39 @@ class Issue(models.Model):
     def __unicode__(self):
         return self.title
 
-    def vote(self, user, vote_int, keep_private, issueset = None):
+    def vote(self, user, vote_int, keep_private):
         new_vote = Vote.objects.create(
             owner = user,
             issue = self,
-            issueset = issueset,
             vote = vote_int,
             keep_private = keep_private,
             time_stamp = datetime.now()
         )
-        self.votes += 1 # See how this interacts with Emocracy design TODO
+        self.votes += 1
         self.save()
         return new_vote
-        
-    def anonymous_vote():
-        pass
-    
+
+    def vote_count( self ):
+        """return dict with vote : value as key : value pair
+        """
+        from django.db import connection
+        cursor = connection.cursor()
+        cursor.execute("""
+           SELECT v.vote , COUNT(*)
+           FROM voting_vote v
+           WHERE %d = v.issue_id 
+           GROUP BY 1
+           ORDER BY 1 """ % ( self.id ) 
+        )
+        votes = {} 
+
+        for row in cursor.fetchall():
+           votes[row[0]] = row[1]
+
+        return votes       
+
     def tag(self, user, tag_string):
+        # this code should not be here!!!
         # Get the tag object and if it does not exist yet, create it.
         try:
             tag = Tag.objects.get(name = tag_string)
@@ -155,38 +154,27 @@ class IssueSet(models.Model):
     def __unicode__(self):
         return self.title
         
-# ------------------------------------------------------------------------------
 
 class VoteManager(models.Manager):
     def get_user_votes( self , user ):
         user_votes = Vote.objects.filter(owner = user, is_archived = False).order_by("time_stamp").reverse()
+        # beter paginate this qs when you use it!
         return user_votes 
 
-# Vote Models:
-#
-# If api_interface is blank/null that means vote came in through the Emocracy 
-# web interface.
-
+    
 class Vote(models.Model):
     api_interface = models.CharField(max_length = 50, blank = True)
     owner = models.ForeignKey(User)
-    
     issue = models.ForeignKey(Issue)
-    # votes should be able to belong to more issue sets.
-    # many to many field would be better
-    issueset = models.ForeignKey(IssueSet, null = True)
-
     vote = models.IntegerField(choices = possible_votes)
     time_stamp = models.DateTimeField(editable = False , default=datetime.now )
     is_archived = models.BooleanField(default = False)
     keep_private = models.BooleanField(default = False)
    
     objects = VoteManager()
+
     def __unicode__(self):
         return unicode(self.vote) + u" on \"" + self.issue.title + u"\" by " + self.owner.username
-
-# ------------------------------------------------------------------------------
-# -- Bare bones Tagging implementation -----------------------------------------
 
 # Rationale: Django-tagging does not keep counts of the number of tags for an
 # model. I need that number because a new tag should only show up after
@@ -195,12 +183,8 @@ class Vote(models.Model):
 # Emocracy are Issues/stuff you can vote on - so there is no need to user the
 # generic foreign key facilities in Django
 
-# TODO look at the way the Tag objects are found, see wether that
-# can be done more cleanly (/better /faster). Probably through some 
-# custom SQL ...
-# Possible way to speed up get_for_issue: have a TagField on an Issue
-# (that would get rid of the TaggedIssue query).
-
+# OPTION use default tagging. but wrap if with game specific tagging functions
+# this should be in a separate taggin app!!
 
 class TagManager(models.Manager):
     def get_for_issue(self, issue, max_num = 10):        
