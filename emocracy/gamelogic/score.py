@@ -29,6 +29,7 @@ def vote(user, issue, new_vote, voted_already):
             # Issue only gets a higher score if it is the first vote that is 
             # also a for or against vote.
             issue.score += ISSUE_VOTE_SCORE 
+
     # Update the user's profile with his/her vote.
     if new_vote.vote == 1:
         userprofile.total_for += 1
@@ -36,7 +37,8 @@ def vote(user, issue, new_vote, voted_already):
         userprofile.total_against += 1
     else:
         userprofile.total_blank += 1
-    # Write all that back to the database.
+
+    # Write all changes back to the database.
     issue.save()
     userprofile.save()
     proposerprofile.save()
@@ -54,4 +56,8 @@ def tag(user, tag):
     if not tag.points_awarded:
         change_score(userprofile , TAG_SCORE )
         userprofile.save()
-    
+
+def multiply( user , issue ):
+    pass
+
+

@@ -24,7 +24,7 @@ from django.conf.urls.defaults import *
 from django.views.generic.simple import direct_to_template
 from django.contrib.auth import views as auth_views
 
-from thirdparty.registration.views import activate
+from thirdparty.registration_mod.views import activate
 from registration.views import register
 
 
