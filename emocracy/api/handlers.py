@@ -81,33 +81,28 @@ class VoteHandler(BaseHandler):
     def user_uri(cls, vote):
         return "http://%s%s" %(domain , reverse('api_user' , args=[vote.owner.id]))
 
-    def create(self, request):
+    def create(self, request , issue=None , vote=None):
         attrs = self.flatten_dict(request.POST)
-        attrs['is_archived'] = False
-        attrs['owner'] = request.user.id
 
         if self.exists(**attrs):
             return rc.DUPLICATE_ENTRY
-        else:
-            current = Vote.objects.filter(
-                Q(issue=attrs['issue']) &
-                Q(owner=request.user) &
-                Q(is_archived=False)
-            )
-            if len(current) == 0:
-                pass
-            else:
-                current = current[0]
-                current.is_archived = True
-                current.save()
-            vote = Vote(vote=attrs['vote'],
-                            issue=Issue.objects.get(id=attrs['issue']),
-                            keep_private=attrs['keep_private'],
-                            owner=request.user,
-                            time_stamp = datetime.datetime.now())
-            vote.save()
+        if not Issue.exists( id = attrs['issue']):
+            return rc.BAD_REQUEST
+        if not attrs.has_key('keep_private'):
+            attrs['keep_private'] = False
+        elif not (attrs['keep_private'] == False |
+                 attrs['keep_private'] == True )
+            return rc.BAD_REQUEST 
 
-            return vote
+        vote = gamelogic.actions.vote( 
+                request.user , 
+                Issue.objects.get(id=attrs['issue'])
+                attrs['vote'],
+                attrs['keep_private'],
+                api_interface = "API" ,
+        )
+        return vote
+
     @staticmethod
     def resource_uri():
         return ('api_votes' , [] , {})
