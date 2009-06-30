@@ -8,8 +8,8 @@ PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
 
 sys.path.append(os.path.split(PROJECT_PATH)[0] + '/external_apps/' ) 
 
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
+DEBUG = True # in production this should be FALSE
+TEMPLATE_DEBUG = DEBUG # comment this out in production
 
 ADMINS = (
     ('Conrado Buhrer', 'conrado@buhrer.net'),
@@ -20,7 +20,7 @@ DEFAULT_FROM_EMAIL='conrado.buhrer@telfort.nl'
 MANAGERS = ADMINS
 
 DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-#DATABASE_NAME = 'thirdparty.sqlite3'             # Or path to database file if using sqlite3.
+#DATABASE_NAME = 'thirdparty.sqlite3' # Or path to database file if using sqlite3.
 DATABASE_NAME = os.path.join(PROJECT_PATH, "thirdparty.sqlite3")
 
 DATABASE_USER = ''             # Not used with sqlite3.
@@ -74,6 +74,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware', # comment this out in production
 )
 
 ROOT_URLCONF = 'thirdparty.urls'
@@ -103,8 +104,9 @@ INSTALLED_APPS = (
     'thirdparty.ajax',
     'thirdparty.web',
     'thirdparty.profiles',
-    'thirdparty.registration',
     'thirdparty.oauth_consumer',
+    'registration',
+    'debug_toolbar', # comment this out in production
 )
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -134,4 +136,3 @@ except ImportError:
     print "Create your local settings_local.py settings file with password sensitive information ect"
     # Re-raise the import error. The server should not run!
     raise
-
