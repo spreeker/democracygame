@@ -40,16 +40,14 @@ from voting.models import votes_to_description
 from issues_content.models import IssueBody
 
 
-def vote(user, issue, vote_int, keep_private):
+def vote(user, issue, vote_int, keep_private , api_interface=None ):
     """Unified voting (both blank and normal votes)."""
-    logging.debug(u"actions.vote called")
     userprofile = user.get_profile()
     if not role_to_actions[userprofile.role].has_key('vote') : return
 
     voted_already, repeated_vote = archive_votes( user, issue , vote_int)
-
     if repeated_vote: return
-
+    
     new_vote = Vote( owner = user, issue = issue, vote = vote_int, keep_private = keep_private)
     new_vote.save()
 
