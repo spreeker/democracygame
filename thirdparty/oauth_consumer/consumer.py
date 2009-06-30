@@ -86,8 +86,18 @@ class EmoOAuthConsumerApp(django_oauth_consumer.OAuthConsumerApp):
     def ld(self):
         """Load data - parse json from last request"""
         data = self.response.read()
-        logging.debug( str(data))
-        return json.loads(data)
+        try :
+            decoded_json = json.loads(data)
+        except ValueError :
+            decoded_json = []
+            logging.debug( """
+                        loading of json data goes wrong. Probably the Service provider is not yet
+                        accepting your oauth consumer key. Or some ohter local oauth configuration
+                        is wrong
+                        """)
+            logging.debug( str(data))
+
+        return decoded_json
 
     def post_resource(self, request, resource, content=None):
         if resource==None:
