@@ -45,10 +45,10 @@ urlpatterns = patterns('',
     url(r'^user/$', user , name="api_users" ),
     # return specific user and stats NOT PUBLIC 
     url(r'^user/(?P<id>\d+)/$', user , name="api_user" ),
-    # vote to an issue
+    # show votes paginated votes of user 
     url(r'^vote/$', vote , name="api_votes" ),
-    #
-    
+    # vote to an issue
+    url(r'^vote/(?P<issue>)\d+/(?P<vote>)'), 
     #
     url(r'^doc/$' , documentation_view , name="api_doc" ) ,
 
