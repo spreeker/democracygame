@@ -21,11 +21,11 @@ domain = Site.objects.get_current().domain
 
 def paginate(request, qs):
     paginator = Paginator(qs, 3)  # TODO: add to settings.py
-    try:
+    try :
         pageno = int(request.GET.get('page', '1'))
     except ValueError:
         pageno = 1
-    try:
+    try :
         page = paginator.page(pageno)
     except (EmptyPage, InvalidPage):
         page = paginator.page(paginator.num_pages) #last page
@@ -58,7 +58,8 @@ class IssueVotesHandler(AnonymousBaseHandler):
 
     @staticmethod
     def resource_uri():
-        return ('api_issue_votes' , ['id'] , {} )
+        return ('api_issue_votes' , ['id'])
+    
 
 class VoteHandler(BaseHandler):
     """ returns the votes for an user. 
@@ -82,7 +83,8 @@ class VoteHandler(BaseHandler):
         return "http://%s%s" %(domain , reverse('api_user' , args=[vote.owner.id]))
 
     def create(self, request , issue=None , vote=None):
-        attrs = self.flatten_dict(request.POST)
+        attrs = { issue:issue , vote:vote }
+        attrs.update(self.flatten_dict(request.POST))
 
         if self.exists(**attrs):
             return rc.DUPLICATE_ENTRY
@@ -90,13 +92,12 @@ class VoteHandler(BaseHandler):
             return rc.BAD_REQUEST
         if not attrs.has_key('keep_private'):
             attrs['keep_private'] = False
-        elif not (attrs['keep_private'] == False |
-                 attrs['keep_private'] == True )
+        elif not ( attrs['keep_private'] == False or attrs['keep_private'] == True ):
             return rc.BAD_REQUEST 
 
         vote = gamelogic.actions.vote( 
                 request.user , 
-                Issue.objects.get(id=attrs['issue'])
+                Issue.objects.get(id=attrs['issue']),
                 attrs['vote'],
                 attrs['keep_private'],
                 api_interface = "API" ,
@@ -105,10 +106,9 @@ class VoteHandler(BaseHandler):
 
     @staticmethod
     def resource_uri():
-        return ('api_votes' , [] , {})
+        return ('api_vote' , ['issue' , 'vote'])
+   
 
-
-    
 class AnonymousUserHandler(AnonymousBaseHandler):
     allowed_methods = ('GET',)
     fields = ('username', 'score', 'ranking' , 'user_uri')
@@ -134,7 +134,7 @@ class AnonymousUserHandler(AnonymousBaseHandler):
 
     @staticmethod
     def resource_uri():
-        return ('api_user' , ['id'] , {} )
+        return ('api_user' , ['id'])
 
 
 class UserHandler(BaseHandler):
@@ -143,10 +143,13 @@ class UserHandler(BaseHandler):
     anonymous = AnonymousUserHandler
     model = User
 
-    def read(self, request, id, *args, **kwargs):
-        queryset = self.model.objects.filter(id=id)
-        page = paginate(request, queryset)
-        return page.object_list
+    def read(self, request, id=None, *args, **kwargs):
+        if id:
+            return self.model.objects.filter( id=id )
+        else :
+            queryset = self.model.objects.filter()
+            page = paginate(request, queryset)
+            return page.object_list
 
     @classmethod
     def score(cls, user):
@@ -158,42 +161,53 @@ class UserHandler(BaseHandler):
 
     @staticmethod
     def resource_uri():
-        return ('api_user' , ['id'] , {})
+        return ('api_user' , ['id'])
 
 
 
 class AnonymousIssueHandler(AnonymousBaseHandler):
     allowed_methods = ('GET',)
     fields = ('issue_uri', 'title', 'body', ('owner', ('username', 'user_uri',)), 'time_stamp', 'source_type', 'url')
-    #model = IssueBody
+    model = IssueBody
 
-    def read(self, request, id, *args, **kwargs):
-        queryset = self.model.objects.filter(id=id)
+    def read(self, request, id=None , *args, **kwargs):
+        if id:
+            return self.model.objects.filter( id=id )
+        else :
+            queryset = self.model.objects.filter()
+            page = paginate(request, queryset)
+            return page.object_list
+
+
+        queryset = self.model.objects.filter()
         page = paginate(request, queryset)
-        return page
+        return page.object_list
 
     @classmethod
-    def user_uri(cls, user):
-        return "http://%s%s" % (domain , reverse('api_issue' , args=[issue.id]))
-
+    def user_uri(cls, issue):
+        return "http://%s%s" % (domain , reverse('api_user' , args=[issue.user]))
 
     @classmethod
     def issue_uri(cls, issue):
         return "http://%s%s" % (domain , reverse('api_issue' , args=[issue.id]))
 
+    @staticmethod
+    def resource_uri():
+        return ('api_issue' , ['id'])
+
 
 class IssueHandler(BaseHandler):
-    allowed_methods = ('GET', 'POST',)
+    allowed_methods = ('POST',)
     anonymous = AnonymousIssueHandler
     fields = ('issue_uri', 'title', 'body', ('owner', ('username', 'user_uri',)), 'time_stamp', 'souce_type', 'url')
-    #model = IssueBody
+    model = IssueBody
 
     def create(self, request):
         attrs = self.flatten_dict(request.POST)
 
         if self.exists(**attrs):
             return rc.DUPLICATE_ENTRY
-        else:
+        else :
             issue = gamelogic.actions.propose(
                 request.user,
                 attrs['title'],
@@ -207,18 +221,24 @@ class IssueHandler(BaseHandler):
             issue.save()
             return issue
 
-    def read(self, request, id):
-        if id==None:
+    def read(self, request, id=None):
+        if id:
             queryset = self.model.objects.filter()
             page = paginate(request, queryset)
             return page.object_list
-        else:
+        else :
             return self.model.objects.filter(id=id)
 
     @classmethod
-    def user_uri(cls, user):
-        return "http://%s%s" % (domain , reverse('api_user' , args=[user.id]))
+    def user_uri(cls, issue):
+        return "http://%s%s" % (domain , reverse('api_user' , args=[issue.owner]))
 
     @classmethod
     def issue_uri(cls, issue):
         return "http://%s%s" % (domain , reverse('api_issue' , args=[issue.id]))
+
+    @staticmethod
+    def resource_uri():
+        return ('api_issue' , ['id'])
+
+
