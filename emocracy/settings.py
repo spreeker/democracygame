@@ -80,6 +80,7 @@ MIDDLEWARE_CLASSES = (
 #    'django.contrib.csrf.middleware.CsrfMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware', ## !! comment out in production.
     'django.middleware.locale.LocaleMiddleware',
     # for the transaction middleware see :
     # http://docs.djangoproject.com/en/dev/topics/db/transactions/
@@ -120,6 +121,8 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
     'django.contrib.sessions',
+    'django.contrib.markup',
+    'debug_toolbar', # comment out in production!!
     'emocracy.gamelogic',
     'emocracy.profiles',
     'emocracy.api',
@@ -131,6 +134,10 @@ INSTALLED_APPS = (
 	'registration',
     'piston',
 )
+# comment out in production
+DEBUG_TOOLBAR_CONFIG = {
+    'INTERCEPT_REDIRECTS': False,
+}
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
