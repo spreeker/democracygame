@@ -10,7 +10,7 @@ from piston.emitters import JSONEmitter
 from emocracy.api.handlers import IssueHandler
 from emocracy.api.handlers import UserHandler
 from emocracy.api.handlers import VoteHandler
-
+from emocracy.api.handlers import MultiplyHandler
 from emocracy.api.handlers import IssueVotesHandler
 
 
@@ -31,6 +31,7 @@ if settings.DEBUG:
 issue = Resource( handler=IssueHandler, authentication=auth )
 user = Resource( handler=UserHandler, authentication=auth )
 vote = Resource( handler=VoteHandler, authentication=auth )
+multiply = Resource( handler=MultiplyHandler , authentication=auth )
 
 issue_votes = Resource( handler=IssueVotesHandler)
 
@@ -49,6 +50,9 @@ urlpatterns = patterns('',
     url(r'^vote/$', vote , name="api_votes" ),
     # vote to an issue
     url(r'^vote/(?P<issue>)\d+/(?P<vote>)\d+/$', vote , name='api_vote' ),
-    # 
+    # view multiplies
+    url(r'^multiply/$', multiply , name='api_multiplies' ),
+    # multiply an issue 
+    url(r'^multiply/(?P<issue>)\d+/$', multiply , name='api_multiply' ),
     url(r'^doc/$' , documentation_view , name="api_doc" ) ,
 )
