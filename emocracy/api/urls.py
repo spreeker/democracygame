@@ -33,7 +33,7 @@ user = Resource( handler=UserHandler, authentication=auth )
 vote = Resource( handler=VoteHandler, authentication=auth )
 multiply = Resource( handler=MultiplyHandler , authentication=auth )
 
-issue_votes = Resource( handler=IssueVotesHandler)
+issue_votes = Resource(handler=IssueVotesHandler)
 
 urlpatterns = patterns('',
     # returns paginated issues public
@@ -41,7 +41,7 @@ urlpatterns = patterns('',
     # returns specific issue public
     url(r'^issue/(?P<id>\d+)/$', issue ,  name="api_issue"),
     # return votes on specific issue public
-    url(r'^issue/(?P<id>\d+)/votes$', vote , name="api_issue_votes" ),
+    url(r'^issue/(?P<id>\d+)/votes/$', issue_votes , name="api_issue_votes" ),
     # return users public
     url(r'^user/$', user , name="api_users" ),
     # return specific user and stats NOT PUBLIC 
