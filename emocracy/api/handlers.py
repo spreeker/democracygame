@@ -105,7 +105,7 @@ class VoteHandler(BaseHandler):
                 attrs['keep_private'],
                 api_interface = "API" , # TODO add aplication interface!!
         )
-        return vote
+        return rc.CREATED 
 
     @staticmethod
     def resource_uri():
@@ -220,7 +220,7 @@ class IssueHandler(BaseHandler):
                 attrs['is_draft'],
                 None,
             )
-            if issue : return issue
+            if issue : return rc.CREATED 
             else : rc.BAD_REQUEST
 
     def read(self, request, id=None):
@@ -285,7 +285,7 @@ class MultiplyHandler( BaseHandler ):
                 attrs['issue'],
                 attrs.get('downgrade', False) ,
             )
-            if issue : return issue
+            if issue : return rc.CREATED 
             else : return rc.BAD_REQUEST
 
     @staticmethod
