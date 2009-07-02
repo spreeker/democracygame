@@ -8,10 +8,10 @@ from emocracy.voting.models import Vote
 
 from django.contrib.auth.models import User
 from django.db import transaction
+from django.test import TestCase 
 
-import unittest
 
-class TestUsers(unittest.TestCase):
+class TestUsers(TestCase):
     usernames = [ 'test1' , 'test2' ,'test3' ]
     profiles = [] 
     users = [] 
@@ -20,6 +20,9 @@ class TestUsers(unittest.TestCase):
         self.load_users() # loads users from DB or creates them
         levels.MIN_SCORE_ACTIVE_CITIZENS = 10
         levels.MAX_OPINION_LEADERS = 2
+
+    def tearDonw(self):
+        User.objects.delete()        
 
     def __str__(self):
         data = " User Profile.role  score \n "
@@ -153,6 +156,7 @@ class TestActions(TestUsers):
         self.assertEqual( Issue.objects.count() , len(self.issues))
 
     def tearDown(self):
+        super(TestActions , self).tearDown()
         qs = Issue.objects.filter( title__startswith = "issue" )
         qs.delete()
         Vote.objects.all().delete()
