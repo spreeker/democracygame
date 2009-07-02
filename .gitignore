@@ -8,6 +8,7 @@ settings_local.py
 *.DS_Store
 *.mo
 *.swp
+*.swo
 *~
 *.sqlite3
 *.log
