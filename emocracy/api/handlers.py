@@ -15,6 +15,8 @@ from emocracy.issues_content.models import IssueBody
 from emocracy.voting.models import Issue
 from emocracy.voting.models import Vote
 from emocracy.profiles.models import UserProfile
+from emocracy.gamelogic.models import MultiplyIssue
+
 import gamelogic.actions
 
 domain = Site.objects.get_current().domain
@@ -82,6 +84,7 @@ class VoteHandler(BaseHandler):
     def user_uri(cls, vote):
         return "http://%s%s" %(domain , reverse('api_user' , args=[vote.owner.id]))
 
+    ## TODO use the @validate decorator of piston
     def create(self, request , issue=None , vote=None):
         attrs = { issue:issue , vote:vote }
         attrs.update(self.flatten_dict(request.POST))
@@ -100,7 +103,7 @@ class VoteHandler(BaseHandler):
                 Issue.objects.get(id=attrs['issue']),
                 attrs['vote'],
                 attrs['keep_private'],
-                api_interface = "API" ,
+                api_interface = "API" , # TODO add aplication interface!!
         )
         return vote
 
@@ -174,10 +177,9 @@ class AnonymousIssueHandler(AnonymousBaseHandler):
         if id:
             return self.model.objects.filter( id=id )
         else :
-            queryset = self.model.objects.filter()
+            queryset = self.model.objects.order_by( '-time_stamp' )
             page = paginate(request, queryset)
             return page.object_list
-
 
         queryset = self.model.objects.filter()
         page = paginate(request, queryset)
@@ -185,7 +187,7 @@ class AnonymousIssueHandler(AnonymousBaseHandler):
 
     @classmethod
     def user_uri(cls, issue):
-        return "http://%s%s" % (domain , reverse('api_user' , args=[issue.user]))
+        return "http://%s%s" % (domain , reverse('api_user' , args=[issue.owner]))
 
     @classmethod
     def issue_uri(cls, issue):
@@ -218,27 +220,77 @@ class IssueHandler(BaseHandler):
                 attrs['is_draft'],
                 None,
             )
-            issue.save()
-            return issue
+            if issue : return issue
+            else : rc.BAD_REQUEST
 
     def read(self, request, id=None):
-        if id:
-            queryset = self.model.objects.filter()
-            page = paginate(request, queryset)
-            return page.object_list
-        else :
-            return self.model.objects.filter(id=id)
+        self.anonymous.read(self,request , id)
 
     @classmethod
     def user_uri(cls, issue):
-        return "http://%s%s" % (domain , reverse('api_user' , args=[issue.owner]))
+        self.anonymous.user_uri(cls , issue)
 
     @classmethod
     def issue_uri(cls, issue):
-        return "http://%s%s" % (domain , reverse('api_issue' , args=[issue.id]))
+        self.anonymous.issue_uri( cls , issue )
 
     @staticmethod
     def resource_uri():
         return ('api_issue' , ['id'])
+
+
+class AnonymousMultiplyHandler( AnonymousBaseHandler ):
+    allowed_methods = ('GET',)
+    model = MultiplyIssue
+    fields = ('user' , 'time_stamp' , 'issue' , 'downgrade' , )
+
+    def read(self, request, id=None , *args, **kwargs):
+        """ Read the active multiplies for specific issue
+            or all multiplies in decending paginated order
+        """
+        if id:
+            return self.model.objects.filter( issue=id )
+        else :
+            queryset = self.model.objects.order_by( '-time_stamp' )
+            page = paginate(request, queryset)
+            return page.object_list
+
+        queryset = self.model.objects.filter()
+        page = paginate(request, queryset)
+        return page.object_list
+
+class MultiplyHandler( BaseHandler ):
+    """ If a user has enough game points the user can multiply the value
+        of an issue.
+    """
+    allower_methods = ('GET' , 'POST')
+    anonymous = AnonymousMultiplyHandler
+    model = MultiplyIssue
+    fields = ('user' , 'time_stamp' , 'issue' , 'downgrade' , )
+
+    def read(self, request, id=None , *args, **kwargs):
+        return self.anonymous.read( self , request , id , *args , **kwargs )
+
+    def create( self , request ):
+        """ expects an issue id and optional a downgrade boolean
+            in the POST data
+        """
+        attrs = self.flatten_dict(request.POST)
+
+        if self.exists(**attrs):
+            return rc.DUPLICATE_ENTRY
+        else :
+            issue = gamelogic.actions.multiply(
+                request.user,
+                attrs['issue'],
+                attrs.get('downgrade', False) ,
+            )
+            if issue : return issue
+            else : return rc.BAD_REQUEST
+
+    @staticmethod
+    def resource_uri():
+        return ('api_multiply' , ['id'])
+
 
 
