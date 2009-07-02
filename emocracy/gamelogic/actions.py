@@ -102,7 +102,8 @@ def propose(user, title, body, vote_int, source_url, source_type, is_draft = Fal
         new_issue = Issue.objects.create_for_object(new_issue, title = new_issue.title, owner = user, is_draft = is_draft)
         new_issue.vote(user, vote_int, keep_private = False)    
 
-        user.message_set.create(message="You voted successfully on %s" % issue.title  )
+        user.message_set.create(message="You created issue \"%s\" successfully " % new_issue.title  )
+
         score.propose(user)
         levels.upgrade[userprofile.role](userprofile)
 
@@ -176,6 +177,7 @@ def multiply(user , issue , downgrade = False ):
 
     checks are done at model level.
     """
+    userprofile = user.get_profile()
     if not role_to_actions[userprofile.role].has_key('multiply'): return 
 
     m = MultiplyIssue.objects.create( user = user , issue = issue , downgrade = downgrade )
