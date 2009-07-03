@@ -322,7 +322,8 @@ class RegistrationViewTests(RegistrationTestCase):
                                     data={ 'username': 'foo',
                                            'email': 'foo@example.com',
                                            'password1': 'foo',
-                                           'password2': 'foo' })
+                                           'password2': 'foo', 
+                                           'tos' : 'True' })
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['Location'], 'http://testserver%s' % reverse('registration_complete'))
         self.assertEqual(RegistrationProfile.objects.count(), 3)
