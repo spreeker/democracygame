@@ -209,7 +209,6 @@ class IssueHandlerTest( APIMainTest ):
         self.issue1 = Issue.objects.get( title = "issue1")
         self.issue2 = Issue.objects.get( title = "issue2")
         self.issue3 = Issue.objects.get( title = "issue3")
-        print self.issue1.id , self.issue2.id , self.issue3.id
  
     def test_read_issues(self):
         expected = """[

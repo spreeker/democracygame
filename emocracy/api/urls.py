@@ -14,7 +14,7 @@ from emocracy.api.handlers import MultiplyHandler
 from emocracy.api.handlers import IssueVotesHandler
 
 
-from piston.doc import documentation_view
+from emocracy.api.doc import documentation_view
 
 auth = OAuthAuthentication(realm='m.buhrer.net')
 
