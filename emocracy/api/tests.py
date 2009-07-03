@@ -107,13 +107,11 @@ class OAuthTests(APIMainTest):
 
 
 class IssueVotesHandlerTest(APIMainTest):
-    """ testing the IssueVoteHandler which can be accessed anonymously
     """
-    def setUp(self):
-        super( IssueVotesHandlerTest , self).setUp()
-
-    def tearDown(self):
-        super( IssueVotesHandlerTest , self).tearDown()
+    testing the IssueVoteHandler which can be accessed anonymously
+    we are only seeing very few votes in our test data but you will get the idea
+    how other votes values are returned.
+    """
 
     def test_gone_issue_votes(self):
         expected = 'Gone'
@@ -137,6 +135,75 @@ class IssueVotesHandlerTest(APIMainTest):
     "-1": 1
 }"""
 
+
+class VoteHandlerTest(APIMainTest):
+    """ test voting.
+        TODO who to do oauth requests??
+    """
+
+    def test_duplicate_vote(self):
+        pass
+
+    def test_non_exsitent_vote(self):
+        pass
+
+    def test_vote_own_issue(self):
+        pass
+
+    def test_vote(self):
+        pass
+
+
+
+class UserHandlerTest( APIMainTest ):
+    
+    def test_get_users(self):
+        expected = """[
+    {
+        "username": "test1", 
+        "ranking": 3, 
+        "score": 11, 
+        "resource_uri": "%(r1)s"
+    }, 
+    {
+        "username": "test2", 
+        "ranking": 3, 
+        "score": 11, 
+        "resource_uri": "%(r2)s"
+    }, 
+    {
+        "username": "test3", 
+        "ranking": 3, 
+        "score": 11, 
+        "resource_uri": "%(r3)s"
+    }
+]""" % {"r1" :  reverse('api_user' , args=[self.users[0].id]) , 
+        "r2" :  reverse('api_user' , args=[self.users[1].id]) , 
+        "r3" :  reverse('api_user' , args=[self.users[2].id]) , 
+        }
+
+        url = reverse( "api_users" )
+        result = self.client.get(url).content        
+        #print result
+        self.assertEqual( expected , result )
+
+    def test_get_user(self):
+        user = User.objects.get( username = 'test1' )
+        expected = """[
+    {
+        "username": "test1", 
+        "ranking": 3, 
+        "score": 11, 
+        "resource_uri": "%(r1)s"
+    }
+]""" % {"r1" :  reverse('api_user' , args=[self.users[0].id]) } 
+
+        url = reverse( "api_user" , args=[user.pk] ) 
+        result = self.client.get(url).content
+        self.assertEqual( expected , result )
+
+
+def IssueHandlerTest( APIMainTest ):
 
 #    def test_singlexml(self):
 #        obj = TestModel.objects.all()[0]
