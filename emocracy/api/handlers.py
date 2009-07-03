@@ -1,7 +1,6 @@
 import datetime
 
 from django.contrib.auth.models import User
-from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator
 from django.core.paginator import InvalidPage
@@ -19,7 +18,6 @@ from emocracy.gamelogic.models import MultiplyIssue
 
 import gamelogic.actions
 
-domain = Site.objects.get_current().domain
 
 def paginate(request, qs):
     paginator = Paginator(qs, 3)  # TODO: add to settings.py
@@ -78,11 +76,11 @@ class VoteHandler(BaseHandler):
 
     @classmethod
     def issue_uri(cls, vote):
-        return "http://%s%s" % (domain , reverse('api_issue' , args=[vote.issue.id]))
+        return "%s" % reverse('api_issue' , args=[vote.issue.id])
 
     @classmethod
     def user_uri(cls, vote):
-        return "http://%s%s" %(domain , reverse('api_user' , args=[vote.owner.id]))
+        return "%s" % reverse('api_user' , args=[vote.owner.id])
 
     ## TODO use the @validate decorator of piston
     def create(self, request , issue=None , vote=None):
@@ -114,36 +112,7 @@ class VoteHandler(BaseHandler):
 
 class AnonymousUserHandler(AnonymousBaseHandler):
     allowed_methods = ('GET',)
-    fields = ('username', 'score', 'ranking' , 'user_uri')
-    model = User
-
-    def read(self, request, id=None, *args, **kwargs):
-        queryset = self.model.objects.filter(id=id)
-        page = paginate(request, queryset)
-        return page.object_list
-
-    @classmethod
-    def score(cls, user):
-        return user.get_profile().score
-
-    @classmethod
-    def user_uri(cls, user):
-        return "http://%s%s" % (domain , reverse('api_user' , args=[user.id]))
-
-    @classmethod
-    def ranking(cls , user):
-        p = user.get_profile()
-        return UserProfile.objects.filter( score__gte = p.score ).count()
-
-    @staticmethod
-    def resource_uri():
-        return ('api_user' , ['id'])
-
-
-class UserHandler(BaseHandler):
-    allowed_methods = ('GET',)
-    fields = ('username', 'score', 'user_uri')
-    anonymous = AnonymousUserHandler
+    fields = ('username', 'score', 'ranking' , )
     model = User
 
     def read(self, request, id=None, *args, **kwargs):
@@ -159,18 +128,36 @@ class UserHandler(BaseHandler):
         return user.get_profile().score
 
     @classmethod
-    def user_uri(cls, user):
-        return "http://%s%s" % (domain , reverse('api_user' , args=[user.id]))
+    def ranking(cls , user):
+        p = user.get_profile()
+        return UserProfile.objects.filter( score__gte = p.score ).count()
 
     @staticmethod
     def resource_uri():
         return ('api_user' , ['id'])
 
 
+class UserHandler(BaseHandler):
+    allowed_methods = ('GET',)
+    fields = ('username', 'score', 'ranking')
+    anonymous = AnonymousUserHandler
+    model = User
+
+    def read(self, request, id=None, *args, **kwargs):
+        self.anonymous.read( self , request , id , *args , **kwargs)
+
+    @classmethod
+    def score(cls, user):
+        return user.get_profile().score
+
+    @staticmethod
+    def resource_uri():
+        return ('api_user' , ['id'])
+
 
 class AnonymousIssueHandler(AnonymousBaseHandler):
     allowed_methods = ('GET',)
-    fields = ('issue_uri', 'title', 'body', ('owner', ('username', 'user_uri',)), 'time_stamp', 'source_type', 'url')
+    fields = ('title', 'body', ('owner', ('username', 'user_uri',)), 'time_stamp', 'source_type', 'url')
     model = IssueBody
 
     def read(self, request, id=None , *args, **kwargs):
@@ -187,11 +174,7 @@ class AnonymousIssueHandler(AnonymousBaseHandler):
 
     @classmethod
     def user_uri(cls, issue):
-        return "http://%s%s" % (domain , reverse('api_user' , args=[issue.owner]))
-
-    @classmethod
-    def issue_uri(cls, issue):
-        return "http://%s%s" % (domain , reverse('api_issue' , args=[issue.id]))
+        return "%s" % reverse('api_user' , args=[issue.owner])
 
     @staticmethod
     def resource_uri():
@@ -201,7 +184,7 @@ class AnonymousIssueHandler(AnonymousBaseHandler):
 class IssueHandler(BaseHandler):
     allowed_methods = ('POST',)
     anonymous = AnonymousIssueHandler
-    fields = ('issue_uri', 'title', 'body', ('owner', ('username', 'user_uri',)), 'time_stamp', 'souce_type', 'url')
+    fields = ('title', 'body', ('owner', ('username', 'user_uri',)), 'time_stamp', 'souce_type', 'url')
     model = IssueBody
 
     def create(self, request):
@@ -229,10 +212,6 @@ class IssueHandler(BaseHandler):
     @classmethod
     def user_uri(cls, issue):
         self.anonymous.user_uri(cls , issue)
-
-    @classmethod
-    def issue_uri(cls, issue):
-        self.anonymous.issue_uri( cls , issue )
 
     @staticmethod
     def resource_uri():
@@ -291,6 +270,4 @@ class MultiplyHandler( BaseHandler ):
     @staticmethod
     def resource_uri():
         return ('api_multiply' , ['id'])
-
-
 
