@@ -238,6 +238,10 @@ class AnonymousMultiplyHandler( AnonymousBaseHandler ):
         page = paginate(request, queryset)
         return page.object_list
 
+    @staticmethod
+    def resource_uri():
+        return ('api_multiply' , ['id'])
+
 class MultiplyHandler( BaseHandler ):
     """ If a user has enough game points the user can multiply the value
         of an issue.
