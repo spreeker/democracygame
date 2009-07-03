@@ -204,7 +204,13 @@ class UserHandlerTest( APIMainTest ):
 
 
 class IssueHandlerTest( APIMainTest ):
-    
+   
+    def init_delegate(self):
+        self.issue1 = Issue.objects.get( title = "issue1")
+        self.issue2 = Issue.objects.get( title = "issue2")
+        self.issue3 = Issue.objects.get( title = "issue3")
+        print self.issue1.id , self.issue2.id , self.issue3.id
+ 
     def test_read_issues(self):
         expected = """[
     {
@@ -214,10 +220,10 @@ class IssueHandlerTest( APIMainTest ):
         "source_type": "url", 
         "owner": {
             "username": "test3", 
-            "resource_uri": "/api/v0/user/6/"
+            "resource_uri": "%(ru3)s"
         }, 
-        "time_stamp": "%(t1)s", 
-        "resource_uri": "/api/v0/issue/6/"
+        "time_stamp": "%(t3)s", 
+        "resource_uri": "%(ri3)s"
     }, 
     {
         "body": "issue2issue2issue2issue2issue2issue2issue2issue2issue2issue2", 
@@ -226,10 +232,10 @@ class IssueHandlerTest( APIMainTest ):
         "source_type": "url", 
         "owner": {
             "username": "test2", 
-            "resource_uri": "/api/v0/user/5/"
+            "resource_uri": "%(ru2)s"
         }, 
         "time_stamp": "%(t2)s", 
-        "resource_uri": "/api/v0/issue/5/"
+        "resource_uri": "%(ri2)s"
     }, 
     {
         "body": "issue1issue1issue1issue1issue1issue1issue1issue1issue1issue1", 
@@ -238,20 +244,25 @@ class IssueHandlerTest( APIMainTest ):
         "source_type": "url", 
         "owner": {
             "username": "test1", 
-            "resource_uri": "/api/v0/user/4/"
+            "resource_uri": "%(ru1)s"
         }, 
-        "time_stamp": "%(t3)s", 
-        "resource_uri": "/api/v0/issue/4/"
+        "time_stamp": "%(t1)s", 
+        "resource_uri": "%(ri1)s"
     }
-]""" % {"t1" : Issue.objects.get( title = "issue1").time_stamp.strftime("%Y-%m-%d %H:%M:%S"),
-        "t2" : Issue.objects.get( title = "issue2").time_stamp.strftime("%Y-%m-%d %H:%M:%S"),
-        "t3" : Issue.objects.get( title = "issue3").time_stamp.strftime("%Y-%m-%d %H:%M:%S"),
+]""" % {"t1" : self.issue1.time_stamp.strftime("%Y-%m-%d %H:%M:%S"),
+        "t2" : self.issue2.time_stamp.strftime("%Y-%m-%d %H:%M:%S"),
+        "t3" : self.issue3.time_stamp.strftime("%Y-%m-%d %H:%M:%S"),
+        "ru1" : reverse("api_user" , args=[self.users[0].id]) , 
+        "ru2" : reverse("api_user" , args=[self.users[1].id]) , 
+        "ru3" : reverse("api_user" , args=[self.users[2].id]) , 
+        "ri1" : reverse("api_issue" , args=[self.issue1.id] ) ,
+        "ri2" : reverse("api_issue" , args=[self.issue2.id] ) ,
+        "ri3" : reverse("api_issue" , args=[self.issue3.pk] ) ,
         }
 
         url = reverse( "api_issues" )
         result = self.client.get( url ).content
         #print result
-        #import os
         #rf = open( "r.txt" , 'w' )
         #cf = open( "c.txt" , 'w' )
         ## open the files in a file diff viewer to see result differences
@@ -273,13 +284,11 @@ class IssueHandlerTest( APIMainTest ):
         "time_stamp": "%(t3)s", 
         "resource_uri": "/api/v0/issue/4/"
     }
-]""" % {"t1" : Issue.objects.get( title = "issue1").time_stamp.strftime("%Y-%m-%d %H:%M:%S") }
+]""" % {"t1" : self.issue1.time_stamp.strftime("%Y-%m-%d %H:%M:%S") }
 
-            url = reverse( "api_issue" , args=[Issue.objects.get( title = "issue1").pk] )
+            url = reverse( "api_issue" , args=[self.issue1.pk] )
             result = self.client.get( url )
             self.assertEqual( expected , result )
-
-
 
 
 #    def test_singlexml(self):
