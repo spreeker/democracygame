@@ -232,7 +232,7 @@ def get_actions(user):
     """ return all possible game actions for a user """
     if not user.is_authenticated()  : return role_to_actions['anonymous citizen']
     userprofile = user.get_profile()
-    actions = role_to_actions[userprofile.role].keys()
+    actions = role_to_actions[userprofile.role]
     return actions
 
 def get_unavailable_actions(user = None):
