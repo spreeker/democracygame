@@ -203,7 +203,84 @@ class UserHandlerTest( APIMainTest ):
         self.assertEqual( expected , result )
 
 
-def IssueHandlerTest( APIMainTest ):
+class IssueHandlerTest( APIMainTest ):
+    
+    def test_read_issues(self):
+        expected = """[
+    {
+        "body": "issue3issue3issue3issue3issue3issue3issue3issue3issue3issue3", 
+        "title": "issue3", 
+        "url": "example.com", 
+        "source_type": "url", 
+        "owner": {
+            "username": "test3", 
+            "resource_uri": "/api/v0/user/6/"
+        }, 
+        "time_stamp": "%(t1)s", 
+        "resource_uri": "/api/v0/issue/6/"
+    }, 
+    {
+        "body": "issue2issue2issue2issue2issue2issue2issue2issue2issue2issue2", 
+        "title": "issue2", 
+        "url": "example.com", 
+        "source_type": "url", 
+        "owner": {
+            "username": "test2", 
+            "resource_uri": "/api/v0/user/5/"
+        }, 
+        "time_stamp": "%(t2)s", 
+        "resource_uri": "/api/v0/issue/5/"
+    }, 
+    {
+        "body": "issue1issue1issue1issue1issue1issue1issue1issue1issue1issue1", 
+        "title": "issue1", 
+        "url": "example.com", 
+        "source_type": "url", 
+        "owner": {
+            "username": "test1", 
+            "resource_uri": "/api/v0/user/4/"
+        }, 
+        "time_stamp": "%(t3)s", 
+        "resource_uri": "/api/v0/issue/4/"
+    }
+]""" % {"t1" : Issue.objects.get( title = "issue1").time_stamp.strftime("%Y-%m-%d %H:%M:%S"),
+        "t2" : Issue.objects.get( title = "issue2").time_stamp.strftime("%Y-%m-%d %H:%M:%S"),
+        "t3" : Issue.objects.get( title = "issue3").time_stamp.strftime("%Y-%m-%d %H:%M:%S"),
+        }
+
+        url = reverse( "api_issues" )
+        result = self.client.get( url ).content
+        #print result
+        #import os
+        #rf = open( "r.txt" , 'w' )
+        #cf = open( "c.txt" , 'w' )
+        ## open the files in a file diff viewer to see result differences
+        #rf.write(result)
+        #cf.write(expected)
+        self.assertEqual( expected , result )
+
+        def test_read_issue(self):
+            expected = """[
+    {
+        "body": "issue1issue1issue1issue1issue1issue1issue1issue1issue1issue1", 
+        "title": "issue1", 
+        "url": "example.com", 
+        "source_type": "url", 
+        "owner": {
+            "username": "test1", 
+            "resource_uri": "/api/v0/user/4/"
+        }, 
+        "time_stamp": "%(t3)s", 
+        "resource_uri": "/api/v0/issue/4/"
+    }
+]""" % {"t1" : Issue.objects.get( title = "issue1").time_stamp.strftime("%Y-%m-%d %H:%M:%S") }
+
+            url = reverse( "api_issue" , args=[Issue.objects.get( title = "issue1").pk] )
+            result = self.client.get( url )
+            self.assertEqual( expected , result )
+
+
+
 
 #    def test_singlexml(self):
 #        obj = TestModel.objects.all()[0]
@@ -224,151 +301,3 @@ def IssueHandlerTest( APIMainTest ):
 #        result = self.client.get('/api/abstract.json',
 #                HTTP_AUTHORIZATION=self.auth_string).content
 #                
-#        expected = """[
-#    {
-#        "id": 1, 
-#        "some_other": "something else", 
-#        "some_field": "something here"
-#    }, 
-#    {
-#        "id": 2, 
-#        "some_other": "something else", 
-#        "some_field": "something here"
-#    }
-#]"""
-#        
-#        self.assertEquals(result, expected)
-#
-#    def test_specific_id(self):
-#        ids = (1, 2)
-#        be = """{
-#    "id": %d, 
-#    "some_other": "something else", 
-#    "some_field": "something here"
-#}"""
-#        
-#        for id_ in ids:
-#            result = self.client.get('/api/abstract/%d.json' % id_,
-#                    HTTP_AUTHORIZATION=self.auth_string).content
-#                    
-#            expected = be % id_
-#            
-#            self.assertEquals(result, expected)
-#
-#class IncomingExpressiveTests(MainTests):
-#    def init_delegate(self):
-#        e1 = ExpressiveTestModel(title="foo", content="bar")
-#        e1.save()
-#        e2 = ExpressiveTestModel(title="foo2", content="bar2")
-#        e2.save()
-#
-#    def test_incoming_json(self):
-#        outgoing = simplejson.dumps({ 'title': 'test', 'content': 'test',
-#                                      'comments': [ { 'content': 'test1' },
-#                                                    { 'content': 'test2' } ] })
-#    
-#        expected = """[
-#    {
-#        "content": "bar", 
-#        "comments": [], 
-#        "title": "foo"
-#    }, 
-#    {
-#        "content": "bar2", 
-#        "comments": [], 
-#        "title": "foo2"
-#    }
-#]"""
-#    
-#        result = self.client.get('/api/expressive.json',
-#            HTTP_AUTHORIZATION=self.auth_string).content
-#
-#        self.assertEquals(result, expected)
-#        
-#        resp = self.client.post('/api/expressive.json', outgoing, content_type='application/json',
-#            HTTP_AUTHORIZATION=self.auth_string)
-#            
-#        self.assertEquals(resp.status_code, 201)
-#        
-#        expected = """[
-#    {
-#        "content": "bar", 
-#        "comments": [], 
-#        "title": "foo"
-#    }, 
-#    {
-#        "content": "bar2", 
-#        "comments": [], 
-#        "title": "foo2"
-#    }, 
-#    {
-#        "content": "test", 
-#        "comments": [
-#            {
-#                "content": "test1"
-#            }, 
-#            {
-#                "content": "test2"
-#            }
-#        ], 
-#        "title": "test"
-#    }
-#]"""
-#        
-#        result = self.client.get('/api/expressive.json', 
-#            HTTP_AUTHORIZATION=self.auth_string).content
-#            
-#        self.assertEquals(result, expected)
-#
-#    def test_incoming_invalid_json(self):
-#        resp = self.client.post('/api/expressive.json',
-#            'foo',
-#            HTTP_AUTHORIZATION=self.auth_string,
-#            content_type='application/json')
-#        self.assertEquals(resp.status_code, 400)
-#
-#    def test_incoming_yaml(self):
-#        if not yaml:
-#            return
-#            
-#        expected = """- comments: []
-#  content: bar
-#  title: foo
-#- comments: []
-#  content: bar2
-#  title: foo2
-#"""
-#          
-#        self.assertEquals(self.client.get('/api/expressive.yaml',
-#            HTTP_AUTHORIZATION=self.auth_string).content, expected)
-#
-#        outgoing = yaml.dump({ 'title': 'test', 'content': 'test',
-#                                      'comments': [ { 'content': 'test1' },
-#                                                    { 'content': 'test2' } ] })
-#            
-#        resp = self.client.post('/api/expressive.json', outgoing, content_type='application/x-yaml',
-#            HTTP_AUTHORIZATION=self.auth_string)
-#        
-#        self.assertEquals(resp.status_code, 201)
-#        
-#        expected = """- comments: []
-#  content: bar
-#  title: foo
-#- comments: []
-#  content: bar2
-#  title: foo2
-#- comments:
-#  - {content: test1}
-#  - {content: test2}
-#  content: test
-#  title: test
-#"""
-#        self.assertEquals(self.client.get('/api/expressive.yaml', 
-#            HTTP_AUTHORIZATION=self.auth_string).content, expected)
-#
-#    def test_incoming_invalid_yaml(self):
-#        resp = self.client.post('/api/expressive.yaml',
-#            '  8**sad asj lja foo',
-#            HTTP_AUTHORIZATION=self.auth_string,
-#            content_type='application/yaml')
-#        self.assertEquals(resp.status_code, 400)
