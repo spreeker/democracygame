@@ -1,4 +1,3 @@
-# by Thijs Coenen for the Emocracy project october 2008
 from emocracy.voting.models import blank_votes
 from emocracy.voting.models import Tag
 from emocracy.voting.models import normal_votes
