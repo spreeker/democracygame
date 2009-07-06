@@ -9,7 +9,10 @@ from django.core.paginator import EmptyPage
 from django.db.models import Q
 from piston.handler import BaseHandler, AnonymousBaseHandler
 from piston.utils import rc
+from piston.utils import validate
 
+from emocracy.api.forms import IssueForm
+from emocracy.api.forms import VoteForm
 from emocracy.issues_content.models import IssueBody
 from emocracy.voting.models import Issue
 from emocracy.voting.models import Vote
@@ -86,18 +89,15 @@ class VoteHandler(BaseHandler):
         return "%s" % reverse('api_user' , args=[vote.owner.id])
 
     ## TODO use the @validate decorator of piston
+    @validate( VoteForm )
     def create(self, request , issue=None , vote=None):
-        attrs = { issue:issue , vote:vote }
+        attrs = { 'issue' : issue , 'vote' : vote }
         attrs.update(self.flatten_dict(request.POST))
 
         if self.exists(**attrs):
             return rc.DUPLICATE_ENTRY
-        if not Issue.exists( id = attrs['issue']):
-            return rc.BAD_REQUEST
         if not attrs.has_key('keep_private'):
             attrs['keep_private'] = False
-        elif not ( attrs['keep_private'] == False or attrs['keep_private'] == True ):
-            return rc.BAD_REQUEST 
 
         vote = gamelogic.actions.vote( 
                 request.user , 
@@ -108,11 +108,7 @@ class VoteHandler(BaseHandler):
         )
         return rc.CREATED 
 
-    @staticmethod
-    def resource_uri():
-        return ('api_vote' , ['issue' , 'vote'])
-   
-
+    
 class AnonymousUserHandler(AnonymousBaseHandler):
     allowed_methods = ('GET',)
     fields = ('username', 'score', 'ranking' , )

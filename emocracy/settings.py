@@ -37,8 +37,8 @@ TIME_ZONE = 'Europe/Amsterdam'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-#LANGUAGE_CODE = 'en-us'
-LANGUAGE_CODE = 'nl'
+LANGUAGE_CODE = 'en-us'
+#LANGUAGE_CODE = 'nl'
 
 SITE_ID = 1
 
@@ -79,12 +79,12 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
 #    'django.contrib.csrf.middleware.CsrfMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware', ## !! comment out in production.
-    'django.middleware.locale.LocaleMiddleware',
     # for the transaction middleware see :
     # http://docs.djangoproject.com/en/dev/topics/db/transactions/
-    'django.middleware.transaction.TransactionMiddleware',
+#    'django.middleware.transaction.TransactionMiddleware',
 )
 
 ROOT_URLCONF = 'emocracy.urls'
@@ -109,7 +109,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
     'django.core.context_processors.request',
-    'emocracy.web.context_processors.profile',
 )
 
 
