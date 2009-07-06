@@ -32,8 +32,10 @@ def paginate(request, qs):
     return page
 
 class IssueVotesHandler(AnonymousBaseHandler):
-    """Returns the vote count for an issue
+    """
+       Returns the vote count for an issue
        issue id should be provided
+       Anonymous function it is global data not user specific
     """ 
     allowed_methods = ('GET',)
     fields = ('vote', 'vote_count',)
@@ -62,7 +64,8 @@ class IssueVotesHandler(AnonymousBaseHandler):
     
 
 class VoteHandler(BaseHandler):
-    """ returns the votes for an user. 
+    """
+        returns the votes for an user. 
         makes it able to post to an user
     """
     allowed_methods = ('GET', 'POST' )
@@ -187,6 +190,7 @@ class IssueHandler(BaseHandler):
     fields = ('title', 'body', ('owner', ('username', 'user_uri',)), 'time_stamp', 'souce_type', 'url')
     model = IssueBody
 
+    @validate(IssueForm)
     def create(self, request):
         attrs = self.flatten_dict(request.POST)
 
