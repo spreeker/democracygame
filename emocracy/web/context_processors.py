@@ -1,5 +1,3 @@
-# by Thijs Coenen for the Emocracy project october 2008
-
 def profile(request):
     """This context processor adds a user's userprofile to the context of the
     template engine if a user is logged in."""

@@ -49,6 +49,8 @@ class OAuthTests(APIMainTest):
         self.consumer = Consumer(name='Test Consumer', description='Test', status='accepted')
         self.consumer.generate_random_codes()
         self.consumer.save()
+        self.oa_atoken = None 
+        self.test_handshake()
 
     def tearDown(self):
         super(OAuthTests, self).tearDown()
@@ -105,10 +107,13 @@ class OAuthTests(APIMainTest):
         atoken = Token.objects.get(key=oa_atoken.key, token_type=Token.ACCESS)
         self.assertEqual(atoken.secret, oa_atoken.secret)
 
+        self.oa_atoken = oa_atoken
+
 
 class IssueVotesHandlerTest(APIMainTest):
     """
     testing the IssueVoteHandler which can be accessed anonymously
+    returns json with vote_kind : vote_count for that kind of vote.
     we are only seeing very few votes in our test data but you will get the idea
     how other votes values are returned.
     """
@@ -136,23 +141,92 @@ class IssueVotesHandlerTest(APIMainTest):
 }"""
 
 
-class VoteHandlerTest(APIMainTest):
+class VoteHandlerTest( OAuthTests ):
     """ test voting.
-        TODO who to do oauth requests??
+
+        we do signed oauth requests , acces token is created by
+        OAuthTests.
+
+        auhtenticated user is test1 , oa_atoken is for user test1.
     """
+    
+    def do_oauth_request(self, parameters , http_method = 'POST' ):
+        
+        oaconsumer = oauth.OAuthConsumer(self.consumer.key, self.consumer.secret)
+
+        request = oauth.OAuthRequest.from_consumer_and_token(
+                oaconsumer, 
+                http_method=http_method , 
+                token=self.oa_atoken ,
+                http_url='http://testserver%s' % reverse( 'api_votes' ))
+        
+        request.parameters.update( parameters )
+        request.sign_request(self.signature_method, oaconsumer, self.oa_atoken )
+        
+        if http_method == 'POST':
+            response = self.client.post( reverse( 'api_votes', ) , request.parameters )
+        else :
+            response = self.client.get( reverse( 'api_votes', ) , request.parameters )
+
+        return response
 
     def test_duplicate_vote(self):
-        pass
+        """ 
+        Duplicate voting should not be allowed.
+        In the creation of parent class TestActions we created 3 issues
+        each user has his own vote on its own issue. 
+        """
+        parameters = {
+                'vote' : 1 ,
+                'issue' : Issue.objects.get( title = "issue1").pk ,
+                }
+        response = self.do_oauth_request( parameters )
+        # conflict / Duplicate
+        self.assertEqual( 409 , response.status_code )
 
-    def test_non_exsitent_vote(self):
-        pass
+    def test_non_exsitent_issue(self):
+        parameters = {
+                'vote' : -1 ,
+                'issue' : 99999 ,
+                }
+        response = self.do_oauth_request( parameters )
 
-    def test_vote_own_issue(self):
-        pass
+        self.assertEqual( 400 , response.status_code )
 
     def test_vote(self):
-        pass
+        """
+        Do a negative vote on issue 3. 
+        this should succeed. with a 201 CREATED status.
+        """
+        parameters = {
+                'vote' : -1 ,
+                'issue' : Issue.objects.get( title = "issue3").pk ,
+                }
 
+        response = self.do_oauth_request( parameters )
+        self.assertEqual(201, response.status_code)
+
+    def test_read_votes(self):
+        # there should be only one vote for user test1
+        from emocracy.voting.models import Vote
+        vote = Vote.objects.get( owner = self.users[0].id ) 
+        issue1 = Issue.objects.get( title = "issue1")
+
+        response = self.do_oauth_request( {} , http_method='GET' ) 
+        expected = """[
+    {
+        "vote": 1, 
+        "time_stamp": "%(t1)s", 
+        "user_uri": "%(ru1)s", 
+        "issue_uri": "%(ri1)s", 
+        "keep_private": false
+    }
+]""" % {"t1" : vote.time_stamp.strftime("%Y-%m-%d %H:%M:%S"),
+        "ru1" : reverse("api_user" , args=[self.users[0].id]) , 
+        "ri1" : reverse("api_issue" , args=[issue1.id] ) ,
+        }
+        self.assertEqual( expected , response.content )
+        self.assertEqual( 200 , response.status_code )
 
 
 class UserHandlerTest( APIMainTest ):
@@ -288,6 +362,8 @@ class IssueHandlerTest( APIMainTest ):
             url = reverse( "api_issue" , args=[self.issue1.pk] )
             result = self.client.get( url )
             self.assertEqual( expected , result )
+
+
 
 
 #    def test_singlexml(self):
