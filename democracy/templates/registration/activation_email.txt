@@ -1,0 +1,9 @@
+{% load i18n %}
+
+{% blocktrans %}
+Hi almost new democracy user !
+
+Please activate your democracy account by going to this url: 
+{% endblocktrans %}
+
+http://{{ site }}{% url registration_activate activation_key %}
