@@ -42,7 +42,6 @@
 		<a href="{% url web_issue_list %}">{% trans "all issues" %}</a><br />
 		<a href="{% url web_issues_for_user user.username %}">{% trans "my issues" %}</a><br />
 		<a href="{% url web_votes_for_user user.username %}">{% trans "my votes" %}</a><br /><br />
-		<a href="{% url web_poll_list %}">{% trans "polls" %}</a><br /><br />
 		<a href="{% url userprofile user.username %}">{% trans "my profile" %}</a><br />
 		<a href="{% url logout %}">{% trans "log out" %}</a> 
 		</p>
@@ -53,7 +52,6 @@
             <p>{% trans "Anonymous users can still vote on issues." %} </p>
 			<span class="system">
                 <a href="{% url web_issue_list %}">{% trans "all issues" %} </a><br />
-                <a href="{% url web_poll_list %}">{% trans "polls" %} </a><br /><br />
 			</span>
 {% endif %}
     <form action="/i18n/setlang/" method="post">
