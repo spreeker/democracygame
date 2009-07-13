@@ -1,4 +1,5 @@
 database.sqlite3
+democracy_log.txt
 emocracy_log.txt
 thirdparty_log.txt
 settings_local.py
