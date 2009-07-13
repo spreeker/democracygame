@@ -118,15 +118,16 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'django.contrib.sessions',
     'django.contrib.markup',
+
     'debug_toolbar', # comment out in production!!
+
     'democracy.gamelogic',
     'democracy.profiles',
     'democracy.api',
     'democracy.web',
     'democracy.voting',
     'democracy.issue_content',
-    # There are currently 2 tests failing for registration due to template 
-    # inheritance. 
+
 	'registration',
     'piston',
 )
