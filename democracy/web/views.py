@@ -26,21 +26,16 @@ from util import issue_sort_order_helper
 import gamelogic.actions
 import anonymous_actions
 
-from web.forms import TagForm
 from web.forms import CastVoteFormFull
 from web.forms import IssueFormNew
 from web.forms import HiddenOkForm
-from web.forms import TagSearchForm
-from web.forms import TagForm2
 from web.forms import AuthorizeRequestTokenForm
 from web.forms import NormalVoteForm
 from web.forms import BlankVoteForm
 from democracy.voting.models import votes_to_description
-from democracy.voting.models import Tag
-from democracy.voting.models import TaggedIssue
 from democracy.voting.models import Issue
 from democracy.voting.models import Vote
-from democracy.issue_content.models import IssueBody
+from democracy.issue.content.models import IssueBody
 
 from piston.models import Token
 
@@ -98,14 +93,13 @@ class ListIssueBaseView(object):
             user_votes, vote_css_class = vote_helper_authenticated(request.user, current_page.object_list)
         else:
             user_votes, vote_css_class = vote_helper_anonymous(request, current_page.object_list)
-        # grab the tags for each Issue
-        tags_for_objects = [Tag.objects.get_for_issue(x) for x in current_page.object_list]
+        
         self.extra_context.update({
             'sort_order' : sort_order,
             'current_page' : current_page,
             'num_pages' : paginator.num_pages,
             'show_more_info_link' : True,
-            'object_list' : zip(current_page.object_list, user_votes, vote_css_class, tags_for_objects),
+            'object_list' : zip(current_page.object_list, user_votes, vote_css_class, ) ,
             'actions'   : gamelogic.actions.get_actions(request.user),
             'unavailable_actions' : gamelogic.actions.get_unavailable_actions(request.user),
         })
@@ -115,20 +109,6 @@ class ListIssueBaseView(object):
                                     )
 
 list_issues = ListIssueBaseView()
-
-class IssuesForTagView(ListIssueBaseView):
-    """
-    This class shows the Issues that go with a certain tag in Emocracy.
-    """
-
-    def issue_queryset(self, request, *args, **kwargs):
-        tag_pk = kwargs.pop('tag_pk')
-        tag = get_object_or_404(Tag, pk = tag_pk)
-        queryset = tag.get_issues()
-        self.extra_context.update( {'page_title' : _(u'Issues tagged with %(tagname)s' % {'tagname' : tag.name})})
-        return queryset
-
-issue_list_tag = IssuesForTagView()
 
 
 class IssuesForUserView(ListIssueBaseView):
@@ -278,7 +258,6 @@ class DetailView(OneIssueBaseView):
             'vote_class' : css[0],
             'vote_text' : votes[0],
             'title' : u'ISSUE DETAIL VIEW',
-            'tags' : Tag.objects.get_for_issue(issue),
             'clean_request_path_for_form' : request.path + u'?' + self.clean_GET_parameters(request).urlencode(),            
         }        
         if form_type in ['voteform','voteblankform', 'tagform']:
@@ -351,89 +330,6 @@ def issue_propose(request, issue_no = None):
     context = RequestContext(request, {"form" : form})
     return render_to_response("web/issue_propose.html", context)
 
-# ------------------------------------------------------------------------------
-# -- Tagging related view functions --------------------------------------------
-
-def tagform(request, issue_pk):
-    """
-    This view returns an HTML fragment containing a TagForm instance.
-    This view exists to serve asynchrounous javascript on the client side.
-    """
-    pk = int(issue_pk)
-    form = TagForm({'issue_no' : pk})
-    popular_tags = Tag.objects.get_popular(10)
-    extra_context = RequestContext(request, {
-        'form' : form,
-        'tags' : popular_tags,
-    })
-    context = RequestContext(request, extra_context)
-    return render_to_response('web/tagform.html', context)
-
-def ajaxtag(request, pk):
-    """
-    This view handles jQuery enhanced and submitted through ajax calls to the
-    tagging system.
-    """
-    pk = int(pk)
-    issue = get_object_or_404(Issue, pk = pk)
-    if request.method == 'POST':
-        form = TagForm(request.POST)
-        if form.is_valid():
-            tag_object, msg = gamelogic.actions.tag(request.user, issue, form.cleaned_data["tags"])
-            reply = simplejson.dumps({'msg' : msg}, ensure_ascii = False)
-            return HttpResponse(reply, mimetype = 'application/json')
-        else:
-            reply = simplejson.dumps({'msg' : _(u'No tag added')}, ensure_ascii = False)
-            return HttpResponse(reply, mimetype = 'application/json')
-
-def search_tag(request):
-    # TODO : fix unicode in request parameters.
-    # (Conrado says it is not allowed, google does it anyway ...)
-    # TODO FIXME XSS handle the way the search_string shows up in the page -
-    # since that is not handled cleanly/correctly at the moment.
-    """This view let's users search for tags."""
-    if request.method == 'POST':
-        form = TagSearchForm(request.POST)
-        if form.is_valid():
-            search_string = form.cleaned_data["search_string"]
-        else:
-            search_string = u''
-    else:
-        form = TagSearchForm()
-        search_string = request.GET.get(u'search_string', u'')
-
-    if not search_string == u'':
-        qs = Tag.objects.filter(name__icontains = search_string)
-    else:
-        qs = Tag.objects.none()
-    
-    paginator = Paginator(qs, 20)
-    
-    # Grab page number from the HTTP GET parameters if present.
-    try:
-        page_no = int(request.GET.get('page', '1'))
-    except ValueError:
-        page_no = 1
-    
-    # See wether requested page is available at all from the paginator.
-    try:
-        current_page = paginator.page(page_no)
-    except (EmptyPage, InvalidPage):
-        current_page = paginator.page(paginator.num_pages)
- 
-    if search_string:
-        form.fields["search_string"].initial = search_string # TODO see wether this can be done more cleanly
-    
-    context = RequestContext(request, {
-        'form' : form,
-        'current_page' : current_page,
-        'search_string' : search_string,
-        'num_pages' : paginator.num_pages,
-    })
-    return render_to_response('web/search_tag.html', context)
-
-# ------------------------------------------------------------------------------
-
 def voteform(request, issue_no):
     """
     This view returns an HTML fragment containing a CastVoteFormFull instance.
@@ -503,7 +399,7 @@ def oauth_user_auth(request, *args):
             request_token = Token.objects.get(key = oauth_token)
         except Token.DoesNotExist:
             msg = u'Token in URL not OK'
-            request_token = 'FUCK'
+            request_token = 'is not here'
             form = None
         else:
             msg = u'Token in URL OK'

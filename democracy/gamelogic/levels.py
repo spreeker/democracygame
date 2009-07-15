@@ -72,7 +72,7 @@ upgrade = {
 }
 
 def change_score(userprofile, score):
-
+    """ if the score changes , the level might change too """
     userprofile.score += score
     while upgrade[userprofile.role](userprofile): 
         #does the level update checks

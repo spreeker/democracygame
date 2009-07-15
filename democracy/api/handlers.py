@@ -13,7 +13,7 @@ from piston.utils import validate
 
 from democracy.api.forms import IssueForm
 from democracy.api.forms import VoteForm
-from democracy.issue_content.models import IssueBody
+from democracy.issue.content.models import IssueBody
 from democracy.voting.models import Issue
 from democracy.voting.models import Vote
 from democracy.profiles.models import UserProfile

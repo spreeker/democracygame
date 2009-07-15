@@ -1,4 +1,5 @@
-"""This is the core of the Emocracy voting system. The Issue model in this 
+"""
+This is the core of the democracy voting system. The Issue model in this 
 module can be generically linked to anything that users whould be able to vote
 on.
 
@@ -18,15 +19,15 @@ from django.contrib.contenttypes import generic
 from django.utils.translation import ugettext as _
 
 from voting.managers import IssueManager
+from voting.managers import VoteManager 
 
 # ADD NEW POSSIBILITIES WITH NEW INTEGERS, THEY NEED TO BE UNIQUE
 # LEAVE OLD ENTRIES SO AS NOT TO MESS THE DATABASE UP!
 
 normal_votes = (
-    (-1 , _(u"Against")),
+    (-1, _(u"Against")),
     (1 , _(u"For")),
 )
-
 blank_votes = [
     # content related problems with issues:
     (10, _(u'Unconvincing')),
@@ -35,7 +36,7 @@ blank_votes = [
     # form related problems with issues":
     (13, _(u"Needs more work")),
     (14, _(u"Badly worded")),
-    (15,  _(u"Duplicate")),
+    (15, _(u"Duplicate")),
     (16, _(u'Unrelated source')),
     # personal considerations:
     (17, _(u'I need to know more')),
@@ -74,9 +75,8 @@ class Issue(models.Model):
     # Denormalized data - for sort order
     offensiveness = models.IntegerField(default = 0)
     score = models.IntegerField(default = 0)
-    votes = models.IntegerField(default = 0)
     hotness = models.IntegerField(default = 0)
-    
+    votes = models.IntegerField(default = 0)
     objects = IssueManager()
     
     class Meta:
@@ -84,20 +84,8 @@ class Issue(models.Model):
 
     def __unicode__(self):
         return self.title
-
-    def vote(self, user, vote_int, keep_private):
-        new_vote = Vote.objects.create(
-            owner = user,
-            issue = self,
-            vote = vote_int,
-            keep_private = keep_private,
-            time_stamp = datetime.now()
-        )
-        self.votes += 1
-        self.save()
-        return new_vote
-
-    def vote_count( self ):
+   
+    def vote_count(self):
         """return dict with vote : value as key : value pair
         """
         from django.db import connection
@@ -116,42 +104,10 @@ class Issue(models.Model):
 
         return votes       
 
-    def tag(self, user, tag_string):
-        # this code should not be here!!!
-        # Get the tag object and if it does not exist yet, create it.
-        try:
-            tag = Tag.objects.get(name = tag_string)
-            tag.count += 1
-        except Tag.DoesNotExist:
-            tag = Tag.objects.create(
-                name = tag_string,
-                first_suggested_by = user,
-                count = 1
-            )
-        # Make tag visible if it is used enough times.
-        tag.save()
-        # Find out wether the user has tagged this issue already with this tag.
-        try:
-            ti = TaggedIssue.objects.create(
-                issue = self,
-                tag = tag,
-                user = user
-            )
-            first_time = True
-        except IntegrityError:
-            first_time = False
-        return tag, first_time
-
             
-class VoteManager(models.Manager):
-    def get_user_votes( self , user ):
-        user_votes = Vote.objects.filter(owner = user, is_archived = False).order_by("time_stamp").reverse()
-        # beter paginate this qs when you use it!
-        return user_votes 
 
-    
 class Vote(models.Model):
-    api_interface = models.CharField(max_length = 50, blank = True)
+    api_interface = models.CharField(max_length=50, blank=True, null=True )
     owner = models.ForeignKey(User)
     issue = models.ForeignKey(Issue)
     vote = models.IntegerField(choices = possible_votes)
@@ -164,46 +120,5 @@ class Vote(models.Model):
     def __unicode__(self):
         return unicode(self.vote) + u" on \"" + self.issue.title + u"\" by " + self.owner.username
 
-# Rationale: Django-tagging does not keep counts of the number of tags for an
-# model. I need that number because a new tag should only show up after
-# a certain number of users have used it (on any Issue, so Model wide counts
-# will suffice). On the other hand the only things that can be tagged in
-# Emocracy are Issues/stuff you can vote on - so there is no need to user the
-# generic foreign key facilities in Django
-
-# OPTION use default tagging. but wrap if with game specific tagging functions
-# this should be in a separate taggin app!!
-
-class TagManager(models.Manager):
-    def get_for_issue(self, issue, max_num = 10):        
-        tag_ids = TaggedIssue.objects.filter(issue = issue).values_list('tag', flat = True)
-        return self.filter(pk__in = tag_ids).filter(visible = True).distinct().order_by('count').reverse()[:max_num]
-    def get_popular(self, max_num = 10):
-        return self.all().order_by('count').reverse()[:max_num]
-        
-
-class Tag(models.Model):
-    """This is a tag, a """
-    name = models.CharField(max_length = 50, unique = True)
-    first_suggested_by = models.ForeignKey(User, null = True)
-    points_awarded = models.BooleanField(default = False)
-    visible = models.BooleanField(default = False)
-    count = models.IntegerField(default = 0) # denormalized ... 
-    objects = TagManager()
-    
-    def __unicode__(self):
-        return self.name
-    
-    def get_issues(self):
-        issue_ids = TaggedIssue.objects.filter(tag = self).values_list('issue', flat = True)
-        return Issue.objects.filter(pk__in = issue_ids).distinct()
-    
-    
-class TaggedIssue(models.Model):
-    issue = models.ForeignKey(Issue)
-    tag = models.ForeignKey(Tag)
-    user = models.ForeignKey(User)
-
     class Meta:
-        unique_together = (('issue', 'tag', 'user'),)
-
+        db_table = 'voting_vote'
