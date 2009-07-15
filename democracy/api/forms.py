@@ -1,7 +1,7 @@
 from django import forms
 from voting.models import normal_votes
 from voting.models import Issue
-from issue_content.models import source_types
+from issue.content.models import source_types
 
 class IssueForm(forms.Form):
     title = forms.CharField(max_length = 100)

@@ -7,15 +7,11 @@ body {
     margin: 0em;
     padding: 0em;
     background-color:white; 
-    background-color: #234F32;
-    color:white; 
     font-family:sans-serif, helvetica, arial;
     }
 
 a   {
     text-decoration:underline;
-    color:#003366;
-    color:#FFDD50;
     }
 
 .system {
@@ -23,25 +19,20 @@ a   {
     font-size: 80%;
     font-family: sans-serif;
     line-height: 120%;
-    color : white;
     margin : 1em 0em ;
 }
 
 /* header style declarations */
 
 #header {
-    background-color: #092E20;
-    color: white;
     text-align : center;
     }
 
 #header > h1 > a {
-    color: white;
     text-decoration: none
     }
 
 #header > a {
-    color: white;
 }
 
 #header > #thegame {
@@ -51,10 +42,7 @@ a   {
 
 /* messagebar*/
 #messagebar {
-    color:black;
     min-height : 30px ;
-    background-color:#ffff99;
-    background-color:#92CC47;
     padding:0em 1em 0em 1em;
     text-align : center ;
 }
@@ -65,8 +53,6 @@ a   {
     float : left ;
     width : 200px ;
     font-family: sans-serif;
-    background-color: #234F32;
-    color: white;
     padding-top : 1em;
 }
 

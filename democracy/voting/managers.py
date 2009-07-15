@@ -24,7 +24,8 @@ class IssueManager(models.Manager):
         )        
         return new_issue
 
-    def with_counts( self , offset = 0 , limit = 100):
+    def with_counts(self, offset=0, limit=100):
+        #TODO make this a qs?
         """ return issues with total votes on them 
             issue.vote # vote value
             issue.vote_count # count of vote value
@@ -49,3 +50,32 @@ class IssueManager(models.Manager):
             i.vote_count = row[4]
             result_list.append(i)
         return result_list
+
+class VoteManager(models.Manager):
+    def get_user_votes(self, user):
+        return Vote.objects.filter(owner=user, is_archived=False).order_by("time_stamp").reverse()
+
+    def vote(self, vote):
+        """
+        Archive old votes by switching the is_archived flag to True
+        for all the previous votes on <issue> by <user>.
+        And we check for and dismiss a repeated vote.
+        We save old votes for research, probable interesting
+        opinion changes.
+        """
+        votes = self.filter(owner=vote.owner, is_archived=False, issue=vote.issue)
+        voted_already = False
+        repeated_vote = False
+        if votes:
+            voted_already = True
+            for v in votes:
+                if vote.vote == v.vote: #check if you do the same vote again.
+                    repeated_vote = True
+                else:
+                    v.is_archived = True
+                    v.save()            
+
+        if not repeated_vote:
+            vote.save()
+
+        return repeated_vote, voted_already

@@ -20,6 +20,8 @@ class TestUsers(TestCase):
         self.load_users() # loads users from DB or creates them
         levels.MIN_SCORE_ACTIVE_CITIZENS = 10
         levels.MAX_OPINION_LEADERS = 2
+        score.PROPOSE_SCORE = 2
+        score.PROPOSE_VOTE_SCORE = 1
 
     def tearDonw(self):
         User.objects.delete()        
@@ -135,12 +137,12 @@ class TestActionData(TestUsers):
     and do other actions with
     """
 
-    issues = [ "issue1" , "issue2" , "issue3" ]
+    issues = [ "issue1", "issue2", "issue3" ]
 
     def setUp(self):
         super(TestActionData, self).setUp()
 
-        self.reset( levels.MIN_SCORE_ACTIVE_CITIZENS , "active citizen" )
+        self.reset( levels.MIN_SCORE_ACTIVE_CITIZENS, "active citizen" )
         self.load_users()
         # make sure default values in db are now ok
         self.assertEqual( User.objects.count() , 3 )
@@ -154,20 +156,18 @@ class TestActionData(TestUsers):
         # this get run multiple times , dubplicate issues should not be created
         self.assertEqual( Issue.objects.count() , len(self.issues))
 
-
-
     def tearDown(self):
-        super(TestActionData , self).tearDown()
+        super(TestActionData, self).tearDown()
 
-        qs = Issue.objects.filter( title__startswith = "issue" )
+        qs = Issue.objects.filter( title__startswith="issue" )
         qs.delete()
         Vote.objects.all().delete()
         MultiplyIssue.objects.all().delete()
 
-    def do_vote(self , user , issue , vote ):
+    def do_vote(self, user, issue, vote ):
         profile = user.get_profile()
         vote_func = actions.role_to_actions[profile.role]['vote']
-        vote_func( user , issue , vote , False) 
+        vote_func(user, issue, vote, False) 
 
     def do_multiply(self , user , issue ):
         # only Opinion leaders can multiply 
@@ -179,46 +179,49 @@ class TestActionData(TestUsers):
 
         multiply_func = actions.role_to_actions[self.profiles[0].role]['multiply']
 
-        multiply_func( user , issue )
+        multiply_func(user, issue)
 
 
 class TestActions(TestActionData):
     """ test all different actions a user can do """
 
     def test_vote(self):
-
-        issue1 = Issue.objects.get( title = "issue1" )  
-        issue2 = Issue.objects.get( title = "issue2" )  
-
-        self.do_vote( self.users[0] , issue2 , 1 )
-
-        self.load_users()
-
-        delta = score.PROPOSE_SCORE + levels.MIN_SCORE_ACTIVE_CITIZENS
-        # check if score has changed
-        self.assertEqual( self.profiles[0].score - delta , score.VOTE_SCORE )
-        # check if identical vote changes nothing 
-        self.do_vote( self.users[0] , issue1 , 1 ) 
         # in the test setup we define 3 issues. 
         # and an issue owner also votes on it.
         # 3 issues is 3 default votes
-        self.assertEqual( self.profiles[0].score - delta , score.VOTE_SCORE )
 
-        self.do_vote( self.users[0] , issue2 , 1 ) 
+        issue1 = Issue.objects.get(title="issue1")  
+        issue2 = Issue.objects.get(title="issue2")  
+
+        self.do_vote(self.users[0], issue2, 1 )
+
+        self.load_users() 
+        delta = score.PROPOSE_SCORE + levels.MIN_SCORE_ACTIVE_CITIZENS 
+        # check if score has changed after vote
+        self.assertEqual( self.profiles[0].score - delta, score.VOTE_SCORE )
+        # check if identical repeated vote on own issue changes nothing
+        self.do_vote( self.users[0], issue1, 1 ) 
+        self.load_users() 
+        self.assertEqual( self.profiles[0].score - delta, score.VOTE_SCORE )
+
+        self.do_vote( self.users[0], issue2 , 1 ) 
         # score should stay the same
-        self.assertEqual( self.profiles[0].score - delta , score.VOTE_SCORE )
+        self.assertEqual( self.profiles[0].score - delta, score.VOTE_SCORE )
+
         # check if different vote gets into the database
         allVotes = Vote.objects.all().count()
-        self.assertEqual( allVotes , 4 )
+        self.assertEqual( allVotes, 4 )
+
         # now we change our mind a lot. this should result in no extra point and just 1 extra vote
         # in the database
-        self.do_vote( self.users[0] , issue2 , -1 ) 
-        self.do_vote( self.users[0] , issue2 , -1 ) 
-        self.do_vote( self.users[0] , issue1 , 1 ) 
+        self.do_vote( self.users[0], issue2, -1 ) 
+        self.do_vote( self.users[0], issue2, -1 ) 
+        self.do_vote( self.users[0], issue1, 1 ) 
 
+        self.load_users() 
         self.assertEqual( self.profiles[0].score - delta , score.VOTE_SCORE )
         allVotes = Vote.objects.all().count()
-        self.assertEqual( allVotes , 5 )
+        self.assertEqual( allVotes, 5 )
 
     def test_multiply(self):
                
