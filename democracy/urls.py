@@ -10,7 +10,9 @@ from piston.authentication import oauth_request_token, oauth_user_auth, oauth_ac
 import settings
 
 urlpatterns = patterns('',
-    (r'^web/', include('democracy.web.urls')),
+    #(r'^web/', include('democracy.web.urls')),
+    url(r'$' , 'test.views.index', ),
+    (r'^test/', include('test.urls')),
     (r'^api/v0/', include('api.urls')),
     # Example:
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
@@ -30,7 +32,6 @@ urlpatterns = patterns('',
     (r'^oauth/access_token/$', oauth_access_token),
 
     (r'^profile/', include('democracy.profiles.urls')),
-
     (r'^i18n/', include('django.conf.urls.i18n')),
     # For Demo purposes: redirect all the wrong stuff to the issue_list views...
     #(r'$', redirect_to, {'url' : '/web/issues/'}),
