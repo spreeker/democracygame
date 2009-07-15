@@ -1,10 +1,18 @@
-""""This module contains functionality that is specific to the 'original' web 
+"""
+We want anonymous users to be able to play a litle.
+
+This module contains functionality that is specific to the 'original' web 
 interface provided by Emocracy --- that is why this file is not in the gamelogic
-app."""
+app.
+
+"""
 
 def vote(request, issue, vote_int):
-    """This function lets anonymous users vote, votes are stored in the session
-    as key:value pairs."""
+    """
+    This function lets anonymous users vote, 
+    votes are stored in the session
+    as key:value pairs.i
+    """
     try:
         request.session["vote_history"][issue.pk] = vote_int
     except KeyError:

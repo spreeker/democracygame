@@ -244,19 +244,19 @@ class AnonymousUserHandlerTest( APIMainTest ):
     {
         "username": "test1", 
         "ranking": 3, 
-        "score": 11, 
+        "score": 12, 
         "resource_uri": "%(r1)s"
     }, 
     {
         "username": "test2", 
         "ranking": 3, 
-        "score": 11, 
+        "score": 12, 
         "resource_uri": "%(r2)s"
     }, 
     {
         "username": "test3", 
         "ranking": 3, 
-        "score": 11, 
+        "score": 12, 
         "resource_uri": "%(r3)s"
     }
 ]""" % {"r1" :  reverse('api_user' , args=[self.users[0].id]) , 
@@ -275,7 +275,7 @@ class AnonymousUserHandlerTest( APIMainTest ):
     {
         "username": "test1", 
         "ranking": 3, 
-        "score": 11, 
+        "score": 12, 
         "resource_uri": "%(r1)s"
     }
 ]""" % {"r1" :  reverse('api_user' , args=[self.users[0].id]) } 
@@ -296,7 +296,7 @@ class UserHandlerTest ( OAuthTests ):
         expected = """{
     "username": "test1", 
     "ranking": 3, 
-    "score": 11, 
+    "score": 12, 
     "role": "opinion leader", 
     "email": "test1@example.com", 
     "resource_uri": "%(ur1)s"

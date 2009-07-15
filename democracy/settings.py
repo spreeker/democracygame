@@ -81,6 +81,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'pagination.middleware.PaginationMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware', ## !! comment out in production.
 )
 
@@ -108,7 +109,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
 )
 
-
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -126,8 +126,11 @@ INSTALLED_APPS = (
     'democracy.api',
     'democracy.web',
     'democracy.voting',
-    'democracy.issue_content',
+    'democracy.issue.content',
 
+    'democracy.test',
+    
+    'pagination',
 	'registration',
     'piston',
 )

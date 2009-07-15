@@ -1,7 +1,7 @@
 from democracy.voting.models import blank_votes
 from democracy.voting.models import Tag
 from democracy.voting.models import normal_votes
-from democracy.issue_content.models import source_types
+from democracy.issue.content.models import source_types
 
 from django import forms
 from django.forms import ModelForm

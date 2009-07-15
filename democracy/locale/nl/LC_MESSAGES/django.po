@@ -49,27 +49,27 @@ msgstr ""
 msgid "I did not vote"
 msgstr "Ik heb niet gestemd"
 
-#: issue_content/models.py:15
+#: issue.content/models.py:15
 msgid "video"
 msgstr ""
 
-#: issue_content/models.py:16
+#: issue.content/models.py:16
 msgid "audio"
 msgstr ""
 
-#: issue_content/models.py:17
+#: issue.content/models.py:17
 msgid "book"
 msgstr ""
 
-#: issue_content/models.py:18
+#: issue.content/models.py:18
 msgid "document"
 msgstr ""
 
-#: issue_content/models.py:19
+#: issue.content/models.py:19
 msgid "image"
 msgstr "plaatje"
 
-#: issue_content/models.py:20
+#: issue.content/models.py:20
 msgid "website"
 msgstr ""
 
