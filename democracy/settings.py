@@ -11,7 +11,7 @@ PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
 sys.path.append(os.path.split(PROJECT_PATH)[0] + '/external_apps/' ) 
 sys.path.append(os.path.split(PROJECT_PATH)[0] + '/external_libraries/' ) 
 
-DEBUG = True    #on production server this should be FASLE
+DEBUG = True  #on production server this should be FASLE
 TEMPLATE_DEBUG = True # on production this should be disabeled
 
 ADMINS = (
@@ -20,8 +20,8 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = 'database.sqlite3'
+DATABASE_ENGINE = 'sqlite3' # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+DATABASE_NAME = 'dev.db'
 
 DATABASE_USER = ''             # Not used with sqlite3.
 DATABASE_PASSWORD = ''         # Not used with sqlite3.
