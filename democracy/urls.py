@@ -7,11 +7,11 @@ from django.contrib import admin
 admin.autodiscover()
 
 from piston.authentication import oauth_request_token, oauth_user_auth, oauth_access_token
+
 import settings
 
 urlpatterns = patterns('',
     #(r'^web/', include('democracy.web.urls')),
-    url(r'$' , 'test.views.index', ),
     (r'^test/', include('test.urls')),
     (r'^api/v0/', include('api.urls')),
     # Example:
@@ -34,5 +34,6 @@ urlpatterns = patterns('',
     (r'^profile/', include('democracy.profiles.urls')),
     (r'^i18n/', include('django.conf.urls.i18n')),
     # For Demo purposes: redirect all the wrong stuff to the issue_list views...
+    url(r'$' , 'test.views.index', ),
     #(r'$', redirect_to, {'url' : '/web/issues/'}),
 )

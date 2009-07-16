@@ -2,9 +2,8 @@ from django.utils.translation import ugettext as _
 from django.db import models
 from django.contrib.auth.models import User
 
-from democracy.voting.models import Issue
+from democracy.issue.models import Issue
 
-tag_count_threshold = 1
 MAX_MULTIPLIERS = 4
 
 roles = ["anonymous citizen", 
@@ -17,15 +16,15 @@ roles = ["anonymous citizen",
         'prime minister']
 
 class MultiplyIssue(models.Model):
-    owner = models.ForeignKey(User )
+    user = models.ForeignKey(User )
     time_stamp = models.DateTimeField(auto_now_add = True)
     issue = models.ForeignKey( Issue )
     downgrade = models.BooleanField( default = False )
     multiply_value = models.IntegerField( blank=True , null=True )
 
     def __unicode__(self):
-        return _(u'%(owner)s  multiplies for %(issue)s' % {
-            'owner' : self.owner.username,
+        return _(u'%(user)s  multiplies for %(issue)s' % {
+            'user' : self.user.username,
             'issue' : self.issue.title, 
             })
 
@@ -36,13 +35,11 @@ class MultiplyIssue(models.Model):
             Maybe this can be extended for users at different levels to have different multiplies
         """
         msg = "Failed to add Multiply"
-        count_m = MultiplyIssue.objects.filter( owner = self.owner ).count()
+        count_m = MultiplyIssue.objects.filter( user = self.user ).count()
         if count_m < MAX_MULTIPLIERS:
-            if not self.issue.owner == self.owner :
+            if not self.issue.user == self.user:
                 super(MultiplyIssue , self).save(force_insert, force_update)
-                msg = "succes fully added multiply" 
+                msg = "succesfully added multiply" 
                 return self
 
-        self.owner.message_set.create(message=msg)
-
-
+        self.user.message_set.create(message=msg)

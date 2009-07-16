@@ -14,7 +14,7 @@ from democracy.api.handlers import VoteHandler
 from democracy.gamelogic.tests import TestActionData
 from democracy.gamelogic.models import MultiplyIssue
 from democracy.gamelogic import actions
-from democracy.voting.models import Issue
+from democracy.issue.models import Issue
 
 #from test_project.apps.testapp.models import TestModel, ExpressiveTestModel, Comment, InheritedModel
 #from test_project.apps.testapp import signals
@@ -66,17 +66,17 @@ class OAuthTests(APIMainTest):
 
         request = oauth.OAuthRequest.from_consumer_and_token(
                 oaconsumer, 
-                http_method=http_method , 
-                token=self.oa_atoken ,
+                http_method=http_method, 
+                token=self.oa_atoken,
                 http_url='http://testserver%s' % url )
         
         request.parameters.update( parameters )
         request.sign_request(self.signature_method, oaconsumer, self.oa_atoken )
         
         if http_method == 'POST':
-            response = self.client.post( url , request.parameters )
+            response = self.client.post( url, request.parameters )
         else :
-            response = self.client.get(  url , request.parameters )
+            response = self.client.get( url, request.parameters )
 
         return response
 
@@ -211,13 +211,12 @@ class VoteHandlerTest( OAuthTests ):
 
         url = reverse( "api_vote" )
         response = self.do_oauth_request( url , parameters )
-
         self.assertEqual(201, response.status_code)
 
     def test_read_votes(self):
         # there should be only one vote for user test1
         from democracy.voting.models import Vote
-        vote = Vote.objects.get( owner = self.users[0].id ) 
+        vote = Vote.objects.get( user = self.users[0].id ) 
         issue1 = Issue.objects.get( title = "issue1")
         url = reverse ( 'api_vote' ) 
         response = self.do_oauth_request(url , http_method='GET' ) 
@@ -315,23 +314,23 @@ class IssueHandlerTest( APIMainTest ):
     def test_read_issues(self):
         expected = """[
     {
-        "body": "issue3issue3issue3issue3issue3issue3issue3issue3issue3issue3", 
-        "title": "issue3", 
+        "body": "issue1issue1issue1issue1issue1issue1issue1issue1issue1issue1", 
+        "title": "issue1", 
         "url": "example.com", 
         "source_type": "website", 
-        "owner": {
-            "username": "test3", 
-            "resource_uri": "%(ru3)s"
+        "user": {
+            "username": "test1", 
+            "resource_uri": "%(ru1)s"
         }, 
-        "time_stamp": "%(t3)s", 
-        "resource_uri": "%(ri3)s"
+        "time_stamp": "%(t1)s", 
+        "resource_uri": "%(ri1)s"
     }, 
     {
         "body": "issue2issue2issue2issue2issue2issue2issue2issue2issue2issue2", 
         "title": "issue2", 
         "url": "example.com", 
         "source_type": "website", 
-        "owner": {
+        "user": {
             "username": "test2", 
             "resource_uri": "%(ru2)s"
         }, 
@@ -339,16 +338,16 @@ class IssueHandlerTest( APIMainTest ):
         "resource_uri": "%(ri2)s"
     }, 
     {
-        "body": "issue1issue1issue1issue1issue1issue1issue1issue1issue1issue1", 
-        "title": "issue1", 
+        "body": "issue3issue3issue3issue3issue3issue3issue3issue3issue3issue3", 
+        "title": "issue3", 
         "url": "example.com", 
         "source_type": "website", 
-        "owner": {
-            "username": "test1", 
-            "resource_uri": "%(ru1)s"
+        "user": {
+            "username": "test3", 
+            "resource_uri": "%(ru3)s"
         }, 
-        "time_stamp": "%(t1)s", 
-        "resource_uri": "%(ri1)s"
+        "time_stamp": "%(t3)s", 
+        "resource_uri": "%(ri3)s"
     }
 ]""" % {"t1" : self.issue1.time_stamp.strftime("%Y-%m-%d %H:%M:%S"),
         "t2" : self.issue2.time_stamp.strftime("%Y-%m-%d %H:%M:%S"),
@@ -366,7 +365,7 @@ class IssueHandlerTest( APIMainTest ):
         #print result
         #rf = open( "r.txt" , 'w' )
         #cf = open( "c.txt" , 'w' )
-        ## open the files in a file diff viewer to see result differences
+        # open the files in a file diff viewer to see result differences
         #rf.write(result)
         #cf.write(expected)
         self.assertEqual( expected , result )
@@ -378,7 +377,7 @@ class IssueHandlerTest( APIMainTest ):
         "title": "issue1", 
         "url": "example.com", 
         "source_type": "url", 
-        "owner": {
+        "user": {
             "username": "test1", 
             "resource_uri": "/api/v0/user/4/"
         }, 
@@ -401,18 +400,18 @@ class MultiplyHandlerTest( OAuthTests ):
         issue2 = Issue.objects.get( title = "issue2" )
         self.do_multiply( self.users[0] ,  issue2 )
         self.do_multiply( self.users[1] ,  issue2 )
-        multiply_vote = MultiplyIssue.objects.get( owner = self.users[0] )
+        multiply_vote = MultiplyIssue.objects.get( user = self.users[0] )
 
         url = reverse( "api_multiplies" )
         response = self.do_oauth_request( url , http_method="GET" )
         expected = """[
     {
-        "owner": {
-            "resource_uri": "%(ou)s"
-        }, 
         "time_stamp": "%(ts)s", 
         "issue": {
             "resource_uri": "%(iu)s"
+        }, 
+        "user": {
+            "resource_uri": "%(ou)s"
         }, 
         "resource_uri": "%(mu)s"
     }
@@ -422,7 +421,6 @@ class MultiplyHandlerTest( OAuthTests ):
         "mu" : reverse( "api_multiply" , args=[multiply_vote.id] ) , 
         }
         result = response.content 
-
         self.assertEqual( expected , result )
    
     def test_post_multiply(self):
@@ -449,36 +447,36 @@ class AnonymousMultiplyHandlerTest( APIMainTest ):
 
     def test_get_multiplies (self):
         #remember only users 1 and 2 can do multiplies
-        issue1 = Issue.objects.get( title = "issue1" )
-        issue2 = Issue.objects.get( title = "issue2" )
+        issue1 = Issue.objects.get( title="issue1" )
+        issue2 = Issue.objects.get( title="issue2" )
 
-        self.do_multiply( self.users[0] , issue2 )
-        self.do_multiply( self.users[1] , issue1 )
+        self.do_multiply( self.users[0], issue2 )
+        self.do_multiply( self.users[1], issue1 )
         
-        multiply_vote1 = MultiplyIssue.objects.get( owner = self.users[0] )
-        multiply_vote2 = MultiplyIssue.objects.get( owner = self.users[1] )
+        multiply_vote1 = MultiplyIssue.objects.get( user=self.users[0] )
+        multiply_vote2 = MultiplyIssue.objects.get( user=self.users[1] )
 
         url = reverse( 'api_multiplies' )
         response = self.client.get( url )
 
         expected = """[
     {
-        "owner": {
-            "resource_uri": "%(ou2)s"
-        }, 
         "time_stamp": "%(ts2)s", 
         "issue": {
             "resource_uri": "%(iu1)s"
         }, 
+        "user": {
+            "resource_uri": "%(ou2)s"
+        }, 
         "resource_uri": "%(mu2)s"
     }, 
     {
-        "owner": {
-            "resource_uri": "%(ou1)s"
-        }, 
         "time_stamp": "%(ts1)s", 
         "issue": {
             "resource_uri": "%(iu2)s"
+        }, 
+        "user": {
+            "resource_uri": "%(ou1)s"
         }, 
         "resource_uri": "%(mu1)s"
     }
@@ -492,11 +490,11 @@ class AnonymousMultiplyHandlerTest( APIMainTest ):
         "mu2" : reverse( "api_multiply" , args=[multiply_vote2.id] ) ,
         }
         #print response
-        #rf = open( "r.txt" , 'w' )
-        #cf = open( "c.txt" , 'w' )
+        rf = open( "r.txt" , 'w' )
+        cf = open( "c.txt" , 'w' )
         # open the files in a file diff viewer to see result differences
-        #rf.write(response.content)
-        #cf.write(expected)
+        rf.write(response.content)
+        cf.write(expected)
            
         self.assertEqual ( expected , response.content )
 
