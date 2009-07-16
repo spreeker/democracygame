@@ -12,7 +12,7 @@ sys.path.append(os.path.split(PROJECT_PATH)[0] + '/external_apps/' )
 sys.path.append(os.path.split(PROJECT_PATH)[0] + '/external_libraries/' ) 
 
 DEBUG = True    #on production server this should be FASLE
-TEMPLATE_DEBUG = DEBUG # on production this should be disabeled
+TEMPLATE_DEBUG = True # on production this should be disabeled
 
 ADMINS = (
     # ('Stephan Preeker', 'stephan@preeker.net'),
@@ -126,7 +126,7 @@ INSTALLED_APPS = (
     'democracy.api',
     'democracy.web',
     'democracy.voting',
-    'democracy.issue.content',
+    'democracy.issue',
 
     'democracy.test',
     

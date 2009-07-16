@@ -5,22 +5,22 @@ from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator
 from django.core.paginator import InvalidPage
 from django.core.paginator import EmptyPage
+from django.contrib.contenttypes.models import ContentType
 
-from django.db.models import Q
 from piston.handler import BaseHandler, AnonymousBaseHandler
 from piston.utils import rc
 from piston.utils import validate
 
 from democracy.api.forms import IssueForm
 from democracy.api.forms import VoteForm
-from democracy.issue.content.models import IssueBody
-from democracy.voting.models import Issue
+from democracy.issue.models import Issue
 from democracy.voting.models import Vote
 from democracy.profiles.models import UserProfile
 from democracy.gamelogic.models import MultiplyIssue
 
 import gamelogic.actions
 
+from piston.models import Token
 
 def paginate(request, qs):
     paginator = Paginator(qs, 3)  # TODO: add to settings.py
@@ -38,7 +38,7 @@ class IssueVotesHandler(AnonymousBaseHandler):
     """
     Returns the vote count for an issue
     issue id should be provided
-    Anonymous function it is global data not user specific
+    Anonymous function it is about aggegrated data not user specific
     """ 
     allowed_methods = ('GET',)
     fields = ('vote', 'vote_count',)
@@ -49,7 +49,7 @@ class IssueVotesHandler(AnonymousBaseHandler):
         except Issue.DoesNotExist :
             return rc.NOT_HERE
         
-        votes = issue.vote_count()
+        votes = Vote.objects.get_object_votes( issue )
         return votes
 
     @classmethod
@@ -67,47 +67,55 @@ class IssueVotesHandler(AnonymousBaseHandler):
 
 class VoteHandler(BaseHandler):
     """
-        returns the votes for an user. 
-        makes it able to post to an user
+    returns the votes for an user. 
+    makes it able to post to an user
     """
     allowed_methods = ('GET', 'POST' )
     fields = ('vote', 'time_stamp', 'issue_uri', 'keep_private', 'user_uri')
     model = Vote
 
     def read(self, request, *args, **kwargs):
-        queryset = self.model.objects.filter( owner = request.user ).order_by('time_stamp')
+        ctype = ContentType.objects.get_for_model(Issue)
+        queryset = self.model.objects.filter( user = request.user,
+                        content_type = ctype.pk ).order_by('time_stamp')
         page = paginate(request, queryset)
         return page.object_list
 
     @classmethod
     def issue_uri(cls, vote):
-        return "%s" % reverse('api_issue' , args=[vote.issue.id])
+        return "%s" % reverse('api_issue' , args=[vote.object_id])
 
     @classmethod
     def user_uri(cls, vote):
-        return "%s" % reverse('api_user' , args=[vote.owner.id])
+        return "%s" % reverse('api_user' , args=[vote.user.id])
 
     ## TODO use the @validate decorator of piston
     @validate( VoteForm )
-    def create(self, request , issue=None , vote=None):
-        attrs = { 'issue' : issue , 'vote' : vote }
-        attrs.update(self.flatten_dict(request.POST))
+    def create(self, request ):
+        ctype = ContentType.objects.get_for_model(Issue)
+        attrs = self.flatten_dict(request.POST)
+        object_id = attrs.pop('issue') 
+        attrs.update({
+                  'content_type' : ctype,
+                  'object_id' : object_id,
+                })
 
         if self.exists(**attrs):
             return rc.DUPLICATE_ENTRY
         if not attrs.has_key('keep_private'):
             attrs['keep_private'] = False
-
-        vote = gamelogic.actions.vote( 
-                request.user , 
-                Issue.objects.get(id=attrs['issue']),
-                attrs['vote'],
+        
+        #print type(request.throttle_extra)
+    
+        gamelogic.actions.vote( 
+                request.user, 
+                Issue.objects.get(id=attrs['object_id']),
+                int(attrs['vote']),
                 attrs['keep_private'],
-                api_interface = "API" , # TODO add aplication interface!!
+                api_interface=request.throttle_extra,
         )
         return rc.CREATED 
 
-    
 class AnonymousUserHandler(AnonymousBaseHandler):
     allowed_methods = ('GET',)
     fields = ('username', 'score', 'ranking' , )
@@ -167,7 +175,7 @@ class UserHandler(BaseHandler):
 class AnonymousIssueHandler(AnonymousBaseHandler):
     allowed_methods = ('GET',)
     
-    fields = ('title', 'body', ('owner', ('username', ) ), 'time_stamp', 'source_type', 'url')
+    fields = ('title', 'body', ('user', ('username', ) ), 'time_stamp', 'source_type', 'url')
     model = Issue
 
     def read(self, request, id=None , *args, **kwargs):
@@ -182,18 +190,6 @@ class AnonymousIssueHandler(AnonymousBaseHandler):
         page = paginate(request, queryset)
         return page.object_list
 
-    @classmethod
-    def body( cls , issue ):
-        return issue.payload.body        
-
-    @classmethod
-    def source_type( cls , issue):
-        return issue.payload.source_type    
- 
-    @classmethod
-    def url( cls , issue ):
-        return issue.payload.url
-
     @staticmethod
     def resource_uri():
         return ('api_issue' , ['id'])
@@ -202,7 +198,7 @@ class AnonymousIssueHandler(AnonymousBaseHandler):
 class IssueHandler(BaseHandler):
     allowed_methods = ('POST',)
     anonymous = AnonymousIssueHandler
-    fields = ('title', 'body', ('owner', ('username')), 'time_stamp', 'souce_type', 'url')
+    fields = ('title', 'body', ('user', ('username')), 'time_stamp', 'souce_type', 'url')
     model = Issue
 
     @validate(IssueForm)
@@ -216,7 +212,7 @@ class IssueHandler(BaseHandler):
                 request.user,
                 attrs['title'],
                 attrs['body'],
-                attrs['owners_vote'],
+                attrs['vote_int'],
                 attrs['url'],
                 attrs['source_type'],
                 attrs['is_draft'],
@@ -233,7 +229,7 @@ class AnonymousMultiplyHandler( AnonymousBaseHandler ):
     allowed_methods = ('GET',)
     model = MultiplyIssue 
 
-    fields = ( ('owner', ('resource_uri') ), 'time_stamp' , ( 'issue' , ( 'resource_uri' ) ) )
+    fields = ( ('user', ('resource_uri') ), 'time_stamp' , ( 'issue' , ( 'resource_uri' ) ) )
 
     def read(self, request, id=None , *args, **kwargs):
         """ Read the active multiplies for specific issue
@@ -263,7 +259,7 @@ class MultiplyHandler( BaseHandler ):
     allowed_methods = ('POST' , 'GET' )
     anonymous = AnonymousMultiplyHandler
     model = MultiplyIssue
-    fields = ( ('owner', ('resource_uri') ), 'time_stamp' , ( 'issue' , ( 'resource_uri' ) ) )
+    fields = ( ('user', ('resource_uri') ), 'time_stamp' , ( 'issue' , ( 'resource_uri' ) ) )
 
     #def read , default behaviour is what we want.    
     # which is readling all you own multiplies
