@@ -123,20 +123,23 @@ class AnonymousUserHandler(AnonymousBaseHandler):
 
     def read(self, request, id=None, *args, **kwargs):
         if id:
-            return User.objects.filter( id=id )
+            try:
+                return User.objects.filter( id=id )
+            except User.DoesNotExist:
+                return rc.NOT_FOUND
         else :
-            queryset = User.objects.filter()
+            queryset = User.objects.filter().order_by( 'username' )
             page = paginate(request, queryset)
             return page.object_list
 
     @classmethod
     def score(cls, user):
-        return user.get_profile().score
+        return  get_profile_field(user, 'score', 0 )
 
     @classmethod
     def ranking(cls , user):
-        p = user.get_profile()
-        return UserProfile.objects.filter( score__gte = p.score ).count()
+        score = cls.score(user) 
+        return UserProfile.objects.filter( score__gte = score ).count()
 
     #TODO GRAVATAR url !! 
 
@@ -156,16 +159,16 @@ class UserHandler(BaseHandler):
 
     @classmethod
     def score(cls, user):
-        return user.get_profile().score
+        return get_profile_field(user, 'score' , 0)
 
     @classmethod
     def role( cls , user):
-        return user.get_profile().role
+        return get_profile_field(user, 'role', 'citizen' )
 
     @classmethod
     def ranking( cls , user):
-        p = user.get_profile()
-        return UserProfile.objects.filter( score__gte = p.score ).count()
+        score = cls.score(user)
+        return UserProfile.objects.filter( score__gte = score ).count()
 
     @staticmethod
     def resource_uri():
@@ -281,3 +284,18 @@ class MultiplyHandler( BaseHandler ):
     @staticmethod
     def resource_uri():
         return ('api_multiply' , ['id'])
+
+
+# helper method.
+def get_profile(user):
+    try :
+        return user.get_profile()
+    except UserProfile.DoesNotExist:
+        pass
+
+def get_profile_field(user, property, default):
+    profile = get_profile(user)
+    if not profile: return default
+    if hasattr(profile, property):
+            return getattr(profile, property)
+    return default

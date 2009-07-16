@@ -283,6 +283,20 @@ class AnonymousUserHandlerTest( APIMainTest ):
         result = self.client.get(url).content
         self.assertEqual( expected , result )
 
+    def test_get_not_existing_user(self):
+        url = reverse( "api_user", args=[9999] )
+        response = self.client.get(url)
+        self.assertEqual( 200 , response.status_code )
+
+    def test_get_not_existing_userprofile(self):
+        # delete profile of user1
+        user = User.objects.get( username = 'test1' )
+        p = user.get_profile()
+        p.delete()
+        url = reverse( "api_user" , args=[user.pk] ) 
+        response = self.client.get(url)
+        self.assertEqual( 200 , response.status_code )
+
 class UserHandlerTest ( OAuthTests ):
     """
     Do an oauth request for you own private data

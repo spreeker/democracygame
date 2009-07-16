@@ -12,7 +12,6 @@ import settings
 
 urlpatterns = patterns('',
     #(r'^web/', include('democracy.web.urls')),
-    (r'^test/', include('test.urls')),
     (r'^api/v0/', include('api.urls')),
     # Example:
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
