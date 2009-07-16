@@ -1,4 +1,3 @@
-
 import logging
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseServerError

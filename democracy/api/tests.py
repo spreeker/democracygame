@@ -490,11 +490,11 @@ class AnonymousMultiplyHandlerTest( APIMainTest ):
         "mu2" : reverse( "api_multiply" , args=[multiply_vote2.id] ) ,
         }
         #print response
-        rf = open( "r.txt" , 'w' )
-        cf = open( "c.txt" , 'w' )
+        #rf = open( "r.txt" , 'w' )
+        #cf = open( "c.txt" , 'w' )
         # open the files in a file diff viewer to see result differences
-        rf.write(response.content)
-        cf.write(expected)
+        #rf.write(response.content)
+        #cf.write(expected)
            
         self.assertEqual ( expected , response.content )
 
