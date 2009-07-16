@@ -34,6 +34,6 @@ urlpatterns = patterns('',
     (r'^profile/', include('democracy.profiles.urls')),
     (r'^i18n/', include('django.conf.urls.i18n')),
     # For Demo purposes: redirect all the wrong stuff to the issue_list views...
-    url(r'$' , 'test.views.index', ),
+    url(r'$' , 'democracy.test.views.index', ),
     #(r'$', redirect_to, {'url' : '/web/issues/'}),
 )
