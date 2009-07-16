@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load pagination_tags %}
+
+{% block content %}
+
+{% autopaginate issues %}
+{% for issue in issues %}
+<div id="issue{{ issue.pk }}" class="issue">
+<p><a href="{% url issue_detail issue.pk %}">{{ issue }}</a> </p>
+<p> {{ issue.payload.body }} </p>
+<p>
+<form action="{% url test_vote %}" method="post">
+    <input type="hidden" name="issue" id="issue" value="{{ issue.pk }}"/>
+    <input type="hidden" name="vote" id="vote" value="1" />
+    <input type="submit" value="YES" >
+<form>
+<form action="{% url test_vote %}" method="post">
+    <input type="hidden" name="issue" id="issue" value="{{ issue.pk }}"/>
+    <input type="hidden" name="vote" id="vote" value="-1" />
+    <input type="submit" value="NO" >
+<form>
+<form action="{% url test_vote %}" method="post">
+    <input type="hidden" name="issue" id="issue" value="{{ issue.pk }}"/>
+    <select name="vote">
+        {% for blank_vote in blank_votes %}
+             <option value="{{ blank_vote.0 }}">{{ blank_vote.1 }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" value="blank">
+<form>
+</p>
+</div>
+{% endfor %}
+
+{% paginate %}
+
+{% endblock %}
+
+{%block sidebar %}
+    {% include "web/sidebar.html" %}
+{% endblock %}
+

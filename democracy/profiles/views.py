@@ -17,7 +17,7 @@ from forms import ChangeDescriptionForm
 from forms import UserSearchForm
 from django.contrib.auth.forms import PasswordResetForm
 from models import UserProfile
-from voting.models import Issue
+from issue.models import Issue
 
 # Imports for activate view
 from registration.models import RegistrationProfile

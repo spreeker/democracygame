@@ -3,7 +3,7 @@ from democracy.gamelogic import actions
 from democracy.gamelogic import score
 from democracy.gamelogic.models import MultiplyIssue
 from democracy.profiles.models import UserProfile
-from democracy.voting.models import Issue
+from democracy.issue.models import Issue
 from democracy.voting.models import Vote
 
 from django.contrib.auth.models import User
@@ -149,7 +149,7 @@ class TestActionData(TestUsers):
         self.assertEqual( self.profiles[0].score , levels.MIN_SCORE_ACTIVE_CITIZENS )
         
         # add issues
-        for i , issue in enumerate(self.issues):
+        for i, issue in enumerate(self.issues):
             actions.propose(self.users[i] , issue , 10*issue , 1 , "example.com" , "website" )
 
         # test the adding of issues was succesfull
@@ -187,7 +187,7 @@ class TestActions(TestActionData):
 
     def test_vote(self):
         # in the test setup we define 3 issues. 
-        # and an issue owner also votes on it.
+        # and an issue user also votes on it.
         # 3 issues is 3 default votes
 
         issue1 = Issue.objects.get(title="issue1")  

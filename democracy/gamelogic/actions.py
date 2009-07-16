@@ -1,16 +1,16 @@
 """
 This module contains the functions that implement the actions that a user can
 take inside of the democracy game. Functionality in this module should not depend
-on request objects. Scripts on the server, the API views and the web views 
-should all call into this module to play the ddemocracy game.
+on request objects. Scripts on the server the API views and other views 
+should all call into this module to play the democracy game.
 
 This module itself uses functions from the score.py and levels.py see if
 an action is allowed and how it affects the score of the players / the democracy
 world.
 
-user_action = get_actions( user )
+user_actions = get_actions( user )
 
-user role_to_actions to determine permission and availability of actions
+user role_actions to determine permission and availability of actions
 
 vote_func = role_to_actions[userprofile.role]['vote'] this will return the function required to do the 
 vote for this user. If it returns a keyerror the action for this user does not excist.
@@ -33,9 +33,8 @@ from democracy.gamelogic.models import roles
 
 from gamelogic.models import MultiplyIssue
 from voting.models import Vote
-from voting.models import Issue
-from voting.models import votes_to_description
-from issue.content.models import IssueBody
+from issue.models import Issue
+from voting.models import possible_votes 
 
 
 def vote(user, issue, vote_int, keep_private , api_interface=None ):
@@ -43,85 +42,56 @@ def vote(user, issue, vote_int, keep_private , api_interface=None ):
     #TODO anonymous voting?
     userprofile = user.get_profile()
     if not role_to_actions[userprofile.role].has_key('vote') : return
-    
-    kwargs = {
-        'owner' : user,
-        'issue' : issue,
-        'vote' : vote_int,
-        'keep_private' : keep_private,
-        'api_interface' : api_interface,
-    }
 
-    new_vote = Vote(**kwargs)
-    repeated_vote, voted_already = Vote.objects.vote(new_vote)
+    repeated_vote, voted_already, new_vote = \
+        Vote.objects.vote(user, issue, vote_int, api_interface )
 
     if repeated_vote: return
     
     logging.debug("User " + user.username + " voted " + unicode(new_vote.vote) + " on issue object with pk =" + unicode(issue.id) + ".")
     user.message_set.create(message="You voted successfully on %s" % issue.title  )
 
-    score.vote(user, issue, new_vote, voted_already)
+    score.vote(user, issue, vote_int, voted_already)
     levels.upgrade[userprofile.role](userprofile)
 
     return new_vote
 
 
-def propose(user, title, body, vote_int, source_url, source_type, is_draft = False, issue_no = None):
-    """ Propose an issue into the game
+def propose(user, title, body, vote_int, source_url,
+            source_type=u"website", is_draft=False, issue_no=None):
+    """ 
+    Propose an issue into the game
     """
     if issue_no == None:
         userprofile = user.get_profile()
         if not role_to_actions[userprofile.role].has_key('propose'): return 
 
-        # user may not have another issue with the same title
-        try :
-            Issue.objects.get( title = title , owner = user )
-            return " trying to create the same issue"
-        except Issue.DoesNotExist :
-            pass 
-
-        new_issue = IssueBody.objects.create(
-            owner = user,
+        new_issue = Issue(
             title = title,
-            body = body,
             url = source_url,
             source_type = source_type,
-            time_stamp = datetime.datetime.now(),
+            body = body,
+            user = user,
         )
-        
-        new_issue = Issue.objects.create_for_object(new_issue, title=new_issue.title, owner=user, is_draft=is_draft)
-        vote = Vote(owner=user, issue=new_issue, vote=vote_int, keep_private=False )    
-        vote.save()
+        new_issue.save()
 
         user.message_set.create(message="You created issue \"%s\" successfully " % new_issue.title  )
-
         score.propose(user)
         levels.upgrade[userprofile.role](userprofile)
-
     else:
         # we are editing one TODO remove this possibility?
-        issue = get_object_or_404(Issue, pk = issue_no)
-        # If an old vote exists, remove it and perform a new vote.
-        try:
-            owners_vote = Vote.objects.filter(issue = issue, owner = user)
-            owners_vote.delete()
-        except Vote.DoesNotExist:
-            pass
-        issue.vote(user, vote_int, keep_private = False)
+        issue = get_object_or_404(Issue, pk=issue_no)
+
         # Now change the issue and issue body to the appropriate values.
         issue.title = title
-        issue.time_stamp = datetime.datetime.now()
         issue.is_draft = is_draft
-        
-        issue.payload.title = title
-        issue.payload.body = body
-        issue.payload.time_stamp = datetime.datetime.now()
-        issue.payload.source_type = source_type
-        issue.payload.source_url = source_url
-        
-        issue.payload.save()
+        issue.body = body
+        issue.source_type = source_type
+        issue.source_url = source_url
         issue.save()
         new_issue = issue
+
+    Vote.objects.vote(user , new_issue, vote_int,)    
 
     return new_issue
 
@@ -138,7 +108,7 @@ def multiply(user , issue , downgrade = False ):
     userprofile = user.get_profile()
     if not role_to_actions[userprofile.role].has_key('multiply'): return 
 
-    m = MultiplyIssue.objects.create( owner = user , issue = issue , downgrade = downgrade )
+    m = MultiplyIssue.objects.create( user=user, issue=issue, downgrade=downgrade )
     # TODO score change?
     return m.save()
 

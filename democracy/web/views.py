@@ -37,7 +37,6 @@ from democracy.voting.models import Issue
 from democracy.voting.models import Vote
 from democracy.issue.content.models import IssueBody
 
-from piston.models import Token
 
 import settings
 
@@ -389,30 +388,3 @@ def ajaxvote(request):
         return HttpResponseServerError(reply, mimetype = 'application/json')
         
 
-# ------------------------------------------------------------------------------
-
-@login_required
-def oauth_user_auth(request, *args):
-    if request.method == 'GET':
-        oauth_token = request.GET.get('oauth_token', '')
-        try:
-            request_token = Token.objects.get(key = oauth_token)
-        except Token.DoesNotExist:
-            msg = u'Token in URL not OK'
-            request_token = 'is not here'
-            form = None
-        else:
-            msg = u'Token in URL OK'
-            consumer_key = request_token.consumer.key
-            form =  AuthorizeRequestTokenForm()
-    else:
-        return Http404("TOKEN NOT FOUND")
-    context = {
-        'msg' : msg,
-        'request_token' : request_token, 
-        'form' : form
-    }
-    return render_to_response('web/authorize.html', context)
-
-def oauth_callback(request, token):
-    return HttpResponseRedirect(token.consumer.callback+token.to_string()+'/')
