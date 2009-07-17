@@ -4,6 +4,7 @@ from django.conf.urls.defaults import *
 from django.views.generic.simple import redirect_to
 
 from django.contrib import admin
+
 admin.autodiscover()
 
 from piston.authentication import oauth_request_token, oauth_user_auth, oauth_access_token
@@ -13,6 +14,7 @@ import settings
 urlpatterns = patterns('',
     #(r'^web/', include('democracy.web.urls')),
     (r'^api/v0/', include('api.urls')),
+    (r'^dashboard/', include('democracy.dashboard.urls')),
     # Example:
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:
@@ -20,8 +22,9 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     (r'^admin/(.*)', admin.site.root),
+
     # Development stuff, media served by django itself. Remove for a real
-    # Emocracy installation (and have Apache handle media).
+    # democracy installation (and have Apache handle media).
     (r'^media/(.*)', 'django.views.static.serve', {
         'document_root' : os.path.join(settings.PROJECT_PATH, 'media')
     }),
@@ -33,6 +36,6 @@ urlpatterns = patterns('',
     (r'^profile/', include('democracy.profiles.urls')),
     (r'^i18n/', include('django.conf.urls.i18n')),
     # For Demo purposes: redirect all the wrong stuff to the issue_list views...
-    url(r'$' , 'democracy.test.views.index', ),
+    url(r'^$' , 'democracy.dashboard.views.index', ),
     #(r'$', redirect_to, {'url' : '/web/issues/'}),
 )
