@@ -128,7 +128,7 @@ INSTALLED_APPS = (
     'democracy.voting',
     'democracy.issue',
 
-    'democracy.test',
+    'democracy.dashboard',
     
     'pagination',
 	'registration',
