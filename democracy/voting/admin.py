@@ -9,7 +9,7 @@ class IssueAdmin(admin.ModelAdmin):
     list_filter = ('title', 'time_stamp', 'user', 'votes' )
 
     def votes(self , obj):
-        return Vote.objects.filter( issue=obj.id).count()
+        return Vote.objects.get_for_object(obj).count()
 
 class VoteAdmin(admin.ModelAdmin):
     date_hierarchy = "time_stamp"
@@ -17,7 +17,7 @@ class VoteAdmin(admin.ModelAdmin):
     list_filter = ('user', 'time_stamp', )
 
     def issue_title(self , obj):
-        return ("%s" % obj.issue.title) 
+        return ("%s" % obj.payload.title) 
     
 admin.site.register(Issue , IssueAdmin)
 admin.site.register(Vote, VoteAdmin)
