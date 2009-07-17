@@ -7,14 +7,14 @@ app.
 
 """
 
-def vote(request, issue, vote_int):
+def vote(request, issue, direction):
     """
     This function lets anonymous users vote, 
     votes are stored in the session
     as key:value pairs.i
     """
     try:
-        request.session["vote_history"][issue.pk] = vote_int
+        request.session["vote_history"][issue.pk] = direction
     except KeyError:
-        request.session["vote_history"] = {issue.pk : vote_int}
+        request.session["vote_history"] = {issue.pk : direction}
     request.session.modified = True

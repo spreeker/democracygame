@@ -283,9 +283,9 @@ def issue_propose(request, issue_no = None):
             # If users were to be allowed to change their opinion on their own
             # issue the following line needs to use a filter() instead of get().
             v = Vote.objects.get(issue = issue, owner = request.user)
-            owners_vote_int = v.vote_int
+            owners_direction = v.direction
         except:
-            owners_vote_int = 1
+            owners_direction = 1
         if issue.owner != request.user: # check that user is owner
             # TODO add is_draft check
             # TODO add more appropriate Http Response code if user tries to 
@@ -300,7 +300,7 @@ def issue_propose(request, issue_no = None):
             'body' : issue.payload.body,
             'url' : issue.payload.url,
             'source_type' : issue.payload.source_type,
-            'owners_vote' : owners_vote_int,
+            'owners_vote' : owners_direction,
             'is_draft': issue.is_draft
         }
     
@@ -357,23 +357,23 @@ def ajaxvote(request):
             
             # The following line adapt the output from the vote form (old style)
             # to the new style of votes.
-            vote_int = form.cleaned_data["vote"] + form.cleaned_data["motivation"]
+            direction = form.cleaned_data["vote"] + form.cleaned_data["motivation"]
                         
-            if vote_int == 1: 
+            if direction == 1: 
                 css_class = u'for'
-            elif vote_int == -1:
+            elif direction == -1:
                 css_class = u'against'
             else:
                 css_class = u'blank'
 
             if request.user.is_authenticated():
-                gamelogic.actions.vote(request.user, issue, vote_int, form.cleaned_data['keep_private'])
+                gamelogic.actions.vote(request.user, issue, direction, form.cleaned_data['keep_private'])
             else:
-                anonymous_actions.vote(request, issue, vote_int)
+                anonymous_actions.vote(request, issue, direction)
             
             data = {
                 'issue_no' : issue_no,
-                'vote_text' : votes_to_description[vote_int],
+                'vote_text' : votes_to_description[direction],
                 'css_class' : css_class,
                 'score' : issue.score,
                 'votes' : issue.votes,

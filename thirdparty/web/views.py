@@ -106,9 +106,9 @@ def issues_add_issue(request, issue_no=None):
             # If users were to be allowed to change their opinion on their own
             # issue the following line needs to use a filter() instead of get().
             v = Vote.objects.get(issue = issue, owner = request.user)
-            owners_vote_int = v.vote_int
+            owners_direction = v.direction
         except:
-            owners_vote_int = 1
+            owners_direction = 1
         if issue.owner != request.user: # check that user is owner
             # TODO add is_draft check
             # TODO add more appropriate Http Response code if user tries to
@@ -123,7 +123,7 @@ def issues_add_issue(request, issue_no=None):
             'body' : issue.payload.body,
             'url' : issue.payload.url,
             'source_type' : issue.payload.source_type,
-            'owners_vote' : owners_vote_int,
+            'owners_vote' : owners_direction,
             'is_draft': issue.is_draft
         }
 

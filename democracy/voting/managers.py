@@ -59,7 +59,7 @@ class VoteManager(models.Manager):
 
         return votes       
 
-    def record_vote(self, user, obj, vote_int , api_interface=None ):
+    def record_vote(self, user, obj, direction , api_interface=None ):
         """
         Archive old votes by switching the is_archived flag to True
         for all the previous votes on <obj> by <user>.
@@ -67,8 +67,8 @@ class VoteManager(models.Manager):
         We save old votes for research, probable interesting
         opinion changes.
         """
-        if not vote_int in possible_votes.keys():
-            raise ValueError('Invalid vote %s must be in %s' % (vote_int , possible_votes.keys()))
+        if not direction in possible_votes.keys():
+            raise ValueError('Invalid vote %s must be in %s' % (direction , possible_votes.keys()))
 
         ctype = ContentType.objects.get_for_model(obj)
         votes = self.filter(user=user, content_type=ctype, object_id=obj._get_pk_val())
@@ -78,7 +78,7 @@ class VoteManager(models.Manager):
         if votes:
             voted_already = True
             for v in votes:
-                if vote_int == v.vote: #check if you do the same vote again.
+                if direction == v.vote: #check if you do the same vote again.
                     repeated_vote = True
                 else:
                     v.is_archived = True
@@ -86,7 +86,7 @@ class VoteManager(models.Manager):
         vote = None
         if not repeated_vote:
             vote = self.create( user=user , content_type=ctype,
-                         object_id=obj._get_pk_val(), vote=vote_int,
+                         object_id=obj._get_pk_val(), vote=direction,
                          api_interface=api_interface 
                         )
             vote.save()

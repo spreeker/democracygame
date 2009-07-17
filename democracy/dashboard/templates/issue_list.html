@@ -3,25 +3,25 @@
 
 {% block content %}
 
-{% autopaginate issues %}
+{% autopaginate issues 3 %}
 {% for issue in issues %}
 <div id="issue{{ issue.pk }}" class="issue">
 <p><a href="/">{{ issue }}</a> </p>
 <p> {{ issue.body }} </p>
 <p>
-<form action="{% url vote %}" method="post">
-    <input type="hidden" name="issue" id="issue" value="{{ issue.pk }}"/>
-    <input type="hidden" name="vote" id="vote" value="1" />
+<form action="{% url vote issue.pk %}" method="post">
+    <input type="hidden" name="direction" id="direction" value="1" />
+    <input type="hidden" name="next" id="next" value="{% url dashboard %}?page={{ request.page }}" />
     <input type="submit" value="YES" >
 <form>
-<form action="{% url vote %}" method="post">
-    <input type="hidden" name="issue" id="issue" value="{{ issue.pk }}"/>
-    <input type="hidden" name="vote" id="vote" value="-1" />
+<form action="{% url vote issue.pk %}" method="post">
+    <input type="hidden" name="direction" id="direction" value="-1" />
+    <input type="hidden" name="next" id="next" value="{% url dashboard %}?page={{ request.page }}" />
     <input type="submit" value="NO" >
 <form>
-<form action="{% url vote %}" method="post">
-    <input type="hidden" name="issue" id="issue" value="{{ issue.pk }}"/>
-    <select name="vote">
+<form action="{% url vote issue.pk %}" method="post">
+    <input type="hidden" name="next" id="next" value="{% url dashboard %}?page={{ request.page }}" />
+    <select name="direction">
         {% for blank_vote in blank_votes %}
              <option value="{{ blank_vote.0 }}">{{ blank_vote.1 }}</option>
         {% endfor %}

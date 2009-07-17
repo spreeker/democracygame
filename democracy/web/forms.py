@@ -103,12 +103,12 @@ class CastVoteFormFull(forms.Form):
         cleaned_data = self.cleaned_data
                 
         try:
-            vote_int = cleaned_data['vote']
+            direction = cleaned_data['vote']
         except KeyError:
             #print 'No vote'
             raise forms.ValidationError(u'No vote')
 
-        if not vote_int in [-1, 0, 1]:
+        if not direction in [-1, 0, 1]:
             #print u'Invalid vote'
             raise forms.ValidationError(u'Invalid vote')
         
@@ -123,13 +123,13 @@ class CastVoteFormFull(forms.Form):
         except KeyError:
             motivation = None
 
-        if vote_int == 0:
+        if direction == 0:
             if motivation not in possible_motivations:
                 #print 'Invalid motivation'
                 raise forms.ValidationError(u'Invalid motivation')
         else: 
-            # We already know vote_int to be in [-1, 0, 1] so here we have 
-            # vote_int in [-1, 1] -> obliterate the motivation.
+            # We already know direction to be in [-1, 0, 1] so here we have 
+            # direction in [-1, 1] -> obliterate the motivation.
             # TODO check wether this is a redundant check.
             cleaned_data[u'motivation'] = 0
         

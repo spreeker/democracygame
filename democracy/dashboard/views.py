@@ -11,12 +11,13 @@ from gamelogic import actions
 from democracy.issue.models import Issue
 from democracy.voting.managers import possible_votes 
 from democracy.voting.models import Vote
-
+from democracy.voting.views import vote_on_object
 # creating gameviews
 
 class GameView(object):
     """ 
     provide the necessarily gameplaying data: 
+    TODO provide template tags?
     actions
     vote_options
     objects/issues
@@ -27,8 +28,7 @@ class GameView(object):
     template_name= "issue_list.html"
 
     def objects(self):
-        # you want to override this method
-        # must return queryset
+        # you want to override this method, # must return queryset
         return Issue.objects.filter().select_related()
 
     def __call__(self, request, *args, **kwargs):
@@ -54,6 +54,15 @@ class GameView(object):
 index = GameView()
 
 
-def vote(request):
-    next = "/"
-    return HttpResponseRedirect(next)
+def record_vote(request, issue_id ):
+    """
+    Wrapper function for the voting.views.vote_on_object function
+
+    if user is anonymous?
+
+    """
+    if request.REQUEST.has_key('direction'):
+        direction = request.REQUEST['direction']
+        return vote_on_object(request, Issue, direction, object_id=issue_id) 
+
+    #return HttpResponseRedirect(next)

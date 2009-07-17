@@ -13,7 +13,7 @@ PROPOSE_SCORE = 2
 PROPOSE_VOTE_SCORE = 1
 ISSUE_VOTE_SCORE = 1
 
-def vote(user, issue, vote_int , voted_already):
+def vote(user, issue, direction , voted_already):
     """Score keeping for voting."""
     
     userprofile = user.get_profile()
@@ -22,14 +22,14 @@ def vote(user, issue, vote_int , voted_already):
     if not voted_already:
         # User only gets poinst if it is the first vote on the issue.
         change_score(userprofile , VOTE_SCORE ) 
-        if vote_int in [-1, 1]:
+        if direction in [-1, 1]:
             # Proposer only gets points if the issue gets a for or against vote
             change_score(proposerprofile , PROPOSE_VOTE_SCORE )
             issue.score += ISSUE_VOTE_SCORE
 
     # Update the user's profile with his/her vote.
-    if vote_int == 1: userprofile.total_for += 1
-    if vote_int == -1: userprofile.total_against += 1
+    if direction == 1: userprofile.total_for += 1
+    if direction == -1: userprofile.total_against += 1
     else: userprofile.total_blank += 1
 
     # Write all changes back to the database.

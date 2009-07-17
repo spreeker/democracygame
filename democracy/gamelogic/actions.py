@@ -37,27 +37,27 @@ from issue.models import Issue
 from voting.models import possible_votes 
 
 
-def vote(user, issue, vote_int, keep_private , api_interface=None ):
+def vote(user, issue, direction, keep_private , api_interface=None ):
     """Unified voting (both blank and normal votes)."""
     #TODO anonymous voting?
     userprofile = user.get_profile()
     if not role_to_actions[userprofile.role].has_key('vote') : return
 
     repeated_vote, voted_already, new_vote = \
-        Vote.objects.record_vote(user, issue, vote_int, api_interface )
+        Vote.objects.record_vote(user, issue, direction, api_interface )
 
     if repeated_vote: return
     
     logging.debug("User " + user.username + " voted " + unicode(new_vote.vote) + " on issue object with pk =" + unicode(issue.id) + ".")
     user.message_set.create(message="You voted successfully on %s" % issue.title  )
 
-    score.vote(user, issue, vote_int, voted_already)
+    score.vote(user, issue, direction, voted_already)
     levels.upgrade[userprofile.role](userprofile)
 
     return new_vote
 
 
-def propose(user, title, body, vote_int, source_url,
+def propose(user, title, body, direction, source_url,
             source_type=u"website", is_draft=False, issue_no=None):
     """ 
     Propose an issue into the game
@@ -91,7 +91,7 @@ def propose(user, title, body, vote_int, source_url,
         issue.save()
         new_issue = issue
 
-    Vote.objects.record_vote(user , new_issue, vote_int,)    
+    Vote.objects.record_vote(user , new_issue, direction,)    
 
     return new_issue
 

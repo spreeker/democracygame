@@ -46,9 +46,10 @@ def vote_on_object(request, model, direction, post_vote_redirect=None,
         return redirect_to_login(request.path)
 
     try:
+        direction = int(direction)
         vote = possible_votes[direction]
     except KeyError:
-        raise AttributeError("'%s' is not a valid vote type." % vote_type)
+        raise AttributeError("'%s' is not a valid vote type." % direction )
 
     # Look up the object to be voted on
     lookup_kwargs = {}
