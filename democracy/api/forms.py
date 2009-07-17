@@ -11,7 +11,7 @@ class IssueForm(forms.Form):
     )
     url = forms.URLField()
     source_type = forms.CharField( widget = forms.ChoiceField( choices = source_types ))
-    vote_int = forms.ChoiceField( choices = possible_votes)
+    direction = forms.ChoiceField( choices = possible_votes)
 
     is_draft = forms.BooleanField(initial = True, required = False)
 

@@ -1,3 +1,10 @@
+"""
+The democracy API.
+
+we have some public resources which you can get annonymousy
+but for the private data we require oauth authentication
+
+"""
 import datetime
 
 from django.contrib.auth.models import User
@@ -36,14 +43,50 @@ def paginate(request, qs):
 
 class IssueVotesHandler(AnonymousBaseHandler):
     """
-    Returns the vote count for an issue
-    issue id should be provided
-    Anonymous function it is about aggegrated data not user specific
-    """ 
+    why am i not in documentation?
+    """
     allowed_methods = ('GET',)
     fields = ('vote', 'vote_count',)
+    model = Vote 
 
     def read(self, request, id ,*args, **kwargs):
+        """
+        Return the different vote counts for an issue
+
+        example output:
+
+        { "-1": 1 , "1":10, "10": 1  ... } 
+                
+        This Means for -1 , (against) there is 1 vote
+        , 10 people voted for (1) and 1 person voted blank (10) *unconvincing*
+        Here are all the different votes directions:
+
+        -1.  "Against",
+
+        1.   "For",
+
+        *blank_votes* note always higer than 10. 
+
+        content related problems with issues 
+
+        10.  'Unconvincing',
+        11.  'Not political',
+        12.  'Can\'t completely agree',
+
+        form related problems with issues 
+
+        13.  "Needs more work",
+        14.  "Badly worded",
+        15.  "Duplicate",
+        16.  'Unrelated source',
+
+        personal considerations 
+
+        17.  'I need to know more',
+        18.  'Ask me later',
+        19.  'Too personal',
+
+        """ 
         try :
             issue = Issue.objects.get( id=id )
         except Issue.DoesNotExist :
@@ -67,14 +110,16 @@ class IssueVotesHandler(AnonymousBaseHandler):
 
 class VoteHandler(BaseHandler):
     """
-    returns the votes for an user. 
-    makes it able to post to an user
+    Read and Post votes for user.
     """
     allowed_methods = ('GET', 'POST' )
     fields = ('vote', 'time_stamp', 'issue_uri', 'keep_private', 'user_uri')
     model = Vote
 
     def read(self, request, *args, **kwargs):
+        """
+        Returns the votes for an user. 
+        """
         ctype = ContentType.objects.get_for_model(Issue)
         queryset = self.model.objects.filter( user = request.user,
                         content_type = ctype.pk ).order_by('time_stamp')
@@ -92,12 +137,14 @@ class VoteHandler(BaseHandler):
     ## TODO use the @validate decorator of piston
     @validate( VoteForm )
     def create(self, request ):
+        """
+        Vote on an Issue
+        """
         ctype = ContentType.objects.get_for_model(Issue)
         attrs = self.flatten_dict(request.POST)
         object_id = attrs.pop('issue') 
-        attrs.update({
-                  'content_type' : ctype,
-                  'object_id' : object_id,
+        attrs.update({ 'content_type' : ctype,
+                       'object_id' : object_id,
                 })
 
         if self.exists(**attrs):
@@ -215,7 +262,7 @@ class IssueHandler(BaseHandler):
                 request.user,
                 attrs['title'],
                 attrs['body'],
-                attrs['vote_int'],
+                attrs['direction'],
                 attrs['url'],
                 attrs['source_type'],
                 attrs['is_draft'],

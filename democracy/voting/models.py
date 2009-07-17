@@ -39,7 +39,7 @@ class Vote(models.Model):
     objects = VoteManager()
 
     def __unicode__(self):
-        return unicode(self.vote) + u" on \"" + self.issue.title + u"\" by " + self.owner.username
+        return unicode(self.vote) + u" on \"" + str(self.payload) + u"\" by " + self.user.username
 
     class Meta:
         db_table = 'votes'
