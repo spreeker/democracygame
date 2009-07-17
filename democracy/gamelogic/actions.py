@@ -44,7 +44,7 @@ def vote(user, issue, vote_int, keep_private , api_interface=None ):
     if not role_to_actions[userprofile.role].has_key('vote') : return
 
     repeated_vote, voted_already, new_vote = \
-        Vote.objects.vote(user, issue, vote_int, api_interface )
+        Vote.objects.record_vote(user, issue, vote_int, api_interface )
 
     if repeated_vote: return
     
@@ -91,7 +91,7 @@ def propose(user, title, body, vote_int, source_url,
         issue.save()
         new_issue = issue
 
-    Vote.objects.vote(user , new_issue, vote_int,)    
+    Vote.objects.record_vote(user , new_issue, vote_int,)    
 
     return new_issue
 

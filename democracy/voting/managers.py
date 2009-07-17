@@ -59,7 +59,7 @@ class VoteManager(models.Manager):
 
         return votes       
 
-    def vote(self, user, obj, vote_int , api_interface=None ):
+    def record_vote(self, user, obj, vote_int , api_interface=None ):
         """
         Archive old votes by switching the is_archived flag to True
         for all the previous votes on <obj> by <user>.
