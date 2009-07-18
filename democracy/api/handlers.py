@@ -43,7 +43,7 @@ def paginate(request, qs):
 
 class IssueVotesHandler(AnonymousBaseHandler):
     """
-    why am i not in documentation?
+    Return votes for issue 
     """
     allowed_methods = ('GET',)
     fields = ('vote', 'vote_count',)
@@ -134,7 +134,6 @@ class VoteHandler(BaseHandler):
     def user_uri(cls, vote):
         return "%s" % reverse('api_user' , args=[vote.user.id])
 
-    ## TODO use the @validate decorator of piston
     @validate( VoteForm )
     def create(self, request ):
         """
