@@ -1,14 +1,14 @@
-# This file contains translations for the Emocracy app/website to dutch.
-# Copyright 2009 
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Thijs Coenen tcoenenbackup@gmail.com, 2009.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-05-20 17:11+0200\n"
+"POT-Creation-Date: 2009-07-18 18:05+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,67 +32,76 @@ msgstr ""
 msgid "Dutch"
 msgstr ""
 
-#: gamelogic/actions.py:128
+#: gamelogic/models.py:26
 #, python-format
-msgid ""
-"Tag %(tagname)s added to this issue. The new tag might not show up "
-"immediately"
-msgstr ""
-
-#: gamelogic/models.py:23
-#, python-format
-msgid "%(user)s voted for %(representative)s"
+msgid "%(user)s  multiplies for %(issue)s"
 msgstr ""
 
 #: gamelogic/util.py:35 gamelogic/util.py:39 gamelogic/util.py:67
 #: web/util.py:35 web/util.py:39 web/util.py:67
 msgid "I did not vote"
-msgstr "Ik heb niet gestemd"
+msgstr ""
 
-#: issue.content/models.py:15
+#: issue/models.py:14
+msgid "website"
+msgstr ""
+
+#: issue/models.py:15
 msgid "video"
 msgstr ""
 
-#: issue.content/models.py:16
+#: issue/models.py:16
 msgid "audio"
 msgstr ""
 
-#: issue.content/models.py:17
+#: issue/models.py:17
 msgid "book"
 msgstr ""
 
-#: issue.content/models.py:18
+#: issue/models.py:18
 msgid "document"
 msgstr ""
 
-#: issue.content/models.py:19
+#: issue/models.py:19
 msgid "image"
-msgstr "plaatje"
-
-#: issue.content/models.py:20
-msgid "website"
 msgstr ""
 
 #: profiles/forms.py:20
 msgid "Username"
-msgstr "Gebruikersnaam"
+msgstr ""
+
+#: templates/base.html:14
+msgid "home"
+msgstr ""
+
+#: templates/base.html:14
+msgid "about"
+msgstr ""
+
+#: templates/base.html:15
+msgid "contact"
+msgstr ""
+
+#: templates/base.html:15
+msgid "wishes"
+msgstr ""
 
 #: templates/profiles/logout.html:5
 msgid "You are now logged out."
-msgstr "U bent nu uitgelogt"
+msgstr ""
 
 #: templates/profiles/search_user.html:6 templates/web/search_tag.html:6
 msgid "search"
-msgstr "zoek"
+msgstr ""
 
 #: templates/profiles/search_user.html:15
 msgid "No users were found that match you query ..."
-msgstr "Er zijn gebruikers gevonden die met uw zoek createria overeen komen"
+msgstr ""
 
 #: templates/profiles/search_user.html:19 templates/web/issue_detail.html:57
 #: templates/web/search_tag.html:19
 msgid "previous"
-msgstr "vorige"
+msgstr ""
 
 #: templates/profiles/search_user.html:21 templates/web/search_tag.html:21
 #, python-format
@@ -126,9 +135,8 @@ msgid "Your previous anonymous votes have been saved to your profile!"
 msgstr ""
 
 #: templates/registration/logged_out.html:4
-#, fuzzy
 msgid "Home"
-msgstr "thuis"
+msgstr ""
 
 #: templates/registration/logged_out.html:8
 msgid "Thanks for spending some quality time with the Web site today."
@@ -136,7 +144,7 @@ msgstr ""
 
 #: templates/registration/logged_out.html:10
 msgid "Log in again"
-msgstr "Log opniew in"
+msgstr ""
 
 #: templates/registration/password_change_done.html:6
 msgid "Password change successful"
@@ -144,11 +152,11 @@ msgstr ""
 
 #: templates/registration/password_change_done.html:8
 msgid "Your password was changed."
-msgstr "Uw wachtwoord is verandert"
+msgstr ""
 
 #: templates/registration/password_change_form.html:6
 msgid "Password change"
-msgstr "Verander wachtwoord"
+msgstr ""
 
 #: templates/registration/password_change_form.html:8
 msgid ""
@@ -158,26 +166,26 @@ msgstr ""
 
 #: templates/registration/password_change_form.html:13
 msgid "Old password:"
-msgstr "Oude wachtwoord"
+msgstr ""
 
 #: templates/registration/password_change_form.html:15
 #: templates/registration/password_reset_confirm.html:15
 msgid "New password:"
-msgstr "Nieuw wachtwoord"
+msgstr ""
 
 #: templates/registration/password_change_form.html:17
 #: templates/registration/password_reset_confirm.html:17
 msgid "Confirm password:"
-msgstr "Bevestig wachtwoord"
+msgstr ""
 
 #: templates/registration/password_change_form.html:19
 #: templates/registration/password_reset_confirm.html:18
 msgid "Change my password"
-msgstr "Verander mijn wachtwoord"
+msgstr ""
 
 #: templates/registration/password_reset_complete.html:7
 msgid "Password reset complete"
-msgstr "Wachtwoord reset geslaagd"
+msgstr ""
 
 #: templates/registration/password_reset_complete.html:9
 msgid "Your password has been set.  You may go ahead and log in now."
@@ -185,11 +193,11 @@ msgstr ""
 
 #: templates/registration/password_reset_complete.html:11
 msgid "Log in"
-msgstr "Log in"
+msgstr ""
 
 #: templates/registration/password_reset_confirm.html:9
 msgid "Enter new password"
-msgstr "Voer nieuw wachtwoord in"
+msgstr ""
 
 #: templates/registration/password_reset_confirm.html:11
 msgid ""
@@ -280,79 +288,47 @@ msgstr ""
 msgid "Yes, run for office."
 msgstr ""
 
-#: templates/web/index.html:11
-msgid "EMOCRACY"
-msgstr ""
-
-#: templates/web/index.html:11
-msgid "[ the game ]"
-msgstr ""
-
-#: templates/web/index.html:13
-msgid "home"
-msgstr "thuis"
-
-#: templates/web/index.html:13
-msgid "about"
-msgstr "over"
-
-#: templates/web/index.html:14
-msgid "contact"
-msgstr "contact"
-
-#: templates/web/index.html:14
-msgid "bugs"
-msgstr "bugs"
-
-#: templates/web/index.html:14
-msgid "wishes"
-msgstr "wensen"
-
 #: templates/web/issue_body.html:4
 msgid "by"
-msgstr "door"
+msgstr ""
 
 #: templates/web/issue_body.html:4
 msgid "on"
-msgstr "op"
+msgstr ""
 
 #: templates/web/issue_body.html:4
 msgid "at"
-msgstr "om"
+msgstr ""
 
 #: templates/web/issue_body.html:7
 msgid "source"
-msgstr "bron"
+msgstr ""
 
 #: templates/web/issue_body.html:14 templates/web/issue_sidebar.html:25
 msgid "add tag"
-msgstr "tag toevoegen"
+msgstr ""
 
 #: templates/web/issue_detail.html:24 templates/web/issue_detail.html.py:33
 #: templates/web/voteform.html:3
-#, fuzzy
 msgid "Vote on this issue"
-msgstr "Score voor dit onderwerp"
+msgstr ""
 
 #: templates/web/issue_detail.html:26
-#, fuzzy
 msgid "Vote"
-msgstr "stemmen"
+msgstr ""
 
 #: templates/web/issue_detail.html:27 templates/web/issue_detail.html.py:36
 #: templates/web/voteform.html:8
 msgid "Keep private"
-msgstr "houd prive"
+msgstr ""
 
 #: templates/web/issue_detail.html:35
-#, fuzzy
 msgid "Motivation"
-msgstr "meer informatie"
+msgstr ""
 
 #: templates/web/issue_detail.html:42
-#, fuzzy
 msgid "Tag this issue"
-msgstr "Score voor dit onderwerp"
+msgstr ""
 
 #: templates/web/issue_detail.html:44
 msgid "Popular tags"
@@ -380,15 +356,15 @@ msgstr ""
 
 #: templates/web/issue_sidebar.html:16
 msgid "more information"
-msgstr "meer informatie"
+msgstr ""
 
 #: templates/web/issue_sidebar.html:33
 msgid "score"
-msgstr "score"
+msgstr ""
 
 #: templates/web/issue_sidebar.html:34
 msgid "votes"
-msgstr "stemmen"
+msgstr ""
 
 #: templates/web/mandate.html:7
 #, python-format
@@ -399,174 +375,156 @@ msgstr ""
 msgid "No tags were found that match you query ..."
 msgstr ""
 
-#: templates/web/sidebar.html:12
+#: templates/web/sidebar.html:9
 #, python-format
 msgid ""
-" Your are currently a <a href=\"http://democracy.nl/wiki/index.php/Burger\">%"
-"(role)s</a>.<br />\n"
-"\t\tYour current <a href=\"http://democracy.nl/wiki/index.php/Punten\">score</"
-"a> is %(score)s<br /><br />\n"
-"\t\tYou voted for %(total_for)s times.<br />\n"
-"\t\tYou voted against %(total_against)s times.<br />\n"
-"\t\tYou voted blank %(total_blank)s times.<br /><br />\n"
+" \n"
+"\n"
+"        <a href=\"http://democracy.nl/wiki/index.php/Burger\">%(role)s</a>."
+"<br />\n"
+"\t\t<a href=\"http://democracy.nl/wiki/index.php/Punten\">score</a> is %"
+"(score)s<br /><br />\n"
+"        <p>\n"
+"\t\tfor : %(total_for)s \n"
+"\t\tagainst : %(total_against)s\n"
+"\t\tblank : %(total_blank)s\n"
+"        </p>\n"
 "        "
 msgstr ""
 
-#: templates/web/sidebar.html:20 templates/web/sidebar.html.py:34
-msgid "all issues"
-msgstr "alle onderwerpen"
-
 #: templates/web/sidebar.html:21
-msgid "my issues"
-msgstr "mijn onderwerpen"
+#, python-format
+msgid ""
+"  \n"
+"                As a %(role)s you can: \n"
+"        "
+msgstr ""
 
-#: templates/web/sidebar.html:22
+#: templates/web/sidebar.html:31
 msgid "propose issue"
-msgstr "maak een onderwerp"
+msgstr ""
 
-#: templates/web/sidebar.html:23
+#: templates/web/sidebar.html:38
+msgid "You are missing the following actions: "
+msgstr ""
+
+#: templates/web/sidebar.html:45
+msgid "all issues"
+msgstr ""
+
+#: templates/web/sidebar.html:46
+msgid "my issues"
+msgstr ""
+
+#: templates/web/sidebar.html:47
 msgid "my votes"
-msgstr "mijn stemmen"
+msgstr ""
 
-#: templates/web/sidebar.html:24 templates/web/sidebar.html.py:35
-msgid "polls"
-msgstr "peilingen"
-
-#: templates/web/sidebar.html:25
+#: templates/web/sidebar.html:48
 msgid "my profile"
-msgstr "mijn profiel"
+msgstr ""
 
-#: templates/web/sidebar.html:26
+#: templates/web/sidebar.html:49
 msgid "log out"
-msgstr "log uit"
-
-#: templates/web/sidebar.html:29
-msgid "Dear Anonymous"
 msgstr ""
 
-#: templates/web/sidebar.html:30
-msgid "You are not logged in. You can"
-msgstr ""
-
-#: templates/web/sidebar.html:30
+#: templates/web/sidebar.html:55
 msgid "register"
 msgstr ""
 
-#: templates/web/sidebar.html:31
-msgid "a new account or you can"
-msgstr ""
-
-#: templates/web/sidebar.html:31
-#, fuzzy
+#: templates/web/sidebar.html:57
 msgid "log in"
-msgstr "log uit"
-
-#: templates/web/sidebar.html:32
-msgid "Anonymous users can still vote on issues."
 msgstr ""
 
 #: templates/web/sort_order_block.html:3
 msgid "most recent"
-msgstr "meest recent"
+msgstr ""
 
 #: templates/web/sort_order_block.html:4
 msgid "most voted on"
-msgstr "meeste stemmen"
+msgstr ""
 
 #: templates/web/sort_order_block.html:5
 msgid "highest score"
-msgstr "hoogste score"
+msgstr ""
 
-#
 #: templates/web/sort_order_block.html:6
 msgid "hottest"
-msgstr "hottest"
+msgstr ""
 
 #: templates/web/sort_order_block.html:6
 msgid "currently sorting by hotness"
-msgstr "hotness"
+msgstr ""
 
 #: templates/web/voteform.html:4
 msgid "cast a vote"
-msgstr "stem"
+msgstr ""
 
-#: voting/models.py:24 web/forms.py:72 web/forms.py:88
+#: voting/managers.py:9 web/forms.py:66 web/forms.py:82
 msgid "Against"
-msgstr "Tegen"
+msgstr ""
 
-#: voting/models.py:25 web/forms.py:72 web/forms.py:88
+#: voting/managers.py:10 web/forms.py:66 web/forms.py:82
 msgid "For"
-msgstr "Voor"
+msgstr ""
 
-#: voting/models.py:30
+#: voting/managers.py:14
 msgid "Unconvincing"
-msgstr "Niet overtuigend"
+msgstr ""
 
-#: voting/models.py:31
+#: voting/managers.py:15
+msgid "Not political"
+msgstr ""
+
+#: voting/managers.py:16
 msgid "Can't completely agree"
-msgstr "Niet helemaal mee eens"
+msgstr ""
 
-#: voting/models.py:33
+#: voting/managers.py:18
 msgid "Needs more work"
-msgstr "Nog niet af"
+msgstr ""
 
-#: voting/models.py:34
+#: voting/managers.py:19
 msgid "Badly worded"
-msgstr "Slecht verwoord"
+msgstr ""
 
-#: voting/models.py:35
+#: voting/managers.py:20
 msgid "Duplicate"
-msgstr "Duplicaat"
+msgstr ""
 
-#: voting/models.py:36
+#: voting/managers.py:21
 msgid "Unrelated source"
-msgstr "Geen toepasselijke bron"
+msgstr ""
 
-#: voting/models.py:38
+#: voting/managers.py:23
 msgid "I need to know more"
-msgstr "Te weinig kennis"
+msgstr ""
 
-#: voting/models.py:39
+#: voting/managers.py:24
 msgid "Ask me later"
-msgstr "Vraag me later"
+msgstr ""
 
-#: web/forms.py:68
+#: voting/managers.py:25
+msgid "Too personal"
+msgstr ""
+
+#: web/forms.py:62
 msgid "Tag"
 msgstr ""
 
-#: web/forms.py:72 web/forms.py:88
+#: web/forms.py:66 web/forms.py:82
 msgid "Blank..."
-msgstr "Blanco..."
-
-#: web/views.py:76
-msgid "All Issues"
-msgstr "alle onderwerpen"
-
-#: web/views.py:128
-#, fuzzy, python-format
-msgid "Issues tagged with %(tagname)s"
-msgstr "Onderwerpen getagd met %(tagname)s"
-
-#: web/views.py:141
-#, fuzzy, python-format
-msgid "Issues for %(username)s"
-msgstr "De nieuwste Onderwerpen voor %(username)s"
-
-#: web/views.py:493
-msgid "No tag added"
 msgstr ""
 
-#: web/views.py:567
-#, fuzzy
+#: web/views.py:64
+msgid "All Issues"
+msgstr ""
+
+#: web/views.py:121
+#, python-format
+msgid "Issues for %(username)s"
+msgstr ""
+
+#: web/views.py:355
 msgid "Issue object does not exist"
-msgstr "Onderwerp bestaat niet"
-
-#~ msgid "Emocracy the Game"
-#~ msgstr "Emocracy het Spel"
-
-#~ msgid ""
-#~ "Your are currently a <a href=\"http://democracy.nl/wiki/index.php/Burger\">"
-#~ "%(role)s</a>.<br />"
-#~ msgstr ""
-#~ "Je bent nu een <a href=\"http://democracy.nl/wiki/index.php/Burger\">%"
-#~ "(role)s</a>.<br />"
+msgstr ""
