@@ -133,6 +133,7 @@ INSTALLED_APPS = (
     'pagination',
 	'registration',
     'piston',
+    'rosetta',
 )
 # comment out in production
 DEBUG_TOOLBAR_CONFIG = {

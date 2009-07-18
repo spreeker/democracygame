@@ -9,7 +9,7 @@ admin.autodiscover()
 
 from piston.authentication import oauth_request_token, oauth_user_auth, oauth_access_token
 
-import settings
+from django.conf import settings
 
 urlpatterns = patterns('',
     #(r'^web/', include('democracy.web.urls')),
@@ -35,7 +35,14 @@ urlpatterns = patterns('',
 
     (r'^profile/', include('democracy.profiles.urls')),
     (r'^i18n/', include('django.conf.urls.i18n')),
+    
     # For Demo purposes: redirect all the wrong stuff to the issue_list views...
     url(r'^$' , 'democracy.dashboard.views.index', ),
     #(r'$', redirect_to, {'url' : '/web/issues/'}),
 )
+
+if 'rosetta' in settings.INSTALLED_APPS:
+    urlpatterns += patterns('',
+        url(r'^rosetta/', include('rosetta.urls')),
+    )
+
