@@ -7,7 +7,8 @@ from django.contrib.auth.views import redirect_to_login
 from django.template import loader, RequestContext
 from django.utils import simplejson
 
-from voting.models import Vote
+from democracy.voting.models import Vote
+from gamelogic import actions 
 
 from democracy.voting.models import possible_votes
 
@@ -40,7 +41,6 @@ def vote_on_object(request, model, direction, post_vote_redirect=None,
         return xmlhttprequest_vote_on_object(request, model, direction,
                                              object_id=object_id, slug=slug,
                                              slug_field=slug_field)
-
     if extra_context is None: extra_context = {}
     if not request.user.is_authenticated():
         return redirect_to_login(request.path)
@@ -51,6 +51,7 @@ def vote_on_object(request, model, direction, post_vote_redirect=None,
     except KeyError:
         raise AttributeError("'%s' is not a valid vote type." % direction )
 
+    print "ehm"
     # Look up the object to be voted on
     lookup_kwargs = {}
     if object_id:
@@ -81,7 +82,8 @@ def vote_on_object(request, model, direction, post_vote_redirect=None,
                                  'the request, or the object being voted on '
                                  'must define a get_absolute_url method or '
                                  'property.')
-        Vote.objects.record_vote(request.user, obj, direction)
+        #Vote.objects.record_vote(request.user, obj, direction)
+        actions.vote(request.user, obj, direction, keep_private=False, ) 
         return HttpResponseRedirect(next)
     else:
         if not template_name:
@@ -149,7 +151,8 @@ def xmlhttprequest_vote_on_object(request, model, direction,
             'No %s found for %s.' % (model._meta.verbose_name, lookup_kwargs))
 
     # Vote and respond
-    Vote.objects.record_vote(request.user, obj, vote)
+    #Vote.objects.record_vote(request.user, obj, vote)
+    vote(request.user, obj, direction, False, api_interface="dashboard") 
     return HttpResponse(simplejson.dumps({
         'success': True,
         'score': Vote.objects.get_object_votes(obj),

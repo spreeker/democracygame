@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-07-18 18:05+0200\n"
-"PO-Revision-Date: 2009-07-18 18:23\n"
+"PO-Revision-Date: 2009-07-20 17:54\n"
 "Last-Translator: <stephan@preeker.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -35,12 +35,12 @@ msgstr "nederlands"
 #: gamelogic/models.py:26
 #, python-format
 msgid "%(user)s  multiplies for %(issue)s"
-msgstr "vermenigvuldigt "
+msgstr " vermenigvuldigt voor"
 
 #: gamelogic/util.py:35 gamelogic/util.py:39 gamelogic/util.py:67
 #: web/util.py:35 web/util.py:39 web/util.py:67
 msgid "I did not vote"
-msgstr ""
+msgstr "niet gestemt"
 
 #: issue/models.py:14
 msgid "website"
@@ -101,17 +101,17 @@ msgstr "Geen gebruikers gevonden die overeenkomen met je zoekopdracht ..."
 #: templates/profiles/search_user.html:19 templates/web/issue_detail.html:57
 #: templates/web/search_tag.html:19
 msgid "previous"
-msgstr ""
+msgstr "vorige"
 
 #: templates/profiles/search_user.html:21 templates/web/search_tag.html:21
 #, python-format
 msgid "page %(no)s of %(np)s "
-msgstr ""
+msgstr "page %(geen)s  van %(NP)s "
 
 #: templates/profiles/search_user.html:23 templates/web/issue_detail.html:63
 #: templates/web/search_tag.html:23
 msgid "next"
-msgstr ""
+msgstr "volgende"
 
 #: templates/registration/activate.html:6
 #, python-format
@@ -128,27 +128,27 @@ msgstr ""
 
 #: templates/registration/activate.html:15
 msgid "Something went wrong. Your account is probably already active"
-msgstr ""
+msgstr "Er iets fout is gegaan. Uw account is waarschijnlijk al actief"
 
 #: templates/registration/activate.html:20
 msgid "Your previous anonymous votes have been saved to your profile!"
-msgstr ""
+msgstr "Uw vorige anoniem stemmen zijn opgeslagen op je profiel!"
 
 #: templates/registration/logged_out.html:4
 msgid "Home"
-msgstr ""
+msgstr "Home"
 
 #: templates/registration/logged_out.html:8
 msgid "Thanks for spending some quality time with the Web site today."
-msgstr ""
+msgstr "Bedankt voor de besteding van sommige quality time met de website vandaag."
 
 #: templates/registration/logged_out.html:10
 msgid "Log in again"
-msgstr ""
+msgstr "opnieuw inloggen"
 
 #: templates/registration/password_change_done.html:6
 msgid "Password change successful"
-msgstr ""
+msgstr "Wachtwoord wijzigen succesvol"
 
 #: templates/registration/password_change_done.html:8
 msgid "Your password was changed."
@@ -391,7 +391,7 @@ msgid ""
 "  \n"
 "                As a %(role)s you can: \n"
 "        "
-msgstr "Als %(rol)s  kunt u:"
+msgstr "Als %(role)s  kunt u:"
 
 #: templates/web/sidebar.html:31
 msgid "propose issue"

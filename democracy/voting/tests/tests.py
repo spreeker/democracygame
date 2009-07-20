@@ -32,7 +32,7 @@ r"""
 >>> for user in users[:2]:
 ...     _,_,_ = Vote.objects.record_vote(user, i1, 10)
 >>> Vote.objects.get_for_object(i1)
-{1: 2, 10: 2}
+{0: 2, 1: 2, 10: 2}
 >>> for user in users[:2]:
 ...     _,_,_ = Vote.objects.record_vote(user, i1, -1)
 >>> i2 = Item.objects.create(name='i2')
@@ -75,7 +75,7 @@ ValueError: Invalid vote -2 must be in [1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 1
 ...     _ = Vote.objects.record_vote(user, i3, +1)
 ...     _ = Vote.objects.record_vote(user, i4, +1)
 >>> Vote.objects.get_for_objects_in_bulk([i1, i2, i3, i4])
-{1: {1: 2, -1: 2}, 2: {1: 4}, 3: {1: 3, -1: 1}, 4: {1: 3, 11: 1}}
+{1: {1: 2, -1: 2}, 2: {1: 4}, 3: {1: 3, -1: 1}, 4: {0: 1, 1: 3, 11: 1}}
 >>> Vote.objects.get_for_objects_in_bulk([])
 {}
 """

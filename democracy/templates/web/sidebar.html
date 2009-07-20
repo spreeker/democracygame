@@ -3,10 +3,10 @@
 	<div class="sidebarblock">
 {% if user.is_authenticated %}
 		<h3>{{user.username}}</h3>
-        <p> ranking: {{userprofile.ranking }}</p>
+        <p> ranking: {{user.get_profile.ranking }}</p>
 		<p>
 
-        {% blocktrans with userprofile.role as role and userprofile.score as score and userprofile.total_for as total_for and userprofile.total_against as total_against and userprofile.total_blank as total_blank %} 
+        {% blocktrans with user.get_profile.role as role and user.get_profile.score as score and user.get_profile.total_for as total_for and user.get_profile.total_against as total_against and user.get_profile.total_blank as total_blank %} 
 
         <a href="http://democracy.nl/wiki/index.php/Burger">{{role}}</a>.<br />
 		<a href="http://democracy.nl/wiki/index.php/Punten">score</a> is {{score}}<br /><br />
@@ -18,7 +18,7 @@
         {% endblocktrans %}
         <p/>
         <p>
-        {% blocktrans with userprofile.role as role %}  
+        {% blocktrans with user.get_profile.role as role %}  
                 As a {{role}} you can: 
         {% endblocktrans %}
 

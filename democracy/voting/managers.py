@@ -59,6 +59,9 @@ class VoteManager(models.Manager):
         object_ids = [o._get_pk_val() for o in objects]
         if not object_ids:
             return {}
+        if not user.is_authenticated():
+            return {} 
+
         queryset = self.filter( user=user )
         queryset = queryset.filter( is_archived=False )
         ctype = ContentType.objects.get_for_model(objects[0])
@@ -88,8 +91,10 @@ class VoteManager(models.Manager):
         queryset = queryset.annotate(vcount=Count("vote")).order_by()
 
         vote_dict = {}
-
+        
         for count in queryset:
+            if count['vote'] >= 10 : # sum up all blank votes
+                vote_dict[0] = vote_dict.get(0,0) + count['vcount']
             vote_dict[count['vote']] = count['vcount']
 
         return vote_dict
@@ -113,11 +118,13 @@ class VoteManager(models.Manager):
         for votecount  in queryset:
             object_id = votecount['object_id']
             votes = vote_dict.setdefault(object_id , {})
+            if votecount['vote'] >= 10:  # sum up all blank votes
+                votes[0] = votes.get(0,0) + votecount['vcount']
             votes[votecount['vote']] =  votecount['vcount']
 
         return vote_dict
 
-    def record_vote(self, user, obj, direction , api_interface=None ):
+    def record_vote(self, user, obj, direction, keep_private=False, api_interface=None ):
         """
         Archive old votes by switching the is_archived flag to True
         for all the previous votes on <obj> by <user>.
@@ -145,7 +152,8 @@ class VoteManager(models.Manager):
         if not repeated_vote:
             vote = self.create( user=user , content_type=ctype,
                          object_id=obj._get_pk_val(), vote=direction,
-                         api_interface=api_interface , is_archived=False 
+                         api_interface=api_interface , is_archived=False, 
+                         keep_private=keep_private
                         )
             vote.save()
         return repeated_vote, voted_already, vote
