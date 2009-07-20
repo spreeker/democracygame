@@ -41,13 +41,39 @@ class VoteManager(models.Manager):
         return self.filter(content_type = ctype.pk,
             object_id = obj.pk)
 
-    def get_user_votes(self, user):
+    def get_for_user(self, user , obj):
+        """
+        Get the vote made on an give object by user return None if it not exists
+        """
+        object_id = obj._get_pk_val()
+        ctype = ContentType.objects.get_for_model(obj)
+        try:
+            return self.get(content_type=ctype, object_id=object_id, is_archived=False, user=user )
+        except Vote.DoesNotExist:
+            return None 
+
+    def get_for_user_in_bulk(self, user, objects):
+        """
+        Get dictinary mapping object to vote for user on given objects.
+        """
+        object_ids = [o._get_pk_val() for o in objects]
+        if not object_ids:
+            return {}
+        queryset = self.filter( user=user )
+        queryset = queryset.filter( is_archived=False )
+        ctype = ContentType.objects.get_for_model(objects[0])
+        queryset = queryset.filter(content_type=ctype, object_id__in=object_ids)
+        votes = list(queryset)
+        vote_dict = dict([( vote.object_id, vote ) for vote in votes ])
+        return vote_dict
+
+    def get_user_votes(self, user, obj=None):
         """
         Get queryset for active votes by user
         """
-        return Vote.objects.filter(owner=user, is_archived=False).order_by("time_stamp").reverse()
+        return self.filter(owner=user, is_archived=False).order_by("-time_stamp")
     
-    def get_object_votes(self, obj, all=False):
+    def get_for_object(self, obj, all=False):
         """
         Get a dictionary mapping vote to votecount
         """
@@ -61,21 +87,20 @@ class VoteManager(models.Manager):
         queryset = queryset.values('vote')
         queryset = queryset.annotate(vcount=Count("vote")).order_by()
 
-        votes = {}
+        vote_dict = {}
 
         for count in queryset:
-            votes[count['vote']] = count['vcount']
+            vote_dict[count['vote']] = count['vcount']
 
-        return votes
+        return vote_dict
 
-    def get_objects_votes(self, objects, all=False):
+    def get_for_objects_in_bulk(self, objects, all=False):
         """
         Get a dictinary mapping objects ids to dictinary which maps direction to votecount
         """
         object_ids = [o._get_pk_val() for o in objects]
         if not object_ids:
             return {}
-        object_ids.reverse()
         ctype = ContentType.objects.get_for_model(objects[0])
         queryset = self.filter(content_type=ctype, object_id__in=object_ids)
 
