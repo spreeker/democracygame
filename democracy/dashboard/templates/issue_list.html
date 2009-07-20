@@ -3,10 +3,15 @@
 
 {% block content %}
 
-{% autopaginate issues 3 %}
+{% autopaginate issues 6 %}
+
+
 {% for issue in issues %}
 <div id="issue{{ issue.pk }}" class="issue">
 <p><a href="/">{{ issue }}</a> </p>
+<div id="issue_left">
+    
+</div>
 <p> {{ issue.body }} </p>
 <p>
 <form action="{% url vote issue.pk %}" method="post">
