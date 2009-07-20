@@ -130,6 +130,7 @@ INSTALLED_APPS = (
 
     'democracy.dashboard',
     
+    'tagging',
     'pagination',
 	'registration',
     'piston',

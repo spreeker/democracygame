@@ -29,7 +29,7 @@ class GameView(object):
 
     def objects(self):
         # you want to override this method, # must return queryset
-        return Issue.objects.filter().select_related()
+        return Issue.objects.filter().select_related().order_by('-timestamp')
 
     def __call__(self, request, *args, **kwargs):
         if request.method == "GET":
@@ -46,6 +46,7 @@ class GameView(object):
             '%s' % self.objects_name :  self.objects(),# qs 
             'actions' : actions.get_actions(request.user),
             'missing_actions' : actions.get_unavailable_actions(request.user),
+            'vote' : Vote,
         }) 
        
         t = loader.get_template(self.template_name)
