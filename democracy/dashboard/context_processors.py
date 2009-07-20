@@ -9,7 +9,7 @@ def get_a_profile(request):
     if request.user.is_authenticated():
         try:
             profile = request.user.get_profile()
-        except UserProfile.ObjectDoesNotExist: 
+        except UserProfile.DoesNotExist: 
             profile = UserProfile.objects.create( user=request.user, score=0, role='citizen' )
         return {'userprofile' : profile }
     else:

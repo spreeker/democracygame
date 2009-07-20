@@ -97,7 +97,7 @@ TEMPLATE_DIRS = (
 # authorization / profile settings:
 AUTH_PROFILE_MODULE = 'profiles.userprofile'
 LOGIN_URL = '/profile/login/'
-LOGIN_REDIRECT_URL = '/web/issues/'
+LOGIN_REDIRECT_URL = '/'
 
 
 # Set the context processors used by RequestContext objects: 
@@ -107,6 +107,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
     'django.core.context_processors.request',
+    'democracy.dashboard.context_processors.get_a_profile',
 )
 
 INSTALLED_APPS = (
@@ -157,9 +158,3 @@ logging.basicConfig(
 
 ACCOUNT_ACTIVATION_DAYS = 1
 
-try:
-    from settings_local import *
-except ImportError:
-    print "Create your local settings_local.py settings file with password sensitive information ect"
-    # Re-raise the import error. The server should not run!
-    raise

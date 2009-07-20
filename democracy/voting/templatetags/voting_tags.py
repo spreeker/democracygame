@@ -18,7 +18,7 @@ class VoteByUserNode(template.Node):
             object = template.resolve_variable(self.object, context)
         except template.VariableDoesNotExist:
             return ''
-        context[self.context_var] = Vote.objects.get_for_user(object, user)
+        context[self.context_var] = Vote.objects.get_for_user(user, object)
         return ''
 
 class VotesByUserNode(template.Node):
@@ -26,17 +26,17 @@ class VotesByUserNode(template.Node):
         self.user = user
         self.objects = objects
         self.context_var = context_var
-
+    #TODO if anonymous get votes from session 
     def render(self, context):
         try:
             user = template.resolve_variable(self.user, context)
             objects = template.resolve_variable(self.objects, context)
         except template.VariableDoesNotExist:
             return ''
-        context[self.context_var] = Vote.objects.get_for_user_in_bulk(objects, user)
+        context[self.context_var] = Vote.objects.get_for_user_in_bulk(user, objects)
         return ''
 
-class ScoreForObjectNode(template.Node):
+class VotesForObjectNode(template.Node):
     def __init__(self, object, context_var):
         self.object = object
         self.context_var = context_var
@@ -46,10 +46,14 @@ class ScoreForObjectNode(template.Node):
             object = template.resolve_variable(self.object, context)
         except template.VariableDoesNotExist:
             return ''
-        context[self.context_var] = Vote.objects.get_score(object)
+
+        vote_counts = Vote.objects.get_for_object( object )
+        votes = dict.fromkeys( possible_votes.keys , 0 ) 
+        votes.update( vote_counts )
+        context[self.context_var] = votes 
         return ''
 
-class ScoresForObjectsNode(template.Node):
+class VotesForObjectsNode(template.Node):
     def __init__(self, objects, context_var):
         self.objects = objects
         self.context_var = context_var
@@ -59,7 +63,30 @@ class ScoresForObjectsNode(template.Node):
             objects = template.resolve_variable(self.objects, context)
         except template.VariableDoesNotExist:
             return ''
-        context[self.context_var] = Vote.objects.get_scores_in_bulk(objects)
+        
+        counts_on_objects = Vote.objects.get_for_objects_in_bulk(objects)
+
+        for object_id in counts_on_objects.keys(): 
+            vote_counts = dict.fromkeys( possible_votes.keys , 0 )
+            vote_counts.update( counts_on_objects[object_id])
+            counts_on_objects[objects_id] = vote_counts
+
+        context[self.context_var] = counts_on_objects 
+        return ''
+
+class DictEntryForItemNode(template.Node):
+    def __init__(self, item, dictionary, context_var):
+        self.item = item
+        self.dictionary = dictionary
+        self.context_var = context_var
+
+    def render(self, context):
+        try:
+            dictionary = template.resolve_variable(self.dictionary, context)
+            item = template.resolve_variable(self.item, context)
+        except template.VariableDoesNotExist:
+            return ''
+        context[self.context_var] = dictionary.get(item.id, None)
         return ''
 
 
@@ -101,15 +128,15 @@ def get_votes_by_user(parser, token):
         raise template.TemplateSyntaxError("fourth argument to '%s' tag must be 'as'" % bits[0])
     return VotesByUserNode(bits[1], bits[3], bits[5])
 
-def do_score_for_object(parser, token):
+def get_vote_counts_for_object(parser, token):
     """
-    Retrieves the total score for an object and the number of votes
+    Retrieves number of votes for an object
     it's received and stores them in a context variable which has
-    ``score`` and ``num_votes`` properties.
+    ``vote`` and ``num_votes`` properties.
 
     Example usage::
 
-        {% score_for_object widget as score %}
+        {% vote_counts_for_object widget as votes %}
 
         {{ score.score }}point{{ score.score|pluralize }}
         after {{ score.num_votes }} vote{{ score.num_votes|pluralize }}
@@ -119,28 +146,28 @@ def do_score_for_object(parser, token):
         raise template.TemplateSyntaxError("'%s' tag takes exactly three arguments" % bits[0])
     if bits[2] != 'as':
         raise template.TemplateSyntaxError("second argument to '%s' tag must be 'as'" % bits[0])
-    return ScoreForObjectNode(bits[1], bits[3])
+    return VotesForObjectNode(bits[1], bits[3])
 
-def do_scores_for_objects(parser, token):
+def get_vote_counts_for_objects(parser, token):
     """
-    Retrieves the total scores for a list of objects and the number of
+    Retrieves the total vote count for a list of objects and the number of
     votes they have received and stores them in a context variable.
 
     Example usage::
 
-        {% scores_for_objects widget_list as score_dict %}
+        {% vote_counts_for_objects widget_list as vote_dict %}
     """
     bits = token.contents.split()
     if len(bits) != 4:
         raise template.TemplateSyntaxError("'%s' tag takes exactly three arguments" % bits[0])
     if bits[2] != 'as':
         raise template.TemplateSyntaxError("second argument to '%s' tag must be 'as'" % bits[0])
-    return ScoresForObjectsNode(bits[1], bits[3])
+    return VotesForObjectsNode(bits[1], bits[3])
 
 def get_dict_entry_for_item(parser, token):
     """
     Given an object and a dictionary keyed with object ids - as
-    returned by the ``votes_by_user`` and ``scores_for_objects``
+    returned by the ``votes_by_user`` and ``vote_counts_for_objects``
     template tags - retrieves the value for the given object and
     stores it in a context variable, storing ``None`` if no value
     exists for the given object.
@@ -161,9 +188,9 @@ def get_dict_entry_for_item(parser, token):
 
 register.tag('vote_by_user', get_vote_by_user)
 register.tag('votes_by_user', get_votes_by_user)
-register.tag('dict_entry_for_item', do_dict_entry_for_item)
-register.tag('score_for_object', do_score_for_object)
-register.tag('scores_for_objects', do_scores_for_objects)
+register.tag('dict_entry_for_item', get_dict_entry_for_item)
+register.tag('vote_counts_for_object', get_vote_counts_for_object)
+register.tag('vote_counts_for_objects', get_vote_counts_for_objects)
 
 
 # Filters

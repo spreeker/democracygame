@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from democracy.gamelogic.models import roles 
+
+
 class UserProfile(models.Model):
 
     user = models.ForeignKey(User, unique = True)
@@ -9,7 +12,7 @@ class UserProfile(models.Model):
     total_for = models.IntegerField(default = 0)
     total_against = models.IntegerField(default = 0)
     total_blank = models.IntegerField(default = 0)
-    role = models.CharField(max_length = 30)
+    role = models.CharField(max_length = 30, choices=roles.items() )
     # description
     title = models.CharField(max_length = 100, blank = True)
     description = models.TextField(blank = True)
