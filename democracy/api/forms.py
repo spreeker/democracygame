@@ -29,3 +29,5 @@ class AuthorizeRequestTokenForm(forms.Form):
         )
 
 
+class MultiplyForm(forms.Form):
+    issue = forms.ModelChoiceField( queryset = Issue.objects.all() )

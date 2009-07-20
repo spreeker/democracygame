@@ -12,6 +12,7 @@ from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator
 from django.core.paginator import InvalidPage
 from django.core.paginator import EmptyPage
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.contenttypes.models import ContentType
 
 from piston.handler import BaseHandler, AnonymousBaseHandler
@@ -20,6 +21,7 @@ from piston.utils import validate
 
 from democracy.api.forms import IssueForm
 from democracy.api.forms import VoteForm
+from democracy.api.forms import MultiplyForm 
 from democracy.issue.models import Issue
 from democracy.voting.models import Vote
 from democracy.profiles.models import UserProfile
@@ -45,11 +47,11 @@ class IssueVotesHandler(AnonymousBaseHandler):
     """
     Return votes for issue 
     """
-    allowed_methods = ('GET',)
+    allow_methods = ('GET',)
     fields = ('vote', 'vote_count',)
     model = Vote 
 
-    def read(self, request, id ,*args, **kwargs):
+    def read(self, request, id, *args, **kwargs):
         """
         Return the different vote counts for an issue
 
@@ -112,7 +114,7 @@ class VoteHandler(BaseHandler):
     """
     Read and Post votes for user.
     """
-    allowed_methods = ('GET', 'POST' )
+    allowed_methods = ('GET', 'POST', )
     fields = ('vote', 'time_stamp', 'issue_uri', 'keep_private', 'user_uri')
     model = Vote
 
@@ -222,14 +224,17 @@ class UserHandler(BaseHandler):
 
 
 class AnonymousIssueHandler(AnonymousBaseHandler):
-    allowed_methods = ('GET',)
+    #allow_methods = ('GET',)
     
     fields = ('title', 'body', ('user', ('username', ) ), 'time_stamp', 'source_type', 'url')
     model = Issue
 
     def read(self, request, id=None , *args, **kwargs):
         if id:
-            return self.model.objects.filter( issue_id=id )
+            try:
+                return self.model.objects.filter( issue_id=id )
+            except ObjectDoesNotExist:
+                return rc.NOT_FOUND
         else :
             queryset = self.model.objects.order_by( '-time_stamp' )
             page = paginate(request, queryset)
@@ -245,7 +250,7 @@ class AnonymousIssueHandler(AnonymousBaseHandler):
 
 
 class IssueHandler(BaseHandler):
-    allowed_methods = ('POST',)
+    allowed_methods = ('GET', 'POST',)
     anonymous = AnonymousIssueHandler
     fields = ('title', 'body', ('user', ('username')), 'time_stamp', 'souce_type', 'url')
     model = Issue
@@ -295,15 +300,15 @@ class AnonymousMultiplyHandler( AnonymousBaseHandler ):
         page = paginate(request, queryset)
         return page.object_list
     
-    
     @staticmethod
     def resource_uri():
         return ('api_multiply' , ['id'])
 
 
 class MultiplyHandler( BaseHandler ):
-    """ If a user has enough game points the user can multiply the value
-        of an issue.
+    """
+    If a user has enough game points the user can multiply the value
+    of an issue.
     """
     allowed_methods = ('POST' , 'GET' )
     anonymous = AnonymousMultiplyHandler
@@ -311,8 +316,8 @@ class MultiplyHandler( BaseHandler ):
     fields = ( ('user', ('resource_uri') ), 'time_stamp' , ( 'issue' , ( 'resource_uri' ) ) )
 
     #def read , default behaviour is what we want.    
-    # which is readling all you own multiplies
-    #TODO validate
+
+    @validate(MultiplyForm)
     def create( self , request ):
         """ expects an issue id and optional a downgrade boolean
             in the POST data
@@ -325,7 +330,7 @@ class MultiplyHandler( BaseHandler ):
             attrs.get('downgrade', False) ,
         )
         if issue : return rc.CREATED 
-        else : return rc.BAD_REQUEST
+        else : return rc.FORBIDDEN
 
     @staticmethod
     def resource_uri():
