@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/66/trunk/rosetta/templates/rosetta
+END
+pofile.html
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/66/trunk/rosetta/templates/rosetta/pofile.html
+END
+languages.html
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/66/trunk/rosetta/templates/rosetta/languages.html
+END
+base.html
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/65/trunk/rosetta/templates/rosetta/base.html
+END

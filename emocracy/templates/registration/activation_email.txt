@@ -1,9 +1,0 @@
-{% load i18n %}
-
-{% blocktrans %}
-Hi almost new emocracy user !
-
-Please activate your emocracy account by going to this url: 
-{% endblocktrans %}
-
-http://{{ site }}{% url registration_activate activation_key %}
