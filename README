@@ -18,7 +18,6 @@ markup
 dist-utils
 django-trunk
 
-cd to the demorcacy directory. default settings.py uses sqlite3 as database backend and you dont need
-to install annything if you are using python >= python2.5
-
 $ python manage.py runserver 8080
+
+$ python manage.py test
