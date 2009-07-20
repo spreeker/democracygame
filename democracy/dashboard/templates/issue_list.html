@@ -1,0 +1,49 @@
+{% extends "base_content.html" %}
+{% load i18n %}
+{% load pagination_tags %}
+{% load voting_tags %}
+
+{% block content %}
+
+{% autopaginate issues 6 %}
+{% votes_by_user user on issues as vote_dct %}
+
+{% for issue in issues %}
+{% dict_entry_for_item issue from vote_dct as vote %}
+
+<div id="issue{{ issue.pk }}" class="issue">
+<p><a href="/">{{ issue }}</a> </p>
+<div id="issue_left">
+    <p>{{ vote.vote }}</p>
+</div>
+<p> {{ issue.body }} </p>
+<div id=forms>
+<form action="{% url vote issue.pk %}" method="post">
+    <input type="hidden" name="direction" id="direction" value="1" />
+    <input type="hidden" name="next" id="next" value="{% url dashboard %}?page={{ request.page }}" />
+    <input type="submit" value={% trans "YES" %}>
+</form><form action="{% url vote issue.pk %}" method="post">
+    <input type="hidden" name="direction" id="direction" value="-1" />
+    <input type="hidden" name="next" id="next" value="{% url dashboard %}?page={{ request.page }}" />
+    <input type="submit" value={% trans "NO" %} >
+</form><form action="{% url vote issue.pk %}" method="post">
+    <input type="hidden" name="next" id="next" value="{% url dashboard %}?page={{ request.page }}" />
+    <select name="direction">
+        {% for blank_vote in blank_votes %}
+             <option value="{{ blank_vote.0 }}">{% trans blank_vote.1 %}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" value="blank">
+</form>
+</div>
+</div>
+{% endfor %}
+
+{% paginate %}
+
+{% endblock %}
+
+{%block sidebar %}
+    {% include "sidebar.html" %}
+{% endblock %}
+
