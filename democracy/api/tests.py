@@ -404,12 +404,15 @@ class IssueHandlerTest( APIMainTest ):
             result = self.client.get( url )
             self.assertEqual( expected , result )
 
+        def test_read_bad_issue(self):
+            url = reverse( "api_issue" , args=999999 )
+            response = self.client.get( url )
+            self.assertEqual( 404 , response.status_code )
 
 class MultiplyHandlerTest( OAuthTests ):
     """
     do oauth request to get you own multiplies. 
     """ 
-
     def test_get_own_multiplies(self):
         issue2 = Issue.objects.get( title = "issue2" )
         self.do_multiply( self.users[0] ,  issue2 )
@@ -443,19 +446,31 @@ class MultiplyHandlerTest( OAuthTests ):
             'issue' : issue2.pk
         }
         url = reverse( "api_multiplies" )       
-        response = self.do_oauth_request( url , parameters = parameters ) 
+        response = self.do_oauth_request( url, parameters=parameters ) 
         self.assertEqual( 201 , response.status_code )
 
-    def test_post_own_multiply(self):
+    def test_post_ownissue_multiply(self):
+        """multiplying your own issue should not be allowed.
+        """
         issue1 = Issue.objects.get( title = "issue1" )
         parameters = {
             'issue' : issue1.pk
         }
         url = reverse( "api_multiplies" )       
-        response = self.do_oauth_request( url , parameters = parameters ) 
+        response = self.do_oauth_request( url, parameters=parameters ) 
+        self.assertEqual( 401, response.status_code )
+ 
+    def test_post_nonexcistingissue_multiply(self):
+        """multiplying your own issue should not be allowed.
+        """
+        issue1 = Issue.objects.get( title = "issue1" )
+        parameters = {
+            'issue' : 999999 
+        }
+        url = reverse( "api_multiplies" )       
+        response = self.do_oauth_request( url, parameters=parameters ) 
         self.assertEqual( 400 , response.status_code )
  
-
 class AnonymousMultiplyHandlerTest( APIMainTest ):
     
 
