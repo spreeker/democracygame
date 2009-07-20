@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block userbar %}
+    {% include "userbar.html" %}
+{% endblock %}
+
+
+{% block messagebar %}
+    {% for m in messages %}{{m}}{% endfor %}
+{% endblock %}
+
+{% block footer %}
+    Dit is de footer
+{% endblock %}

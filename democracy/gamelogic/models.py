@@ -6,14 +6,15 @@ from democracy.issue.models import Issue
 
 MAX_MULTIPLIERS = 4
 
-roles = ["anonymous citizen", 
-        "citizen", 
-        "active citizen", 
-        "opinion leader", 
-        "candidate", 
-        "parliament member", 
-        "minister", 
-        'prime minister']
+roles = {'anonymous citizen' : _(u'Anonymous Citizen'), 
+        'citizen' : _(u'Citizen'),
+        'active citizen' : _(u'Active Citizen'),
+        'opinion leader' : _(u'Opinion Leader'),
+}       #"candidate", 
+        #"parliament member", 
+        #"minister", 
+        #'prime minister']
+
 
 class MultiplyIssue(models.Model):
     user = models.ForeignKey(User )

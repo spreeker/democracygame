@@ -1,5 +1,5 @@
-{% extends "web/index.html" %}
-
+{% extends "base.html" %}
+{% load i18n %}
 {% block content %}
 
 <form method="post" action=".">
@@ -14,7 +14,7 @@
 </tr>
 </table>
 {% if form.errors %}
-Try again, username and password don't match.
+   {% trans "Try again, username and password don't match." %}
 {% endif %}
 
 <input type="submit" value="login">
