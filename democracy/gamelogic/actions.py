@@ -44,7 +44,7 @@ def vote(user, issue, direction, keep_private , api_interface=None ):
     if not role_to_actions[userprofile.role].has_key('vote') : return
 
     repeated_vote, voted_already, new_vote = \
-        Vote.objects.record_vote(user, issue, direction, api_interface )
+        Vote.objects.record_vote(user, issue, direction, keep_private,  api_interface )
 
     if repeated_vote: return
     
@@ -151,7 +151,7 @@ def get_unavailable_actions(user = None):
     else : userprofile = user.get_profile()
 
     all_actions = {}
-    for role in roles: #collect all possible actions
+    for role in roles.keys(): #collect all possible actions
         actions = role_to_actions.get(role , {} )
         for action , function in actions.iteritems():
             all_actions.setdefault( action , role )

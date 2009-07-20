@@ -3,7 +3,7 @@
 from democracy.profiles.models import UserProfile
 
 # put these values in a database??
-MAX_OPINION_LEADERS = 2
+MAX_OPINION_LEADERS = 5
 MIN_SCORE_ACTIVE_CITIZENS = 10
 
 def anonymous_citizen(userprofile):

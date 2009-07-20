@@ -29,7 +29,7 @@ class GameView(object):
 
     def objects(self):
         # you want to override this method, # must return queryset
-        return Issue.objects.filter().select_related().order_by('-timestamp')
+        return Issue.objects.filter().select_related().order_by('-time_stamp')
 
     def __call__(self, request, *args, **kwargs):
         if request.method == "GET":
@@ -64,6 +64,6 @@ def record_vote(request, issue_id ):
     """
     if request.REQUEST.has_key('direction'):
         direction = request.REQUEST['direction']
-        return vote_on_object(request, Issue, direction, object_id=issue_id) 
+        return vote_on_object(request, Issue, direction , object_id=issue_id ) 
+    return Http404
 
-    #return HttpResponseRedirect(next)

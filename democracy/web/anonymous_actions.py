@@ -2,7 +2,7 @@
 We want anonymous users to be able to play a litle.
 
 This module contains functionality that is specific to the 'original' web 
-interface provided by Emocracy --- that is why this file is not in the gamelogic
+interface provided by dEmocracy --- that is why this file is not in the gamelogic
 app.
 
 """
