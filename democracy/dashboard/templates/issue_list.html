@@ -8,16 +8,19 @@
 {% autopaginate issues 6 %}
 {% votes_by_user user on issues as vote_dct %}
 
+<div class="issues">
+<h2> {% trans "issues"%} </h2>
+<ul>
 {% for issue in issues %}
 {% dict_entry_for_item issue from vote_dct as vote %}
 
-<div id="issue{{ issue.pk }}" class="issue">
-<p><a href="/">{{ issue }}</a> </p>
-<div id="issue_left">
-    <p>{{ vote.vote }}</p>
+<li id="issue{{ issue.pk }}">
+    <h3> <a href="/">{{ issue }}</a> </h3> 
+<div class="issue_left">
+    {{ vote.vote }}
 </div>
 <p> {{ issue.body }} </p>
-<div id=forms>
+<div class="forms">
 <form action="{% url vote issue.pk %}" method="post">
     <input type="hidden" name="direction" id="direction" value="1" />
     <input type="hidden" name="next" id="next" value="{% url dashboard %}?page={{ request.page }}" />
@@ -36,8 +39,10 @@
     <input type="submit" value="blank">
 </form>
 </div>
-</div>
+</li>
 {% endfor %}
+</ul>
+</div>
 
 {% paginate %}
 
