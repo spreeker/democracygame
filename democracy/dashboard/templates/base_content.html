@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block mainmenu %}
+    | <a href={% url api_doc %} >API</a>
+{% endblock %}
+
 {% block userbar %}
     {% include "userbar.html" %}
 {% endblock %}

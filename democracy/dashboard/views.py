@@ -1,7 +1,7 @@
 import logging
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseServerError
-from django.http import Http404, HttpResponseRedirect 
+from django.http import Http404, HttpResponseRedirect,HttpResponseBadRequest 
 from django.template import loader, RequestContext
 from django.core.urlresolvers import reverse
 from django.views.generic.list_detail import object_list
@@ -65,5 +65,5 @@ def record_vote(request, issue_id ):
     if request.REQUEST.has_key('direction'):
         direction = request.REQUEST['direction']
         return vote_on_object(request, Issue, direction , object_id=issue_id ) 
-    return Http404
+    return HttpResponseBadRequest
 
