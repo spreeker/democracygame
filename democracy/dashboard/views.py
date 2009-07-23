@@ -2,6 +2,7 @@ import logging
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseServerError
 from django.http import Http404, HttpResponseRedirect,HttpResponseBadRequest 
+from django.shortcuts import render_to_response, get_object_or_404
 from django.template import loader, RequestContext
 from django.core.urlresolvers import reverse
 from django.views.generic.list_detail import object_list
@@ -17,15 +18,13 @@ from democracy.voting.views import vote_on_object
 class GameView(object):
     """ 
     provide the necessarily gameplaying data: 
-    TODO provide template tags?
     actions
     vote_options
     objects/issues
     issues not voted on?
     """
     # override in subclass if needed 
-    objects_name = "issues"
-    template_name= "issue_list.html"
+    template_name= "dashboard/issue_list.html"
 
     def objects(self):
         # you want to override this method, # must return queryset
@@ -43,7 +42,8 @@ class GameView(object):
 
         c = RequestContext(request, {
             'blank_votes' : blank_votes,
-            '%s' % self.objects_name :  self.objects(),# qs 
+            'possible_votes' : possible_votes,
+            'issues'  : self.objects(),# qs 
             'actions' : actions.get_actions(request.user),
             'missing_actions' : actions.get_unavailable_actions(request.user),
             'vote' : Vote,
@@ -59,11 +59,30 @@ def record_vote(request, issue_id ):
     """
     Wrapper function for the voting.views.vote_on_object function
 
-    if user is anonymous?
+    what if user is anonymous?
 
     """
     if request.REQUEST.has_key('direction'):
         direction = request.REQUEST['direction']
         return vote_on_object(request, Issue, direction , object_id=issue_id ) 
     return HttpResponseBadRequest
+
+def record_multiply(request , issue_id ):
+    """
+    Wrapper funtion around gamelogic.actions.multiply
+    """
+    if not request.method == "POST": 
+        return HttpResponseBadRequest()
+    issue = get_object_or_404( Issue, id=issue_id ) 
+
+    possible_actions = actions.get_actions(request.user) 
+    message = "You cannot multiply yet!"
+    next = request.REQUEST.get('next' , '/' )
+
+    if possible_actions.has_key('multiply') :
+        actions.multiply( request.user, issue )
+        return HttpResponseRedirect(next)
+
+    request.user.message_set.create(message=message)    
+    return HttpResponseRedirect( next )
 
