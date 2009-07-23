@@ -10,7 +10,10 @@ world.
 
 user_actions = get_actions( user )
 
-user role_actions to determine permission and availability of actions
+use the role_to_actions dict to determine availability of actions for user
+
+example usage
+-------------
 
 vote_func = role_to_actions[userprofile.role]['vote'] this will return the function required to do the 
 vote for this user. If it returns a keyerror the action for this user does not excist.
@@ -62,7 +65,7 @@ def propose(user, title, body, direction, source_url,
     """ 
     Propose an issue into the game
     """
-    if issue_no == None:
+    if not issue_no:
         userprofile = user.get_profile()
         if not role_to_actions[userprofile.role].has_key('propose'): return 
 
@@ -95,22 +98,21 @@ def propose(user, title, body, direction, source_url,
 
     return new_issue
 
-def multiply(user , issue , downgrade = False ):
+def multiply(user, issue, downgrade=False ):
     """
     Opinion leaders have the option to mutiply the values of issues. 
     at most X multyplies can be given.
-
-    check if there are multipliers left.
-    add multiplier to issue.but not your own.
-
-    checks are done at model level.
     """
     userprofile = user.get_profile()
     if not role_to_actions[userprofile.role].has_key('multiply'): return 
 
-    m = MultiplyIssue.objects.create( user=user, issue=issue, downgrade=downgrade )
+    m = MultiplyIssue( user=user, issue=issue, downgrade=downgrade )
     # TODO score change?
     return m.save()
+
+
+def tag(user, issue, tag_word):
+    pass
 
 
 role_to_actions = {
@@ -119,16 +121,16 @@ role_to_actions = {
     },
     'citizen' : {
         'vote' : vote,
-        #'tag' : tag,
+        'tag' : tag,
     },
     'active citizen' : {
         'vote' : vote,
-        #'tag' : tag,
+        'tag' : tag,
         'propose' : propose,
     },
     'opinion leader' : {
         'vote' : vote,
-        #'tag' : tag,
+        'tag' : tag,
         'propose' : propose,
         'multiply' : multiply,
     }
