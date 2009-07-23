@@ -10,10 +10,16 @@ from django.utils.html import escape
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 
-from oauth_consumer.consumer import EmoOAuthConsumerApp
+from oauth_consumer.consumer import DemoOAuthConsumerApp
 from forms import VoteForm
 
-emo = EmoOAuthConsumerApp()
+emo = DemoOAuthConsumerApp()
+
+
+def ajax_error(error, status ):
+    status = simplejson.dumps({'status' : status, 'error' : error})
+    return http.HttpResponse(status, mimetype="application/json")
+
 
 def ajax_vote_cast(request, next=None, xhr="WTF?"):
     """
@@ -23,15 +29,13 @@ def ajax_vote_cast(request, next=None, xhr="WTF?"):
     """
     # Fill out some initial data fields from an authenticated user, if present
 
+    error = ""
     if request.user.is_anonymous():
-        error = "Must be logged in."
-        status = simplejson.dumps({'status' : 'error', 'error' : error})
-        return http.HttpResponse(status, mimetype="application/json")
-    else:
-        if not request.user.get_profile().access_token:
-            error = "Must have access token."
-            status = simplejson.dumps({'status' : 'error', 'error' : error})
-            return http.HttpResponse(status, mimetype="application/json")
+        return ajax_error( "Must be logged in." , "error" )
+
+    if not request.user.get_profile().access_token:
+        error = "Must have access token."
+        return ajax_error( error , "error" )
 
     data = request.POST.copy()
 
@@ -55,7 +59,7 @@ def ajax_vote_cast(request, next=None, xhr="WTF?"):
     
     # Otherwise submit the vote to Service Provider
     if form.is_valid():
-        retstatus = emo.post_vote(request, form.clean())
+        retstatus = demo.post_vote(request, form.clean())
     else:
         pass #for now
 
@@ -65,8 +69,29 @@ def ajax_vote_cast(request, next=None, xhr="WTF?"):
         status = simplejson.dumps({'status': 'debug', 'error': error})
         return http.HttpResponseServerError(status, mimetype="application/json")
 
-    # Save the comment and signal that it was saved
+    # Save the vote and signal that it was saved
     status = simplejson.dumps({'status': "success"})
     return http.HttpResponse(status, mimetype="application/json")
 
+def ajax_get_issue( request ):
+    """
+    Return issue in json
+    """
+    # get issue URI
+    # loopup issue from cache
+    # return the json
+
+def ajax_get_issue_score( request ):
+    """
+    Return vote counts for issue
+    """
+    # get issue URI
+    # lookup issue votecount from cache
+    # return json
+
+def ajax_get_issue_vote( request ):
+    """
+    return vote for an user
+    """
+    pass
 

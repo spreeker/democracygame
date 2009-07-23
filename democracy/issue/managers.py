@@ -8,11 +8,6 @@ from django.utils.translation import ugettext as _
 
 class IssueManager(models.Manager):
 
-    def hot(self):
-        pass
-
-    def new(self):
-        pass
 
     def user_issues(self, user):
         pass
