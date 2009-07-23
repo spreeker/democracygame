@@ -47,7 +47,7 @@ class IssueVotesHandler(AnonymousBaseHandler):
     """
     Return votes for issue 
     """
-    allow_methods = ('GET',)
+    allowed_methods = ('GET',)
     fields = ('vote', 'vote_count',)
     model = Vote 
 
@@ -109,32 +109,71 @@ class IssueVotesHandler(AnonymousBaseHandler):
     def resource_uri():
         return ('api_issue_votes' , ['id'])
     
+class IssueList(BaseHandler):
+    """
+    BaseClass for Listings of issues
+
+    #. 'new' 
+    #. 'popular' 
+    #. 'controversial'
+    #. 'recommended' #TODO
+    #. 'with_tag'    #TODO
+
+    """
+    allowed_methods = ('GET',)
+
+    def read(self, request , **kwargs):
+        """ get listing of issue uri's """
+        
+        sortorder = kwargs.get("sortorder", "")
+        if sortorder == 'popular':
+            qs = Vote.objects.get_popular(Issue)
+        elif sortorder == 'controversial':
+            qs = Vote.objects.get_controversial(Issue)
+        elif sortorder == 'new':
+            qs = Issue.objects.all().order_by('-time_stamp')
+            qs = qs.values_list('id', 'time_stamp')
+            
+        else:
+            return rc.BAD_REQUEST
+        page = paginate(request, qs )
+        result = [] 
+        for id_value in page.object_list:
+            uri = self.issue_url( id_value )
+            result.append( (uri, id_value[1]) )
+        return result 
+
+    # not no classmethodis because query returns list of tuples.
+    # and the responder will not look at those.
+    def issue_url(cls, id_value ):
+        return reverse('api_issue', args=[id_value[0]])
+
 
 class VoteHandler(BaseHandler):
     """
     Read and Post votes for user.
     """
     allowed_methods = ('GET', 'POST', )
-    fields = ('vote', 'time_stamp', 'issue_uri', 'keep_private', 'user_uri')
+    fields = ('vote', 'time_stamp', 'issue_uri', 'keep_private', )
     model = Vote
 
-    def read(self, request, *args, **kwargs):
+    def read(self, request, id=None, **kwargs):
         """
         Returns the votes for an user. 
         """
+        # TODO check if args has issue id.
         ctype = ContentType.objects.get_for_model(Issue)
         queryset = self.model.objects.filter( user = request.user,
                         content_type = ctype.pk ).order_by('time_stamp')
+        if id:
+            queryset = queryset.filter( object_id=id )
+        queryset.order_by( "username" )
         page = paginate(request, queryset)
         return page.object_list
 
     @classmethod
     def issue_uri(cls, vote):
         return "%s" % reverse('api_issue' , args=[vote.object_id])
-
-    @classmethod
-    def user_uri(cls, vote):
-        return "%s" % reverse('api_user' , args=[vote.user.id])
 
     @validate( VoteForm )
     def create(self, request ):
@@ -190,13 +229,16 @@ class AnonymousUserHandler(AnonymousBaseHandler):
         return UserProfile.objects.filter( score__gte = score ).count()
 
     #TODO GRAVATAR url !! 
-
     @staticmethod
     def resource_uri():
         return ('api_user' , ['id'])
 
 
+
 class UserHandler(BaseHandler):
+    """
+    Get User Details for authenticated user
+    """
     allowed_methods = ('GET',)
     fields = ('username', 'firstname' , 'lastname' , 'email' , 'score', 'ranking' , 'role' )
     anonymous = AnonymousUserHandler
@@ -224,7 +266,6 @@ class UserHandler(BaseHandler):
 
 
 class AnonymousIssueHandler(AnonymousBaseHandler):
-    #allow_methods = ('GET',)
     
     fields = ('title', 'body', ('user', ('username', ) ), 'time_stamp', 'source_type', 'url')
     model = Issue
@@ -344,9 +385,9 @@ def get_profile(user):
     except UserProfile.DoesNotExist:
         pass
 
-def get_profile_field(user, property, default):
+def get_profile_field(user, attribute, default):
     profile = get_profile(user)
     if not profile: return default
-    if hasattr(profile, property):
-            return getattr(profile, property)
+    if hasattr(profile, attribute):
+            return getattr(profile, attribute)
     return default

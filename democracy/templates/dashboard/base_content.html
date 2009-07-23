@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block mainmenu %}
+    | <a href={% url api_doc %} >API</a>
+    | {% trans "propose" %}
+    | <a href={% url userprofile user %} >profile</a>
+    | {% trans "your issues" %}
+{% endblock %}
+
+{% block userbar %}
+    {% include "dashboard/userbar.html" %}
+{% endblock %}
+
+
+{% block messagebar %}
+    {% for m in messages %}{{m}}{% endfor %}
+{% endblock %}
+
+{% block footer %}
+    Dit is de footer
+{% endblock %}

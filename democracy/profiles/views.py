@@ -149,33 +149,21 @@ def change_description(request):
     return render_to_response('profiles/change_description.html', context)
 
 def search_user(request):
-    """This view let's users search for other users by username..."""
-    # TODO : fix unicode in request parameters.
-    # (Conrado says it is not allowed, google does it anyway ...)
-    # TODO FIXME XSS handle the way the search_string shows up in the page -
-    # since that is not handled cleanly/correctly at the moment.
-    if request.method == 'POST':
-        form = UserSearchForm(request.POST)
-        if form.is_valid():
-            search_string = form.cleaned_data["search_string"]
-        else:
-            search_string = u''
-    else:
-        form = UserSearchForm()
-        search_string = request.GET.get(u'search_string', u'')
+    
+    form = UserSearchForm(request.REQUEST)
+    search_string = ''
+    if form.is_valid():
+        search_string = form.cleaned_data["search_string"]
 
-    if not search_string == u'':
+    if search_string :
         qs = User.objects.filter(username__icontains = search_string)
     else:
-        qs = User.objects.none()
+        qs = User.objects.all()
     
     paginator = Paginator(qs, 20)
     
     # Grab page number from the HTTP GET parameters if present.
-    try:
-        page_no = int(request.GET.get('page', '1'))
-    except ValueError:
-        page_no = 1
+    page_no = int(request.GET.get('page', '1'))
     
     # See wether requested page is available at all from the paginator.
     try:
@@ -184,7 +172,7 @@ def search_user(request):
         current_page = paginator.page(paginator.num_pages)
  
     if search_string:
-        form.fields["search_string"].initial = search_string # TODO see wether this can be done more cleanly
+        form.fields["search_string"].initial = search_string
     
     context = RequestContext(request, {
         'form' : form,

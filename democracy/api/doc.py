@@ -1,9 +1,12 @@
 import logging
 
+from django.core.urlresolvers import reverse
 from piston.handler import typemapper
 from piston.doc import generate_doc
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+
+from democracy.api.handlers import IssueList
 
 """
 Copied from piston.doc modified to apear in the way we want.
@@ -14,13 +17,17 @@ def documentation_view(request):
     from the handlers you've defined.
     """
     docs = [ ]
+    
+    issuedoc = generate_doc(IssueList)
+    issuedoc.url = reverse( "api_sort_order" , args=["new"] )
+
+    docs.append( issuedoc )
 
     for handler, (model, anonymous) in typemapper.iteritems():
         docs.append(generate_doc(handler))
 
     def _compare( doc1 , doc2 ):
-        return cmp(doc1.name , 
-                    doc2.name)    
+        return cmp(doc1.name , doc2.name)    
  
     docs.sort(_compare)
 
