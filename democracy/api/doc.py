@@ -19,8 +19,7 @@ def documentation_view(request):
         docs.append(generate_doc(handler))
 
     def _compare( doc1 , doc2 ):
-        return cmp(doc1.name , 
-                    doc2.name)    
+        return cmp(doc1.name , doc2.name)    
  
     docs.sort(_compare)
 

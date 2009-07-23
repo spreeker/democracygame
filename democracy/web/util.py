@@ -1,4 +1,3 @@
-# By Thijs Coenen for the Emocracy project.
 """
 Utility / helper functions for use with the web interface.
 """

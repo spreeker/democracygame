@@ -1,6 +1,6 @@
 from django.db import models, IntegrityError
 from django.db import connection
-from django.db.models import Avg, Count
+from django.db.models import Avg, Count, Sum
 
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
@@ -27,8 +27,15 @@ blank_votes = {
     18 : _(u'Ask me later'),
     19 : _(u'Too personal'),
 }
-possible_votes = votes
-possible_votes.update(blank_votes)
+normal_votes = votes.copy()
+normal_votes.update(blank_votes)
+
+multiply_votes = {
+    20 : _("Multiply"),
+}
+
+possible_votes = normal_votes.copy() 
+possible_votes.update(multiply_votes)
 
 
 class VoteManager(models.Manager):
@@ -109,8 +116,9 @@ class VoteManager(models.Manager):
         ctype = ContentType.objects.get_for_model(objects[0])
         queryset = self.filter(content_type=ctype, object_id__in=object_ids)
 
-        if not all:
-            queryset = queryset.filter(is_archived=False) # only pick active votes
+        if not all: # only pick active votes
+            queryset = queryset.filter(is_archived=False) 
+
         queryset = queryset.values('object_id', 'vote',)
         queryset = queryset.annotate(vcount=Count("vote")).order_by()
        
@@ -123,6 +131,39 @@ class VoteManager(models.Manager):
             votes[votecount['vote']] =  votecount['vcount']
 
         return vote_dict
+
+    def get_popular(self, Model):
+        """ return qs ordered by popularity """
+        ctype = ContentType.objects.get_for_model(Model)
+        queryset = self.filter(content_type=ctype,)
+        queryset = queryset.filter(is_archived=False) 
+
+        queryset = queryset.values('object_id',)
+        queryset = queryset.annotate(totalvotes=Count("vote")).order_by()
+        queryset = queryset.order_by('-totalvotes')
+        queryset = queryset.values_list('object_id' , 'totalvotes')
+       
+        return queryset
+
+    def get_controversial(self, Model):
+        """ 
+        return qs ordered by controversy , 
+        meaning it divides the ppl in 50/50.
+        since for is 1 and against is -1, a score close to 0
+        indicates controversy.
+        if Object is getting blank votes it will dissapear from the list
+
+        """
+        ctype = ContentType.objects.get_for_model(Model)
+        queryset = self.filter(content_type=ctype,)
+        queryset = queryset.filter(is_archived=False) 
+
+        queryset = queryset.values('object_id',)
+        queryset = queryset.annotate(avg=Avg("vote")).order_by()
+        queryset = queryset.order_by('avg')
+        queryset = queryset.values_list('object_id' , 'avg')
+
+        return queryset
 
     def record_vote(self, user, obj, direction, keep_private=False, api_interface=None ):
         """
