@@ -29,6 +29,7 @@
                 <li> {% url api_users %} </li>
                 <li> {% url api_multiplies %} </li>
                 <li> {% url api_vote %} </li>
+                <li> {% url api_sort_order "new" %} , popular, controversial  </li> 
             </ul>
             <p> 
                 The URL in the resources mean you can acces a specific instance of that resource. 
@@ -52,6 +53,9 @@
 			
 			<p>
 				URL: <b>{{ doc.get_resource_uri_template }}</b>
+                <p>
+				<b>{{ doc.url }}</b>
+                </p>
 			</p>
 			
 			<p>
