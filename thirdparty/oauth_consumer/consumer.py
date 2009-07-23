@@ -13,9 +13,9 @@ from django.utils import simplejson as json
 CONSUMER_KEY = settings.CONSUMER_KEY
 CONSUMER_SECRET = settings.CONSUMER_SECRET
 
-NAME = 'EmOAuth'
+NAME = 'DemOAuth'
 
-SERVER = settings.EMOCRACY_API_SERVER
+SERVER = settings.DEMOCRACY_API_SERVER
 API_SERVER = SERVER + "api/"
 
 REQUEST_TOKEN_URL = '%soauth/request_token/' % SERVER
@@ -25,7 +25,7 @@ REALM = settings.REALM
 SIGNATURE_METHOD = 'oauth.signature_method.plaintext.OAuthSignatureMethod_PLAINTEXT'
 
 
-class EmoOAuthConsumerApp(django_oauth_consumer.OAuthConsumerApp):
+class DemoOAuthConsumerApp(django_oauth_consumer.OAuthConsumerApp):
     """ the Oauth consumer parent class does the actual connecting to the api
         server
     """
@@ -115,24 +115,26 @@ class EmoOAuthConsumerApp(django_oauth_consumer.OAuthConsumerApp):
         `vote_data` should be a dictionary:
             { 'issue' : integer,
               'keep_private' : boolean,
-              'vote' : integer,  # valid values -1, 1, 10-19 (see emocracy docs)
+              'vote' : integer,  # valid values -1, 1, 10-19 (see democracy docs)
             }
         """
         api_url = API_SERVER+'votes/'
         self.response = self.post_resource(request, api_url, content=vote_data)
         return self.response.status
 
+    # public? cached?
     def get_issue_list(self, request):
-        api_url = API_SERVER+'issues/'
+        api_url = API_SERVER+'issue/'
         self.response = self.get_resource(request, api_url)
         return self.ld()
 
+    # public? cached?
     def get_issue(self, request, issue_no):
-        api_url = API_SERVER+'issues/'+issue_no+'/'
+        api_url = API_SERVER+'issue/'+issue_no+'/'
         self.response = self.get_resource(request, api_url)
         return self.ld()
 
     def post_issue(self, request, issue_data):
-        api_url = API_SERVER+'issues/'
+        api_url = API_SERVER+'issue/'
         self.response = self.post_resource(request, api_url, content=issue_data)
         return self.response.status

@@ -1,7 +1,0 @@
-{% load i18n %}
-{% if user.is_authenticated %}
-<strong>{{user.username}}</strong>
- {{user.get_profile.ranking }}th
-<a href="http://democracy.nl/wiki/index.php/Burger">{% trans user.get_profile.role %}</a>
-<a href="http://democracy.nl/wiki/index.php/Punten">score</a> is {{user.get_profile.score}}
-{% endif %}

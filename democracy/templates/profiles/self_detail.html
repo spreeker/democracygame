@@ -1,19 +1,19 @@
-{% extends "web/index.html" %}
-
+{% extends "dashboard/base_content.html" %}
 
 {% block content %}
-
-
+<h2> Registered User {{ user.username }} </h2>
+{% with user.get_profile as profile %}
+{% trans your personal details %}
 <h3>{{profile.title}}</h3>
 <div style="font-family:serif;line-height:120%">
 {{profile.description|striptags|linebreaks|truncatewords_html:200}}
 </div>
 
-{% if profile.url%}
-url {{profile.url|urlizetrunc:30}}
-{% else %}
-No url given.
-{% endif %}
+<p> website :{% if profile.url%} {{profile.url|urlizetrunc:30}} {% endif %}</p>
 
-<br /><a href="{% url change_description %}">Change my description</a><br />
+
+{% endwith %}
+
+<a href="{% url change_description %}">Change my description</a><br />
+
 {% endblock %}

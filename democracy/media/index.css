@@ -1,79 +1,105 @@
-/* General Emocracy site wide CSS file */
+/* General democracy site wide CSS file */
 
-/* general declarations */
+/*** Resets ***/
 * { margin : 0 ; padding : 0 ; }
 
-body {
-    margin: 0em;
-    padding: 0em;
-    background-color:white; 
-    font-family:sans-serif, helvetica, arial;
-    }
-
-a   {
-    text-decoration:underline;
-    }
-
-.system {
-    clear : both ;
-    font-size: 80%;
+body,
+div,
+h1,
+h2,
+h3,
+ul,
+li,
+p,
+pre,
+input,
+textarea,
+button {
+    margin: 0;
+    padding: 0;
     font-family: sans-serif;
-    line-height: 120%;
-    margin : 1em 0em ;
+    font-size: 100%;
+    line-height: 1.25;
+}
+body {
+    color : #303030;
+}
+
+a {
+    text-decoration : none ;
+}
+h2 {
+    text-align : center ;
+    border-bottom : 0.05em solid black ;
+}
+h1 {
+    text-align : center ;
+}
+h3 {
+    margin-bottom : 1.25em ;
 }
 
 /* header style declarations */
 
-#header {
-    text-align : center;
-    }
-
-#header > h1 > a {
-    text-decoration: none
-    }
-
-#header > a {
+#header #userbar {
+    display : inline;
+    float : right ;
+    margin-right : 10em;
+ }
+#header #mainmenu {
+    margin-left : 5em;
 }
 
-#header > #thegame {
-   letter-spacing : 0.5em; 
-   font-style : italic;
-}
-
-/* messagebar*/
 #messagebar {
     min-height : 30px ;
+    color : gray ;
     padding:0em 1em 0em 1em;
     text-align : center ;
 }
-
-/* sidebar style declarations */
+#userbar form {
+    display : inline;
+}
 
 #sidebar{
     float : left ;
     width : 200px ;
     font-family: sans-serif;
-    padding-top : 1em;
 }
-
-.sidebarblock {
-    margin:0em 0em 0em 1em;
-}
-
-
-.sidebarblock > p {
-    font-size:80%;
-    line-height:120%
-}
-
-
-/* main content area style declarations*/
 
 #content {
     float : left;
-    min-width : 500px;
+    min-width : 300px;
     width : 80% ;
+    margin-left : 1em ;
 }
+.issues p , .issues .title , .issues .forms , .issues h3 {
+    margin-left : 4em ;
+}
+.issues .yourvote {
+    float : right;
+}
+.issues > ul {
+    list-style-image:none;
+    list-style-position:outside;
+    list-style-type:none;
+}
+.issues .forms {
+    margin-top : 1.25em ;
+}
+.issues .forms form {
+    display : inline ;
+}
+
+
+.issues ul li {
+    border-bottom : 1px solid black ;
+    padding : 1.2em 1em 1.25em 0;
+}
+#content .issue_left {
+    float : left;
+    margin-left: 1em;
+}
+
 
 /* Issue display specific styles */
 

@@ -3,9 +3,7 @@
 "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
-		<title>
-			democracy game generated documentation
-		</title>
+		<title> democracy game API </title>
 		<style type="text/css">
 			body {
 				background: #fffff0;
@@ -15,8 +13,36 @@
 		</style>
 	</head>
 	<body>
-		<h1>API Documentation</h1>
-		
+		<h1>Democracy API Documentation</h1>
+	    
+        <p>
+        We provide two types of resources. 
+        The first are Public resources without authentication. Public Resources provide global game playing data and statistics.
+        Public resources are specified as Anonymous. 
+        The second type of resource are for the more interesting and privacy sensitive data and is only accible via oauth. 
+        So You need to contact us to get an oauth consumer key to get you implementation / interface working with our api.
+        Oauth ensures that users can protect their data and only give sites the user trusts acces their data.
+
+            <p> Current resources </p>
+            <ul>
+                <li> {% url api_issues %} </li>
+                <li> {% url api_users %} </li>
+                <li> {% url api_multiplies %} </li>
+                <li> {% url api_vote %} </li>
+                <li> {% url api_sort_order "new" %} , popular, controversial  </li> 
+            </ul>
+            <p> 
+                The URL in the resources mean you can acces a specific instance of that resource. 
+                Resources which return lists of items are paginated , if you want te get the next
+                page add a ?page=x to the urls where x is the number.
+            </p>
+            <p> As you probably have seen our api is versioned via the url
+                We have made a mobile interface for this data in which you can look for example code ,
+                since the source is public on git://github.com/spreeker/democracygame.git take a look
+                at the api code and especialy the tests.
+            </p>     
+
+        </p>    
 		{% for doc in docs %}
 		
 			<h3>{{ doc.name|cut:"Handler" }}:</h3>
@@ -27,6 +53,9 @@
 			
 			<p>
 				URL: <b>{{ doc.get_resource_uri_template }}</b>
+                <p>
+				<b>{{ doc.url }}</b>
+                </p>
 			</p>
 			
 			<p>

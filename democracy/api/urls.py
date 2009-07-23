@@ -12,6 +12,7 @@ from democracy.api.handlers import UserHandler
 from democracy.api.handlers import VoteHandler
 from democracy.api.handlers import MultiplyHandler
 from democracy.api.handlers import IssueVotesHandler
+from democracy.api.handlers import IssueList
 
 
 from democracy.api.doc import documentation_view
@@ -33,6 +34,8 @@ user = Resource( handler=UserHandler, authentication=auth )
 vote = Resource( handler=VoteHandler, authentication=auth )
 multiply = Resource( handler=MultiplyHandler , authentication=auth )
 
+issuelist = Resource( handler=IssueList, authentication=auth )
+
 issue_votes = Resource(handler=IssueVotesHandler)
 
 urlpatterns = patterns('',
@@ -40,15 +43,17 @@ urlpatterns = patterns('',
     url(r'^issue/$', issue , name="api_issues" ),
     # returns specific issue public
     url(r'^issue/(?P<id>\d+)/$', issue ,  name="api_issue"),
-
     # return votes on specific issue public
     url(r'^issue/(?P<id>\d+)/votes/$', issue_votes , name="api_issue_votes" ),
+    # return list of issues , popular , new , controversial
+    url(r'^issue/(?P<sortorder>\w+)/', issuelist, name="api_sort_order" ),
     # return users public
     url(r'^user/$', user , name="api_users" ),
     # return specific user and stats NOT PUBLIC 
     url(r'^user/(?P<id>\d+)/$', user , name="api_user" ),
     # oauth: GET votes of user , POST vote for an user
     url(r'^vote/$', vote , name="api_vote" ),
+    url(r'^vote/(?P<id>\d+)/$', vote , name="api_read_vote" ),
     # view multiplies
     url(r'^multiply/$', multiply , name='api_multiplies' ),
     # multiply an issue 
