@@ -1,0 +1,13 @@
+{% load i18n %}
+{% load tagging_tags %}
+
+{% if issues %}
+    <h1> tags for issues </h1>
+
+{% tag_cloud_for_model issue.issue as issue_tags %}
+
+{% for issue_tag in issue_tags %}
+   {{ issue_tag.name }} {{ issue_tag.font_size }}
+{% endfor %}
+
+{% endif %}

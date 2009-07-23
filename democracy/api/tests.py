@@ -16,8 +16,6 @@ from democracy.gamelogic.models import MultiplyIssue
 from democracy.gamelogic import actions
 from democracy.issue.models import Issue
 
-#from test_project.apps.testapp.models import TestModel, ExpressiveTestModel, Comment, InheritedModel
-#from test_project.apps.testapp import signals
 
 class APIMainTest(TestActionData):
     """ We inherit from TestActionData from gameactions.tests so the
@@ -214,6 +212,7 @@ class VoteHandlerTest( OAuthTests ):
         self.assertEqual(201, response.status_code)
 
     def test_read_votes(self):
+        """ get a lits of votes for user """
         # there should be only one vote for user test1
         from democracy.voting.models import Vote
         vote = Vote.objects.get( user = self.users[0].id ) 
@@ -224,7 +223,27 @@ class VoteHandlerTest( OAuthTests ):
     {
         "vote": 1, 
         "time_stamp": "%(t1)s", 
-        "user_uri": "%(ru1)s", 
+        "issue_uri": "%(ri1)s", 
+        "keep_private": false
+    }
+]""" % {"t1" : vote.time_stamp.strftime("%Y-%m-%d %H:%M:%S"),
+        "ru1" : reverse("api_user" , args=[self.users[0].id]) , 
+        "ri1" : reverse("api_issue" , args=[issue1.id] ) ,
+        }
+        self.assertEqual( expected , response.content )
+        self.assertEqual( 200 , response.status_code )
+
+    def test_read_vote(self):
+        """ read a single vote """
+        from democracy.voting.models import Vote
+        vote = Vote.objects.get( user = self.users[0].id ) 
+        issue1 = Issue.objects.get( title = "issue1")
+        url = reverse ( 'api_read_vote' , args=[issue1.id] ) 
+        response = self.do_oauth_request(url , http_method='GET' ) 
+        expected = """[
+    {
+        "vote": 1, 
+        "time_stamp": "%(t1)s", 
         "issue_uri": "%(ri1)s", 
         "keep_private": false
     }
@@ -239,6 +258,7 @@ class VoteHandlerTest( OAuthTests ):
 class AnonymousUserHandlerTest( APIMainTest ):
     
     def test_get_users(self):
+        """ test reading users """
         expected = """[
     {
         "username": "test1", 
@@ -269,6 +289,7 @@ class AnonymousUserHandlerTest( APIMainTest ):
         self.assertEqual( expected , result )
 
     def test_get_user(self):
+        """ test getting a user """
         user = User.objects.get( username = 'test1' )
         expected = """[
     {
@@ -284,11 +305,13 @@ class AnonymousUserHandlerTest( APIMainTest ):
         self.assertEqual( expected , result )
 
     def test_get_not_existing_user(self):
+        """ read non existing user """
         url = reverse( "api_user", args=[9999] )
         response = self.client.get(url)
         self.assertEqual( 200 , response.status_code )
 
     def test_get_not_existing_userprofile(self):
+        """ test if missing userprofile not causes a crash """
         # delete profile of user1
         user = User.objects.get( username = 'test1' )
         p = user.get_profile()
@@ -303,6 +326,7 @@ class UserHandlerTest ( OAuthTests ):
     """
     
     def test_get_user_data(self):
+        """ test get specific user data """
         url = reverse( 'api_user' , args=[self.users[0].pk] )
         response = self.do_oauth_request( url , http_method = 'GET' )
 
@@ -326,6 +350,7 @@ class IssueHandlerTest( APIMainTest ):
         self.issue3 = Issue.objects.get( title = "issue3")
  
     def test_read_issues(self):
+        """ read a list of issues """
         expected = """[
     {
         "body": "issue1issue1issue1issue1issue1issue1issue1issue1issue1issue1", 
@@ -385,6 +410,7 @@ class IssueHandlerTest( APIMainTest ):
         self.assertEqual( expected , result )
 
         def test_read_issue(self):
+            """ test read issue """
             expected = """[
     {
         "body": "issue1issue1issue1issue1issue1issue1issue1issue1issue1issue1", 
@@ -405,6 +431,7 @@ class IssueHandlerTest( APIMainTest ):
             self.assertEqual( expected , result )
 
         def test_read_bad_issue(self):
+            """ test read bad issue """
             url = reverse( "api_issue" , args=999999 )
             response = self.client.get( url )
             self.assertEqual( 404 , response.status_code )
@@ -414,6 +441,7 @@ class MultiplyHandlerTest( OAuthTests ):
     do oauth request to get you own multiplies. 
     """ 
     def test_get_own_multiplies(self):
+        """ test get your own multiplies """
         issue2 = Issue.objects.get( title = "issue2" )
         self.do_multiply( self.users[0] ,  issue2 )
         self.do_multiply( self.users[1] ,  issue2 )
@@ -472,9 +500,9 @@ class MultiplyHandlerTest( OAuthTests ):
         self.assertEqual( 400 , response.status_code )
  
 class AnonymousMultiplyHandlerTest( APIMainTest ):
-    
 
     def test_get_multiplies (self):
+        """ read multiplies """
         #remember only users 1 and 2 can do multiplies
         issue1 = Issue.objects.get( title="issue1" )
         issue2 = Issue.objects.get( title="issue2" )
@@ -526,4 +554,100 @@ class AnonymousMultiplyHandlerTest( APIMainTest ):
         #cf.write(expected)
            
         self.assertEqual ( expected , response.content )
+
+
+class IssueListTest( OAuthTests ): 
+    """ test the new , popular and controversial issue functions """
+
+    def test_get_new(self):
+        """ test get the newest issues as list """
+        url = reverse("api_sort_order", args=["new"] )
+        issue1 = Issue.objects.get( pk=1 )
+        issue2 = Issue.objects.get( pk=2 )
+        issue3 = Issue.objects.get( pk=3 )
+        response = self.do_oauth_request( url , http_method="GET" )
+        expected = """[
+    [
+        "%(i1)s", 
+        "%(it1)s"
+    ], 
+    [
+        "%(i2)s", 
+        "%(it2)s"
+    ], 
+    [
+        "%(i3)s", 
+        "%(it3)s"
+    ]
+]"""    % { 
+        "it1" : issue1.time_stamp.strftime("%Y-%m-%d %H:%M:%S") ,
+        "it2" : issue2.time_stamp.strftime("%Y-%m-%d %H:%M:%S") ,
+        "it3" : issue3.time_stamp.strftime("%Y-%m-%d %H:%M:%S") ,
+        "i1" : reverse( "api_issue" , args=[issue1.pk] ) , 
+        "i2" : reverse( "api_issue" , args=[issue2.pk] ) , 
+        "i3" : reverse( "api_issue" , args=[issue3.pk] ) , 
+        }
+        self.assertEqual( expected , response.content )
+
+    def test_get_popular(self):
+        """ test get the popular issues as list """
+        url = reverse("api_sort_order", args=["popular"] )
+        issue1 = Issue.objects.get( pk=1 )
+        issue2 = Issue.objects.get( pk=2 )
+        issue3 = Issue.objects.get( pk=3 )
+        # vote on an issue so we get one popular one..
+        vote_func = actions.role_to_actions[self.profiles[0].role]['vote'] 
+        vote_func( self.users[0] , issue3 , -1 , False)
+
+        response = self.do_oauth_request( url , http_method="GET" )
+        expected = """[
+    [
+        "%(i3)s", 
+        2
+    ], 
+    [
+        "%(i1)s", 
+        1
+    ], 
+    [
+        "%(i2)s", 
+        1
+    ]
+]"""    % { 
+        "i1" : reverse( "api_issue" , args=[issue1.pk] ) , 
+        "i2" : reverse( "api_issue" , args=[issue2.pk] ) , 
+        "i3" : reverse( "api_issue" , args=[issue3.pk] ) , 
+        }
+        self.assertEqual( expected , response.content )
+
+    def test_get_controversial(self):
+        """ test get the controversial issues as list """
+        url = reverse("api_sort_order", args=["controversial"] )
+        issue1 = Issue.objects.get( pk=1 )
+        issue2 = Issue.objects.get( pk=2 )
+        issue3 = Issue.objects.get( pk=3 )
+        # vote on an issue so we get one controversial one..
+        vote_func = actions.role_to_actions[self.profiles[0].role]['vote'] 
+        vote_func( self.users[0] , issue3 , -1 , False)
+
+        response = self.do_oauth_request( url , http_method="GET" )
+        expected = """[
+    [
+        "%(i3)s", 
+        0.0
+    ], 
+    [
+        "%(i1)s", 
+        1.0
+    ], 
+    [
+        "%(i2)s", 
+        1.0
+    ]
+]"""    % { 
+        "i1" : reverse( "api_issue" , args=[issue1.pk] ) , 
+        "i2" : reverse( "api_issue" , args=[issue2.pk] ) , 
+        "i3" : reverse( "api_issue" , args=[issue3.pk] ) , 
+        }
+        self.assertEqual( expected , response.content )
 

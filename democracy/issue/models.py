@@ -10,6 +10,8 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 from issue.managers import IssueManager
 
+import tagging
+
 source_types = (
     (u"website", _(u"website")),
     (u"video", _(u"video")),
@@ -49,3 +51,4 @@ class Issue(models.Model):
     def __unicode__(self):
         return self.title
    
+#tagging.register(Issue)

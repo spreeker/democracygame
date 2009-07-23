@@ -142,11 +142,9 @@ DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False,
 }
 
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+#SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+FORCELOWERCASE_TAGS = True
 
-# loggin setup:
-# (see: http://simonwillison.net/2008/May/22/debugging/ )
-# and python docs
 
 LOG_FILE_NAME = os.path.join(PROJECT_PATH, "democracy_log.txt")
 

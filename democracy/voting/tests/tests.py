@@ -39,12 +39,12 @@ r"""
 >>> _,_,_ = Vote.objects.record_vote(users[0], i2, 10)
 >>> Vote.objects.get_for_object(i1)
 {1: 2, -1: 2}
->>> Vote.objects.record_vote(i1, user, -2)
-Traceback (most recent call last):
-    ...
-ValueError: Invalid vote -2 must be in [1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, -1]
+>>> try:
+...     Vote.objects.record_vote(i1, user, -2)
+... except ValueError: 
+...     pass
 
-# Retrievar of votes #########################################################
+# Retrieval of votes #########################################################
 
 >>> i3 = Item.objects.create(name='i3')
 >>> i4 = Item.objects.create(name='i4')
@@ -69,13 +69,29 @@ ValueError: Invalid vote -2 must be in [1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 1
 >>> Vote.objects.get_for_user_in_bulk(users[0], [])
 {}
 
-
 >>> for user in users[1:]:
 ...     _ = Vote.objects.record_vote(user, i2, +1)
 ...     _ = Vote.objects.record_vote(user, i3, +1)
 ...     _ = Vote.objects.record_vote(user, i4, +1)
+
+>>> votes = Vote.objects.get_for_user_in_bulk(users[1], [i1, i2, i3, i4])
+>>> [(id, vote.vote) for id, vote in votes.items()]
+[(1, -1), (2, 1), (3, 1), (4, 1)]
+
 >>> Vote.objects.get_for_objects_in_bulk([i1, i2, i3, i4])
 {1: {1: 2, -1: 2}, 2: {1: 4}, 3: {1: 3, -1: 1}, 4: {0: 1, 1: 3, 11: 1}}
 >>> Vote.objects.get_for_objects_in_bulk([])
 {}
+
+# Popular #################################################
+
+>>> i5 = Item.objects.create(name='i5')
+>>> i6 = Item.objects.create(name='i6')
+>>> _ = Vote.objects.record_vote(users[1] , i5, 10)
+>>> _ = Vote.objects.record_vote(users[0] , i6, 10)
+>>> _ = Vote.objects.record_vote(users[1] , i6, 10)
+>>> Vote.objects.get_popular(Item)
+[(1, 4), (2, 4), (3, 4), (4, 4), (6, 2), (5, 1)]
+>>> Vote.objects.get_controversial(Item)
+[(1, 0.0), (3, 0.5), (2, 1.0), (4, 3.5), (5, 10.0), (6, 10.0)]
 """

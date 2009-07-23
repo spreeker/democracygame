@@ -8,17 +8,37 @@ be free and it should be easy to integrate our tools/game into other tools
 and websites.
 
 Installation:
+=============
 
 I asume basic python , django, linux and scm knowledge.
 
 Installing democracy for development:
 
-python requirements: python2.6
-markup
-dist-utils
-django-trunk
+requirements: 
+-------------
 
-cd to the demorcacy directory. default settings.py uses sqlite3 as database backend and you dont need
-to install annything if you are using python >= python2.5
+# python2.6 , oauth library needs it.
+# markup
+# dist-utils
+# django-trunk
+
+We provided most extra packages in the external external_app directory.
+The settings and wsgi example apache configuration takes care of putting that directory
+in your python path.
 
 $ python manage.py runserver 8080
+
+Testing
+=======
+
+We put quite some effort in creating tests for our application
+
+$ python manage.py test
+
+To only test the api:
+
+$ python manage.py test api 
+
+and to test only the voting app
+
+$ python manage.py test tests --settings=voting.tests.settings

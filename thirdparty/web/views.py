@@ -16,10 +16,10 @@ from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
-from oauth_consumer.consumer import EmoOAuthConsumerApp
+from oauth_consumer.consumer import DemoOAuthConsumerApp
 from web.forms import IssueFormNew
 
-emo = EmoOAuthConsumerApp()
+demo = DemoOAuthConsumerApp()
 
 #-----------------------------------------------------------------------------
 # Some extra response codes not defined in:
@@ -32,10 +32,16 @@ class HttpResponseCreated(HttpResponse):
     status_code = 201
 
 #-----------------------------------------------------------------------------
-
+def index(request):
+    """
+    returns empty body
+    """
+    pass
 
 def issues_list_hottest(request):
-    issue_list = emo.get_issue_list(request)
+    
+    issue_list = demo.get_issue_list(request)
+
     fetch = []
     for resource in issue_list:
         issueid = resource['issue_uri'].split('/')
@@ -99,7 +105,7 @@ def issues_add_issue(request, issue_no=None):
     This view handles proposing new issues.
     """
     if issue_no is not None: # view was called to edit an issue
-        issue = emo.get_issue(request, issue_no)
+        issue = demo.get_issue(request, issue_no)
         #issue = get_object_or_404(Issue, pk = issue_no)
         try:
             # TODO
@@ -130,7 +136,7 @@ def issues_add_issue(request, issue_no=None):
     if request.method == "POST":
         form = IssueFormNew(request.POST)
         if form.is_valid():
-            status = emo.post_issue(
+            status = demo.post_issue(
                 request,
                 {
                     'title' : form.cleaned_data[u'title'],
@@ -176,7 +182,7 @@ def user_details(request, pk):
             RequestContext(request, extra_context))
 
 def top_level_menu(request):
-    issue_list = emo.get_issue_list(request)
+    issue_list = demo.get_issue_list(request)
     fetch = []
     for resource in issue_list:
         issueid = resource['issue_uri'].split('/')
