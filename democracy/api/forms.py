@@ -1,5 +1,5 @@
 from django import forms
-from voting.managers import possible_votes
+from voting.managers import normal_votes 
 from issue.models import Issue
 from issue.models import source_types
 
@@ -11,13 +11,13 @@ class IssueForm(forms.Form):
     )
     url = forms.URLField()
     source_type = forms.CharField( widget = forms.ChoiceField( choices = source_types ))
-    direction = forms.ChoiceField( choices = possible_votes)
+    direction = forms.ChoiceField( choices = normal_votes)
 
     is_draft = forms.BooleanField(initial = True, required = False)
 
 
 class VoteForm(forms.Form):
-    vote = forms.ChoiceField(choices = possible_votes.items() ) 
+    vote = forms.ChoiceField(choices = normal_votes.items() ) 
     keep_private = forms.BooleanField(initial = False , required = False )
     issue = forms.ModelChoiceField( queryset = Issue.objects.all() )
 

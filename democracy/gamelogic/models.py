@@ -35,12 +35,13 @@ class MultiplyIssue(models.Model):
 
             Maybe this can be extended for users at different levels to have different multiplies
         """
-        msg = "Failed to add Multiply"
+        msg = _("You have no multiplies left")
         count_m = MultiplyIssue.objects.filter( user = self.user ).count()
         if count_m < MAX_MULTIPLIERS:
+            msg = _("You cannot not multiplie on your own issues")
             if not self.issue.user == self.user:
                 super(MultiplyIssue , self).save(force_insert, force_update)
-                msg = "succesfully added multiply" 
+                msg = _("succesfully added multiply")
                 return self
 
         self.user.message_set.create(message=msg)
