@@ -258,6 +258,7 @@ class VoteHandlerTest( OAuthTests ):
 class AnonymousUserHandlerTest( APIMainTest ):
     
     def test_get_users(self):
+        """ test reading users """
         expected = """[
     {
         "username": "test1", 
@@ -288,6 +289,7 @@ class AnonymousUserHandlerTest( APIMainTest ):
         self.assertEqual( expected , result )
 
     def test_get_user(self):
+        """ test getting a user """
         user = User.objects.get( username = 'test1' )
         expected = """[
     {
@@ -303,11 +305,13 @@ class AnonymousUserHandlerTest( APIMainTest ):
         self.assertEqual( expected , result )
 
     def test_get_not_existing_user(self):
+        """ read non existing user """
         url = reverse( "api_user", args=[9999] )
         response = self.client.get(url)
         self.assertEqual( 200 , response.status_code )
 
     def test_get_not_existing_userprofile(self):
+        """ test if missing userprofile not causes a crash """
         # delete profile of user1
         user = User.objects.get( username = 'test1' )
         p = user.get_profile()
@@ -322,6 +326,7 @@ class UserHandlerTest ( OAuthTests ):
     """
     
     def test_get_user_data(self):
+        """ test get specific user data """
         url = reverse( 'api_user' , args=[self.users[0].pk] )
         response = self.do_oauth_request( url , http_method = 'GET' )
 
@@ -345,6 +350,7 @@ class IssueHandlerTest( APIMainTest ):
         self.issue3 = Issue.objects.get( title = "issue3")
  
     def test_read_issues(self):
+        """ read a list of issues """
         expected = """[
     {
         "body": "issue1issue1issue1issue1issue1issue1issue1issue1issue1issue1", 
@@ -404,6 +410,7 @@ class IssueHandlerTest( APIMainTest ):
         self.assertEqual( expected , result )
 
         def test_read_issue(self):
+            """ test read issue """
             expected = """[
     {
         "body": "issue1issue1issue1issue1issue1issue1issue1issue1issue1issue1", 
@@ -424,6 +431,7 @@ class IssueHandlerTest( APIMainTest ):
             self.assertEqual( expected , result )
 
         def test_read_bad_issue(self):
+            """ test read bad issue """
             url = reverse( "api_issue" , args=999999 )
             response = self.client.get( url )
             self.assertEqual( 404 , response.status_code )
@@ -433,6 +441,7 @@ class MultiplyHandlerTest( OAuthTests ):
     do oauth request to get you own multiplies. 
     """ 
     def test_get_own_multiplies(self):
+        """ test get your own multiplies """
         issue2 = Issue.objects.get( title = "issue2" )
         self.do_multiply( self.users[0] ,  issue2 )
         self.do_multiply( self.users[1] ,  issue2 )
@@ -493,6 +502,7 @@ class MultiplyHandlerTest( OAuthTests ):
 class AnonymousMultiplyHandlerTest( APIMainTest ):
 
     def test_get_multiplies (self):
+        """ read multiplies """
         #remember only users 1 and 2 can do multiplies
         issue1 = Issue.objects.get( title="issue1" )
         issue2 = Issue.objects.get( title="issue2" )
