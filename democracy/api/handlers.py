@@ -113,11 +113,11 @@ class IssueList(BaseHandler):
     """
     BaseClass for Listings of issues
 
-    # 'new' 
-    # 'popular' 
-    # 'controversial'
-    # 'recommended' #TODO
-    # 'with_tag'    #TODO
+    #. 'new' 
+    #. 'popular' 
+    #. 'controversial'
+    #. 'recommended' #TODO
+    #. 'with_tag'    #TODO
 
     """
     allowed_methods = ('GET',)
@@ -135,14 +135,12 @@ class IssueList(BaseHandler):
             qs = qs.values_list('id', 'time_stamp')
             
         else:
-            print "HUH"
             return rc.BAD_REQUEST
         page = paginate(request, qs )
         result = [] 
         for id_value in page.object_list:
             uri = self.issue_url( id_value )
             result.append( (uri, id_value[1]) )
-        print result
         return result 
 
     # not no classmethodis because query returns list of tuples.
@@ -169,6 +167,7 @@ class VoteHandler(BaseHandler):
                         content_type = ctype.pk ).order_by('time_stamp')
         if id:
             queryset = queryset.filter( object_id=id )
+        queryset.order_by( "username" )
         page = paginate(request, queryset)
         return page.object_list
 
@@ -230,6 +229,10 @@ class AnonymousUserHandler(AnonymousBaseHandler):
         return UserProfile.objects.filter( score__gte = score ).count()
 
     #TODO GRAVATAR url !! 
+    @staticmethod
+    def resource_uri():
+        return ('api_user' , ['id'])
+
 
 
 class UserHandler(BaseHandler):
