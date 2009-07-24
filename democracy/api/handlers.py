@@ -21,7 +21,7 @@ from piston.utils import validate
 
 from democracy.api.forms import IssueForm
 from democracy.api.forms import VoteForm
-from democracy.api.forms import MultiplyForm 
+from democracy.api.forms import MultiplyForm
 from democracy.issue.models import Issue
 from democracy.voting.models import Vote
 from democracy.profiles.models import UserProfile
@@ -31,25 +31,27 @@ import gamelogic.actions
 
 from piston.models import Token
 
+
 def paginate(request, qs):
-    paginator = Paginator(qs, 3)  # TODO: add to settings.py
-    try :
+    paginator = Paginator(qs, 3)  # TODO add to settings.py
+    try:
         pageno = int(request.GET.get('page', '1'))
     except ValueError:
         pageno = 1
-    try :
+    try:
         page = paginator.page(pageno)
     except (EmptyPage, InvalidPage):
         page = paginator.page(paginator.num_pages) #last page
     return page
 
+
 class IssueVotesHandler(AnonymousBaseHandler):
     """
-    Return votes for issue 
+    Return votes for issue
     """
-    allowed_methods = ('GET',)
-    fields = ('vote', 'vote_count',)
-    model = Vote 
+    allowed_methods = ('GET', )
+    fields = ('vote', 'vote_count', )
+    model = Vote
 
     def read(self, request, id, *args, **kwargs):
         """
@@ -57,9 +59,9 @@ class IssueVotesHandler(AnonymousBaseHandler):
 
         example output:
 
-        { "-1": 1 , "1":10, "10": 1  ... } 
-                
-        This Means for -1 , (against) there is 1 vote
+        {"-1": 1, "1":10, "10": 1  ... }
+
+        This Means for -1, (against) there is 1 vote
         , 10 people voted for (1) and 1 person voted blank (10) *unconvincing*
         Here are all the different votes directions:
 
@@ -67,34 +69,34 @@ class IssueVotesHandler(AnonymousBaseHandler):
 
         1.   "For",
 
-        *blank_votes* note always higer than 10. 
+        *blank_votes* note always higer than 10.
 
-        content related problems with issues 
+        content related problems with issues
 
         10.  'Unconvincing',
         11.  'Not political',
         12.  'Can\'t completely agree',
 
-        form related problems with issues 
+        form related problems with issues
 
         13.  "Needs more work",
         14.  "Badly worded",
         15.  "Duplicate",
         16.  'Unrelated source',
 
-        personal considerations 
+        personal considerations
 
         17.  'I need to know more',
         18.  'Ask me later',
         19.  'Too personal',
 
-        """ 
-        try :
-            issue = Issue.objects.get( id=id )
-        except Issue.DoesNotExist :
+        """
+        try:
+            issue = Issue.objects.get(id=id)
+        except Issue.DoesNotExist:
             return rc.NOT_HERE
-        
-        votes = Vote.objects.get_for_object( issue )
+
+        votes = Vote.objects.get_for_object(issue)
         return votes
 
     @classmethod
@@ -107,24 +109,25 @@ class IssueVotesHandler(AnonymousBaseHandler):
 
     @staticmethod
     def resource_uri():
-        return ('api_issue_votes' , ['id'])
-    
+        return ('api_issue_votes', ['id'])
+
+
 class IssueList(BaseHandler):
     """
     BaseClass for Listings of issues
 
-    #. 'new' 
-    #. 'popular' 
+    #. 'new'
+    #. 'popular'
     #. 'controversial'
     #. 'recommended' #TODO
     #. 'with_tag'    #TODO
 
     """
-    allowed_methods = ('GET',)
+    allowed_methods = ('GET', )
 
-    def read(self, request , **kwargs):
+    def read(self, request, **kwargs):
         """ get listing of issue uri's """
-        
+
         sortorder = kwargs.get("sortorder", "")
         if sortorder == 'popular':
             qs = Vote.objects.get_popular(Issue)
@@ -133,19 +136,19 @@ class IssueList(BaseHandler):
         elif sortorder == 'new':
             qs = Issue.objects.all().order_by('-time_stamp')
             qs = qs.values_list('id', 'time_stamp')
-            
+
         else:
             return rc.BAD_REQUEST
-        page = paginate(request, qs )
-        result = [] 
+        page = paginate(request, qs)
+        result = []
         for id_value in page.object_list:
-            uri = self.issue_url( id_value )
-            result.append( (uri, id_value[1]) )
-        return result 
+            uri = self.issue_url(id_value)
+            result.append((uri, id_value[1]))
+        return result
 
     # not no classmethodis because query returns list of tuples.
     # and the responder will not look at those.
-    def issue_url(cls, id_value ):
+    def issue_url(cls, id_value):
         return reverse('api_issue', args=[id_value[0]])
 
 
@@ -159,88 +162,89 @@ class VoteHandler(BaseHandler):
 
     def read(self, request, id=None, **kwargs):
         """
-        Returns the votes for an user. 
+        Returns the votes for an user.
         """
         # TODO check if args has issue id.
         ctype = ContentType.objects.get_for_model(Issue)
-        queryset = self.model.objects.filter( user = request.user,
-                        content_type = ctype.pk ).order_by('time_stamp')
+        queryset = self.model.objects.filter(user = request.user,
+                        content_type = ctype.pk).order_by('time_stamp')
         if id:
-            queryset = queryset.filter( object_id=id )
-        queryset.order_by( "username" )
+            queryset = queryset.filter(object_id=id)
+        queryset.order_by("username")
         page = paginate(request, queryset)
         return page.object_list
 
     @classmethod
     def issue_uri(cls, vote):
-        return "%s" % reverse('api_issue' , args=[vote.object_id])
+        return "%s" % reverse('api_issue', args=[vote.object_id])
 
-    @validate( VoteForm )
-    def create(self, request ):
+    @validate(VoteForm)
+    def create(self, request):
         """
         Vote on an Issue
         """
         ctype = ContentType.objects.get_for_model(Issue)
         attrs = self.flatten_dict(request.POST)
-        object_id = attrs.pop('issue') 
-        attrs.update({ 'content_type' : ctype,
-                       'object_id' : object_id,
+        object_id = attrs.pop('issue')
+        attrs.update({'content_type': ctype,
+                       'object_id': object_id,
                 })
 
         if self.exists(**attrs):
             return rc.DUPLICATE_ENTRY
-        if not attrs.has_key('keep_private'):
+        if not 'keep_private' in attrs:
             attrs['keep_private'] = False
-        
+
         #print type(request.throttle_extra)
-    
-        gamelogic.actions.vote( 
-                request.user, 
+
+        gamelogic.actions.vote(
+                request.user,
                 Issue.objects.get(id=attrs['object_id']),
                 int(attrs['vote']),
                 attrs['keep_private'],
                 api_interface=request.throttle_extra,
         )
-        return rc.CREATED 
+        return rc.CREATED
+
 
 class AnonymousUserHandler(AnonymousBaseHandler):
-    allowed_methods = ('GET',)
-    fields = ('username', 'score', 'ranking' , )
+    allowed_methods = ('GET', )
+    fields = ('username', 'score', 'ranking', )
     model = User
 
     def read(self, request, id=None, *args, **kwargs):
         if id:
             try:
-                return User.objects.filter( id=id )
+                return User.objects.filter(id=id)
             except User.DoesNotExist:
                 return rc.NOT_FOUND
-        else :
-            queryset = User.objects.filter().order_by( 'username' )
+        else:
+            queryset = User.objects.filter().order_by('username')
             page = paginate(request, queryset)
             return page.object_list
 
     @classmethod
     def score(cls, user):
-        return  get_profile_field(user, 'score', 0 )
+        return  get_profile_field(user, 'score', 0)
 
     @classmethod
-    def ranking(cls , user):
-        score = cls.score(user) 
-        return UserProfile.objects.filter( score__gte = score ).count()
+    def ranking(cls, user):
+        score = cls.score(user)
+        return UserProfile.objects.filter(score__gte = score).count()
 
-    #TODO GRAVATAR url !! 
+    #TODO GRAVATAR url !!
     @staticmethod
     def resource_uri():
-        return ('api_user' , ['id'])
-
+        return ('api_user', ['id'])
 
 
 class UserHandler(BaseHandler):
     """
     Get User Details for authenticated user
     """
-    allowed_methods = ('GET',)
-    fields = ('username', 'firstname' , 'lastname' , 'email' , 'score', 'ranking' , 'role' )
+    allowed_methods = ('GET', )
+    fields = ('username', 'firstname', 'lastname', 'email', 'score',
+            'ranking', 'role')
     anonymous = AnonymousUserHandler
     model = User
 
@@ -249,35 +253,36 @@ class UserHandler(BaseHandler):
 
     @classmethod
     def score(cls, user):
-        return get_profile_field(user, 'score' , 0)
+        return get_profile_field(user, 'score', 0)
 
     @classmethod
-    def role( cls , user):
-        return get_profile_field(user, 'role', 'citizen' )
+    def role(cls, user):
+        return get_profile_field(user, 'role', 'citizen')
 
     @classmethod
-    def ranking( cls , user):
+    def ranking(cls, user):
         score = cls.score(user)
-        return UserProfile.objects.filter( score__gte = score ).count()
+        return UserProfile.objects.filter(score__gte = score).count()
 
     @staticmethod
     def resource_uri():
-        return ('api_user' , ['id'])
+        return ('api_user', ['id'])
 
 
 class AnonymousIssueHandler(AnonymousBaseHandler):
-    
-    fields = ('title', 'body', ('user', ('username', ) ), 'time_stamp', 'source_type', 'url')
+
+    fields = ('title', 'body', ('user', ('username', )), 'time_stamp',
+            'source_type', 'url')
     model = Issue
 
-    def read(self, request, id=None , *args, **kwargs):
+    def read(self, request, id=None, *args, **kwargs):
         if id:
             try:
-                return self.model.objects.filter( issue_id=id )
+                return self.model.objects.filter(issue_id=id)
             except ObjectDoesNotExist:
                 return rc.NOT_FOUND
-        else :
-            queryset = self.model.objects.order_by( '-time_stamp' )
+        else:
+            queryset = self.model.objects.order_by('-time_stamp')
             page = paginate(request, queryset)
             return page.object_list
 
@@ -287,13 +292,14 @@ class AnonymousIssueHandler(AnonymousBaseHandler):
 
     @staticmethod
     def resource_uri():
-        return ('api_issue' , ['id'])
+        return ('api_issue', ['id'])
 
 
 class IssueHandler(BaseHandler):
-    allowed_methods = ('GET', 'POST',)
+    allowed_methods = ('GET', 'POST')
     anonymous = AnonymousIssueHandler
-    fields = ('title', 'body', ('user', ('username')), 'time_stamp', 'souce_type', 'url')
+    fields = ('title', 'body', ('user', ('username')), 'time_stamp',
+            'souce_type', 'url')
     model = Issue
 
     @validate(IssueForm)
@@ -302,7 +308,7 @@ class IssueHandler(BaseHandler):
 
         if self.exists(**attrs):
             return rc.DUPLICATE_ENTRY
-        else :
+        else:
             issue = gamelogic.actions.propose(
                 request.user,
                 attrs['title'],
@@ -311,55 +317,58 @@ class IssueHandler(BaseHandler):
                 attrs['url'],
                 attrs['source_type'],
                 attrs['is_draft'],
-            )
-            if issue : return rc.CREATED 
-            else : rc.BAD_REQUEST
+           )
+            if issue:
+                return rc.CREATED
+            else:
+                return rc.BAD_REQUEST
 
     @staticmethod
     def resource_uri():
-        return ('api_issue' , ['id'])
+        return ('api_issue', ['id'])
 
 
-class AnonymousMultiplyHandler( AnonymousBaseHandler ):
-    allowed_methods = ('GET',)
-    model = MultiplyIssue 
+class AnonymousMultiplyHandler(AnonymousBaseHandler):
+    allowed_methods = ('GET', )
+    model = MultiplyIssue
 
-    fields = ( ('user', ('resource_uri') ), 'time_stamp' , ( 'issue' , ( 'resource_uri' ) ) )
+    fields = (('user', ('resource_uri')), 'time_stamp',
+            ('issue', ('resource_uri')))
 
-    def read(self, request, id=None , *args, **kwargs):
+    def read(self, request, id=None, *args, **kwargs):
         """ Read the active multiplies for specific issue
             or all multiplies in decending paginated order
         """
         if id:
-            return self.model.objects.filter( issue=id )
-        else :
-            queryset = self.model.objects.all().order_by( '-time_stamp' )
+            return self.model.objects.filter(issue=id)
+        else:
+            queryset = self.model.objects.all().order_by('-time_stamp')
             page = paginate(request, queryset)
             return page.object_list
 
         queryset = self.model.objects.filter()
         page = paginate(request, queryset)
         return page.object_list
-    
+
     @staticmethod
     def resource_uri():
-        return ('api_multiply' , ['id'])
+        return ('api_multiply', ['id'])
 
 
-class MultiplyHandler( BaseHandler ):
+class MultiplyHandler(BaseHandler):
     """
     If a user has enough game points the user can multiply the value
     of an issue.
     """
-    allowed_methods = ('POST' , 'GET' )
+    allowed_methods = ('POST', 'GET')
     anonymous = AnonymousMultiplyHandler
     model = MultiplyIssue
-    fields = ( ('user', ('resource_uri') ), 'time_stamp' , ( 'issue' , ( 'resource_uri' ) ) )
+    fields = (('user', ('resource_uri')), 'time_stamp', ('issue',
+        ('resource_uri')))
 
-    #def read , default behaviour is what we want.    
-
+    #No def read, default behaviour is what we want.
     @validate(MultiplyForm)
-    def create( self , request ):
+    def create(self, request):
         """ expects an issue id and optional a downgrade boolean
             in the POST data
         """
@@ -367,27 +376,30 @@ class MultiplyHandler( BaseHandler ):
 
         issue = gamelogic.actions.multiply(
             request.user,
-            Issue.objects.get( id = attrs['issue'] ) ,
-            attrs.get('downgrade', False) ,
+            Issue.objects.get(id = attrs['issue']),
+            attrs.get('downgrade', False),
         )
-        if issue : return rc.CREATED 
-        else : return rc.FORBIDDEN
+        if issue:
+            return rc.CREATED
+        else:
+            return rc.FORBIDDEN
 
     @staticmethod
     def resource_uri():
-        return ('api_multiply' , ['id'])
+        return ('api_multiply', ['id'])
 
 
-# helper method.
 def get_profile(user):
-    try :
+    try:
         return user.get_profile()
     except UserProfile.DoesNotExist:
         pass
 
+
 def get_profile_field(user, attribute, default):
     profile = get_profile(user)
-    if not profile: return default
+    if not profile:
+        return default
     if hasattr(profile, attribute):
             return getattr(profile, attribute)
     return default
