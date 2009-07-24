@@ -1,10 +1,10 @@
 {% load i18n %}
 {% if user.is_authenticated %}
-{{user.username}}
- <strong>{{user.get_profile.ranking }}</strong>
+<a href="{% url userprofile user %}">{{user.username}}</a>
+<strong>{{user.get_profile.ranking }}</strong>
 <a href="http://democracy.nl/wiki/index.php/Punten">score</a> {{user.get_profile.score}}
 <a href="http://democracy.nl/wiki/index.php/Burger">{% trans user.get_profile.role %}</a>
-<a href="{% url logout %}">{% trans "logout" %} </a>.
+<a href="{% url logout %}">{% trans "logout" %}</a>.
 
 {% else %}
     <a href="{% url registration_register %}">{% trans "register" %} </a> | 
