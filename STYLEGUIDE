@@ -4,3 +4,5 @@ The codebase should follow the Style Guide for Python Code
 which you can find here:
 
 http://www.python.org/dev/peps/pep-0008/
+
+You can check your code with pep8.py
