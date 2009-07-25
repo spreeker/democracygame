@@ -3,6 +3,7 @@ The democracy API.
 
 we have some public resources which you can get annonymousy
 but for the private data we require oauth authentication
+we have built test to acces those resouces through oauth.
 
 """
 import datetime
@@ -33,7 +34,7 @@ from piston.models import Token
 
 
 def paginate(request, qs):
-    paginator = Paginator(qs, 3)  # TODO add to settings.py
+    paginator = Paginator(qs, 25)  # TODO add to settings.py
     try:
         pageno = int(request.GET.get('page', '1'))
     except ValueError:
@@ -131,12 +132,13 @@ class IssueList(BaseHandler):
         sortorder = kwargs.get("sortorder", "")
         if sortorder == 'popular':
             qs = Vote.objects.get_popular(Issue)
+            qs = qs.values_list('object_id' , 'totalvotes')
         elif sortorder == 'controversial':
             qs = Vote.objects.get_controversial(Issue)
+            qs = qs.values_list('object_id' , 'avg')
         elif sortorder == 'new':
             qs = Issue.objects.all().order_by('-time_stamp')
             qs = qs.values_list('id', 'time_stamp')
-
         else:
             return rc.BAD_REQUEST
         page = paginate(request, qs)
