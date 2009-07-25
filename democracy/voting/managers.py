@@ -108,7 +108,8 @@ class VoteManager(models.Manager):
 
     def get_for_objects_in_bulk(self, objects, all=False):
         """
-        Get a dictinary mapping objects ids to dictinary which maps direction to votecount
+        Get a dictinary mapping objects ids to dictinary
+        which maps direction to votecount
         """
         object_ids = [o._get_pk_val() for o in objects]
         if not object_ids:
@@ -132,11 +133,14 @@ class VoteManager(models.Manager):
 
         return vote_dict
 
-    def get_popular(self, Model):
+    def get_popular(self, Model, object_ids=None):
         """ return qs ordered by popularity """
         ctype = ContentType.objects.get_for_model(Model)
         queryset = self.filter(content_type=ctype,)
         queryset = queryset.filter(is_archived=False) 
+
+        if object_ids: # to get the most popular from a list
+            queryset = queryset.filter(object_id__in=object_ids)
 
         queryset = queryset.values('object_id',)
         queryset = queryset.annotate(totalvotes=Count("vote")).order_by()
@@ -145,7 +149,7 @@ class VoteManager(models.Manager):
        
         return queryset
 
-    def get_controversial(self, Model):
+    def get_controversial(self, Model, object_ids=None):
         """ 
         return qs ordered by controversy , 
         meaning it divides the ppl in 50/50.
@@ -156,6 +160,10 @@ class VoteManager(models.Manager):
         queryset = self.filter(content_type=ctype,)
         queryset = queryset.filter(is_archived=False) 
         queryset = queryset.filter(vote__in=[-1,1])
+
+        if object_ids: # to get the most popular from a list
+            queryset = queryset.filter(object_id__in=object_ids)
+
         queryset = queryset.values('object_id',)
         queryset = queryset.annotate(avg=Avg("vote")).order_by()
         queryset = queryset.order_by('avg')
