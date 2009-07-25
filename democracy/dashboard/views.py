@@ -1,8 +1,10 @@
 """
-Views for showing your own data. data on issues and your votes en your data
-Show who has acces to them.
-"""
+Views for showing / managaging players OWN data. 
 
+# data on your issues 
+# your votes
+# Show which 3d party has acces acces to them.
+"""
 
 import logging
 from django.contrib.auth.models import User
@@ -33,12 +35,57 @@ def paginate(request, qs):
         page = paginator.page(paginator.num_pages) #last page
     return page
 
+def order_issues(request, sortorder, issues):
+    """ return page and issues derived by voting data.  """
+    ids = issues.values_list("id")
+    if sortorder == 'popular':
+        qs = Vote.objects.get_popular(Issue, ids)
+    elif sortorder == 'controversial':
+        qs = Vote.objects.get_controversial(Issue, ids)
+    else:
+        return
 
-class IssueView(object):
+    page = paginate(request, qs)
+    object_ids = [ d['object_id'] for d in page.object_list ]
+    issues = issues.filter( id__in=object_ids )
+
+    return issues, page
+
+
+def my_issue_list(request, *args, **kwargs):
     """ 
     shows issues to vote on in different sortings
     based on collective knowlegde from votings on them
+    """
+    template_name= "dasboard/issue_list.html"
 
+    if not request.method == "GET":
+        return HttpResponseBadRequest
+
+    issues = Issue.objects.select_related().order_by('-time_stamp')
+    issues = issues.filter( user=request.user ) 
+
+    if 'sortorder' in kwargs:
+        issues, page = order_issues(request, kwargs['sortorder'], issues)
+    else:
+        page = paginate(request, issues)
+        issues = page.object_list
+
+    c = RequestContext(request, {
+        'blank_votes' : blank_votes.items(),
+        'possible_votes' : possible_votes,
+        'issues'  : issues, 
+        'page' : page,
+        'votedata' : Vote,
+    }) 
+   
+    t = loader.get_template(template_name)
+    return HttpResponse(t.render(c))
+
+
+class MyDataView(object):
+    """ 
+    shows players issues 
     qs is the pagianted queryset
     """
     # override in subclass if needed 
@@ -62,10 +109,10 @@ class IssueView(object):
             return HttpResponseBadRequest
         if 'sortorder' in kwargs:
             self.order_issues(kwargs['sortorder'])
-             
+            
         page = paginate(request, self.qs)
 
-        if isinstance(page.object_list[0], dict):  
+        if isinstance(page.object_list[0], dict): #hits the db 
             # qs result from sortorder, which are Vote instances and not Issue
             object_ids = [ d['object_id'] for d in page.object_list ]
             issues = Issue.objects.filter( id__in=object_ids )
@@ -81,40 +128,31 @@ class IssueView(object):
             'vote' : Vote,
             'page' : page
         }) 
-       
         t = loader.get_template(self.template_name)
         return HttpResponse(t.render(c))
 
-index = IssueView()
 
+def archive_issue(request, issue_id):
+    pass
 
-def record_vote(request, issue_id ):
+def archive_vote(request, issue_id ):
     """
-    Wrapper function for the voting.views.vote_on_object function
-
-    what if user is anonymous?
-
+    voting.views.vote_on_object function
     """
-    if request.REQUEST.has_key('direction'):
-        direction = request.REQUEST['direction']
-        return vote_on_object(request, Issue, direction , object_id=issue_id ) 
+    if 'archive' in request.REQUEST:
+        pass     
+    next = request.REQUEST.get('next' , '/' )
     return HttpResponseBadRequest
 
-def record_multiply(request , issue_id ):
+def delete_multiply(request , issue_id ):
     """
-    Wrapper funtion around gamelogic.actions.multiply
+    Delete a multiply 
     """
     if not request.method == "POST": 
         return HttpResponseBadRequest()
     issue = get_object_or_404( Issue, id=issue_id ) 
 
-    possible_actions = actions.get_actions(request.user) 
-    message = "You cannot multiply yet!"
     next = request.REQUEST.get('next' , '/' )
-
-    if possible_actions.has_key('multiply') :
-        actions.multiply( request.user, issue )
-        return HttpResponseRedirect(next)
-
+    message = "NOT IMPLEMENTED YET"
     request.user.message_set.create(message=message)    
     return HttpResponseRedirect( next )
