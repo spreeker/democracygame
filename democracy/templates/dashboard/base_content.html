@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block mainmenu %}
+
+    <a href="/">/</a> | 
     <a href={% url api_doc %}>API</a> | 
     {% trans "propose" %} | 
     {% trans "your issues" %} | 
