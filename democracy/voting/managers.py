@@ -141,7 +141,7 @@ class VoteManager(models.Manager):
         queryset = queryset.values('object_id',)
         queryset = queryset.annotate(totalvotes=Count("vote")).order_by()
         queryset = queryset.order_by('-totalvotes')
-        queryset = queryset.values_list('object_id' , 'totalvotes')
+        #queryset = queryset.values_list('object_id' , 'totalvotes')
        
         return queryset
 
@@ -151,21 +151,33 @@ class VoteManager(models.Manager):
         meaning it divides the ppl in 50/50.
         since for is 1 and against is -1, a score close to 0
         indicates controversy.
-        if Object is getting blank votes it will dissapear from the list
-
         """
         ctype = ContentType.objects.get_for_model(Model)
         queryset = self.filter(content_type=ctype,)
         queryset = queryset.filter(is_archived=False) 
-
+        queryset = queryset.filter(vote__in=[-1,1])
         queryset = queryset.values('object_id',)
         queryset = queryset.annotate(avg=Avg("vote")).order_by()
         queryset = queryset.order_by('avg')
-        queryset = queryset.values_list('object_id' , 'avg')
+        queryset = queryset.filter(avg__gt= -0.3 )
+        queryset = queryset.filter(avg__lt= 0.3 )
+        #queryset = queryset.values_list('object_id' , 'avg')
 
         return queryset
 
-    def record_vote(self, user, obj, direction, keep_private=False, api_interface=None ):
+    def get_for_direction(self, Model, directions=[1,-1]):
+        """
+        return objects with a specific direction for ...
+        TODO
+        """
+        ctype = ContentType.objects.get_for_model(Model)
+        queryset = self.filter(content_type=ctype,)
+        queryset = queryset.filter(is_archived=False) 
+        queryset = queryset.filter(vote__in=directions)
+
+        return queryset
+
+    def record_vote(self, user, obj, direction, keep_private=False, api_interface=None):
         """
         Archive old votes by switching the is_archived flag to True
         for all the previous votes on <obj> by <user>.
@@ -174,7 +186,7 @@ class VoteManager(models.Manager):
         opinion changes.
         """
         if not direction in possible_votes.keys():
-            raise ValueError('Invalid vote %s must be in %s' % (direction , possible_votes.keys()))
+            raise ValueError('Invalid vote %s must be in %s' % (direction, possible_votes.keys()))
 
         ctype = ContentType.objects.get_for_model(obj)
         votes = self.filter(user=user, content_type=ctype, object_id=obj._get_pk_val(), is_archived=False)
@@ -191,9 +203,9 @@ class VoteManager(models.Manager):
                     v.save()            
         vote = None
         if not repeated_vote:
-            vote = self.create( user=user , content_type=ctype,
+            vote = self.create( user=user, content_type=ctype,
                          object_id=obj._get_pk_val(), vote=direction,
-                         api_interface=api_interface , is_archived=False, 
+                         api_interface=api_interface, is_archived=False, 
                          keep_private=keep_private
                         )
             vote.save()

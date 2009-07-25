@@ -90,8 +90,10 @@ r"""
 >>> _ = Vote.objects.record_vote(users[1] , i5, 10)
 >>> _ = Vote.objects.record_vote(users[0] , i6, 10)
 >>> _ = Vote.objects.record_vote(users[1] , i6, 10)
->>> Vote.objects.get_popular(Item)
+>>> qs = Vote.objects.get_popular(Item)
+>>> qs.values_list('object_id' , 'totalvotes')
 [(1, 4), (2, 4), (3, 4), (4, 4), (6, 2), (5, 1)]
->>> Vote.objects.get_controversial(Item)
-[(1, 0.0), (3, 0.5), (2, 1.0), (4, 3.5), (5, 10.0), (6, 10.0)]
+>>> qs = Vote.objects.get_controversial(Item)
+>>> qs.values_list('object_id' , 'avg')
+[(1, 0.0)]
 """
