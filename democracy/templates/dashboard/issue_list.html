@@ -8,7 +8,8 @@
 {% votes_by_user user on issues as vote_dct %}
 
 <div class="issues">
-<h2> {% trans "issues"%} </h2>
+    <h2> {% trans "issues"%} </h2>
+
 <ul>
 {% for issue in issues %}
 
@@ -32,14 +33,14 @@
 <div class="forms">
 <form action="{% url vote issue.pk %}" method="post">
     <input type="hidden" name="direction" id="direction" value="1" />
-    <input type="hidden" name="next" id="next" value="{% url dashboard %}?page={{ request.page }}#{{issue.pk}}" />
+    <input type="hidden" name="next" id="next" value="/{{ request.get_full_path }}#{{issue.pk}}" />
     <input type="submit" value={% trans "YES" %}>
 </form><form action="{% url vote issue.pk %}" method="post">
     <input type="hidden" name="direction" id="direction" value="-1" />
-    <input type="hidden" name="next" id="next" value="{% url dashboard %}?page={{ request.page }}#{{issue.pk}}" />
+    <input type="hidden" name="next" id="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
     <input type="submit" value={% trans "NO" %} >
 </form><form action="{% url vote issue.pk %}" method="post">
-    <input type="hidden" name="next" id="next" value="{% url dashboard %}?page={{ request.page }}#{{issue.pk}}" />
+    <input type="hidden" name="next" id="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
     <select name="direction">
         {% for blank_vote in blank_votes %}
              <option value="{{ blank_vote.0 }}">{% trans blank_vote.1 %}</option>
@@ -48,7 +49,7 @@
     <input type="submit" value="{% trans "blank" %}">
 </form>
 
-<form action="{% url multiply issue.pk %}" method="post">
+<form class="multiply" action="{% url multiply issue.pk %}" method="post">
     <input type="hidden" name="next" id="next" value="{% url dashboard %}?page={{ request.page }}#{{issue.pk}}" />
     <input type="submit" value="{% trans "multiply" %}"
 </form>
@@ -77,6 +78,6 @@
 {% endblock %}
 
 {%block sidebar %}
-    {% include "dashboard/tag_cloud.html" %}
+    {% include "dashboard/tag_cloud.html" %} 
 {% endblock %}
 
