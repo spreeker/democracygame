@@ -1,12 +1,10 @@
 from django.conf.urls.defaults import *
-
 from issue.models import Issue
 
-from democracy.dashboard.views import index
 
-urlpatterns = patterns('',
-    url(r'^issue/vote/(?P<issue_id>\d+)$', 'dashboard.views.record_vote', name='vote' ),
-    url(r'^issue/multiply/(?P<issue_id>\d+)$', 'dashboard.views.record_multiply', name='multiply' ),
-    url(r'^issue/(?P<sortorder>\w+)/$', index , name='dashboard_order'),
-    url(r'^$', index , name='dashboard'),
+urlpatterns = patterns('dashboard.views',
+    #url(r'^my/votes/(?P<issue_id>\d+)$', 'record_vote', name='my_vote' ),
+    #url(r'^my/multiplies/(?P<issue_id>\d+)$', 'dashboard.views.record_multiply', name='my_multiply' ),
+    url(r'^my/issues(?P<sortorder>\w+)/$', 'my_issue_list' , name='dashboard_issues'),
+    url(r'^my/votes/$', 'my_issue_list' , name='dashboard'),
 )
