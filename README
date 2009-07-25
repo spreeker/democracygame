@@ -22,6 +22,8 @@ requirements:
 # dist-utils
 # django-trunk
 
+# gettext
+
 We provided most extra packages in the external external_app directory.
 The settings and wsgi example apache configuration takes care of putting that directory
 in your python path.
