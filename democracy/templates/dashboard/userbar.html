@@ -10,12 +10,4 @@
     <a href="{% url registration_register %}">{% trans "register" %} </a> | 
     <a href="{% url auth_login %}">{% trans "log in" %} </a>.
 {% endif %}
-    <form action="/i18n/setlang/" method="post">
-        {# <input name="next" type="hidden" value="/next/page/" /> #}
-        <select name="language">
-            {% for lang in LANGUAGES %}
-                <option value="{{ lang.0 }}">{{ lang.1 }}</option>
-            {% endfor %}
-        </select>
-        <input type="submit" value="Go" />
-    </form>
+
