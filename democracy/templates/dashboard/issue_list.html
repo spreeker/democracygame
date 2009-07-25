@@ -1,17 +1,17 @@
 {% extends "dashboard/base_content.html" %}
 {% load i18n %}
-{% load pagination_tags %}
 {% load voting_tags %}
 
 {% block content %}
 
-{% autopaginate issues 9 %}
+
 {% votes_by_user user on issues as vote_dct %}
 
 <div class="issues">
 <h2> {% trans "issues"%} </h2>
 <ul>
 {% for issue in issues %}
+
 {% dict_entry_for_item issue from vote_dct as vote %}
 
 <li id="issue{{ issue.pk }}" >
@@ -52,15 +52,27 @@
     <input type="hidden" name="next" id="next" value="{% url dashboard %}?page={{ request.page }}#{{issue.pk}}" />
     <input type="submit" value="{% trans "multiply" %}"
 </form>
-
-
-</div>
+</div>{# end forms #}
 </li>
 {% endfor %}
 </ul>
 </div>
 
-{% paginate %}
+<div class="pagination">
+    <span class="step-links">
+        {% if page.has_previous %}
+            <a href="?page={{ page.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page.number }} of {{ page.paginator.num_pages }}.
+        </span>
+
+        {% if page.has_next %}
+            <a href="?page={{ page.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
 
 {% endblock %}
 
