@@ -2,12 +2,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-07-18 18:05+0200\n"
+"POT-Creation-Date: 2009-07-25 19:55+0200\n"
 "PO-Revision-Date: 2009-07-20 17:54\n"
 "Last-Translator: <stephan@preeker.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,37 +32,60 @@ msgstr "duits"
 msgid "Dutch"
 msgstr "nederlands"
 
-#: gamelogic/models.py:26
+#: gamelogic/models.py:9
+msgid "Anonymous Citizen"
+msgstr ""
+
+#: gamelogic/models.py:10
+msgid "Citizen"
+msgstr ""
+
+#: gamelogic/models.py:11
+msgid "Active Citizen"
+msgstr ""
+
+#: gamelogic/models.py:12
+msgid "Opinion Leader"
+msgstr ""
+
+#: gamelogic/models.py:27
 #, python-format
 msgid "%(user)s  multiplies for %(issue)s"
 msgstr " vermenigvuldigt voor"
 
-#: gamelogic/util.py:35 gamelogic/util.py:39 gamelogic/util.py:67
-#: web/util.py:35 web/util.py:39 web/util.py:67
-msgid "I did not vote"
-msgstr "niet gestemt"
+#: gamelogic/models.py:38
+msgid "You have no multiplies left"
+msgstr ""
 
-#: issue/models.py:14
+#: gamelogic/models.py:41
+msgid "You cannot not multiplie on your own issues"
+msgstr ""
+
+#: gamelogic/models.py:44
+msgid "succesfully added multiply"
+msgstr ""
+
+#: issue/models.py:16
 msgid "website"
 msgstr "website"
 
-#: issue/models.py:15
+#: issue/models.py:17
 msgid "video"
 msgstr "video"
 
-#: issue/models.py:16
+#: issue/models.py:18
 msgid "audio"
 msgstr "audio"
 
-#: issue/models.py:17
+#: issue/models.py:19
 msgid "book"
 msgstr "boek"
 
-#: issue/models.py:18
+#: issue/models.py:20
 msgid "document"
 msgstr "document"
 
-#: issue/models.py:19
+#: issue/models.py:21
 msgid "image"
 msgstr "image"
 
@@ -70,21 +93,68 @@ msgstr "image"
 msgid "Username"
 msgstr "Gebruikersnaam"
 
-#: templates/base.html:14
-msgid "home"
-msgstr "thuis"
+#: templates/dashboard/base_content.html:5
+#, fuzzy
+msgid "propose"
+msgstr "voorstellen kwestie"
 
-#: templates/base.html:14
-msgid "about"
-msgstr "over ons"
+#: templates/dashboard/base_content.html:6
+#, fuzzy
+msgid "your issues"
+msgstr "mijn kwesties"
 
-#: templates/base.html:15
-msgid "contact"
-msgstr "contact"
+#: templates/dashboard/issue_list.html:11 templates/issue/issue_list.html:12
+#, fuzzy
+msgid "issues"
+msgstr "mijn kwesties"
 
-#: templates/base.html:15
-msgid "wishes"
-msgstr "wensen"
+#: templates/dashboard/issue_list.html:37 templates/issue/issue_list.html:42
+msgid "YES"
+msgstr ""
+
+#: templates/dashboard/issue_list.html:41 templates/issue/issue_list.html:46
+msgid "NO"
+msgstr ""
+
+#: templates/dashboard/issue_list.html:49 templates/issue/issue_list.html:54
+#, fuzzy
+msgid "blank"
+msgstr "Leeg ..."
+
+#: templates/dashboard/issue_list.html:54 templates/issue/issue_list.html:59
+msgid "multiply"
+msgstr ""
+
+#: templates/dashboard/userbar.html:7
+#, fuzzy
+msgid "logout"
+msgstr "uitloggen"
+
+#: templates/dashboard/userbar.html:10 templates/profiles/login.html:23
+#: templates/web/sidebar.html:55
+msgid "register"
+msgstr "registreren"
+
+#: templates/dashboard/userbar.html:11 templates/web/sidebar.html:57
+msgid "log in"
+msgstr "log in"
+
+#: templates/issue/issue_list.html:13
+#, fuzzy
+msgid "popular"
+msgstr "Populaire tags"
+
+#: templates/issue/issue_list.html:14
+msgid "controversial"
+msgstr ""
+
+#: templates/issue/issue_list.html:15
+msgid "new"
+msgstr ""
+
+#: templates/profiles/login.html:17
+msgid "Try again, username and password don't match."
+msgstr ""
 
 #: templates/profiles/logout.html:5
 msgid "You are now logged out."
@@ -140,7 +210,8 @@ msgstr "Home"
 
 #: templates/registration/logged_out.html:8
 msgid "Thanks for spending some quality time with the Web site today."
-msgstr "Bedankt voor de besteding van sommige quality time met de website vandaag."
+msgstr ""
+"Bedankt voor de besteding van sommige quality time met de website vandaag."
 
 #: templates/registration/logged_out.html:10
 msgid "Log in again"
@@ -159,7 +230,9 @@ msgid "Password change"
 msgstr ""
 
 #: templates/registration/password_change_form.html:8
-msgid "Please enter your old password, for security's sake, and then enter your new password twice so we can verify you typed it in correctly."
+msgid ""
+"Please enter your old password, for security's sake, and then enter your new "
+"password twice so we can verify you typed it in correctly."
 msgstr ""
 
 #: templates/registration/password_change_form.html:13
@@ -198,7 +271,9 @@ msgid "Enter new password"
 msgstr ""
 
 #: templates/registration/password_reset_confirm.html:11
-msgid "Please enter your new password twice so we can verify you typed it in correctly."
+msgid ""
+"Please enter your new password twice so we can verify you typed it in "
+"correctly."
 msgstr ""
 
 #: templates/registration/password_reset_confirm.html:23
@@ -206,7 +281,9 @@ msgid "Password reset unsuccessful"
 msgstr ""
 
 #: templates/registration/password_reset_confirm.html:25
-msgid "The password reset link was invalid, possibly because it has already been used.  Please request a new password reset."
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a new password reset."
 msgstr ""
 
 #: templates/registration/password_reset_done.html:6
@@ -214,7 +291,9 @@ msgid "Password reset successful"
 msgstr ""
 
 #: templates/registration/password_reset_done.html:8
-msgid "We've e-mailed you instructions for setting your password to the e-mail address you submitted. You should be receiving it shortly."
+msgid ""
+"We've e-mailed you instructions for setting your password to the e-mail "
+"address you submitted. You should be receiving it shortly."
 msgstr ""
 
 #: templates/registration/password_reset_email.html:2
@@ -248,8 +327,12 @@ msgid "Password reset"
 msgstr "Wachtwoord resetten"
 
 #: templates/registration/password_reset_form.html:8
-msgid "Forgotten your password? Enter your e-mail address below, and we'll e-mail instructions for setting a new one."
-msgstr "Wachtwoord vergeten? Voer uw e-mail adres in en wij e-mailen instructies voor het instellen van een nieuwe."
+msgid ""
+"Forgotten your password? Enter your e-mail address below, and we'll e-mail "
+"instructions for setting a new one."
+msgstr ""
+"Wachtwoord vergeten? Voer uw e-mail adres in en wij e-mailen instructies "
+"voor het instellen van een nieuwe."
 
 #: templates/registration/password_reset_form.html:12
 msgid "E-mail address:"
@@ -275,7 +358,9 @@ msgid ""
 msgstr ""
 "\n"
 "<p> U heeft zich bijna ingeschreven voor het democratie spel </p>\n"
-"<p> Controleer uw e-mail op een bevestigings e-mail waarin een bevestigings link vind die  u moet bezoeken in uw browser om uw registratie te bevestigen. Uw huidige stemmen worden dan opgeslagen bij je profiel. </p>"
+"<p> Controleer uw e-mail op een bevestigings e-mail waarin een bevestigings "
+"link vind die  u moet bezoeken in uw browser om uw registratie te "
+"bevestigen. Uw huidige stemmen worden dan opgeslagen bij je profiel. </p>"
 
 #: templates/web/become_candidate.html:8
 msgid "Yes, run for office."
@@ -375,8 +460,10 @@ msgstr ""
 msgid ""
 " \n"
 "\n"
-"        <a href=\"http://democracy.nl/wiki/index.php/Burger\">%(role)s</a>.<br />\n"
-"\t\t<a href=\"http://democracy.nl/wiki/index.php/Punten\">score</a> is %(score)s<br /><br />\n"
+"        <a href=\"http://democracy.nl/wiki/index.php/Burger\">%(role)s</a>."
+"<br />\n"
+"\t\t<a href=\"http://democracy.nl/wiki/index.php/Punten\">score</a> is %"
+"(score)s<br /><br />\n"
 "        <p>\n"
 "\t\tfor : %(total_for)s \n"
 "\t\tagainst : %(total_against)s\n"
@@ -421,14 +508,6 @@ msgstr "mijn profiel"
 msgid "log out"
 msgstr "uitloggen"
 
-#: templates/web/sidebar.html:55
-msgid "register"
-msgstr "registreren"
-
-#: templates/web/sidebar.html:57
-msgid "log in"
-msgstr "log in"
-
 #: templates/web/sort_order_block.html:3
 msgid "most recent"
 msgstr "meest recente"
@@ -453,53 +532,57 @@ msgstr "Momenteel sorteren door hotness"
 msgid "cast a vote"
 msgstr "stem"
 
-#: voting/managers.py:9 web/forms.py:66 web/forms.py:82
+#: voting/managers.py:12 web/forms.py:66 web/forms.py:82
 msgid "Against"
 msgstr "Tegen"
 
-#: voting/managers.py:10 web/forms.py:66 web/forms.py:82
+#: voting/managers.py:13 web/forms.py:66 web/forms.py:82
 msgid "For"
 msgstr "Voor"
 
-#: voting/managers.py:14
+#: voting/managers.py:17
 msgid "Unconvincing"
 msgstr "Niet overtuigend"
 
-#: voting/managers.py:15
+#: voting/managers.py:18
 msgid "Not political"
 msgstr "Geen politieke"
 
-#: voting/managers.py:16
+#: voting/managers.py:19
 msgid "Can't completely agree"
 msgstr "Kan niet helemaal mee eens zijn"
 
-#: voting/managers.py:18
+#: voting/managers.py:21
 msgid "Needs more work"
 msgstr "Moet meer werk"
 
-#: voting/managers.py:19
+#: voting/managers.py:22
 msgid "Badly worded"
 msgstr "Slecht geformuleerd"
 
-#: voting/managers.py:20
+#: voting/managers.py:23
 msgid "Duplicate"
 msgstr "Dupliceren"
 
-#: voting/managers.py:21
+#: voting/managers.py:24
 msgid "Unrelated source"
 msgstr "externe bron niet bruikbaar"
 
-#: voting/managers.py:23
+#: voting/managers.py:26
 msgid "I need to know more"
 msgstr "Ik moet meer weten"
 
-#: voting/managers.py:24
+#: voting/managers.py:27
 msgid "Ask me later"
 msgstr "Vraag me later"
 
-#: voting/managers.py:25
+#: voting/managers.py:28
 msgid "Too personal"
 msgstr "te persoonlijk"
+
+#: voting/managers.py:34
+msgid "Multiply"
+msgstr ""
 
 #: web/forms.py:62
 msgid "Tag"
@@ -508,6 +591,10 @@ msgstr "Tag"
 #: web/forms.py:66 web/forms.py:82
 msgid "Blank..."
 msgstr "Leeg ..."
+
+#: web/util.py:34 web/util.py:38 web/util.py:66
+msgid "I did not vote"
+msgstr "niet gestemt"
 
 #: web/views.py:64
 msgid "All Issues"
@@ -521,3 +608,15 @@ msgstr "Kwesties van %(username)s "
 #: web/views.py:355
 msgid "Issue object does not exist"
 msgstr "Kwestie object bestaat niet"
+
+#~ msgid "home"
+#~ msgstr "thuis"
+
+#~ msgid "about"
+#~ msgstr "over ons"
+
+#~ msgid "contact"
+#~ msgstr "contact"
+
+#~ msgid "wishes"
+#~ msgstr "wensen"
