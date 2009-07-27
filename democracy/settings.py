@@ -127,14 +127,14 @@ INSTALLED_APPS = (
     'democracy.gamelogic',
     'democracy.profiles',
     'democracy.api',
-    'democracy.web',
+#    'democracy.web',
     'democracy.voting',
     'democracy.issue',
 
     'democracy.dashboard',
     
     'tagging',
-    'pagination',
+#    'pagination',
 	'registration',
     'piston',
     'rosetta',

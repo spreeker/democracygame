@@ -23,7 +23,7 @@ def documentation_view(request):
     issuedoc.url = reverse("api_sort_order", args=["new"])
     docs.append(issuedoc)
     tagcloud = generate_doc(TagCloudHandler)
-    tagcloud.url = reverse("api_tagcloud", args=["json"])
+    tagcloud.url = reverse("api_tagcloud")
     docs.append(tagcloud)
 
     for handler, (model, anonymous) in typemapper.iteritems():

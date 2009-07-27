@@ -12,7 +12,7 @@ from django.test import TestCase
 
 
 class TestUsers(TestCase):
-    usernames = [ 'test1' , 'test2' ,'test3' ]
+    usernames = ['test1', 'test2','test3']
     profiles = [] 
     users = [] 
     
