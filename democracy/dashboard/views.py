@@ -17,10 +17,10 @@ from django.views.generic.list_detail import object_list
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from gamelogic import actions
-from democracy.issue.models import Issue
-from democracy.voting.managers import possible_votes, blank_votes
-from democracy.voting.models import Vote
-from democracy.voting.views import vote_on_object
+from issue.models import Issue
+from voting.managers import possible_votes, blank_votes
+from voting.models import Vote
+from voting.views import vote_on_object
 
 
 def paginate(request, qs):

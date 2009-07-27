@@ -1,10 +1,10 @@
-from democracy.gamelogic import levels
-from democracy.gamelogic import actions 
-from democracy.gamelogic import score
-from democracy.gamelogic.models import MultiplyIssue
-from democracy.profiles.models import UserProfile
-from democracy.issue.models import Issue
-from democracy.voting.models import Vote
+from gamelogic import levels
+from gamelogic import actions 
+from gamelogic import score
+from gamelogic.models import MultiplyIssue
+from profiles.models import UserProfile
+from issue.models import Issue
+from voting.models import Vote
 
 from django.contrib.auth.models import User
 from django.db import transaction
