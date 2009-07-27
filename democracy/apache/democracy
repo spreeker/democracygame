@@ -1,0 +1,27 @@
+
+<VirtualHost *:80 >
+    ServerName d.preeker.net
+    
+    Alias /admin_media/ /var/www/admin_media/
+
+    <Directory /var/www/admin_media>
+        Order deny,allow
+        Allow from all
+    </Directory>
+
+    <Directory /var/git/democracy/democracy/apache/>
+        Order deny,allow
+        Allow from all
+    </Directory>    
+
+    CustomLog /var/log/apache2/d.log combined
+    ErrorLog /var/log/apache2/d_error.log
+    LogLevel debug
+    ServerSignature On
+    
+    WSGIPassAuthorization On
+    WSGIDaemonProcess d.preeker.net user=www-data group=www-data threads=5    
+    WSGIProcessGroup d.preeker.net
+    WSGIScriptAlias / /var/git/democracy/democracy/apache/django.wsgi 
+    
+</VirtualHost>
