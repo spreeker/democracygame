@@ -87,7 +87,7 @@ MIDDLEWARE_CLASSES = (
 CACHE_MIDDLEWARE_SECONDS = 60
 CACHE_MIDDLEWARE_KEY_PREFIX = "demo"
 
-ROOT_URLCONF = 'democracy.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -109,7 +109,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
     'django.core.context_processors.request',
-    'democracy.dashboard.context_processors.get_a_profile',
+    'dashboard.context_processors.get_a_profile',
 )
 
 INSTALLED_APPS = (
@@ -124,14 +124,14 @@ INSTALLED_APPS = (
 
     'debug_toolbar', # comment out in production!!
 
-    'democracy.gamelogic',
-    'democracy.profiles',
-    'democracy.api',
-#    'democracy.web',
-    'democracy.voting',
-    'democracy.issue',
+    'gamelogic',
+    'profiles',
+    'api',
+#    'web',
+    'voting',
+    'issue',
 
-    'democracy.dashboard',
+    'dashboard',
     
     'tagging',
 #    'pagination',

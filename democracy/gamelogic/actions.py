@@ -32,7 +32,7 @@ from django.contrib.contenttypes.models import ContentType
 
 import score
 import levels
-from democracy.gamelogic.models import roles
+from gamelogic.models import roles
 
 from gamelogic.models import MultiplyIssue
 from voting.models import Vote

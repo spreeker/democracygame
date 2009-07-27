@@ -1,6 +1,6 @@
 # The game level upgrade functions which are exectuted on a score change 
 
-from democracy.profiles.models import UserProfile
+from profiles.models import UserProfile
 
 # put these values in a database??
 MAX_OPINION_LEADERS = 5

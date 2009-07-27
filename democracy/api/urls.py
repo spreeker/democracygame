@@ -9,17 +9,17 @@ from piston.authentication import HttpBasicAuthentication
 from piston.emitters import Emitter
 from piston.emitters import JSONEmitter
 
-from democracy.api.handlers import IssueHandler
-from democracy.api.handlers import UserHandler
-from democracy.api.handlers import VoteHandler
-from democracy.api.handlers import MultiplyHandler
-from democracy.api.handlers import IssueVotesHandler
-from democracy.api.handlers import IssueList
-from democracy.api.handlers import TagCloudHandler 
-from democracy.api.handlers import TagHandler
+from api.handlers import IssueHandler
+from api.handlers import UserHandler
+from api.handlers import VoteHandler
+from api.handlers import MultiplyHandler
+from api.handlers import IssueVotesHandler
+from api.handlers import IssueList
+from api.handlers import TagCloudHandler 
+from api.handlers import TagHandler
 
 
-from democracy.api.doc import documentation_view
+from api.doc import documentation_view
 
 auth = OAuthAuthentication(realm='d.preeker.net')
 

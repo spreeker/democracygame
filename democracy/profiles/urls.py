@@ -6,11 +6,11 @@ from django.views.generic.simple import direct_to_template
 from django.contrib.auth import views as auth_views
 
 #from registration.views import activate
-from democracy.profiles.views import activate
-from democracy.profiles.views import userprofile_show
-from democracy.profiles.views import change_description
+from profiles.views import activate
+from profiles.views import userprofile_show
+from profiles.views import change_description
 
-from democracy.profiles.forms import RegistrationTermsOfServiceUniqueEmail
+from profiles.forms import RegistrationTermsOfServiceUniqueEmail
 
 from registration.views import register
 
