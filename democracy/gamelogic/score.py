@@ -5,7 +5,7 @@ concerned. The rest of the game rules are in actions.py
 this module needs to get a lot bigger..
 """
 
-from democracy.gamelogic.levels import change_score
+from gamelogic.levels import change_score
 
 VOTE_SCORE = 1
 TAG_SCORE = 1

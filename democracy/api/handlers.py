@@ -23,13 +23,13 @@ from piston.handler import BaseHandler, AnonymousBaseHandler
 from piston.utils import rc
 from piston.utils import validate
 
-from democracy.api.forms import IssueForm
-from democracy.api.forms import VoteForm
-from democracy.api.forms import MultiplyForm
-from democracy.issue.models import Issue
-from democracy.voting.models import Vote
-from democracy.profiles.models import UserProfile
-from democracy.gamelogic.models import MultiplyIssue
+from api.forms import IssueForm
+from api.forms import VoteForm
+from api.forms import MultiplyForm
+from issue.models import Issue
+from voting.models import Vote
+from profiles.models import UserProfile
+from gamelogic.models import MultiplyIssue
 
 from tagging.models import Tag, TaggedItem
 from tagging.utils import calculate_cloud

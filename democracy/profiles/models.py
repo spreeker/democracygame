@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from democracy.gamelogic.models import roles 
+from gamelogic.models import roles 
 
 
 class UserProfile(models.Model):

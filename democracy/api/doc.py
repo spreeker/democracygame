@@ -6,8 +6,8 @@ from piston.doc import generate_doc
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-from democracy.api.handlers import IssueList
-from democracy.api.handlers import TagCloudHandler 
+from api.handlers import IssueList
+from api.handlers import TagCloudHandler 
 
 """
 Copied from piston.doc modified to apear in the way we want.
