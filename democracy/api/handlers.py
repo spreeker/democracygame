@@ -16,6 +16,9 @@ from django.core.paginator import EmptyPage
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.contenttypes.models import ContentType
 
+from django.views.decorators.cache import cache_page
+from django.views.decorators.cache import never_cache 
+
 from piston.handler import BaseHandler, AnonymousBaseHandler
 from piston.utils import rc
 from piston.utils import validate
@@ -28,15 +31,22 @@ from democracy.voting.models import Vote
 from democracy.profiles.models import UserProfile
 from democracy.gamelogic.models import MultiplyIssue
 
+from tagging.models import Tag, TaggedItem
+from tagging.utils import calculate_cloud
+
 import gamelogic.actions
 
 from piston.models import Token
 
 
-def paginate(request, qs):
+def paginate(request, qs, **kwargs):
     paginator = Paginator(qs, 25)  # TODO add to settings.py
     try:
-        pageno = int(request.GET.get('page', '1'))
+        #pageno = int(request.GET.get('page', '1'))
+        pageno = int(kwargs.get('page', '1'))
+        # if we want cacheing on paginated results, 
+        # page must be in url not in a parameter
+        # issues/page/3 and not issues/?page=3
     except ValueError:
         pageno = 1
     try:
@@ -141,7 +151,7 @@ class IssueList(BaseHandler):
             qs = qs.values_list('id', 'time_stamp')
         else:
             return rc.BAD_REQUEST
-        page = paginate(request, qs)
+        page = paginate(request, qs, **kwargs)
         result = []
         for id_value in page.object_list:
             uri = self.issue_url(id_value)
@@ -162,18 +172,18 @@ class VoteHandler(BaseHandler):
     fields = ('vote', 'time_stamp', 'issue_uri', 'keep_private', )
     model = Vote
 
+    
     def read(self, request, id=None, **kwargs):
         """
         Returns the votes for an user.
         """
-        # TODO check if args has issue id.
         ctype = ContentType.objects.get_for_model(Issue)
         queryset = self.model.objects.filter(user = request.user,
                         content_type = ctype.pk).order_by('time_stamp')
         if id:
             queryset = queryset.filter(object_id=id)
         queryset.order_by("username")
-        page = paginate(request, queryset)
+        page = paginate(request, queryset, **kwargs)
         return page.object_list
 
     @classmethod
@@ -222,7 +232,7 @@ class AnonymousUserHandler(AnonymousBaseHandler):
                 return rc.NOT_FOUND
         else:
             queryset = User.objects.filter().order_by('username')
-            page = paginate(request, queryset)
+            page = paginate(request, queryset, **kwargs)
             return page.object_list
 
     @classmethod
@@ -285,12 +295,8 @@ class AnonymousIssueHandler(AnonymousBaseHandler):
                 return rc.NOT_FOUND
         else:
             queryset = self.model.objects.order_by('-time_stamp')
-            page = paginate(request, queryset)
+            page = paginate(request, queryset, **kwargs)
             return page.object_list
-
-        queryset = self.model.objects.filter()
-        page = paginate(request, queryset)
-        return page.object_list
 
     @staticmethod
     def resource_uri():
@@ -303,6 +309,9 @@ class IssueHandler(BaseHandler):
     fields = ('title', 'body', ('user', ('username')), 'time_stamp',
             'souce_type', 'url')
     model = Issue
+
+    def read(self, request):
+        return self.anonymous.read(request)
 
     @validate(IssueForm)
     def create(self, request):
@@ -345,12 +354,8 @@ class AnonymousMultiplyHandler(AnonymousBaseHandler):
             return self.model.objects.filter(issue=id)
         else:
             queryset = self.model.objects.all().order_by('-time_stamp')
-            page = paginate(request, queryset)
+            page = paginate(request, queryset, **kwargs)
             return page.object_list
-
-        queryset = self.model.objects.filter()
-        page = paginate(request, queryset)
-        return page.object_list
 
     @staticmethod
     def resource_uri():
@@ -390,6 +395,51 @@ class MultiplyHandler(BaseHandler):
     def resource_uri():
         return ('api_multiply', ['id'])
 
+
+class TagCloudHandler(BaseHandler):
+    allowed_methods = ('GET', )
+    fields = ('name','count','font_size')
+        
+    def read (self, request):
+        """
+        Reads the Tag Cloud for all posts
+        """
+        tags = Tag.objects.usage_for_model(Issue, counts=True)
+        return calculate_cloud(tags)
+
+class TagHandler(BaseHandler):
+    allow_methods = ('GET',)
+    #model = FeedItem
+    #fields = ('title', 'link', 'summary', 'tags')
+        
+    def read(self, request, tags=None, **kwargs):
+        """Read posts. Optional parameters:
+
+        tags -- Limits results to posts that have the specified tags
+        
+        """
+
+        if tags == None and 'tags' in request.GET:
+            tags = request.GET['tags']
+
+        tags = [ tags ]    
+
+        if tags:
+            issues = TaggedItem.objects.get_by_model(Issue, tags)
+            print issues
+        else: 
+            issues = [] 
+        page = paginate(request, issues, **kwargs)
+        result = []
+        for issue in page.object_list:
+            uri = self.issue_url(issue.id)
+            result.append((uri))
+        return result
+
+    # not no classmethodis because query returns list of tuples.
+    # and the responder will not look at those.
+    def issue_url(cls, id):
+        return reverse('api_issue', args=[id])
 
 def get_profile(user):
     try:
