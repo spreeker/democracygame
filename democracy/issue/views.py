@@ -37,13 +37,12 @@ def order_issues(request, sortorder, issues):
         qs = Vote.objects.get_popular(Issue)
     elif sortorder == 'controversial':
         qs = Vote.objects.get_controversial(Issue)
-    elif sortorder == 'new': 
+    else:
+        #elif sortorder == 'new': 
         # we dont need voting data for this one.
         #default issues is wat we want
         page = paginate(request, issues)
         return page.object_list, page 
-    else:
-        return
 
     page = paginate(request, qs)
     object_ids = [ d['object_id'] for d in page.object_list ]

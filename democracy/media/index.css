@@ -86,12 +86,34 @@ h3 {
 .issues .forms {
     margin-top : 1.25em ;
 }
-.issues .forms form {
+.issues .forms form , .issues .forms {
     display : inline ;
 }
-
-
 .issues ul li {
+    border-bottom : 1px solid black ;
+    padding : 1.2em 1em 1.25em 0;
+}
+.votes p , .votes .title , .votes .forms , .votes h3 {
+    display : inline ;
+}
+.votes .forms {
+    float : left;
+}
+.votes .title {
+    margin-left : 3em ;
+}
+.votes .forms , .votes .title , .votes .yourvote{
+    display : inline;
+}
+.votes .yourvote {
+    float : right;
+}
+.votes > ul {
+    list-style-image:none;
+    list-style-position:outside;
+    list-style-type:none;
+}
+.votes ul li {
     border-bottom : 1px solid black ;
     padding : 1.2em 1em 1.25em 0;
 }
@@ -157,4 +179,6 @@ h3 {
 #footer {
     clear : both;
 }
+
+
 
