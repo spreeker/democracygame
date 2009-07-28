@@ -1,0 +1,50 @@
+{% extends "base_content.html" %}
+{% load i18n %}
+{% load voting_tags %}
+
+{% block content %}
+
+<div class="votes">
+<h2> {% trans "My votes" %} </h2>
+<ul>
+{% for vote in my_votes %}
+
+<li id="vote{{ vote.pk }}" ><a name="{{vote.pk}}"></a>
+<div class="yourvote">
+{% if vote.vote %}
+{% for key , direction in possible_votes.items %}{% ifequal key vote.vote %}{% trans direction %}{% endifequal %}{% endfor %}
+{% endif %}
+</div>
+<div class="title">{{ vote.payload.title }}</div>
+<div class="forms">
+</form><form action="/" method="get">
+    <input type="hidden" name="next" id="next" value="{{ request.get_full_path }}#{{vote.pk}}" />
+    <input type="submit" value={% trans "DELETE" %} >
+</div>{# end forms #}
+</li>
+{% endfor %}
+</ul>
+</div>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page.has_previous %}
+            <a href="?page={{ page.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page.number }} of {{ page.paginator.num_pages }}.
+        </span>
+
+        {% if page.has_next %}
+            <a href="?page={{ page.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+
+{% endblock %}
+
+{%block sidebar %}
+    {% include "dashboard/tag_cloud.html" %}
+{% endblock %}
+
