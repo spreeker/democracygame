@@ -59,7 +59,7 @@ urlpatterns = patterns('',
        url(r'^userprofile/(?P<username>\w+)/$',
             userprofile_show,
             name='userprofile',),
-       url(r'^userprofile/changedescription/$',
+       url(r'^changedescription/$',
             change_description,
             name='change_description',),
        )

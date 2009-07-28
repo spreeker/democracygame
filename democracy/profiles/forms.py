@@ -26,4 +26,11 @@ class RegistrationTermsOfServiceUniqueEmail(
         Subclass of RegistrationForms which enforces
         both terms of service and an unique email.
         """
+
+
+class ChangeProfile(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('title', 'description', 'url', 
+                   'id_is_verified', 'votes_public', 'show_identity' )
         
