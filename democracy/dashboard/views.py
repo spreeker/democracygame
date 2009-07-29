@@ -19,6 +19,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from gamelogic import actions
 from issue.models import Issue
+from issue.views import propose_issue
 from voting.managers import possible_votes, blank_votes
 from voting.models import Vote
 from voting.views import vote_on_object
@@ -43,10 +44,13 @@ def order_issues(request, sortorder, issues):
         qs = Vote.objects.get_popular(Issue, ids)
     elif sortorder == 'controversial':
         qs = Vote.objects.get_controversial(Issue, ids)
+    elif sortorder == 'all':
+        issues = Issue.objects.all() 
+        page = paginate(request, issues)
+        return page.object_list, page
     else:
         page = paginate(request, issues)
-        issues = page.object_list
-        return issues, page
+        return page.object_list, page
 
     page = paginate(request, qs)
     object_ids = [ d['object_id'] for d in page.object_list ]
@@ -59,12 +63,11 @@ def my_issue_list(request, *args, **kwargs):
     """ 
     shows issues to vote on in different sortings
     based on collective knowlegde from votings on them
+    shows issue from to propose issue, if you have the game rights
     """
     template_name= "dashboard/my_issues.html"
 
-    if not request.method == "GET":
-        return HttpResponseBadRequest
-
+    issueform = propose_issue(request)
     issues = Issue.objects.select_related().order_by('-time_stamp')
     issues = issues.filter( user=request.user ) 
 
@@ -75,13 +78,14 @@ def my_issue_list(request, *args, **kwargs):
         issues = page.object_list
 
     c = RequestContext(request, {
+        'issueform' : issueform,
         'blank_votes' : blank_votes.items(),
         'possible_votes' : possible_votes,
         'issues'  : issues, 
         'page' : page,
-        'votedata' : Vote,
+        'actions' : actions.get_actions(request.user),
     }) 
-   
+
     t = loader.get_template(template_name)
     return HttpResponse(t.render(c))
 
@@ -101,6 +105,7 @@ def my_votes_list(request, *args, **kwargs):
     Show user votes
     """
     template_name = "dashboard/my_votes.html"
+
     if not request.method == "GET":
         return HttpResponseBadRequest
 
@@ -123,31 +128,34 @@ def my_votes_list(request, *args, **kwargs):
     return HttpResponse(t.render(c))
 
 
-def archive_issue(request, issue_id):
-    pass
-
-def archive_vote(request, issue_id ):
+@login_required
+def archive_vote(request, vote_id ):
     """
     voting.views.vote_on_object function
     """
-    if 'archive' in request.REQUEST:
-        pass     
     if request.method != "POST":
         return HttpResponseBadRequest
+    
+    vote = get_object_or_404( Vote, id=vote_id, user=request.user)
+    
+    vote.is_archived = True
+    vote.save()
+    profile = user.get_profile()
+    profile.score = profile.score - 1
 
-    message = "NOT IMPLEMENTED YET"
     next = request.REQUEST.get('next', '/' )
     return HttpResponseRedirect(next) 
 
-def delete_multiply(request , issue_id ):
+@login_required
+def delete_multiply(request , multiply_id ):
     """
     Delete a multiply 
     """
     if not request.method == "POST": 
         return HttpResponseBadRequest()
-    issue = get_object_or_404( Issue, id=issue_id ) 
-
-    next = request.REQUEST.get('next' , '/' )
-    message = "NOT IMPLEMENTED YET"
+    m = get_object_or_404(Multiply, id=multiply_id, user=request.user ) 
+    m.delete()
+    next = request.REQUEST.get('next', '/' )
+    message = "multiply deleted"
     request.user.message_set.create(message=message)    
-    return HttpResponseRedirect( next )
+    return HttpResponseRedirect(next)
