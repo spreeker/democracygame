@@ -12,6 +12,7 @@ from django.utils.translation import ugettext as _
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.core.urlresolvers import reverse
 
+from forms import ChangeProfile
 from forms import ChangeSettingsForm
 from forms import ChangeDescriptionForm
 from forms import UserSearchForm
@@ -121,9 +122,13 @@ def activate(request, activation_key,
 
 def userprofile_show(request, username):
     user = get_object_or_404(User, username = username) 
+
+    form = 0
+    if request.user.is_authenticated:
+        form = ChangeProfile( instance= user.get_profile() )
+
     context = RequestContext(request, {
-        'user_to_show' : user,
-        'profile' : user.get_profile(),
+        'form' : form,
     })
     if user == request.user:
         return render_to_response('profiles/self_detail.html', context)
@@ -133,8 +138,9 @@ def userprofile_show(request, username):
 @login_required
 def change_description(request):
     p = request.user.get_profile()
+    print "kom ik hier/? "
     if request.method == 'POST':
-        form = ChangeDescriptionForm(request.POST)
+        form = ChangeProfile(request.POST)
         if form.is_valid():
             p.title = form.cleaned_data['title']
             p.description = form.cleaned_data['description']
@@ -142,11 +148,11 @@ def change_description(request):
             p.save()
             return HttpResponseRedirect(reverse('userprofile', args = [request.user.username]))
     else:
-        form = ChangeDescriptionForm(instance = p)
+        form = ChangeProfile(instance = p)
     context = RequestContext(request, {
         'form' : form,        
     })
-    return render_to_response('profiles/change_description.html', context)
+    return render_to_response('profiles/self_detail.html', context)
 
 def search_user(request):
     

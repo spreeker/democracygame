@@ -5,7 +5,7 @@ The tests are based on the django-registration.
 These tests assume that you've completed all the prerequisites for
 getting django-registration running in the default setup, to wit:
 
-1. You have ``registration`` and ``democracy.profile`` in 
+1. You have ``registration`` and ``profile`` in 
    your ``INSTALLED_APPS`` setting.
 
 2. You have created all of the templates mentioned in this

@@ -1,6 +1,7 @@
 database.sqlite3
 dev.db
 *.db
+RUN
 democracy_log.txt
 emocracy_log.txt
 thirdparty_log.txt
