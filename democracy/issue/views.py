@@ -12,10 +12,10 @@ from django.views.generic.list_detail import object_list
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from gamelogic import actions
-from democracy.issue.models import Issue
-from democracy.voting.managers import possible_votes, blank_votes
-from democracy.voting.models import Vote
-from democracy.voting.views import vote_on_object
+from issue.models import Issue
+from voting.managers import possible_votes, blank_votes
+from voting.models import Vote
+from voting.views import vote_on_object
 
 
 def paginate(request, qs):
@@ -37,13 +37,12 @@ def order_issues(request, sortorder, issues):
         qs = Vote.objects.get_popular(Issue)
     elif sortorder == 'controversial':
         qs = Vote.objects.get_controversial(Issue)
-    elif sortorder == 'new': 
+    else:
+        #elif sortorder == 'new': 
         # we dont need voting data for this one.
         #default issues is wat we want
         page = paginate(request, issues)
         return page.object_list, page 
-    else:
-        return
 
     page = paginate(request, qs)
     object_ids = [ d['object_id'] for d in page.object_list ]
