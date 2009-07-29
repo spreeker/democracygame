@@ -2,7 +2,7 @@ from django.utils.translation import ugettext as _
 from django.db import models
 from django.contrib.auth.models import User
 
-from democracy.issue.models import Issue
+from issue.models import Issue
 
 MAX_MULTIPLIERS = 4
 

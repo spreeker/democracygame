@@ -5,7 +5,9 @@
     <a href="/">/</a> | 
     <a href={% url api_doc %}>API</a> | 
     {% trans "propose" %} | 
-    {% trans "your issues" %} | 
+    <a href={% url index %}> {% trans "issues" %} </a> |
+    <a href={% url dashboard_issues %}> {% trans "your issues" %} </a> |
+    <a href={% url dashboard_votes %}> {% trans "your votes" %} </a> |
 {% endblock %}
 
 {% block userbar %}
@@ -29,7 +31,7 @@
         </p>
 
         <form action="/i18n/setlang/" method="post">
-            <input name="next" type="hidden" value="{{ request.get_full_path }}" /> 
+            {#<input name="next" type="hidden" value="{{ request.get_full_path }}" /> #}
         <select name="language">
             {% for lang in LANGUAGES %}
                 <option value="{{ lang.0 }}">{{ lang.1 }}</option>

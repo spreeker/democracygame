@@ -9,12 +9,12 @@ from piston.forms import OAuthAuthenticationForm
 
 import urllib, base64
 
-from democracy.api.handlers import IssueVotesHandler
-from democracy.api.handlers import VoteHandler 
-from democracy.gamelogic.tests import TestActionData
-from democracy.gamelogic.models import MultiplyIssue
-from democracy.gamelogic import actions
-from democracy.issue.models import Issue
+from api.handlers import IssueVotesHandler
+from api.handlers import VoteHandler 
+from gamelogic.tests import TestActionData
+from gamelogic.models import MultiplyIssue
+from gamelogic import actions
+from issue.models import Issue
 
 
 class APIMainTest(TestActionData):
@@ -214,7 +214,7 @@ class VoteHandlerTest( OAuthTests ):
     def test_read_votes(self):
         """ get a lits of votes for user """
         # there should be only one vote for user test1
-        from democracy.voting.models import Vote
+        from voting.models import Vote
         vote = Vote.objects.get( user = self.users[0].id ) 
         issue1 = Issue.objects.get( title = "issue1")
         url = reverse ( 'api_vote' ) 
@@ -235,7 +235,7 @@ class VoteHandlerTest( OAuthTests ):
 
     def test_read_vote(self):
         """ read a single vote """
-        from democracy.voting.models import Vote
+        from voting.models import Vote
         vote = Vote.objects.get( user = self.users[0].id ) 
         issue1 = Issue.objects.get( title = "issue1")
         url = reverse ( 'api_read_vote' , args=[issue1.id] ) 
