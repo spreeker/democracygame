@@ -21,7 +21,8 @@ class UserSearchForm(forms.Form):
 
 class RegistrationTermsOfServiceUniqueEmail(
         RegistrationFormTermsOfService, 
-        RegistrationFormUniqueEmail):
+        RegistrationFormUniqueEmail
+        ):
         """
         Subclass of RegistrationForms which enforces
         both terms of service and an unique email.
