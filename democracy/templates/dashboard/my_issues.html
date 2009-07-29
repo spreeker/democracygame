@@ -6,34 +6,39 @@
 
 
 {% votes_by_user user on issues as vote_dct %}
+{% vote_counts_for_objects issues as counts_dct %}
 
 <div class="issues">
-    <h2> {% trans "issues"%} </h2>
-
+<h2> {% trans "My issues" %} </h2>
+<h1> <a href="{% url my_issues 'popular' %}"> {% trans 'popular' %} </a> |
+    <a href="{% url my_issues 'controversial' %}">{%trans 'controversial' %}</a> | 
+    <a href="{% url my_issues 'new' %}">{% trans 'new' %}</a> | </h1>
 <ul>
 {% for issue in issues %}
 
 {% dict_entry_for_item issue from vote_dct as vote %}
+{% dict_entry_for_item issue from counts_dct as score %}
 
 <li id="issue{{ issue.pk }}" >
     <a name="{{issue.pk}}"></a>
     <h3> <a href="/">{{ issue }}</a> </h3> 
 <div class="issue_left">
     {% if vote.vote %}
-
+    <div class="for"> {{ score.1 }}</div>
+    <div class="blank"> {{ score.0 }}</div>
+    <div class="against"> {{ score.2 }}</div>
     {% endif %}
 </div>
 <p> {{ issue.body }} </p>
-<div class="yourvote"
+<div class="yourvote">
 {% if vote.vote %}
-    {% for key , direction in possible_votes.items %} {% ifequal key vote.vote %} <p>{% trans direction %}</p> {% endifequal %}
-    {% endfor %}
+{% for key , direction in possible_votes.items %}{% ifequal key vote.vote %}<p>{% trans direction %}</p> {% endifequal %}{% endfor %}
 {% endif %}
 </div>
 <div class="forms">
 <form action="{% url vote issue.pk %}" method="post">
     <input type="hidden" name="direction" id="direction" value="1" />
-    <input type="hidden" name="next" id="next" value="/{{ request.get_full_path }}#{{issue.pk}}" />
+    <input type="hidden" name="next" id="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
     <input type="submit" value={% trans "YES" %}>
 </form><form action="{% url vote issue.pk %}" method="post">
     <input type="hidden" name="direction" id="direction" value="-1" />
@@ -49,10 +54,11 @@
     <input type="submit" value="{% trans "blank" %}">
 </form>
 
-<form class="multiply" action="{% url multiply issue.pk %}" method="post">
-    <input type="hidden" name="next" id="next" value="{% url dashboard %}?page={{ request.page }}#{{issue.pk}}" />
-    <input type="submit" value="{% trans "multiply" %}"
+<form action="{% url multiply issue.pk %}" method="post">
+    <input type="hidden" name="next" id="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
+    <input type="submit" value="{% trans "multiply" %}">
 </form>
+created by {{ issue.user }}
 </div>{# end forms #}
 </li>
 {% endfor %}
@@ -78,6 +84,6 @@
 {% endblock %}
 
 {%block sidebar %}
-    {% include "dashboard/tag_cloud.html" %} 
+    {% include "dashboard/tag_cloud.html" %}
 {% endblock %}
 

@@ -81,7 +81,7 @@ class VoteManager(models.Manager):
         """
         Get queryset for active votes by user
         """
-        return self.filter(owner=user, is_archived=False).order_by("-time_stamp")
+        return self.filter(user=user, is_archived=False).order_by("-time_stamp")
     
     def get_for_object(self, obj, all=False):
         """

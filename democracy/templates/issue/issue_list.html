@@ -1,4 +1,4 @@
-{% extends "dashboard/base_content.html" %}
+{% extends "base_content.html" %}
 {% load i18n %}
 {% load voting_tags %}
 
@@ -56,7 +56,7 @@
 
 <form action="{% url multiply issue.pk %}" method="post">
     <input type="hidden" name="next" id="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
-    <input type="submit" value="{% trans "multiply" %}"
+    <input type="submit" value="{% trans "multiply" %}">
 </form>
 created by {{ issue.user }}
 </div>{# end forms #}

@@ -37,8 +37,8 @@ TIME_ZONE = 'Europe/Amsterdam'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-#LANGUAGE_CODE = 'en-us'
-LANGUAGE_CODE = 'nl'
+LANGUAGE_CODE = 'en-us'
+#LANGUAGE_CODE = 'nl'
 
 SITE_ID = 1
 
@@ -72,20 +72,22 @@ ADMIN_MEDIA_PREFIX = '/admin/media/'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.load_template_source',
     'django.template.loaders.app_directories.load_template_source',
-#     'django.template.loaders.eggs.load_template_source',
 )
 
 MIDDLEWARE_CLASSES = (
+#    'django.middleware.cache.UpdateCacheMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
 #    'django.contrib.csrf.middleware.CsrfMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'pagination.middleware.PaginationMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware', ## !! comment out in production.
+#    'debug_toolbar.middleware.DebugToolbarMiddleware', ## !! comment out in production.
+#    'django.middleware.cache.FetchFromCacheMiddleware',
 )
+CACHE_MIDDLEWARE_SECONDS = 60
+CACHE_MIDDLEWARE_KEY_PREFIX = "demo"
 
-ROOT_URLCONF = 'democracy.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -107,7 +109,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
     'django.core.context_processors.request',
-    'democracy.dashboard.context_processors.get_a_profile',
+    'dashboard.context_processors.get_a_profile',
 )
 
 INSTALLED_APPS = (
@@ -122,17 +124,17 @@ INSTALLED_APPS = (
 
     'debug_toolbar', # comment out in production!!
 
-    'democracy.gamelogic',
-    'democracy.profiles',
-    'democracy.api',
-    'democracy.web',
-    'democracy.voting',
-    'democracy.issue',
+    'gamelogic',
+    'profiles',
+    'api',
+#    'web',
+    'voting',
+    'issue',
 
-    'democracy.dashboard',
+    'dashboard',
     
     'tagging',
-    'pagination',
+#    'pagination',
 	'registration',
     'piston',
     'rosetta',
@@ -155,4 +157,3 @@ logging.basicConfig(
 )
 
 ACCOUNT_ACTIVATION_DAYS = 1
-

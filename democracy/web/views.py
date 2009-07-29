@@ -32,10 +32,10 @@ from web.forms import HiddenOkForm
 from web.forms import AuthorizeRequestTokenForm
 from web.forms import NormalVoteForm
 from web.forms import BlankVoteForm
-from democracy.voting.models import votes_to_description
-from democracy.voting.models import Issue
-from democracy.voting.models import Vote
-from democracy.issue.content.models import IssueBody
+from voting.models import votes_to_description
+from voting.models import Issue
+from voting.models import Vote
+from issue.content.models import IssueBody
 
 
 import settings

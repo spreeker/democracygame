@@ -1,4 +1,4 @@
-from democracy.profiles.models import UserProfile
+from profiles.models import UserProfile
 
 def get_a_profile(request):
     """

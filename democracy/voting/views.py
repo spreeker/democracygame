@@ -7,10 +7,10 @@ from django.contrib.auth.views import redirect_to_login
 from django.template import loader, RequestContext
 from django.utils import simplejson
 
-from democracy.voting.models import Vote
+from voting.models import Vote
 from gamelogic import actions 
 
-from democracy.voting.models import possible_votes
+from voting.models import possible_votes
 
 def vote_on_object(request, model, direction, post_vote_redirect=None,
         object_id=None, slug=None, slug_field=None, template_name=None,

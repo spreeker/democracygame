@@ -8,6 +8,7 @@ Views for showing / managaging players OWN data.
 
 import logging
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseServerError
 from django.http import Http404, HttpResponseRedirect,HttpResponseBadRequest 
 from django.shortcuts import render_to_response, get_object_or_404
@@ -17,14 +18,14 @@ from django.views.generic.list_detail import object_list
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from gamelogic import actions
-from democracy.issue.models import Issue
-from democracy.voting.managers import possible_votes, blank_votes
-from democracy.voting.models import Vote
-from democracy.voting.views import vote_on_object
+from issue.models import Issue
+from voting.managers import possible_votes, blank_votes
+from voting.models import Vote
+from voting.views import vote_on_object
 
 
-def paginate(request, qs):
-    paginator = Paginator(qs, 9) #TODO add to settings.py
+def paginate(request, qs, ipp=9):
+    paginator = Paginator(qs, ipp) #TODO add to settings.py
     try:
         pageno = int(request.GET.get('page', '1'))
     except ValueError:
@@ -43,7 +44,9 @@ def order_issues(request, sortorder, issues):
     elif sortorder == 'controversial':
         qs = Vote.objects.get_controversial(Issue, ids)
     else:
-        return
+        page = paginate(request, issues)
+        issues = page.object_list
+        return issues, page
 
     page = paginate(request, qs)
     object_ids = [ d['object_id'] for d in page.object_list ]
@@ -51,13 +54,13 @@ def order_issues(request, sortorder, issues):
 
     return issues, page
 
-
+@login_required
 def my_issue_list(request, *args, **kwargs):
     """ 
     shows issues to vote on in different sortings
     based on collective knowlegde from votings on them
     """
-    template_name= "dasboard/issue_list.html"
+    template_name= "dashboard/my_issues.html"
 
     if not request.method == "GET":
         return HttpResponseBadRequest
@@ -83,53 +86,41 @@ def my_issue_list(request, *args, **kwargs):
     return HttpResponse(t.render(c))
 
 
-class MyDataView(object):
-    """ 
-    shows players issues 
-    qs is the pagianted queryset
+def order_votes(request, sortorder, votes):
+    """ update issues qs acording to qs """
+    if sortorder == 'name':
+        return votes.order_by('object__title')
+    elif sortorder == 'new':
+        return votes
+    else:
+        return votes
+
+@login_required
+def my_votes_list(request, *args, **kwargs):
     """
-    # override in subclass if needed 
-    template_name= "dashboard/issue_list.html"
-    qs = Issue.objects.filter().select_related().order_by('-time_stamp')
+    Show user votes
+    """
+    template_name = "dashboard/my_votes.html"
+    if not request.method == "GET":
+        return HttpResponseBadRequest
 
-    def order_issues(self, sortorder):
-        """ update issues qs acording to qs """
-        if sortorder == 'popular':
-            qs = Vote.objects.get_popular(Issue)
-        elif sortorder == 'controversial':
-            qs = Vote.objects.get_controversial(Issue)
-        elif sortorder == 'new':
-            qs = Issue.objects.all().order_by('-time_stamp')
-        else:
-            return
-        self.qs = qs
+    myvotes = Vote.objects.get_user_votes(request.user)
+    myvotes = myvotes.select_related()
+    
+    if 'sortorder' in kwargs:
+        myvotes = order_issues(request, kwargs['sortorder'], myvotes)
+        
+    page = paginate(request, myvotes, 50)
 
-    def __call__(self, request, *args, **kwargs):
-        if not request.method == "GET":
-            return HttpResponseBadRequest
-        if 'sortorder' in kwargs:
-            self.order_issues(kwargs['sortorder'])
-            
-        page = paginate(request, self.qs)
-
-        if isinstance(page.object_list[0], dict): #hits the db 
-            # qs result from sortorder, which are Vote instances and not Issue
-            object_ids = [ d['object_id'] for d in page.object_list ]
-            issues = Issue.objects.filter( id__in=object_ids )
-        else:
-            issues = page.object_list    
-
-        c = RequestContext(request, {
-            'blank_votes' : blank_votes.items(),
-            'possible_votes' : possible_votes,
-            'issues'  : issues, 
-            'actions' : actions.get_actions(request.user),
-            'missing_actions' : actions.get_unavailable_actions(request.user),
-            'vote' : Vote,
-            'page' : page
-        }) 
-        t = loader.get_template(self.template_name)
-        return HttpResponse(t.render(c))
+    c = RequestContext(request, {
+        'blank_votes' : blank_votes.items(),
+        'possible_votes' : possible_votes,
+        'vote' : Vote,
+        'page' : page,
+        'my_votes' : page.object_list
+    }) 
+    t = loader.get_template(template_name)
+    return HttpResponse(t.render(c))
 
 
 def archive_issue(request, issue_id):
@@ -141,8 +132,12 @@ def archive_vote(request, issue_id ):
     """
     if 'archive' in request.REQUEST:
         pass     
-    next = request.REQUEST.get('next' , '/' )
-    return HttpResponseBadRequest
+    if request.method != "POST":
+        return HttpResponseBadRequest
+
+    message = "NOT IMPLEMENTED YET"
+    next = request.REQUEST.get('next', '/' )
+    return HttpResponseRedirect(next) 
 
 def delete_multiply(request , issue_id ):
     """
