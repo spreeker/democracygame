@@ -6,8 +6,10 @@ import sys
 # Be sure to create a settings_local.py module with your local settings!
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
-# Add the external dependencies of Edemocracy to the python path. (The external
-# dependencies are included with the Edemocracy source to ease deployment.)
+FORCE_SCRIPT_NAME = "" # removes the django.fcgi from the urls.
+
+# Add the external dependencies of democracy to the python path. (The external
+# dependencies are included with the democracy source to ease deployment.)
 sys.path.append(os.path.split(PROJECT_PATH)[0] + '/external_apps/' ) 
 sys.path.append(os.path.split(PROJECT_PATH)[0] + '/external_libraries/' ) 
 
@@ -148,13 +150,17 @@ DEBUG_TOOLBAR_CONFIG = {
 #SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 FORCELOWERCASE_TAGS = True
 
+<<<<<<< HEAD:democracy/settings.py
 
 LOG_FILE_NAME = os.path.join(PROJECT_PATH, "democracy_log.txt")
+=======
+#LOG_FILE_NAME = os.path.join(PROJECT_PATH, "democracy_log.txt")
+>>>>>>>  fixed fcgi error:democracy/settings.py
 
-logging.basicConfig(
-    level = logging.DEBUG,
-    format = '%(asctime)s %(levelname)s %(message)s',
-    filename = LOG_FILE_NAME,
-)
+#logging.basicConfig(
+#    level = logging.DEBUG,
+#    format = '%(asctime)s %(levelname)s %(message)s',
+#    filename = LOG_FILE_NAME,
+#)
 
 ACCOUNT_ACTIVATION_DAYS = 1
