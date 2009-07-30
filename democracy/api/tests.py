@@ -429,8 +429,6 @@ class IssueHandlerTest( OAuthTests ):
 
         url = reverse( "api_issue" , args=[self.issue1.pk] )
         response = self.client.get( url )
-        rf = open( "r.txt" , 'w' )
-        cf = open( "c.txt" , 'w' )
         # open the files in a file diff viewer to see result differences
         #rf.write(response.content)
         #cf.write(expected)
