@@ -290,7 +290,7 @@ class AnonymousIssueHandler(AnonymousBaseHandler):
     def read(self, request, id=None, *args, **kwargs):
         if id:
             try:
-                return self.model.objects.filter(issue_id=id)
+                return self.model.objects.get(id=id)
             except ObjectDoesNotExist:
                 return rc.NOT_FOUND
         else:
@@ -316,23 +316,20 @@ class IssueHandler(BaseHandler):
     @validate(IssueForm)
     def create(self, request):
         attrs = self.flatten_dict(request.POST)
-
-        if self.exists(**attrs):
-            return rc.DUPLICATE_ENTRY
+        print "Do I GET HERE?"
+        issue = gamelogic.actions.propose(
+            request.user,
+            attrs['title'],
+            attrs['body'],
+            int(attrs['direction']),
+            attrs['url'],
+            attrs['source_type'],
+            attrs['is_draft'],
+            )
+        if issue:
+            return rc.CREATED
         else:
-            issue = gamelogic.actions.propose(
-                request.user,
-                attrs['title'],
-                attrs['body'],
-                attrs['direction'],
-                attrs['url'],
-                attrs['source_type'],
-                attrs['is_draft'],
-           )
-            if issue:
-                return rc.CREATED
-            else:
-                return rc.BAD_REQUEST
+            return rc.BAD_REQUEST
 
     @staticmethod
     def resource_uri():
