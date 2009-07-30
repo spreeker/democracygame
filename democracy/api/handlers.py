@@ -316,7 +316,6 @@ class IssueHandler(BaseHandler):
     @validate(IssueForm)
     def create(self, request):
         attrs = self.flatten_dict(request.POST)
-        print "Do I GET HERE?"
         issue = gamelogic.actions.propose(
             request.user,
             attrs['title'],
