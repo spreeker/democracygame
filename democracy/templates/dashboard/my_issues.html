@@ -11,15 +11,17 @@
     <a href="{% url my_issues 'new' %}">{% trans 'new' %}</a> | </h1>
 
 {% if issueform %}
-       {% if actions.propose %} 
+       {% if actions.propose %}
         <div class="propose">
         <div id='proposetips'>
         <h3> {% trans "propose your issue" %} </h3>
+        {% blocktrans %}
         <p>
         Make sure you check your spelling. It is not possible to change your issue later.
         We do not allow change because people might have voted. If content changes,  votes
         are invalidated.You can archive and hide it by not publishing your issue.</p>
         </p>
+        {% endblocktrans %}
         </div>
         <form action="{{ request.get_full_path }}" method="POST">
                 {{ issueform.as_p }}
@@ -42,7 +44,7 @@
 
 <li id="issue{{ issue.pk }}" >
     <a name="{{issue.pk}}"></a>
-    <h3> <a href="/">{{ issue }}</a> </h3> 
+    <h3> <a href="{{ issue.url }}">{{ issue }}</a> </h3> 
 <div class="issue_left">
     {% if vote.vote %}
     <div class="for"> {{ score.1 }}</div>
