@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import login_required
 from oauth_consumer.consumer import DemoOAuthConsumerApp
 from forms import VoteForm
 
-emo = DemoOAuthConsumerApp()
+demo = DemoOAuthConsumerApp()
 
 
 def ajax_error(error, status ):
@@ -59,12 +59,14 @@ def ajax_vote_cast(request, next=None, xhr="WTF?"):
     
     # Otherwise submit the vote to Service Provider
     if form.is_valid():
+        print form.cleaned_data
         retstatus = demo.post_vote(request, form.clean())
     else:
         pass #for now
 
     #print response.read()
-    if retstatus != 200:
+    print retstatus
+    if retstatus != 201:
         error = "vote cast failed, code %d, reason %s" % (response.status, response.reason)
         status = simplejson.dumps({'status': 'debug', 'error': error})
         return http.HttpResponseServerError(status, mimetype="application/json")

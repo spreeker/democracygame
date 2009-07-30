@@ -16,4 +16,5 @@ urlpatterns = patterns('thirdparty.web.views',
                        #url(r'^logout/$', 'user_logout', name="user_logout"),
     url(r'^(?P<pk>\d+)/$', 'issues_issue_detail', name="issues_issue_detail"),
     url(r'^error/$', 'issues_submit_error', name="issues_submit_error"),
+    url(r'^debug/$', 'debug', name="debug"),
 )
