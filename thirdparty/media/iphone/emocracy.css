@@ -7,7 +7,7 @@ body {
 
   -webkit-text-size-adjust: none;
 	background-color: #accbcb;
-	background-image: url(./bg.png);
+/*	background-image: url(./bg.png); */
 	background-repeat: no-repeat;
 }
 
@@ -373,7 +373,7 @@ a img {
   padding:14px 0 14px 0;
 }
 #menu div.hotissues {
-  background-color: #ff51a8;
+/*  background-color: #ff51a8; */
   margin:0;
   text-align:center;
   border-top: 0.1em solid black;
@@ -383,7 +383,7 @@ a img {
   padding:14px 0 14px 0;
 }
 #menu div.newissues {
-  background-color: #00ff00;
+/*  background-color: #00ff00; */
   margin:0;
   text-align:center;
   border-top: 0.1em solid black;
@@ -393,7 +393,7 @@ a img {
   padding:14px 0 14px 0;
 }
 #menu div.genissues {
-  background-color: #ad5bfe;
+/*  background-color: #ad5bfe; */
   margin:0;
   text-align:center;
   border-top: 0.1em solid black;
@@ -403,7 +403,7 @@ a img {
   padding:14px 0 14px 0;
 }
 #menu div.addissue {
-  background-color: #0099ff;
+/*  background-color: #0099ff; */
   margin:0;
   text-align:center;
   border-top: 0.1em solid black;
