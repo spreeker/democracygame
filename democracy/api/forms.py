@@ -13,8 +13,7 @@ class IssueForm(forms.Form):
     source_type = forms.ChoiceField( choices = source_types),
     direction = forms.ChoiceField( choices = normal_votes.items()),
 
-    is_draft = forms.ChoiceField( choices = [(1, "True"),(0,  "False")])
-
+    is_draft = forms.TypedChoiceField(choices= ((0 , "NO"), (1, "YES")), coerce=int) 
 
 class VoteForm(forms.Form):
     vote = forms.ChoiceField(choices = normal_votes.items() ) 

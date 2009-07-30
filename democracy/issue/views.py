@@ -149,11 +149,10 @@ def publish_issue(request, issue_id):
 
     issue = get_object_or_404(Issue, id=issue_id, user=request.user)
     
-    if 'is_draft' in request.POST:
-        issue.is_draft = True 
-        issue.save()
-    else:
-        issue.is_draft = False
+    form = Publish(request.POST)
+    
+    if form.is_valid(): 
+        issue.is_draft = True if form.cleaned_data['is_draft'] else False
         issue.save()
 
     next = request.REQUEST.get('next', '/' )
