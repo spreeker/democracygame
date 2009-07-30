@@ -141,16 +141,18 @@ def issues_add_issue(request, issue_no=None):
                 {
                     'title' : form.cleaned_data[u'title'],
                     'body' : form.cleaned_data[u'body'],
-                    'owners_vote' : form.cleaned_data[u'owners_vote'],
+                    # TODO : fix naming owners_vote/direction
+                    'direction' : form.cleaned_data[u'owners_vote'],
                     'url' : form.cleaned_data[u'url'],
                     'source_type' : form.cleaned_data[u'source_type'],
                     'is_draft' : form.cleaned_data[u'is_draft'],
                     'issue_no' : issue_no,
                 }
             )
-
+            print 'STATUS', status
+            
             #return HttpResponseRedirect(reverse('web_issue_detail', args = [new_issue.pk]))
-            if status == 200:
+            if status == 201:
                 return HttpResponseRedirect(reverse('top_level_menu'))
             else:
                 return HttpResponseRedirect(reverse('issues_submit_error'))
@@ -185,7 +187,7 @@ def top_level_menu(request):
     issue_list = demo.get_issue_list(request)
     fetch = []
     for resource in issue_list:
-        issueid = resource['issue_uri'].split('/')
+        issueid = resource['resource_uri'].split('/')
         issueid = issueid[-2:]
         issueid = issueid[0]
         resource_data = {}
@@ -204,15 +206,16 @@ def top_level_menu(request):
 
         resource_data['title'] = resource['title']
         resource_data['body'] = resource['body']
-        resource_data['votes_for'] = resource['votes_for']
-        resource_data['votes_abstain'] = resource['votes_abstain']
-        resource_data['votes_against'] = resource['votes_against']
+        votes = demo.get_issue_votes(request, issueid)
+        resource_data['votes_for'] = votes.pop(u'+1', 0)
+        resource_data['votes_against'] = votes.pop(u'-1', 0)
+        resource_data['votes_abstain'] = sum([v for v in votes.values()])
         if not dt.days:
             resource_data['age'] = 'Today'
         else:
             resource_data['age'] = '%s days ago' % dt.days
-        resource_data['user'] = resource['owner']['username']
-        userid = resource['owner']['user_uri'].split('/')
+        resource_data['user'] = resource['user']['username']
+        userid = resource['user']['resource_uri'].split('/')
         userid = userid[-2:]
         resource_data['userid'] = userid[0]
         fetch.append(resource_data)
@@ -221,6 +224,13 @@ def top_level_menu(request):
     context['is_menu'] = True
     return render_to_response('interface.html',
             RequestContext(request, context))
+
+def debug(request):
+    issue_list = demo.get_issue_votes_user(request)
+    context = {'json' : issue_list}
+    return render_to_response('debug.html',
+            RequestContext(request, context))
+
 
 def url_error_view(request, error):
     return render_to_response(
