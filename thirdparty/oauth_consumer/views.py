@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
-from oauth_consumer.consumer import EmoOAuthConsumerApp
+from oauth_consumer.consumer import DemoOAuthConsumerApp as EmoOAuthConsumerApp
 
 emoauth = EmoOAuthConsumerApp()
 
