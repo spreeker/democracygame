@@ -2,7 +2,6 @@
 {% load i18n %}
 {% block mainmenu %}
     <a href={% url api_doc %}>API</a> | 
-    {% trans "propose" %} | 
     <a href={% url index %}> {% trans "issues" %} </a> |
     <a href={% url dashboard_issues %}> {% trans "your issues" %} </a> |
     <a href={% url dashboard_votes %}> {% trans "your votes" %} </a> |

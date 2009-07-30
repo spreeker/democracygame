@@ -4,7 +4,6 @@
 
 {% block content %}
 
-
 {% votes_by_user user on issues as vote_dct %}
 {% vote_counts_for_objects issues as counts_dct %}
 
@@ -21,7 +20,7 @@
 
 <li id="issue{{ issue.pk }}" >
     <a name="{{issue.pk}}"></a>
-    <h3> <a href="/">{{ issue }}</a> </h3> 
+    <h3> <a href="{{issue.url}}">{{ issue }}</a> </h3> 
 <div class="issue_left">
     {% if vote.vote %}
     <div class="for"> {{ score.1 }}</div>
@@ -85,5 +84,6 @@ created by {{ issue.user }}
 
 {%block sidebar %}
     {% include "dashboard/tag_cloud.html" %}
+    &nbsp;
 {% endblock %}
 
