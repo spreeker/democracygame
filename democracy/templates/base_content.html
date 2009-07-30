@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block mainmenu %}
-    <a href={% url api_doc %}>API</a> | 
-    <a href={% url index %}> {% trans "issues" %} </a> |
-    <a href={% url dashboard_issues %}> {% trans "your issues" %} </a> |
-    <a href={% url dashboard_votes %}> {% trans "your votes" %} </a> |
+    <a href="{% url api_doc %}">API</a> | 
+    <a href="{% url index %}"> {% trans "issues" %} </a> |
+    <a href="{% url dashboard_issues %}"> {% trans "your issues" %} </a> |
+    <a href="{% url dashboard_votes %}"> {% trans "your votes" %} </a> |
 {% endblock %}
 
 {% block userbar %}
@@ -19,16 +19,16 @@
 <div id="footerLicense">
         <p class="box">
           <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">
-            <img src="http://i.creativecommons.org/l/by/3.0/88x31.png" alt="Creative Commons License" style="border:none;" height="31" width="88">
+            <img src="http://i.creativecommons.org/l/by/3.0/88x31.png" alt="Creative Commons License" style="border:none;" height="31" width="88"/>
           </a>
           Except where otherwise noted, content on this site is<br/>
-          licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/" class="subfoot">Creative Commons
-          Attribution 3.0 License</a>
+          licensed under a 
+<a rel="license" href="http://creativecommons.org/licenses/by/3.0/" class="subfoot">Creative Commons Attribution 3.0 License</a>
 
         </p>
 
         <form action="/i18n/setlang/" method="post">
-            {#<input name="next" type="hidden" value="{{ request.get_full_path }}" /> #}
+            <input name="next" type="hidden" value="{{ request.get_full_path }}"/>
         <select name="language">
             {% for lang in LANGUAGES %}
                 <option value="{{ lang.0 }}">{{ lang.1 }}</option>
