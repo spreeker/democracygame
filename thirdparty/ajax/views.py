@@ -75,13 +75,27 @@ def ajax_vote_cast(request, next=None, xhr="WTF?"):
     status = simplejson.dumps({'status': "success"})
     return http.HttpResponse(status, mimetype="application/json")
 
-def ajax_get_issue( request ):
+def ajax_get_issue( request, issueid ):
     """
     Return issue in json
     """
     # get issue URI
     # loopup issue from cache
     # return the json
+    error = ""
+    
+    response = demo.get_issue_json(request, issueid)
+    # Otherwise submit the vote to Service Provider
+
+    #print response.read()
+    if response.status != 200:
+        error = "getting issue failed, code %d, reason %s" % (response.status, response.reason)
+        status = simplejson.dumps({'status': 'debug', 'error': error})
+        return http.HttpResponseServerError(status, mimetype="application/json")
+
+    # Save the vote and signal that it was saved
+    status = simplejson.dumps({'status': response.read()})
+    return http.HttpResponse(status, mimetype="application/json")
 
 def ajax_get_issue_score( request ):
     """
