@@ -342,7 +342,7 @@ class UserHandlerTest ( OAuthTests ):
         self.assertEqual( expected , response.content )
 
 
-class IssueHandlerTest( APIMainTest ):
+class IssueHandlerTest( OAuthTests ):
    
     def init_delegate(self):
         self.issue1 = Issue.objects.get( title = "issue1")
@@ -409,32 +409,56 @@ class IssueHandlerTest( APIMainTest ):
         #cf.write(expected)
         self.assertEqual( expected , result )
 
-        def test_read_issue(self):
-            """ test read issue """
-            expected = """[
-    {
-        "body": "issue1issue1issue1issue1issue1issue1issue1issue1issue1issue1", 
-        "title": "issue1", 
-        "url": "example.com", 
-        "source_type": "url", 
-        "user": {
-            "username": "test1", 
-            "resource_uri": "/api/v0/user/4/"
-        }, 
-        "time_stamp": "%(t3)s", 
-        "resource_uri": "/api/v0/issue/4/"
-    }
-]""" % {"t1" : self.issue1.time_stamp.strftime("%Y-%m-%d %H:%M:%S") }
+    def test_read_issue(self):
+        """ test read issue """
+        expected = """{
+    "body": "issue1issue1issue1issue1issue1issue1issue1issue1issue1issue1", 
+    "title": "issue1", 
+    "url": "example.com", 
+    "source_type": "website", 
+    "user": {
+        "username": "test1", 
+        "resource_uri": "%(ru1)s"
+    }, 
+    "time_stamp": "%(t1)s", 
+    "resource_uri": "%(ri1)s"
+}""" % {"t1" : self.issue1.time_stamp.strftime("%Y-%m-%d %H:%M:%S"),
+        "ru1" : reverse("api_user", args=[self.users[0].id]), 
+        "ri1" : reverse("api_issue", args=[self.issue1.id] ),
+        }
 
-            url = reverse( "api_issue" , args=[self.issue1.pk] )
-            result = self.client.get( url )
-            self.assertEqual( expected , result )
+        url = reverse( "api_issue" , args=[self.issue1.pk] )
+        response = self.client.get( url )
+        # open the files in a file diff viewer to see result differences
+        #rf.write(response.content)
+        #cf.write(expected)
+        #print expected
+        #print response.content
+        self.assertEqual( expected , response.content )
 
-        def test_read_bad_issue(self):
-            """ test read bad issue """
-            url = reverse( "api_issue" , args=999999 )
-            response = self.client.get( url )
-            self.assertEqual( 404 , response.status_code )
+    def test_read_bad_issue(self):
+        """ test read bad issue """
+        url = reverse( "api_issue" , args=[999999] )
+        response = self.client.get( url )
+        
+        self.assertEqual( 404 , response.status_code )
+
+    def test_post_issue(self):
+        """ test posting of issue """
+        url = reverse( "api_issues" )
+        parameters = {
+            'title' : "posted issue",
+            'body' : "body",
+            'direction' : 1,
+            'url': "www.geenstijl.nl",
+            'source_type' : "website",
+            'is_draft' : 1,
+            }
+        url = reverse("api_issues")
+        response = self.do_oauth_request(url, parameters )
+        self.assertEqual(201, response.status_code)
+        self.assertEqual(Issue.objects.all().count() , 4 )
+
 
 class MultiplyHandlerTest( OAuthTests ):
     """
