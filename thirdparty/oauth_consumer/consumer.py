@@ -118,7 +118,7 @@ class DemoOAuthConsumerApp(django_oauth_consumer.OAuthConsumerApp):
               'vote' : integer,  # valid values -1, 1, 10-19 (see democracy docs)
             }
         """
-        api_url = API_SERVER+'vote/'
+        api_url = '%svote/' % API_SERVER
         self.response = self.post_resource(request, api_url, content=vote_data)
         return self.response.status
 
@@ -127,19 +127,23 @@ class DemoOAuthConsumerApp(django_oauth_consumer.OAuthConsumerApp):
         tempuser = request.user
         from django.contrib.auth.models import AnonymousUser
         request.user = AnonymousUser()
-        api_url = API_SERVER+'issue/'
+        api_url = '%sissue/' % API_SERVER
         self.response = self.get_resource(request, api_url)
         request.user = tempuser
         return self.ld()
 
     # public? cached?
     def get_issue(self, request, issue_no):
-        api_url = API_SERVER+'issue/'+issue_no+'/'
+        api_url = '%sissue/%s/' % (API_SERVER, issue_no)
         self.response = self.get_resource(request, api_url)
         return self.ld()
+    def get_issue_json(self, request, issue_no):
+        api_url = '%sissue/%s/' % (API_SERVER, issue_no)
+        self.response = self.get_resource(request, api_url)
+        return self.response
     
     def get_issue_votes(self, request, issue_no):
-        api_url = API_SERVER + 'issue/' + issue_no + '/votes/'
+        api_url = '%sissue/%s/votes/' % (API_SERVER, issue_no)
         self.response = self.get_resource(request, api_url)
         return self.ld()
 
@@ -149,16 +153,16 @@ class DemoOAuthConsumerApp(django_oauth_consumer.OAuthConsumerApp):
         return self.ld()
 
     def get_issue_votes_user(self, request):
-        api_url = API_SERVER + 'vote/'
+        api_url = '%svote/' % API_SERVER
         self.response = self.get_resource(request, api_url)
         return self.ld()
-        
+
+    def get_user(self, request, user_no):
+        api_url = '%suser/%s/' % (API_SERVER, user_no)
+        self.response = self.get_resource(request, api_url)
+        return self.ld() 
 
     def post_issue(self, request, issue_data):
-        api_url = API_SERVER+'issue/'
+        api_url = '%sissue/' % API_SERVER
         self.response = self.post_resource(request, api_url, content=issue_data)
-        f = open('/Users/thijscoenen/Desktop/out.html', 'w')
-        f.write(self.response.read())
-        f.close()
-        
         return self.response.status
