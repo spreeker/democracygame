@@ -143,6 +143,11 @@ class DemoOAuthConsumerApp(django_oauth_consumer.OAuthConsumerApp):
         self.response = self.get_resource(request, api_url)
         return self.ld()
 
+    def get_issue_vote(self, request, issue_no):
+        api_url = API_SERVER + 'issue/' + issue_no + '/'
+        self.response = self.get_resource(request, api_url)
+        return self.ld()
+
     def get_issue_votes_user(self, request):
         api_url = API_SERVER + 'vote/'
         self.response = self.get_resource(request, api_url)
