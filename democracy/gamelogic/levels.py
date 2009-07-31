@@ -1,4 +1,10 @@
-# The game level upgrade functions which are exectuted on a score change 
+"""
+The game level upgrade functions which are exectuted on a score change 
+
+This module manages the leveling of a user.
+From somewhere in the code where an action changes the score,
+change the score using the change_score method in the module.
+"""
 
 from profiles.models import UserProfile
 
@@ -46,7 +52,7 @@ def active_citizen(userprofile):
         lowest_opinion_leader.save()
         return 'opinion leader' 
 
-    
+  
 def opinion_leader(userprofile):
     """ opinion leaders get downgraded if there are too many of them
     """
@@ -62,7 +68,6 @@ def opinion_leader(userprofile):
     if userprofile.score < MIN_SCORE_ACTIVE_CITIZENS:
         userprofile.role = 'citizen'    
         return 'citizen'
-    
  
 upgrade = {
     'anonymous citizen' : anonymous_citizen,
@@ -72,7 +77,7 @@ upgrade = {
 }
 
 def change_score(userprofile, score):
-    """ if the score changes , the level might change too """
+    """ if the score changes, the level might change too """
     userprofile.score += score
     while upgrade[userprofile.role](userprofile): 
         #does the level update checks

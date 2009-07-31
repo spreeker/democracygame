@@ -17,5 +17,5 @@ class IssueForm(forms.Form):
     is_draft = forms.BooleanField(label=_("publish"), initial=True, required=False)
 
 class Publish(forms.Form):
-    is_draft = forms.BooleanField()
+    is_draft = forms.TypedChoiceField(choices= ((0 , "NO"), (1, "YES")), coerce=int) 
 
