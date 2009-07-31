@@ -198,9 +198,13 @@ def top_level_menu(request):
         if request.user.is_anonymous():
             pass
         else:
-            voteList = resource.get('my_vote', [] )
-            if voteList:
-                resource_data['my_vote'] = voteList[0]['vote']
+            myvote = demo.get_issue_vote(request,issueid)
+            mvote = None
+            if myvote:
+                print 'myvote', myvote
+                mvote = myvote[0].get('vote', [] )
+            if mvote:
+                resource_data['my_vote'] = mvote
             else:
                 resource_data['my_vote'] = None
 
@@ -226,7 +230,7 @@ def top_level_menu(request):
             RequestContext(request, context))
 
 def debug(request):
-    issue_list = demo.get_issue_votes_user(request)
+    issue_list = demo.get_issue_list(request)
     context = {'json' : issue_list}
     return render_to_response('debug.html',
             RequestContext(request, context))
