@@ -467,12 +467,12 @@ class MultiplyHandlerTest( OAuthTests ):
     def test_get_own_multiplies(self):
         """ test get your own multiplies """
         issue2 = Issue.objects.get( title = "issue2" )
-        self.do_multiply( self.users[0] ,  issue2 )
-        self.do_multiply( self.users[1] ,  issue2 )
-        multiply_vote = MultiplyIssue.objects.get( user = self.users[0] )
+        self.do_multiply(self.users[0],  issue2 )
+        self.do_multiply(self.users[1],  issue2 )
+        multiply_vote = MultiplyIssue.objects.get(user = self.users[0])
 
         url = reverse( "api_multiplies" )
-        response = self.do_oauth_request( url , http_method="GET" )
+        response = self.do_oauth_request(url, http_method="GET")
         expected = """[
     {
         "time_stamp": "%(ts)s", 
@@ -484,10 +484,10 @@ class MultiplyHandlerTest( OAuthTests ):
         }, 
         "resource_uri": "%(mu)s"
     }
-]""" % {"ou" : reverse( "api_user" , args=[ self.users[0].pk] ) , 
-        "ts" : multiply_vote.time_stamp.strftime("%Y-%m-%d %H:%M:%S") ,
-        "iu" : reverse( "api_issue" , args=[issue2.pk] ) , 
-        "mu" : reverse( "api_multiply" , args=[multiply_vote.id] ) , 
+]""" % {"ou" : reverse( "api_user", args=[ self.users[0].pk] ), 
+        "ts" : multiply_vote.time_stamp.strftime("%Y-%m-%d %H:%M:%S"),
+        "iu" : reverse( "api_issue", args=[issue2.pk] ), 
+        "mu" : reverse( "api_multiply", args=[multiply_vote.id] ), 
         }
         result = response.content 
         self.assertEqual( expected , result )
