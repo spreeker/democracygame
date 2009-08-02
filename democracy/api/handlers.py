@@ -125,13 +125,11 @@ class IssueVotesHandler(AnonymousBaseHandler):
 
 class IssueList(BaseHandler):
     """
-    BaseClass for Listings of issues
-
-    #. 'new'
-    #. 'popular'
-    #. 'controversial'
-    #. 'recommended' #TODO
-    #. 'with_tag'    #TODO
+    Resource for Listings of issues in a particular order
+    
+    - 'new'
+    - 'popular'
+    - 'controversial'
 
     """
     allowed_methods = ('GET', )
@@ -158,7 +156,7 @@ class IssueList(BaseHandler):
             result.append((uri, id_value[1]))
         return result
 
-    # not no classmethodis because query returns list of tuples.
+    # not no classmethods because query returns list of tuples.
     # and the responder will not look at those.
     def issue_url(cls, id_value):
         return reverse('api_issue', args=[id_value[0]])
@@ -194,6 +192,13 @@ class VoteHandler(BaseHandler):
     def create(self, request):
         """
         Vote on an Issue
+
+        postparameters:
+
+        - object_id
+        - vote
+        - keep_private (optional)
+
         """
         ctype = ContentType.objects.get_for_model(Issue)
         attrs = self.flatten_dict(request.POST)
@@ -290,7 +295,7 @@ class AnonymousIssueHandler(AnonymousBaseHandler):
     def read(self, request, id=None, *args, **kwargs):
         if id:
             try:
-                return self.model.objects.filter(issue_id=id)
+                return self.model.objects.get(id=id)
             except ObjectDoesNotExist:
                 return rc.NOT_FOUND
         else:
@@ -315,24 +320,33 @@ class IssueHandler(BaseHandler):
 
     @validate(IssueForm)
     def create(self, request):
-        attrs = self.flatten_dict(request.POST)
+        """ 
+        Create new issue
 
-        if self.exists(**attrs):
-            return rc.DUPLICATE_ENTRY
+        post parameters:
+
+        -title
+        -body
+        -direction ( vote of the user )
+        -url
+        -source_type
+        -is_draf
+
+        """
+        attrs = self.flatten_dict(request.POST)
+        issue = gamelogic.actions.propose(
+            request.user,
+            attrs['title'],
+            attrs['body'],
+            int(attrs['direction']),
+            attrs['url'],
+            attrs['source_type'],
+            attrs['is_draft'],
+            )
+        if issue:
+            return rc.CREATED
         else:
-            issue = gamelogic.actions.propose(
-                request.user,
-                attrs['title'],
-                attrs['body'],
-                attrs['direction'],
-                attrs['url'],
-                attrs['source_type'],
-                attrs['is_draft'],
-           )
-            if issue:
-                return rc.CREATED
-            else:
-                return rc.BAD_REQUEST
+            return rc.BAD_REQUEST
 
     @staticmethod
     def resource_uri():

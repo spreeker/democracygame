@@ -4,7 +4,6 @@
 
 {% block content %}
 
-
 {% votes_by_user user on issues as vote_dct %}
 {% vote_counts_for_objects issues as counts_dct %}
 
@@ -21,7 +20,7 @@
 
 <li id="issue{{ issue.pk }}" >
     <a name="{{issue.pk}}"></a>
-    <h3> <a href="/">{{ issue }}</a> </h3> 
+    <h3> <a href="{{issue.url}}">{{ issue }}</a> </h3> 
 <div class="issue_left">
     {% if vote.vote %}
     <div class="for"> {{ score.1 }}</div>
@@ -37,26 +36,25 @@
 </div>
 <div class="forms">
 <form action="{% url vote issue.pk %}" method="post">
-    <input type="hidden" name="direction" id="direction" value="1" />
-    <input type="hidden" name="next" id="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
-    <input type="submit" value={% trans "YES" %}>
+    <input type="hidden" name="direction" class="direction" value="1" />
+    <input type="hidden" name="next" class="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
+    <input type="submit" value="{% trans "YES" %}"/>
 </form><form action="{% url vote issue.pk %}" method="post">
-    <input type="hidden" name="direction" id="direction" value="-1" />
-    <input type="hidden" name="next" id="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
-    <input type="submit" value={% trans "NO" %} >
+    <input type="hidden" name="direction" class="direction" value="-1" />
+    <input type="hidden" name="next" class="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
+    <input type="submit" value="{% trans "NO" %}"/>
 </form><form action="{% url vote issue.pk %}" method="post">
-    <input type="hidden" name="next" id="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
+    <input type="hidden" name="next" class="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
     <select name="direction">
         {% for blank_vote in blank_votes %}
              <option value="{{ blank_vote.0 }}">{% trans blank_vote.1 %}</option>
         {% endfor %}
     </select>
-    <input type="submit" value="{% trans "blank" %}">
+    <input type="submit" value="{% trans "blank" %}"/>
 </form>
-
 <form action="{% url multiply issue.pk %}" method="post">
-    <input type="hidden" name="next" id="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
-    <input type="submit" value="{% trans "multiply" %}">
+    <input type="hidden" name="next" class="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
+    <input type="submit" value="{% trans "multiply" %}"/>
 </form>
 created by {{ issue.user }}
 </div>{# end forms #}
@@ -85,5 +83,6 @@ created by {{ issue.user }}
 
 {%block sidebar %}
     {% include "dashboard/tag_cloud.html" %}
+    &nbsp;
 {% endblock %}
 
