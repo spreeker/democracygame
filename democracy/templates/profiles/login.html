@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+
 {% block content %}
 
 <form method="post" action=".">
@@ -21,6 +22,6 @@
 <input type="hidden" value="{{next}}" name="next">
 </form>
 <a href={% url registration_register %}>{% trans "register" %}</a>
-<a href={% url auth_password_reset %}>{% trans "register" %}</a>
+<a href={% url auth_password_reset %}>{% trans "reset password" %}</a>
 
 {% endblock %}

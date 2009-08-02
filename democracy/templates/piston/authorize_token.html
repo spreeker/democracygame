@@ -1,14 +1,27 @@
-<html>
-<head><title>Token Authorization Page.</title></head>
-<body>
-<h1>Authorize third party</h1>
+{% extends "base_content.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "3rd party Authorization Page" %}{% endblock %}
+
+{% block content %}
+<h2>{% trans "Authorize a third party" %}</h2>
+
+<p>
+{% blocktrans %}
+    You came on this page because you want to use your voting data and/or play
+    the democracy game on an other website/service than ours.
+    To protect your data *you* need to authorize the 3rd
+    party on this page to acces your data. You can revoke granted acces later if you want.
+{% endblocktrans %}
+</p>
+
 {{msg}} <br />
-token : {{request_token}} <br/>
+
 <form action="." method="POST">
 {{form.as_table}}
 <input type="submit" value="submit" />
 </form>
 
+token : {{request_token}} <br/>
+{% endblock %}
 
-</body>
-</html>
