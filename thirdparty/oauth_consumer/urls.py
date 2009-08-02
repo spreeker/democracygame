@@ -1,9 +1,9 @@
 from django.conf.urls.defaults import *
 
 from oauth_consumer.views import *
-from oauth_consumer.consumer import EmoOAuthConsumerApp
+from oauth_consumer.consumer import DemoOAuthConsumerApp
 
-emoauth = EmoOAuthConsumerApp()
+emoauth = DemoOAuthConsumerApp()
 
 urlpatterns = patterns('',
     url(r'^auth/', emoauth.need_authorization, name=emoauth.NEEDS_AUTH_VIEW_NAME),

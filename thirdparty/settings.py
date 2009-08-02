@@ -128,7 +128,7 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_URL = '/logout/'
 
 ACCOUNT_ACTIVATION_DAYS = 1
-AUTH_PROFILE_MODULE = 'profiles.userprofile'
+AUTH_PROFILE_MODULE = 'profiles.UserProfile'
 
 try:
     from settings_local import *
