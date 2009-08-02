@@ -3,4 +3,7 @@
 
 {% block content %}
 {% blocktrans %}You are now logged out.{% endblocktrans %}
+
+    <a href="{% url auth_login %}">{% trans "log in" %} </a>.
+
 {% endblock %}
