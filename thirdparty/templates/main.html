@@ -29,11 +29,6 @@ Page Header with login/logout links.
 {% if not is_menu %}
   <a href="{% url top_level_menu %}" id="menu" class="left"><img src="/media/iphone/btn_header_menu.png" alt="Menu" /></a>
 {% endif %}
-<center>
-  <a href="{% url top_level_menu %}"><img src="/media/pir.png" alt="Menu" /></a>&nbsp;&nbsp;&nbsp;&nbsp;
-  <a href="{% url top_level_menu %}"><img src="/media/pie.png" alt="Menu" /></a>&nbsp;&nbsp;&nbsp;&nbsp;
-  <a href="{% url top_level_menu %}"><img src="/media/score.png" alt="Menu" /></a>
-</center>
 {% if user.is_authenticated %} 
   <a href="{% url logout %}" id="exit" class="right"><img src="/media/iphone/btn_header_exit.png" alt="Exit"></a>
 {% else %}

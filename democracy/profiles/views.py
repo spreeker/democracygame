@@ -138,7 +138,6 @@ def userprofile_show(request, username):
 @login_required
 def change_description(request):
     p = request.user.get_profile()
-    print "kom ik hier/? "
     if request.method == 'POST':
         form = ChangeProfile(request.POST)
         if form.is_valid():

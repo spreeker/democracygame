@@ -3,16 +3,39 @@
 {% load voting_tags %}
 
 {% block content %}
+<div class="issues">
 
+<h2>{% trans "your issues" %}</h2>
+<h1><a href="{% url my_issues 'popular' %}"> {% trans 'popular' %} </a> |
+    <a href="{% url my_issues 'controversial' %}">{%trans 'controversial' %}</a> | 
+    <a href="{% url my_issues 'new' %}">{% trans 'new' %}</a> | </h1>
+
+{% if issueform %}
+       {% if actions.propose %}
+        <div class="propose">
+        <div id='proposetips'>
+        <h3> {% trans "propose your issue" %} </h3>
+        {% blocktrans %}
+        <p>
+        Make sure you check your spelling. It is not possible to change your issue later.
+        We do not allow change because people might have voted. If content changes,  votes
+        are invalidated.You can archive and hide it by not publishing your issue.
+        </p>
+        {% endblocktrans %}
+        </div>
+        <form action="{{ request.get_full_path }}" method="post">
+                {{ issueform.as_p }}
+                <p> <input type="submit" value="{% trans "submit issue" %}"/></p>
+        </form>
+        {% else %} <h2>{% trans "You cannot propose yet or anymore, you need more points" %}</h2>
+        {% endif %}
+        </div>
+{% endif %}
 
 {% votes_by_user user on issues as vote_dct %}
 {% vote_counts_for_objects issues as counts_dct %}
 
-<div class="issues">
-<h2> {% trans "My issues" %} </h2>
-<h1> <a href="{% url my_issues 'popular' %}"> {% trans 'popular' %} </a> |
-    <a href="{% url my_issues 'controversial' %}">{%trans 'controversial' %}</a> | 
-    <a href="{% url my_issues 'new' %}">{% trans 'new' %}</a> | </h1>
+<h2> {% trans "proposed by you" %}</h2>
 <ul>
 {% for issue in issues %}
 
@@ -21,7 +44,7 @@
 
 <li id="issue{{ issue.pk }}" >
     <a name="{{issue.pk}}"></a>
-    <h3> <a href="/">{{ issue }}</a> </h3> 
+    <h3> <a href="{{ issue.url }}">{{ issue }}</a> </h3> 
 <div class="issue_left">
     {% if vote.vote %}
     <div class="for"> {{ score.1 }}</div>
@@ -35,30 +58,42 @@
 {% for key , direction in possible_votes.items %}{% ifequal key vote.vote %}<p>{% trans direction %}</p> {% endifequal %}{% endfor %}
 {% endif %}
 </div>
+<div class="votecounts">
+{% for k, count in score.items %}
+{% if count %}
+{% for key , direction in possible_votes.items %}{% ifequal key k %}<div class="scoretag">{% trans direction %} {{count}} </div> {% endifequal %}{% endfor %}
+{% endif %}
+{% endfor %}
+</div>
 <div class="forms">
 <form action="{% url vote issue.pk %}" method="post">
-    <input type="hidden" name="direction" id="direction" value="1" />
-    <input type="hidden" name="next" id="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
-    <input type="submit" value={% trans "YES" %}>
+    <input type="hidden" name="direction" value="1" />
+    <input type="hidden" name="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
+    <input type="submit" value="{% trans "YES" %}"/>
 </form><form action="{% url vote issue.pk %}" method="post">
-    <input type="hidden" name="direction" id="direction" value="-1" />
-    <input type="hidden" name="next" id="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
-    <input type="submit" value={% trans "NO" %} >
+    <input type="hidden" name="direction" value="-1" />
+    <input type="hidden" name="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
+    <input type="submit" value="{% trans "NO" %}"/>
 </form><form action="{% url vote issue.pk %}" method="post">
-    <input type="hidden" name="next" id="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
+    <input type="hidden" name="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
     <select name="direction">
         {% for blank_vote in blank_votes %}
              <option value="{{ blank_vote.0 }}">{% trans blank_vote.1 %}</option>
         {% endfor %}
     </select>
-    <input type="submit" value="{% trans "blank" %}">
+    <input type="submit" value="{% trans "blank" %}"/>
+</form>
+<form action="{% url publish issue.pk %}" method="post">
+    <input type="hidden" name="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
+    <input type="hidden" value={% if issue.is_draft %}"0"{% else %}"1"{% endif %} name="is_draft"/>
+    <input type="submit" value="{% if issue.is_draft %}{% trans "publish" %}{% else %}{% trans "hide" %}{% endif %}"/>
 </form>
 
 <form action="{% url multiply issue.pk %}" method="post">
-    <input type="hidden" name="next" id="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
-    <input type="submit" value="{% trans "multiply" %}">
+    <input type="hidden" name="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
+    <input type="submit" value="{% trans "multiply" %}"/>
 </form>
-created by {{ issue.user }}
+{% trans "created by" %} {{ issue.user }}
 </div>{# end forms #}
 </li>
 {% endfor %}
@@ -85,5 +120,6 @@ created by {{ issue.user }}
 
 {%block sidebar %}
     {% include "dashboard/tag_cloud.html" %}
+    &nbsp;
 {% endblock %}
 

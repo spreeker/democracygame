@@ -9,12 +9,11 @@ class IssueForm(forms.Form):
         widget = forms.Textarea(),
         max_length = 2000,
     )
-    url = forms.URLField()
-    source_type = forms.CharField( widget = forms.ChoiceField( choices = source_types ))
-    direction = forms.ChoiceField( choices = normal_votes)
+    url = forms.URLField(),
+    source_type = forms.ChoiceField( choices = source_types),
+    direction = forms.ChoiceField( choices = normal_votes.items()),
 
-    is_draft = forms.BooleanField(initial = True, required = False)
-
+    is_draft = forms.TypedChoiceField(choices= ((0 , "NO"), (1, "YES")), coerce=int) 
 
 class VoteForm(forms.Form):
     vote = forms.ChoiceField(choices = normal_votes.items() ) 
