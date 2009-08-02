@@ -106,8 +106,11 @@ def record_multiply(request , issue_id ):
     possible_actions = actions.get_actions(request.user) 
     next = request.REQUEST.get('next' , '/' )
 
-    if possible_actions.has_key('multiply') :
+    if possible_actions.has_key('multiply'):
         actions.multiply(request.user, issue )
+        return HttpResponseRedirect(next)
+
+    if not request.user.is_authenticated():
         return HttpResponseRedirect(next)
 
     message = "You cannot multiply yet!"
