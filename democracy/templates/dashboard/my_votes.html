@@ -19,7 +19,7 @@
 <div class="forms">
 </form><form action="/" method="get">
     <input type="hidden" name="next" id="next" value="{{ request.get_full_path }}#{{vote.pk}}" />
-    <input type="submit" value={% trans "DELETE" %} >
+    <input type="submit" value={% trans "DELETE" %} />
 </div>{# end forms #}
 </li>
 {% endfor %}

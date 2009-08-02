@@ -1,8 +1,10 @@
 """
 Issue model , objects on which we vote
 (whished) functionality
+TODO
 -Update possibilities on issues? history and undo?
 -location (geo django) data?
+-language field?
 """
 from datetime import datetime
 from django.db import models
@@ -21,11 +23,6 @@ source_types = (
     (u"image", _(u"image")),
 )
 
-# TODO
-# HOW TO DEAL with updated content?
-# Add location to the Issue Body?
-# content duplication handling?
-
 
 class Issue(models.Model):
     """
@@ -36,7 +33,7 @@ class Issue(models.Model):
     time_stamp = models.DateTimeField( default= datetime.now() )
     url = models.URLField( verify_exists=False)
     source_type = models.CharField( max_length=20, choices=source_types)
-    body = models.TextField( max_length=2000)
+    body = models.TextField(max_length=2000)
 
     is_draft = models.BooleanField( default=True )
 
@@ -45,10 +42,6 @@ class Issue(models.Model):
     score = models.IntegerField(default=0)
     hotness = models.IntegerField(default=0)
     votes = models.IntegerField(default=0)
-
-    #objects = IssueManager()
     
     def __unicode__(self):
         return self.title
-   
-#tagging.register(Issue)

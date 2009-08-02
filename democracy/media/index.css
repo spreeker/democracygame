@@ -72,11 +72,20 @@ h3 {
     width : 80% ;
     margin-left : 1em ;
 }
-.issues p , .issues .title , .issues .forms , .issues h3 {
+
+.issues p, 
+.issues .title,
+.issues .votecounts,
+.issues .forms,
+.issues h3 {
     margin-left : 4em ;
 }
 .issues .yourvote {
     float : right;
+}
+.issues .scoretag {
+    margin-left : 2em ;
+    line-height : 1em;
 }
 .issues > ul {
     list-style-image:none;
@@ -84,16 +93,20 @@ h3 {
     list-style-type:none;
 }
 .issues .forms {
-    margin-top : 1.25em ;
+    margin-top: 1em ;
 }
-.issues .forms form , .issues .forms {
+.issues .scoretag,
+.issues .forms form {
     display : inline ;
 }
 .issues ul li {
     border-bottom : 1px solid black ;
     padding : 1.2em 1em 1.25em 0;
 }
-.votes p , .votes .title , .votes .forms , .votes h3 {
+.votes p,
+.votes .title,
+.votes .forms,
+.votes h3 {
     display : inline ;
 }
 .votes .forms {
@@ -102,7 +115,9 @@ h3 {
 .votes .title {
     margin-left : 3em ;
 }
-.votes .forms , .votes .title , .votes .yourvote{
+.votes .forms,
+.votes .title,
+.votes .yourvote {
     display : inline;
 }
 .votes .yourvote {
@@ -117,11 +132,33 @@ h3 {
     border-bottom : 1px solid black ;
     padding : 1.2em 1em 1.25em 0;
 }
+.propose {
+    margin-top : 1em;
+    width : 50em;
+    margin-bottom : 2em;
+}
+.propose label {
+    width : 40em;
+    display : block;
+    text-align : left;
+}
+.propose input,
+.propose textarea {
+    width : 25em;
+}
+.propose form {
+    width : 45em;
+}
+#proposetips {
+    margin-top : 1em;
+    width : 20em;
+    float : right ; 
+}
+
 #content .issue_left {
     float : left;
     margin-left: 1em;
 }
-
 
 /* Issue display specific styles */
 
