@@ -125,13 +125,11 @@ class IssueVotesHandler(AnonymousBaseHandler):
 
 class IssueList(BaseHandler):
     """
-    BaseClass for Listings of issues
-
-    #. 'new'
-    #. 'popular'
-    #. 'controversial'
-    #. 'recommended' #TODO
-    #. 'with_tag'    #TODO
+    Resource for Listings of issues in a particular order
+    
+    - 'new'
+    - 'popular'
+    - 'controversial'
 
     """
     allowed_methods = ('GET', )
@@ -158,7 +156,7 @@ class IssueList(BaseHandler):
             result.append((uri, id_value[1]))
         return result
 
-    # not no classmethodis because query returns list of tuples.
+    # not no classmethods because query returns list of tuples.
     # and the responder will not look at those.
     def issue_url(cls, id_value):
         return reverse('api_issue', args=[id_value[0]])
@@ -194,6 +192,13 @@ class VoteHandler(BaseHandler):
     def create(self, request):
         """
         Vote on an Issue
+
+        postparameters:
+
+        - object_id
+        - vote
+        - keep_private (optional)
+
         """
         ctype = ContentType.objects.get_for_model(Issue)
         attrs = self.flatten_dict(request.POST)
@@ -315,6 +320,19 @@ class IssueHandler(BaseHandler):
 
     @validate(IssueForm)
     def create(self, request):
+        """ 
+        Create new issue
+
+        post parameters:
+
+        -title
+        -body
+        -direction ( vote of the user )
+        -url
+        -source_type
+        -is_draf
+
+        """
         attrs = self.flatten_dict(request.POST)
         issue = gamelogic.actions.propose(
             request.user,

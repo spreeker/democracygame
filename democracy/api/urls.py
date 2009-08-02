@@ -23,9 +23,9 @@ from api.doc import documentation_view
 
 auth = OAuthAuthentication(realm='d.preeker.net')
 
-# Emitter registrered to set wrong mime-type for visibility purposes
-# just comment these lines out for production
-# setting the authtication to basic so you can test in the browser the
+# If in debug mode, Emitter is registrered with wrong mime-type 
+# for visibility purposes
+# Alse the authtication is set to basic so you can test in the browser the
 # api responses
 
 if settings.DEBUG:
@@ -73,5 +73,5 @@ urlpatterns = patterns('',
     url(r'^multiply/(?P<issue>)\d+/$', multiply, name='api_multiply' ),
     url(r'^doc/$', documentation_view, name="api_doc" ),
     url(r'^tagcloud/', tag_cloud, name='api_tagcloud'),
-    url(r'^issues.tags/(?P<tags>[^/]+)/', issues_with_tags, ),
+    url(r'^issues.tags/(?P<tags>[^/]+)/', issues_with_tags, name="api_issues_with_tag" ),
 )
