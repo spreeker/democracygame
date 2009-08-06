@@ -13,4 +13,7 @@ urlpatterns = patterns('ajax.views',
         view='ajax_get_issue',
         name='ajax_get_issue'),
 
+    url(r'^issue/(?P<issueid>\d+)/votes/$',
+        view='ajax_get_issue_votes',
+        name='ajax_get_issue_votes'),
 )

@@ -138,19 +138,33 @@ class DemoOAuthConsumerApp(django_oauth_consumer.OAuthConsumerApp):
         self.response = self.get_resource(request, api_url)
         return self.ld()
     def get_issue_json(self, request, issue_no):
+        tempuser = request.user
+        from django.contrib.auth.models import AnonymousUser
+        request.user = AnonymousUser()
         api_url = '%sissue/%s/' % (API_SERVER, issue_no)
         self.response = self.get_resource(request, api_url)
+        request.user = tempuser
         return self.response
     
     def get_issue_votes(self, request, issue_no):
         api_url = '%sissue/%s/votes/' % (API_SERVER, issue_no)
         self.response = self.get_resource(request, api_url)
         return self.ld()
+    
+    def get_issue_votes_json(self, request, issue_no):
+        api_url = '%sissue/%s/votes/' % (API_SERVER, issue_no)
+        self.response = self.get_resource(request, api_url)
+        return self.response
 
     def get_issue_vote(self, request, issue_no):
-        api_url = API_SERVER + 'issue/' + issue_no + '/'
+        api_url = '%svote/%s/' % (API_SERVER, issue_no)
         self.response = self.get_resource(request, api_url)
         return self.ld()
+
+    def get_issue_vote_json(self, request, issue_no):
+        api_url = '%svote/%s/' % (API_SERVER, issue_no)
+        self.response = self.get_resource(request, api_url)
+        return self.response
 
     def get_issue_votes_user(self, request):
         api_url = '%svote/' % API_SERVER
