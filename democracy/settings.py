@@ -81,7 +81,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
 #    'django.contrib.csrf.middleware.CsrfMiddleware',
-#    'debug_toolbar.middleware.DebugToolbarMiddleware', ## !! comment out in production.
+    'debug_toolbar.middleware.DebugToolbarMiddleware', ## !! comment out in production.
 #    'django.middleware.cache.FetchFromCacheMiddleware',
 )
 CACHE_MIDDLEWARE_SECONDS = 60
