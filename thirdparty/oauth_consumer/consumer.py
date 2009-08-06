@@ -179,4 +179,8 @@ class DemoOAuthConsumerApp(django_oauth_consumer.OAuthConsumerApp):
     def post_issue(self, request, issue_data):
         api_url = '%sissue/' % API_SERVER
         self.response = self.post_resource(request, api_url, content=issue_data)
+        f = open('/Users/thijscoenen/Desktop/out.html', 'w')
+        f.write(self.response.read())
+        f.close()
+        
         return self.response.status
