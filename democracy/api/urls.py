@@ -20,6 +20,7 @@ from api.handlers import TagHandler
 
 
 from api.doc import documentation_view
+from piston.doc import documentation_view
 
 auth = OAuthAuthentication(realm='d.preeker.net')
 
