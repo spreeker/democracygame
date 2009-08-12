@@ -48,10 +48,11 @@ USE_I18N = True
 
 ugettext = lambda s: s
 LANGUAGES = (
+    ('nl' , ugettext('Dutch')),
     ('en' , ugettext('English')),
     ('es' , ugettext('Spanish')),
     ('de' , ugettext('German')),
-    ('nl' , ugettext('Dutch')),
+    ('fr' , ugettext('French')),
 )
 
 # Absolute path to the directory that holds media.
