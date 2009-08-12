@@ -1,29 +1,4 @@
-/* General democracy site wide CSS file */
-
-/*** Resets ***/
-* { margin : 0 ; padding : 0 ; }
-
-body,
-div,
-h1,
-h2,
-h3,
-ul,
-li,
-p,
-pre,
-input,
-textarea,
-button {
-    margin: 0;
-    padding: 0;
-    font-family: sans-serif;
-    font-size: 100%;
-    line-height: 1.25;
-}
-body {
-    color : #303030;
-}
+/* custom democracy customizations on top of blueprint CSS */
 
 a {
     text-decoration : none ;
@@ -31,8 +6,10 @@ a {
 h2 {
     text-align : center ;
     border-bottom : 0.05em solid black ;
+    margin-bottom: 0em;
 }
-h1 {
+h4 {
+    margin-top: 0em;
     text-align : center ;
 }
 h3 {
@@ -41,44 +18,15 @@ h3 {
 
 /* header style declarations */
 
-#header #userbar {
-    display : inline;
-    float : right ;
-    margin-right : 10em;
- }
-#header #mainmenu {
-    margin-left : 5em;
-}
-
-#messagebar {
-    min-height : 30px ;
-    color : gray ;
-    padding:0em 1em 0em 1em;
-    text-align : center ;
-}
-#userbar form {
-    display : inline;
-}
-
-#sidebar{
-    float : left ;
-    width : 200px ;
-    font-family: sans-serif;
-}
-
-#content {
-    float : left;
-    min-width : 300px;
-    width : 80% ;
-    margin-left : 1em ;
-}
-
 .issues p, 
 .issues .title,
 .issues .votecounts,
 .issues .forms,
 .issues h3 {
     margin-left : 4em ;
+}
+#proposetips{
+    margin-left : 0em;
 }
 .issues .yourvote {
     float : right;
@@ -103,6 +51,11 @@ h3 {
     border-bottom : 1px solid black ;
     padding : 1.2em 1em 1.25em 0;
 }
+.issue_left {
+    width : 3em ;
+    float : left ; 
+}
+
 .votes p,
 .votes .title,
 .votes .forms,
@@ -132,66 +85,8 @@ h3 {
     border-bottom : 1px solid black ;
     padding : 1.2em 1em 1.25em 0;
 }
-.propose {
-    margin-top : 1em;
-    width : 50em;
-    margin-bottom : 2em;
-}
-.propose label {
-    width : 40em;
-    display : block;
-    text-align : left;
-}
-.propose input,
-.propose textarea {
-    width : 25em;
-}
-.propose form {
-    width : 45em;
-}
-#proposetips {
-    margin-top : 1em;
-    width : 20em;
-    float : right ; 
-}
-
-#content .issue_left {
-    float : left;
-    margin-left: 1em;
-}
 
 /* Issue display specific styles */
-
-.issue_block {
-    
-    margin : 0em 0em 2em 2em;
-    overflow : hidden ;
-}
-
-.issuebody{
-    border-right : 3px solid #092E20 ;
-    padding : 0em 1em 0em 0em ;
-    float : right ;
-    width : 75% ;
-    font-family:serif;
-    line-height:120%;
-    text-align:justify;
-    min-height : 250px ;
-}
-
-.issueinfo{
-    border-bottom : 2px solid #092E20 ;
-    padding : 0em 0em 1em 1em ;
-    float : right ;
-    width : 20% ;
-    font-family:sans-serif;
-    font-size:80%;
-    overflow:hidden;
-}
-
-.issuebody > p {
-    text-align:justify;
-}
 
 /* Vote link/report style declarations */
 

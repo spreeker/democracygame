@@ -57,16 +57,14 @@ def paginate(request, qs, **kwargs):
 
 
 class IssueVotesHandler(AnonymousBaseHandler):
-    """
-    Return votes for issue
+    """Return votes for issue
     """
     allowed_methods = ('GET', )
     fields = ('vote', 'vote_count', )
     model = Vote
 
     def read(self, request, id, *args, **kwargs):
-        """
-        Return the different vote counts for an issue
+        """Return the different vote counts for an issue
 
         example output:
 
@@ -124,13 +122,11 @@ class IssueVotesHandler(AnonymousBaseHandler):
 
 
 class IssueList(BaseHandler):
-    """
-    Resource for Listings of issues in a particular order
-    
+    """Resource for Listings of issues in a particular order
+
     - 'new'
     - 'popular'
     - 'controversial'
-
     """
     allowed_methods = ('GET', )
 
@@ -163,14 +159,12 @@ class IssueList(BaseHandler):
 
 
 class VoteHandler(BaseHandler):
-    """
-    Read and Post votes for user.
+    """Read and Post votes for user.
     """
     allowed_methods = ('GET', 'POST', )
     fields = ('vote', 'time_stamp', 'issue_uri', 'keep_private', )
     model = Vote
 
-    
     def read(self, request, id=None, **kwargs):
         """
         Returns the votes for an user.
@@ -178,6 +172,7 @@ class VoteHandler(BaseHandler):
         ctype = ContentType.objects.get_for_model(Issue)
         queryset = self.model.objects.filter(user = request.user,
                         content_type = ctype.pk).order_by('time_stamp')
+        queryset = queryset.filter( is_archived=False )
         if id:
             queryset = queryset.filter(object_id=id)
         queryset.order_by("username")
@@ -256,8 +251,7 @@ class AnonymousUserHandler(AnonymousBaseHandler):
 
 
 class UserHandler(BaseHandler):
-    """
-    Get User Details for authenticated user
+    """Get User Details for authenticated user
     """
     allowed_methods = ('GET', )
     fields = ('username', 'firstname', 'lastname', 'email', 'score',
@@ -320,18 +314,16 @@ class IssueHandler(BaseHandler):
 
     @validate(IssueForm)
     def create(self, request):
-        """ 
-        Create new issue
+        """Create new issue
 
         post parameters:
 
-        -title
-        -body
-        -direction ( vote of the user )
-        -url
-        -source_type
-        -is_draf
-
+        - title
+        - body
+        - direction ( vote of the user )
+        - url
+        - source_type
+        - is_draf
         """
         attrs = self.flatten_dict(request.POST)
         issue = gamelogic.actions.propose(
@@ -377,9 +369,8 @@ class AnonymousMultiplyHandler(AnonymousBaseHandler):
 
 
 class MultiplyHandler(BaseHandler):
-    """
-    If a user has enough game points the user can multiply the value
-    of an issue.
+    """If a user has enough game points the user can multiply the value of an issue.
+    A multiplied issue will make it more important and gives generate more points.(XXX not yet implemented)
     """
     allowed_methods = ('POST', 'GET')
     anonymous = AnonymousMultiplyHandler
@@ -429,7 +420,7 @@ class TagHandler(BaseHandler):
     def read(self, request, tags=None, **kwargs):
         """Read posts. Optional parameters:
 
-        tags -- Limits results to posts that have the specified tags
+        tags -- return issues that have the specified tags
         
         """
 
@@ -450,17 +441,17 @@ class TagHandler(BaseHandler):
             result.append((uri))
         return result
 
-    # not no classmethodis because query returns list of tuples.
+    # no classmethods because query returns list of tuples.
     # and the responder will not look at those.
     def issue_url(cls, id):
         return reverse('api_issue', args=[id])
+
 
 def get_profile(user):
     try:
         return user.get_profile()
     except UserProfile.DoesNotExist:
         pass
-
 
 def get_profile_field(user, attribute, default):
     profile = get_profile(user)

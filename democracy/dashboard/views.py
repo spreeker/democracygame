@@ -38,7 +38,7 @@ def paginate(request, qs, ipp=9):
     return page
 
 def order_issues(request, sortorder, issues):
-    """ return page and issues derived by voting data.  """
+    """ return page and issues derived by voting data."""
     ids = issues.values_list("id")
     if sortorder == 'popular':
         qs = Vote.objects.get_popular(Issue, ids)
@@ -61,9 +61,9 @@ def order_issues(request, sortorder, issues):
 @login_required
 def my_issue_list(request, *args, **kwargs):
     """ 
-    shows issues to vote on in different sortings
-    based on collective knowlegde from votings on them
-    shows issue from to propose issue, if you have the game rights
+    -show issues to vote on in different sortings
+    based on collective voting knowlegde. 
+    -show issue form to propose issue, if you have the game rights
     """
     template_name= "dashboard/my_issues.html"
 
@@ -90,15 +90,6 @@ def my_issue_list(request, *args, **kwargs):
     return HttpResponse(t.render(c))
 
 
-def order_votes(request, sortorder, votes):
-    """ update issues qs acording to qs """
-    if sortorder == 'name':
-        return votes.order_by('object__title')
-    elif sortorder == 'new':
-        return votes
-    else:
-        return votes
-
 @login_required
 def my_votes_list(request, *args, **kwargs):
     """
@@ -112,9 +103,6 @@ def my_votes_list(request, *args, **kwargs):
     myvotes = Vote.objects.get_user_votes(request.user)
     myvotes = myvotes.select_related()
     
-    if 'sortorder' in kwargs:
-        myvotes = order_issues(request, kwargs['sortorder'], myvotes)
-        
     page = paginate(request, myvotes, 50)
 
     c = RequestContext(request, {
