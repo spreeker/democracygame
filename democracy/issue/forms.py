@@ -5,12 +5,12 @@ from voting.managers import votes
 from django.utils.translation import ugettext as _
 
 class IssueForm(forms.Form):
-    title = forms.CharField(label=_('your issue'), max_length = 100)
+    title = forms.CharField(label=_('your issue title'), max_length = 100)
     body = forms.CharField( label=_('arguments'),
         widget = forms.Textarea(),
         max_length = 2000,
     )
-    url = forms.URLField(label= _('external source for extra information'))
+    url = forms.URLField(label= _('external source of information'))
     source_type = forms.ChoiceField(label=_("source type"), choices = source_types )
     direction = forms.TypedChoiceField(label=_("your vote"), choices = votes.items(),coerce=int )
 
