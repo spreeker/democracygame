@@ -18,27 +18,23 @@
 </div>
 <div id="userbar" class="span-8 last">
     &nbsp; 
-{% block userbar %}
-{% endblock %}
+{% block userbar %}{% endblock %}
 </div>
 </div>
 
 <div class="container">
 <div id="sidebar" class="span-3">
   &nbsp;
-  {% block sidebar %}
-  {% endblock %}
+  {% block sidebar %}{% endblock %}
+</div>
+<div id="content" class="span-18 last">
+    {% block content %}{% endblock %}
+</div>
+<div id="gamenews" class="span-3">
 <div id="messagebar"> 
-    {% block messagebar %} 
-    {% endblock %}
+{% block messagebar %}{% endblock %}
 </div>
-</div>
-<div id="content" class="span-17 last">
-    {% block content %}
-    {% endblock %}
-</div>
-<div id="gamenews" class="span-4">
-    &nbsp;
+   &nbsp;
 <div>
 </div></div>
 
