@@ -1,4 +1,4 @@
-/* custom democracy site wide blueprint CSS file */
+/* custom democracy customizations on top of blueprint CSS */
 
 a {
     text-decoration : none ;
@@ -24,6 +24,9 @@ h3 {
 .issues .forms,
 .issues h3 {
     margin-left : 4em ;
+}
+#proposetips{
+    margin-left : 0em;
 }
 .issues .yourvote {
     float : right;
