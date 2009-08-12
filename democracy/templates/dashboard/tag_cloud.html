@@ -7,7 +7,7 @@
 {% tag_cloud_for_model issue.issue as issue_tags %}
 
 {% for issue_tag in issue_tags %}
-   {{ issue_tag.name }} {{ issue_tag.font_size }}
+   <FONT size="{{ issue_tag.font_size }}">{{ issue_tag.name }}</FONT>
 {% endfor %}
 
 {% endif %}
