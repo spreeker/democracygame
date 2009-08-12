@@ -6,9 +6,9 @@
 <div class="issues">
 
 <h2>{% trans "your issues" %}</h2>
-<h1><a href="{% url my_issues 'popular' %}"> {% trans 'popular' %} </a> |
+<h4><a href="{% url my_issues 'popular' %}"> {% trans 'popular' %} </a> |
     <a href="{% url my_issues 'controversial' %}">{%trans 'controversial' %}</a> | 
-    <a href="{% url my_issues 'new' %}">{% trans 'new' %}</a> | </h1>
+    <a href="{% url my_issues 'new' %}">{% trans 'new' %}</a> | </h4>
 
 {% if issueform %}
        {% if actions.propose %}
