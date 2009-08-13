@@ -150,12 +150,7 @@ DEBUG_TOOLBAR_CONFIG = {
 #SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 FORCELOWERCASE_TAGS = True
 
-<<<<<<< HEAD:democracy/settings.py
-
-LOG_FILE_NAME = os.path.join(PROJECT_PATH, "democracy_log.txt")
-=======
 #LOG_FILE_NAME = os.path.join(PROJECT_PATH, "democracy_log.txt")
->>>>>>>  fixed fcgi error:democracy/settings.py
 
 #logging.basicConfig(
 #    level = logging.DEBUG,
