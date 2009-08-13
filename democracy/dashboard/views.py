@@ -24,6 +24,7 @@ from voting.managers import possible_votes, blank_votes
 from voting.models import Vote
 from voting.views import vote_on_object
 
+from tagging.generic import fetch_content_objects
 
 def paginate(request, qs, ipp=9):
     paginator = Paginator(qs, ipp) #TODO add to settings.py
@@ -101,9 +102,9 @@ def my_votes_list(request, *args, **kwargs):
         return HttpResponseBadRequest
 
     myvotes = Vote.objects.get_user_votes(request.user)
-    myvotes = myvotes.select_related()
-    
-    page = paginate(request, myvotes, 50)
+    # XXX on each vote object we need to do a query to 
+    # its voted on object. tagging has an efficient way for that in tagging.generic.
+    page = paginate(request, myvotes, 10)
 
     c = RequestContext(request, {
         'blank_votes' : blank_votes.items(),
@@ -147,3 +148,4 @@ def delete_multiply(request , multiply_id ):
     message = "multiply deleted"
     request.user.message_set.create(message=message)    
     return HttpResponseRedirect(next)
+
