@@ -105,6 +105,12 @@
     <input type="hidden" name="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
     <input type="submit" value="{% trans "multiply" %}"/>
 </form>
+<form action="{% url tag_issue issue.pk %}" method="post">
+    <input type="hidden" name="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
+    <input type="text" name="tags" maxlength="100" value="{% for tag in issue.tags %}{{tag}}, {% endfor %}" />
+    {# hits the db each time optimze like voting?? #}
+    <input type="submit" value="{% trans "tag" %}"/>
+</form>
 {% trans "created by" %} {{ issue.user }}
 </div>{# end forms #}
 </li>
