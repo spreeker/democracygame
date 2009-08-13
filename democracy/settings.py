@@ -151,6 +151,7 @@ DEBUG_TOOLBAR_CONFIG = {
 FORCELOWERCASE_TAGS = True
 
 #LOG_FILE_NAME = os.path.join(PROJECT_PATH, "democracy_log.txt")
+MAX_TAG_LENGTH = 20
 
 #logging.basicConfig(
 #    level = logging.DEBUG,
