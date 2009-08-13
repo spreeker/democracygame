@@ -1,5 +1,13 @@
 """
-Views for showing and voting on Issues.
+Views for showing and acting on Issues.
+
+propose a new issue.
+vote on an issue
+publish hide an issue
+tag an issue
+multuply an issue
+show issues in ordering
+
 """
 import logging
 from django.contrib.auth.models import User
@@ -12,12 +20,16 @@ from django.core.urlresolvers import reverse
 from django.views.generic.list_detail import object_list
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
+
+from tagging.forms import TagField
+
 from gamelogic import actions
 from issue.models import Issue
-from issue.forms import IssueForm, Publish
+from issue.forms import IssueForm, Publish, TagForm
 from voting.managers import possible_votes, blank_votes
 from voting.models import Vote
 from voting.views import vote_on_object
+
 
 
 def paginate(request, qs):
@@ -68,6 +80,11 @@ def issue_list(request, *args, **kwargs):
 
     if 'sortorder' in kwargs:
         issues, page = order_issues(request, kwargs['sortorder'], issues)
+    if 'tag' in kwargs:
+        tag = "\"%s\"" % kwargs['tag']
+        issues = Issue.tagged.with_any(tag)
+        page = paginate(request, issues)
+        issues = page.object_list
     else:
         page = paginate(request, issues)
         issues = page.object_list
@@ -121,15 +138,16 @@ def record_multiply(request , issue_id ):
 def propose_issue(request):
     """
     Wrapper for gamelogic.actions.propose
-    save an issue in the system
-    return from, to be used in other views
+    and for gamelogic.actions.tag
+    save an issue in the system possibly with tags.
+    return issue form with errors data to be used in other views
     """
     form = IssueForm()
 
     if request.method == "POST":
         form = IssueForm(request.POST)
         if form.is_valid():
-            actions.propose(
+            new_issue = actions.propose(
                 request.user,
                 form.cleaned_data['title'],
                 form.cleaned_data['body'],
@@ -138,9 +156,33 @@ def propose_issue(request):
                 form.cleaned_data['source_type'],
                 form.cleaned_data['is_draft'],
             )
+            if form.cleaned_data['tags']:
+                actions.tag(
+                    request.user,
+                    new_issue,
+                    form.cleaned_data['tags'],
+                )
             form = IssueForm()
     return form
 
+@login_required
+def tag_issue(request, issue_id):
+    """
+    Tag an issue. Just Your own for now.
+    returns a tag form.
+    """
+    issue = get_object_or_404(Issue, id=issue_id, user=request.user)
+    if request.method == "POST":
+        form = TagForm(request.POST)
+
+        if form.is_valid():
+            actions.tag(
+                request.user,
+                issue,
+                form.cleaned_data['tags']
+            )
+    next = request.REQUEST.get('next', '/' )
+    return HttpResponseRedirect(next) 
 
 @login_required
 def publish_issue(request, issue_id):
