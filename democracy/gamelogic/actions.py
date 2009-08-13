@@ -111,8 +111,16 @@ def multiply(user, issue, downgrade=False ):
     return m.save()
 
 
-def tag(user, issue, tag_word):
-    pass
+def tag(user, issue, tags):
+    """
+    tag/retag an issue
+    """
+    userprofile = user.get_profile()
+    if not role_to_actions[userprofile.role].has_key('tag'): return 
+    #TODO score change?
+    issue.tags = tags
+
+    return tags
 
 
 role_to_actions = {
