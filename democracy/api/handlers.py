@@ -121,7 +121,7 @@ class IssueVotesHandler(AnonymousBaseHandler):
         return ('api_issue_votes', ['id'])
 
 
-class IssueList(BaseHandler):
+class IssueList(AnonymousBaseHandler):
     """Resource for Listings of issues in a particular order
 
     - 'new'
@@ -440,6 +440,24 @@ class TagHandler(BaseHandler):
             uri = self.issue_url(issue.id)
             result.append((uri))
         return result
+
+    def create(self, request, **kwargs):
+        """XXX not yet implemented.
+        tag an issue
+
+        Examples:
+
+        ====================== ======================================= ================================================
+        Tag input string       Resulting tags                          Notes
+        ====================== ======================================= ================================================
+        apple ball cat         [``apple``], [``ball``], [``cat``]      No commas, so space delimited
+        apple, ball cat        [``apple``], [``ball cat``]             Comma present, so comma delimited
+        "apple, ball" cat dog  [``apple, ball``], [``cat``], [``dog``] All commas are quoted, so space delimited
+        "apple, ball", cat dog [``apple, ball``], [``cat dog``]        Contains an unquoted comma, so comma delimited
+        apple "ball cat" dog   [``apple``], [``ball cat``], [``dog``]  No commas, so space delimited
+        "apple" "ball dog      [``apple``], [``ball``], [``dog``]      Unclosed double quote is ignored
+        ====================== ======================================= ================================================
+        """
 
     # no classmethods because query returns list of tuples.
     # and the responder will not look at those.
