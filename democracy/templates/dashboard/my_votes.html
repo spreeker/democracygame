@@ -7,6 +7,7 @@
 <div class="votes">
 <h2> {% trans "My votes" %} </h2>
 <ul>
+<p> {% trans "odered by time" %} </p>
 {% for vote in my_votes %}
 
 <li id="vote{{ vote.pk }}" ><a name="{{vote.pk}}"></a>

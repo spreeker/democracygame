@@ -1,86 +1,82 @@
+{% extends "base_content.html" %}
 {% load markup %}
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-"http://www.w3.org/TR/html4/strict.dtd">
-<html>
-	<head>
-		<title> democracy game API </title>
-		<style type="text/css">
-			body {
-				background: #fffff0;
-				font: 1em "Helvetica Neue", Verdana;
-				padding: 0 0 0 25px;
-			}
-		</style>
-	</head>
-	<body>
-		<h1>Democracy API Documentation</h1>
-	    
-        <p>
-        We provide two types of resources. 
-        The first are Public resources without authentication. Public Resources provide global game playing data and statistics.
-        Public resources are specified as Anonymous. 
-        The second type of resource are for the more interesting and privacy sensitive data and is only accible via oauth. 
-        So You need to contact us to get an oauth consumer key to get you implementation / interface working with our api.
-        Oauth ensures that users can protect their data and only give sites the user trusts acces their data.
+{% block title %} democracy game API {% endblock %}
+{% block extra_head %} {% endblock %}
 
-            <p> Current resources </p>
+    {% block content %}
+    <div id="api">
+    <h1>Democracy API </h1>
+    
+    <p>
+    The Democracy API enables developers to interact with the Democracy web site programmatically. 
+    It's designed to make it possible for anyone to improve Democracy or integrate Democracy into other applications. 
+    You can develop a Democracy interface for a mobile phone, build a Democracy widget for your blog, 
+    or develop an application that makes it easy to post photos to your feed from your iPhone.
+    </p> 
+    <p>
+    The Democracy API enables developers to interact with the Democracy web site programmatically via simple HTTP requests.
+    </p>
+    <p>
+    Below on the this page you can find all the different resources accesible with simple http request.
+    We provide two types of resources. 
+    The first are Public resources without authentication. Public Resources provide global game playing data and statistics.
+    Public resources are specified as Anonymous.
+    The second type of resource are for the more interesting and privacy sensitive data and is only accesible via oauth. 
+    </p>
+    <h3> What is OAuth? </h3>
+    <p>
+    OAuth is an authentication protocol that allows you to authorize a third-party application to 
+    interact with Democracy on your behalf without sharing your password.<a href="http://oauth.net">Learn more about OAuth.</a>
+    </p><p>
+    If you want to Develop with our API, you need to contact us to get an oauth consumer key to get you implementation/interface 
+    working with our api to get user data.
+    Oauth enables users to protect their data. Users control acces to their data. Sites which we AND the user trusts
+    can be given acces but the acces can easily be revoked by the user or us.
+    </p>
+    <p> Current url resources </p>
             <ul>
                 <li> {% url api_issues %} </li>
                 <li> {% url api_users %} </li>
                 <li> {% url api_multiplies %} </li>
                 <li> {% url api_vote %} </li>
-                <li> {% url api_sort_order "new" %} , popular, controversial  </li> 
+                <li> {% url api_sort_order "new" %}</li>
+                <li> {% url api_sort_order "popular" %}</li>
+                <li> {% url api_sort_order "controversial" %}</li>
                 <li> {% url api_tagcloud %} </li>
                 <li> {% url api_issues_with_tag "\"sociale zekerheid\"" %} tags of multiple words should be between "" </li>
             </ul>
+            <p> example: http://api.democratiespel.nl/{% url api_issue 1 %} 
+            </p>
             <p> 
-                The URL in the resources mean you can acces a specific instance of that resource. 
+                Below, the URL in the resources mean you can acces a specific instance for that resource. 
                 Resources which return lists of items are paginated , if you want te get the next
-                page add a ?page=x to the urls where x is the number.
+                page add a .page/n to the urls where n is the page number. If n is to big you will get the last result.
             </p>
             <p> As you probably have seen our api is versioned via the url
                 We have made a mobile interface for this data in which you can look for example code ,
-                since the source is public on git://github.com/spreeker/democracygame.git take a look
+                since the source is public on github: git://github.com/spreeker/democracygame.git take a look
                 at the api code and especialy the tests.
+                <a href="http://github.com/spreeker/democracygame/blob/1dfa9b83ac99719224fd4aa74e58336c6d322aba/democracy/api/handlers.py">browse source code</a>
             </p>     
-
-        </p>    
 		{% for doc in docs %}
-		
 			<h3>{{ doc.name|cut:"Handler" }}:</h3>
-
-			<p>
-				{{ doc.get_doc|default:""|restructuredtext }}
+			{{ doc.get_doc|default:""|restructuredtext }}
+			<p> URL: <b>{{ doc.get_resource_uri_template }}</b>
 			</p>
-			
-			<p>
-				URL: <b>{{ doc.get_resource_uri_template }}</b>
-                <p>
-				<b>{{ doc.url }}</b>
-                </p>
+			<p> Accepted methods: {% for meth in doc.allowed_methods %}<b>{{ meth }}</b>{% if not forloop.last %}, {% endif %}{% endfor %}
 			</p>
-			
-			<p>
-				Accepted methods: {% for meth in doc.allowed_methods %}<b>{{ meth }}</b>{% if not forloop.last %}, {% endif %}{% endfor %}
-			</p>
-					
 			<dl>
 				{% for method in doc.get_all_methods %}
-				
 					<dt>
 						method <i>{{ method.name }}</i>({{ method.signature }}){% if method.stale %} <i>- inherited</i>{% else %}:{% endif %}
-						
 					</dt>				
-										
 					{% if method.get_doc %}
 						<dd>
 							{{ method.get_doc|default:""|restructuredtext }}
-						<dd>
+						</dd>
 					{% endif %}
-				
 				{% endfor %}
 			</dl>
-		
 		{% endfor %}
-	</body>
-</html>
+    </div>
+    {% endblock %}
