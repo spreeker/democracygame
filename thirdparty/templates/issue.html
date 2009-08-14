@@ -1,0 +1,25 @@
+        <div class="issue i-{{issue.id}}">
+          <div class="title t-{{issue.id}}">{{issue.title}}</div>
+          <div class="body b-{{issue.id}}">{{issue.body}}</div>
+          <div class="panel">
+              <div class="votes" id="vote{{issue.id}}">
+                  <div class="button for">For</div>
+                  <div class="button abstain">Abstain</div>
+                  <div class="button against">Against</div>
+              </div>
+          </div>
+          <div style="clear: both;"></div>
+          <div class="abstainvotes abs-{{issue.id}}">
+            <div class="abs" id="unconvincing">Unconvincing</div>
+            <div class="abs" id="notpolitical">Not Political</div>
+            <div class="abs" id="cantagree">Can't completely agree</div>
+            <div class="abs" id="needsmorework">Needs more work</div>
+            <div class="abs" id="badlyworded">Badly worded</div>
+            <div class="abs" id="duplicate">Duplicate</div>
+            <div class="abs" id="unrelated">Unrelated source</div>
+            <div class="abs" id="needtoknowmore">Need to know more</div>
+            <div class="abs" id="askmelater">Ask me later</div>
+          </div>
+          <div style="clear: both;"></div>
+      </div>
+
