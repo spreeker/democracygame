@@ -1,4 +1,4 @@
-# Django settings for eddemocracy project.
+# Django settings for democracy project.
 import logging
 import os
 import sys
@@ -84,7 +84,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
 #    'django.contrib.csrf.middleware.CsrfMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware', ## !! comment out in production.
+#    'debug_toolbar.middleware.DebugToolbarMiddleware', ## !! comment out in production.
+    'django.middleware.doc.XViewMiddleware',
 #    'django.middleware.cache.FetchFromCacheMiddleware',
 )
 CACHE_MIDDLEWARE_SECONDS = 60
@@ -130,14 +131,12 @@ INSTALLED_APPS = (
     'gamelogic',
     'profiles',
     'api',
-#    'web',
     'voting',
     'issue',
 
     'dashboard',
     
     'tagging',
-#    'pagination',
 	'registration',
     'piston',
     'rosetta',
@@ -151,7 +150,7 @@ DEBUG_TOOLBAR_CONFIG = {
 FORCELOWERCASE_TAGS = True
 
 #LOG_FILE_NAME = os.path.join(PROJECT_PATH, "democracy_log.txt")
-MAX_TAG_LENGTH = 20
+MAX_TAG_LENGTH = 30
 
 #logging.basicConfig(
 #    level = logging.DEBUG,
