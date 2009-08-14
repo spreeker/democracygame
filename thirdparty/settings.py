@@ -4,6 +4,15 @@ import logging
 import os
 import sys
 
+SECRET_KEY = 'SERVER SPECIFIC DO NOT SHARE!'
+DEBUG = True
+CONSUMER_KEY = "abc"
+CONSUMER_SECRET = "abc"
+
+REALM = 'd.preeker.net'
+
+DEMOCRACY_API_SERVER = "http://d.preeker.net/"
+
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
 sys.path.append(os.path.split(PROJECT_PATH)[0] + '/external_apps/' )
 
