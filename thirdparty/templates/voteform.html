@@ -1,0 +1,5 @@
+                <form action="{% url ajax_vote_cast %}" id="vote_form_{{vote.issueid}}" method="post">
+                    <input type="hidden" id="my_vote" name="vote" value="{{vote.vote}}" />
+                    <input type="hidden" id="my_vote_issue" name="issue" value="{{vote.issueid}}" />
+                    <input type="hidden" id="my_vote_privacy" name="keep_private" value="{{vote.keep_private}}" />
+                </form>
