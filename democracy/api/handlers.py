@@ -309,8 +309,8 @@ class IssueHandler(BaseHandler):
             'souce_type', 'url')
     model = Issue
 
-    def read(self, request):
-        return self.anonymous.read(request)
+    def read(self, request, id=None, *args, **kwargs):
+        return self.anonymous.read(request, id, args, kwargs)
 
     @validate(IssueForm)
     def create(self, request):
