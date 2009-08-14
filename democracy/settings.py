@@ -48,10 +48,11 @@ USE_I18N = True
 
 ugettext = lambda s: s
 LANGUAGES = (
+    ('nl' , ugettext('Dutch')),
     ('en' , ugettext('English')),
     ('es' , ugettext('Spanish')),
     ('de' , ugettext('German')),
-    ('nl' , ugettext('Dutch')),
+    ('fr' , ugettext('French')),
 )
 
 # Absolute path to the directory that holds media.
@@ -146,7 +147,7 @@ DEBUG_TOOLBAR_CONFIG = {
 
 #SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 FORCELOWERCASE_TAGS = True
-
+MAX_TAG_LENGTH = 20
 
 LOG_FILE_NAME = os.path.join(PROJECT_PATH, "democracy_log.txt")
 

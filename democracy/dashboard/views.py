@@ -24,6 +24,7 @@ from voting.managers import possible_votes, blank_votes
 from voting.models import Vote
 from voting.views import vote_on_object
 
+from tagging.generic import fetch_content_objects
 
 def paginate(request, qs, ipp=9):
     paginator = Paginator(qs, ipp) #TODO add to settings.py
@@ -38,7 +39,7 @@ def paginate(request, qs, ipp=9):
     return page
 
 def order_issues(request, sortorder, issues):
-    """ return page and issues derived by voting data.  """
+    """ return page and issues derived by voting data."""
     ids = issues.values_list("id")
     if sortorder == 'popular':
         qs = Vote.objects.get_popular(Issue, ids)
@@ -61,9 +62,9 @@ def order_issues(request, sortorder, issues):
 @login_required
 def my_issue_list(request, *args, **kwargs):
     """ 
-    shows issues to vote on in different sortings
-    based on collective knowlegde from votings on them
-    shows issue from to propose issue, if you have the game rights
+    -show issues to vote on in different sortings
+    based on collective voting knowlegde. 
+    -show issue form to propose issue, if you have the game rights
     """
     template_name= "dashboard/my_issues.html"
 
@@ -90,15 +91,6 @@ def my_issue_list(request, *args, **kwargs):
     return HttpResponse(t.render(c))
 
 
-def order_votes(request, sortorder, votes):
-    """ update issues qs acording to qs """
-    if sortorder == 'name':
-        return votes.order_by('object__title')
-    elif sortorder == 'new':
-        return votes
-    else:
-        return votes
-
 @login_required
 def my_votes_list(request, *args, **kwargs):
     """
@@ -110,12 +102,9 @@ def my_votes_list(request, *args, **kwargs):
         return HttpResponseBadRequest
 
     myvotes = Vote.objects.get_user_votes(request.user)
-    myvotes = myvotes.select_related()
-    
-    if 'sortorder' in kwargs:
-        myvotes = order_issues(request, kwargs['sortorder'], myvotes)
-        
-    page = paginate(request, myvotes, 50)
+    # XXX on each vote object we need to do a query to 
+    # its voted on object. tagging has an efficient way for that in tagging.generic.
+    page = paginate(request, myvotes, 10)
 
     c = RequestContext(request, {
         'blank_votes' : blank_votes.items(),
@@ -159,3 +148,4 @@ def delete_multiply(request , multiply_id ):
     message = "multiply deleted"
     request.user.message_set.create(message=message)    
     return HttpResponseRedirect(next)
+
