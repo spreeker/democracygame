@@ -11,10 +11,14 @@ from django.core import serializers
 from django.utils import simplejson as json
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
+from django.http import HttpResponseNotFound
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
+from django.views.decorators.cache import cache_page
+from django.views.decorators.cache import cache_control
+from django.views.decorators.vary import vary_on_headers
 
 from oauth_consumer.consumer import DemoOAuthConsumerApp
 from web.forms import IssueFormNew
@@ -37,6 +41,52 @@ def index(request):
     returns empty body
     """
     pass
+
+@cache_control(public=True)
+@cache_page(60 * 60 * 24 * 15)
+def issue_ajax(request, issueid):
+
+    issue = demo.get_issue(request, issueid)
+    if issue == []:
+        # TODO: handle this better, possibly with more status codes
+        return HttpResponseNotFound()
+    issue['id'] = issueid
+    return render_to_response('issue.html', 
+        RequestContext(request, {'issue' : issue}))
+
+@cache_control(private=True)
+@vary_on_headers('User-Agent', 'Cookie')
+@cache_page(5*30)
+def myvote_ajax(request, issueid):
+
+    vote = demo.get_issue_vote(request, issueid)
+    if vote == []:
+        vote = {}
+        vote['vote'] = None
+        vote['issueid'] = issueid
+        vote['keep_private'] = False
+    if type(vote) == type(list()):
+        vote = vote[-1]
+    vote['issueid'] = issueid
+    return render_to_response('voteform.html',
+        RequestContext(request, {'vote' : vote}))
+
+@cache_page(5*60)
+def vote_totals_ajax(request, issueid):
+
+    votes = demo.get_issue_votes(request, issueid)
+    totals = {}
+    if votes == []:
+        totals['votes_for'] = 0
+        totals['votes_against'] = 0
+        totals['votes_abstain'] = 0
+    else:
+        totals['votes_for'] = votes.pop(u'+1', 0)
+        totals['votes_against'] = votes.pop(u'-1', 0)
+        totals['votes_abstain'] = sum([v for v in votes.values()])
+    totals['issueid'] = issueid
+    return render_to_response('votetotals.html',
+        RequestContext(request, {'totals' : totals } ))
 
 def issues_list_hottest(request):
     
@@ -229,9 +279,16 @@ def top_level_menu(request):
     return render_to_response('interface.html',
             RequestContext(request, context))
 
+def ajax_app(request):
+    context = {}
+    context['is_menu'] = True
+    return render_to_response('ajax_app.html',
+            RequestContext(request, context))
+
+
 def debug(request):
-    issue_list = demo.get_issue_list(request)
-    context = {'json' : issue_list}
+    vote = demo.get_issue_vote(request, 1)
+    context = {'json' : vote}
     return render_to_response('debug.html',
             RequestContext(request, context))
 
