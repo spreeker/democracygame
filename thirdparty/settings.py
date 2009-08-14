@@ -5,22 +5,25 @@ import os
 import sys
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
-
 sys.path.append(os.path.split(PROJECT_PATH)[0] + '/external_apps/' )
+
+BASE_PATH = os.path.dirname(__file__)
 
 DEBUG = True # in production this should be FALSE
 TEMPLATE_DEBUG = DEBUG # comment this out in production
 
+SERVER_EMAIL = 'webmaster@democratiespel.nl'
+
 ADMINS = (
     ('Conrado Buhrer', 'conrado@buhrer.net'),
+    ('ReindeR Rustema', 'webmaster@democratiespel.nl'),
 )
 
-DEFAULT_FROM_EMAIL='conrado.buhrer@telfort.nl'
+DEFAULT_FROM = 'webmaster@democratiespel.nl'
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-#DATABASE_NAME = 'thirdparty.sqlite3' # Or path to database file if using sqlite3.
+DATABASE_ENGINE = 'sqlite3'
 DATABASE_NAME = os.path.join(PROJECT_PATH, "thirdparty.sqlite3")
 
 DATABASE_USER = ''             # Not used with sqlite3.
@@ -47,17 +50,17 @@ USE_I18N = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = BASE_PATH+'/media'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = ''
+MEDIA_URL = '/media/'
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = '/admin/media/'
+ADMIN_MEDIA_PREFIX = '/media/admin/'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'iwkgrl8-xd&)jig$_#7du+uj3lrx-*ki-yizt59yqv10&ojnij'
@@ -74,16 +77,21 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware', # comment this out in production
+    'django.middleware.doc.XViewMiddleware',
+    #'debug_toolbar.middleware.DebugToolbarMiddleware', # comment this out in production
 )
 
 ROOT_URLCONF = 'thirdparty.urls'
+
+# Override the server-derived value of SCRIPT_NAME 
+# See http://code.djangoproject.com/wiki/BackwardsIncompatibleChanges#lighttpdfastcgiandothers
+FORCE_SCRIPT_NAME = ''
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(PROJECT_PATH, 'templates')
+    BASE_PATH+'/templates/',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -93,7 +101,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.media',
     'django.core.context_processors.request',
 )
-
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -106,7 +113,7 @@ INSTALLED_APPS = (
     'thirdparty.profiles',
     'thirdparty.oauth_consumer',
     'registration',
-    'debug_toolbar', # comment this out in production
+    #'debug_toolbar', # comment this out in production
 )
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -115,13 +122,13 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # (see: http://simonwillison.net/2008/May/22/debugging/ )
 # and python docs
 
-LOG_FILE_NAME = os.path.join(PROJECT_PATH, "thirdparty_log.txt")
+#LOG_FILE_NAME = os.path.join(PROJECT_PATH, "thirdparty_log.txt")
 
-logging.basicConfig(
-    level = logging.INFO,
-    format = '%(asctime)s %(levelname)s %(message)s',
-    filename = LOG_FILE_NAME,
-)
+#logging.basicConfig(
+#    level = logging.INFO,
+#    format = '%(asctime)s %(levelname)s %(message)s',
+#    filename = LOG_FILE_NAME,
+#)
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
@@ -130,9 +137,3 @@ LOGOUT_URL = '/logout/'
 ACCOUNT_ACTIVATION_DAYS = 1
 AUTH_PROFILE_MODULE = 'profiles.UserProfile'
 
-try:
-    from settings_local import *
-except ImportError:
-    print "Create your local settings_local.py settings file with password sensitive information ect"
-    # Re-raise the import error. The server should not run!
-    raise
