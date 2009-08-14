@@ -6,30 +6,42 @@
 <div class="issues">
 
 <h2>{% trans "your issues" %}</h2>
-<h1><a href="{% url my_issues 'popular' %}"> {% trans 'popular' %} </a> |
+<h4><a href="{% url my_issues 'popular' %}"> {% trans 'popular' %} </a> |
     <a href="{% url my_issues 'controversial' %}">{%trans 'controversial' %}</a> | 
-    <a href="{% url my_issues 'new' %}">{% trans 'new' %}</a> | </h1>
+    <a href="{% url my_issues 'new' %}">{% trans 'new' %}</a> | </h4>
 
 {% if issueform %}
        {% if actions.propose %}
-        <div class="propose">
-        <div id='proposetips'>
+        <div class="container">
+        <div class="span-13 append-3">
         <h3> {% trans "propose your issue" %} </h3>
+           <form action="{{ request.get_full_path }}" method="post">
+        {% for field in issueform %}
+            {% if field.errors %} 
+            {% for error in field.errors %}
+                <div class="error span-8 append-8">{{error}}</div> 
+            {% endfor %}
+            {% endif %}
+            <div class="column span-5">
+                {{ field.label_tag }}
+            </div>
+            <div class="column span-8 last"> {{ field }} </div>
+        {% endfor %}
+           <div class="column span-8 prepend-5 last">
+           <input type="submit" value="{% trans "submit issue" %}"/>
+           </div>
+           </form>
+        </div>
+        <div id='proposetips' class="span-4 last">
         {% blocktrans %}
-        <p>
         Make sure you check your spelling. It is not possible to change your issue later.
         We do not allow change because people might have voted. If content changes,  votes
         are invalidated.You can archive and hide it by not publishing your issue.
-        </p>
         {% endblocktrans %}
         </div>
-        <form action="{{ request.get_full_path }}" method="post">
-                {{ issueform.as_p }}
-                <p> <input type="submit" value="{% trans "submit issue" %}"/></p>
-        </form>
+        </div>
         {% else %} <h2>{% trans "You cannot propose yet or anymore, you need more points" %}</h2>
         {% endif %}
-        </div>
 {% endif %}
 
 {% votes_by_user user on issues as vote_dct %}
@@ -55,7 +67,7 @@
 <p> {{ issue.body }} </p>
 <div class="yourvote">
 {% if vote.vote %}
-{% for key , direction in possible_votes.items %}{% ifequal key vote.vote %}<p>{% trans direction %}</p> {% endifequal %}{% endfor %}
+{% for key , direction in possible_votes.items %}{% ifequal key vote.vote %}{% trans direction %}{% endifequal %}{% endfor %}
 {% endif %}
 </div>
 <div class="votecounts">
@@ -92,6 +104,12 @@
 <form action="{% url multiply issue.pk %}" method="post">
     <input type="hidden" name="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
     <input type="submit" value="{% trans "multiply" %}"/>
+</form>
+<form action="{% url tag_issue issue.pk %}" method="post">
+    <input type="hidden" name="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
+    <input type="text" name="tags" maxlength="100" value="{% for tag in issue.tags %}{{tag}}, {% endfor %}" />
+    {# hits the db each time optimze like voting?? #}
+    <input type="submit" value="{% trans "tag" %}"/>
 </form>
 {% trans "created by" %} {{ issue.user }}
 </div>{# end forms #}

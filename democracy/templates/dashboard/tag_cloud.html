@@ -6,8 +6,8 @@
 
 {% tag_cloud_for_model issue.issue as issue_tags %}
 
-{% for issue_tag in issue_tags %}
-   {{ issue_tag.name }} {{ issue_tag.font_size }}
+{% for tag in issue_tags %}
+   <a href="{% url issue_with_tag tag.name %}"><FONT size="{{ tag.font_size }}">{{ tag.name }}</FONT></a>
 {% endfor %}
 
 {% endif %}
