@@ -118,11 +118,7 @@ class DemoOAuthConsumerApp(django_oauth_consumer.OAuthConsumerApp):
               'vote' : integer,  # valid values -1, 1, 10-19 (see democracy docs)
             }
         """
-<<<<<<< HEAD:thirdparty/oauth_consumer/consumer.py
-        api_url = API_SERVER+'vote/'
-=======
         api_url = '%svote/' % API_SERVER
->>>>>>> conrado:thirdparty/oauth_consumer/consumer.py
         self.response = self.post_resource(request, api_url, content=vote_data)
         return self.response.status
 
@@ -131,57 +127,66 @@ class DemoOAuthConsumerApp(django_oauth_consumer.OAuthConsumerApp):
         tempuser = request.user
         from django.contrib.auth.models import AnonymousUser
         request.user = AnonymousUser()
-<<<<<<< HEAD:thirdparty/oauth_consumer/consumer.py
-        api_url = API_SERVER+'issue/'
-=======
         api_url = '%sissue/' % API_SERVER
->>>>>>> conrado:thirdparty/oauth_consumer/consumer.py
         self.response = self.get_resource(request, api_url)
         request.user = tempuser
         return self.ld()
 
     # public? cached?
     def get_issue(self, request, issue_no):
+        tempuser = request.user
+        from django.contrib.auth.models import AnonymousUser
+        request.user = AnonymousUser()
         api_url = '%sissue/%s/' % (API_SERVER, issue_no)
         self.response = self.get_resource(request, api_url)
+        request.user = tempuser
         return self.ld()
-<<<<<<< HEAD:thirdparty/oauth_consumer/consumer.py
-    
-    def get_issue_votes(self, request, issue_no):
-        api_url = API_SERVER + 'issue/' + issue_no + '/votes/'
-=======
     def get_issue_json(self, request, issue_no):
+        tempuser = request.user
+        from django.contrib.auth.models import AnonymousUser
+        request.user = AnonymousUser()
         api_url = '%sissue/%s/' % (API_SERVER, issue_no)
         self.response = self.get_resource(request, api_url)
+        request.user = tempuser
         return self.response
     
     def get_issue_votes(self, request, issue_no):
         api_url = '%sissue/%s/votes/' % (API_SERVER, issue_no)
         self.response = self.get_resource(request, api_url)
         return self.ld()
+    
+    def get_issue_votes_json(self, request, issue_no):
+        api_url = '%sissue/%s/votes/' % (API_SERVER, issue_no)
+        self.response = self.get_resource(request, api_url)
+        return self.response
 
     def get_issue_vote(self, request, issue_no):
-        api_url = API_SERVER + 'issue/' + issue_no + '/'
->>>>>>> conrado:thirdparty/oauth_consumer/consumer.py
+        api_url = '%svote/%s/' % (API_SERVER, issue_no)
         self.response = self.get_resource(request, api_url)
         return self.ld()
 
-    def get_issue_votes_user(self, request):
-<<<<<<< HEAD:thirdparty/oauth_consumer/consumer.py
-        api_url = API_SERVER + 'vote/'
+    def get_issue_vote_json(self, request, issue_no):
+        api_url = '%svote/%s/' % (API_SERVER, issue_no)
         self.response = self.get_resource(request, api_url)
-        return self.ld()
-        
-=======
+        return self.response
+
+    def get_issue_votes_user(self, request):
         api_url = '%svote/' % API_SERVER
         self.response = self.get_resource(request, api_url)
         return self.ld()
+
+    def get_issues_list_ordered(self, request, sortorder, page):
+        if page == None:
+            api_url = '%s/issues/%s/' %(API_SERVER, sortorder)
+        else:
+            api_url = '%s/issues/%s\.page/%s/' %(API_SERVER, sortorder, page)
+        self.response = self.get_resource(request, api_url)
+        return self.response
 
     def get_user(self, request, user_no):
         api_url = '%suser/%s/' % (API_SERVER, user_no)
         self.response = self.get_resource(request, api_url)
         return self.ld() 
->>>>>>> conrado:thirdparty/oauth_consumer/consumer.py
 
     def post_issue(self, request, issue_data):
         api_url = '%sissue/' % API_SERVER
