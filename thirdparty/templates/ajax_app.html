@@ -1,0 +1,31 @@
+{% extends "ajax_main.html" %}
+{% comment %}
+
+Author: Conrado Buhrer <conrado@buhrer.net>
+Date: 16th of March 2009
+Copyright: Emocracy Project - http://emocracy.nl
+
+Description:
+
+Third Party Application example.
+
+Application top level menu
+
+{% endcomment %}
+{% block content %}
+<div id="views">
+    <div class="view" id="menu">
+        <div class="issuehead new">New Issues</div>
+            <div class="folder" id="new">
+            </div>
+        <div class="issuehead popular">Popular Issues</div>
+            <div class="folder" id="popular">
+            </div>
+        <div class="issuehead controversial">Controversial Issues</div>
+            <div class="folder" id="controversial">
+            </div>
+        <div class="addissue">Add Issues</div>
+  </div>
+</div>
+{% include "menu_footer.html" %}
+{% endblock %}
