@@ -169,12 +169,15 @@ class OAuthConsumerApp(object):
 
         """
 
-        if isinstance(content, collections.Mapping):
-            params = content
-        else:
-            params = {}
+        # threw error handling away to work with python 2.5
 
-        orequest = oauth.OAuthRequest(url, method, params)
+        #if isinstance(content, collections.Mapping):
+        #    params = content
+        #else:
+        #    params = {}
+
+        orequest = oauth.OAuthRequest(url, method, content)
+        #orequest = oauth.OAuthRequest(url, method, params)
         orequest.sign_request(self.sig_method, self.consumer, token)
         headers['Authorization'] = orequest.to_header(self.realm)
         response = make_request(url, method=method, content=content, headers=headers)
