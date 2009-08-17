@@ -9,9 +9,9 @@ DEBUG = True
 CONSUMER_KEY = "abc"
 CONSUMER_SECRET = "abc"
 
-REALM = 'd.preeker.net'
+REALM = 'api.democratiespel.nl'
 
-DEMOCRACY_API_SERVER = "http://d.preeker.net/"
+DEMOCRACY_API_SERVER = "http://api.democratiespel.nl/"
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
 sys.path.append(os.path.split(PROJECT_PATH)[0] + '/external_apps/' )
@@ -81,13 +81,20 @@ TEMPLATE_LOADERS = (
 #     'django.template.loaders.eggs.load_template_source',
 )
 
+CACHE_MIDDLEWARE_SECONDS = 60 * 60 # one hour
+#CACHE_BACKEND = 'locmem:///'
+CACHE_BACKEND = 'memcached://127.0.0.1:62267/'
+
 MIDDLEWARE_CLASSES = (
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.doc.XViewMiddleware',
+    'django.middleware.http.ConditionalGetMiddleware',
     #'debug_toolbar.middleware.DebugToolbarMiddleware', # comment this out in production
+    'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
 ROOT_URLCONF = 'thirdparty.urls'
