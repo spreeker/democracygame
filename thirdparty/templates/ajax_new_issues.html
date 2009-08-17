@@ -1,0 +1,33 @@
+      <div class="newissues">New Issues</div>
+      <div class="folder" id="newissue">
+        <div class="issue i-" id="newissue">
+          <div class="title"></div>
+          <div class="body"></div>
+          <div class="panel">
+            <form action="{% url ajax_vote_cast %}" id="vote_form_" method="post">
+              <input type="hidden" id="my_vote" name="vote" value="">
+              <input type="hidden" id="my_vote_issue" name="issue" value="">
+              <input type="hidden" id="my_vote_privacy" name="keep_private" value="False">
+              <table class="votes" id="vote"><tbody>
+                <tr>
+                  <td class="for"></td>
+                  <td class="abstain"></td>
+                  <td class="against"></td>
+                </tr>
+              </tbody></table>
+            </form>
+          </div>
+          <div class="abstainvotes abs-" id="newissuesabs-">
+            <div class="abs" id="">Unconvincing</div>
+            <div class="abs" id="notpolitical">Not Political</div>
+            <div class="abs" id="cantagree">Can't completely agree</div>
+            <div class="abs" id="needsmorework">Needs more work</div>
+            <div class="abs" id="badlyworded">Badly worded</div>
+            <div class="abs" id="duplicate">Duplicate</div>
+            <div class="abs" id="unrelated">Unrelated source</div>
+            <div class="abs" id="needtoknowmore">Need to know more</div>
+            <div class="abs" id="askmelater">Ask me later</div>
+          </div>
+          <div style="clear: both;"></div>
+        </div>
+      </div>
