@@ -17,12 +17,15 @@
 
 {% dict_entry_for_item issue from vote_dct as vote %}
 {% dict_entry_for_item issue from counts_dct as score %}
+{% if not vote %}
+    {% dict_entry_for_item issue from request.session.vote_history as vote %}
+{% endif %}
 
 <li id="issue{{ issue.pk }}" >
     <a name="{{issue.pk}}"></a>
     <h3> <a href="{{issue.url}}">{{ issue }}</a> </h3> 
 <div class="issue_left">
-    {% if vote.vote %}
+    {% if vote %}
     <div class="for"> {{ score.1 }}</div>
     <div class="blank"> {{ score.0 }}</div>
     <div class="against"> {{ score.2 }}</div>
@@ -32,6 +35,7 @@
 <div class="yourvote">
 {% if vote.vote %}
 {% for key , direction in possible_votes.items %}{% ifequal key vote.vote %}{% trans direction %}{% endifequal %}{% endfor %}
+{% else
 {% endif %}
 </div>
 <div class="forms">
