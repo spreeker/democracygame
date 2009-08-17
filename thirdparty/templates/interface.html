@@ -14,12 +14,18 @@ Application top level menu
 {% endcomment %}
 {% block content %}
 <div id="views">
-  <div class="view" id="menu">
-{% include "hot_issues.html" %}
-{% include "new_issues.html" %}
-{% include "gen_issues.html" %}
-      <div class="addissue">Add Issues</div>
+    <div class="view" id="menu">
+        <div class="issuehead new">New Issues</div>
+            <div class="folder" id="new">
+            </div>
+        <div class="issuehead popular">Popular Issues</div>
+            <div class="folder" id="popular">
+            </div>
+        <div class="issuehead controversial">Controversial Issues</div>
+            <div class="folder" id="controversial">
+            </div>
+        <div class="addissue">Add Issues</div>
   </div>
 </div>
-{% include "menu_footer.html" %}
+{% include "footer.html" %}
 {% endblock %}
