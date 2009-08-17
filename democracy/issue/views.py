@@ -1,12 +1,12 @@
 """
 Views for showing and acting on Issues.
 
-propose a new issue.
-vote on an issue
-publish hide an issue
-tag an issue
-multuply an issue
-show issues in ordering
+Propose a new issue.
+Vote on an issue
+Publish hide an issue
+Tag an issue
+Multuply an issue
+show Issues in ordering
 
 """
 import logging
@@ -20,6 +20,7 @@ from django.core.urlresolvers import reverse
 from django.views.generic.list_detail import object_list
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.utils.translation import ugettext as _
 
 from tagging.forms import TagField
 
@@ -29,7 +30,6 @@ from issue.forms import IssueForm, Publish, TagForm
 from voting.managers import possible_votes, blank_votes
 from voting.models import Vote
 from voting.views import vote_on_object
-
 
 
 def paginate(request, qs):
@@ -89,12 +89,18 @@ def issue_list(request, *args, **kwargs):
         page = paginate(request, issues)
         issues = page.object_list
 
+    flash_msg = request.session.get("flash_msg","")
+    if flash_msg:
+        del request.session['flash_msg']
+
+
     c = RequestContext(request, {
         'blank_votes' : blank_votes.items(),
         'possible_votes' : possible_votes,
         'issues'  : issues, 
         'page' : page,
         'votedata' : Vote,
+        'flash_msg' : flash_msg,
     }) 
    
     t = loader.get_template(template_name)
@@ -107,10 +113,20 @@ def record_vote(request, issue_id ):
     what if user is anonymous?
 
     """
+    if not request.user.is_authenticated() and request.REQUEST.has_key('direction'):
+        vote_history = request.session.get("vote_history", {})
+        vote_history[int(issue_id)] = request.REQUEST['direction']
+        request.session['vote_history'] = vote_history
+        request.session.modified = True
+        message = _("You voted succesfull, to save your votes please register")
+        request.session["flash_msg"] = message
+        next = request.REQUEST.get('next', '/' )
+        return HttpResponseRedirect( next )
+
     if request.REQUEST.has_key('direction'):
         direction = request.REQUEST['direction']
         return vote_on_object(request, Issue, direction , object_id=issue_id ) 
-    return HttpResponseRedirect( '/' )
+    return HttpResponseRedirect('/')
 
 def record_multiply(request , issue_id ):
     """
@@ -121,7 +137,7 @@ def record_multiply(request , issue_id ):
     issue = get_object_or_404( Issue, id=issue_id ) 
 
     possible_actions = actions.get_actions(request.user) 
-    next = request.REQUEST.get('next' , '/' )
+    next = request.REQUEST.get('next', '/' )
 
     if possible_actions.has_key('multiply'):
         actions.multiply(request.user, issue )
@@ -130,7 +146,7 @@ def record_multiply(request , issue_id ):
     if not request.user.is_authenticated():
         return HttpResponseRedirect(next)
 
-    message = "You cannot multiply yet!"
+    message = _("You cannot multiply yet!")
     request.user.message_set.create(message=message)    
     return HttpResponseRedirect( next )
 
