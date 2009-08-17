@@ -1,1 +1,1 @@
-Welkom bij Emocracy
+{% load i18n %}{% trans "Activate your Democracy account" %}

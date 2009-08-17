@@ -442,7 +442,8 @@ class TagHandler(BaseHandler):
         return result
 
     def create(self, request, **kwargs):
-        """XXX not yet implemented.
+        """
+        XXX not yet implemented
         tag an issue
 
         Examples:
