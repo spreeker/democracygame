@@ -1,4 +1,5 @@
 # Django settings for democratiespel project.
+from settings import *
 
 import os.path
 import os
@@ -132,19 +133,8 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.app_directories.load_template_source',
 )
 
-AUTH_PROFILE_MODULE = 'profiles.userprofile'
-LOGIN_URL = '/profile/login/'                                                                                         
-LOGIN_REDIRECT_URL = '/'
-
 FORCELOWERCASE_TAGS = True
 MAX_TAG_LENGTH = 30
 
 USE_I18N = True
 
-ugettext = lambda s: s
-LANGUAGES = (
-    ('en' , ugettext('English')),
-    ('es' , ugettext('Spanish')),
-    ('de' , ugettext('German')),
-    ('nl' , ugettext('Dutch')),
-)
