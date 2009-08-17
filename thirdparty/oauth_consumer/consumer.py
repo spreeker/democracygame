@@ -176,11 +176,15 @@ class DemoOAuthConsumerApp(django_oauth_consumer.OAuthConsumerApp):
         return self.ld()
 
     def get_issues_list_ordered(self, request, sortorder, page):
+        tempuser = request.user
+        from django.contrib.auth.models import AnonymousUser
+        request.user = AnonymousUser()
         if page == None:
             api_url = '%s/issues/%s/' %(API_SERVER, sortorder)
         else:
             api_url = '%s/issues/%s\.page/%s/' %(API_SERVER, sortorder, page)
         self.response = self.get_resource(request, api_url)
+        request.user = tempuser
         return self.response
 
     def get_user(self, request, user_no):
