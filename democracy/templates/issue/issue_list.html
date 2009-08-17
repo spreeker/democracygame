@@ -35,7 +35,6 @@
 <div class="yourvote">
 {% if vote.vote %}
 {% for key , direction in possible_votes.items %}{% ifequal key vote.vote %}{% trans direction %}{% endifequal %}{% endfor %}
-{% else
 {% endif %}
 </div>
 <div class="forms">
