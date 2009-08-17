@@ -5,7 +5,11 @@ from django.conf.urls.defaults import *
 
 
 urlpatterns = patterns('thirdparty.web.views',
-    url(r'^$', 'top_level_menu', name="top_level_menu"),
+    #url(r'^$', 'top_level_menu', name="top_level_menu"),
+    url(r'^$', 'ajax_app', name="top_level_menu"),
+    url(r'^issue/(?P<issueid>\d+)/$', 'issue_ajax', name="issue_ajax"),
+    url(r'^myvote/(?P<issueid>\d+)/$', 'myvote_ajax', name="myvote_ajax"),
+    url(r'^totals/(?P<issueid>\d+)/$', 'vote_totals_ajax', name="vote_totals_ajax"),
     url(r'^pop/$', 'issues_list_popular', name="issues_list_popular"),
     url(r'^hot/$', 'issues_list_hottest', name="issues_list_hottest"),
     url(r'^new/$', 'issues_list_newest', name="issues_list_newest"),
