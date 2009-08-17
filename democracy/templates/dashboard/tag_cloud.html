@@ -7,7 +7,7 @@
 {% tag_cloud_for_model issue.issue as issue_tags %}
 
 {% for tag in issue_tags %}
-   <a href="{% url issue_with_tag tag.name %}"><FONT size="{{ tag.font_size }}">{{ tag.name }}</FONT></a>
+   <a href="{% url issue_with_tag tag.name %}"><font size="{{ tag.font_size }}">{{ tag.name }}</font></a>
 {% endfor %}
 
 {% endif %}
