@@ -24,6 +24,8 @@ from issue.models import Issue
 from registration.models import RegistrationProfile
 from django.conf import settings
 
+from gamelogic import actions
+
 import datetime
 
 def create_userprofile(sender, **kwargs):
@@ -42,6 +44,17 @@ def create_userprofile(sender, **kwargs):
         new_profile.save()
 
 post_save.connect(create_userprofile, sender = User)
+
+def migrate_votes(request, user, votes):
+    """When an User registers, migrate the users session votes to REAL votes."""
+
+    for issue_id, direction in votes.items():
+        try:
+            issue = Issue.objects.get(id=issue_id)
+        except Issue.DoesNotExist:
+            continue
+
+        actions.vote(user, issue, int(direction), keep_private=False)   
 
 def activate(request, activation_key,
              template_name='registration/activate.html',
@@ -106,10 +119,10 @@ def activate(request, activation_key,
     if request.session.has_key("vote_history"):
         session_votes = True    
         if account: 
-            migrate_votes(account, request.session["vote_history"])
+            migrate_votes(request, account, request.session["vote_history"])
+            del request.session["vote_history"]
 
     extra_context.update( { 'votes_saved' : session_votes } )
-
     #=========================================================
     # end custom code
     #========================================================
