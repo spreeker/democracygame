@@ -36,6 +36,8 @@ def vote_on_object(request, model, direction, post_vote_redirect=None,
             The object being voted on.
         direction
             The type of vote which will be registered for the object.
+
+
     """
     if allow_xmlhttprequest and request.is_ajax():
         return xmlhttprequest_vote_on_object(request, model, direction,
@@ -51,7 +53,6 @@ def vote_on_object(request, model, direction, post_vote_redirect=None,
     except KeyError:
         raise AttributeError("'%s' is not a valid vote type." % direction )
 
-    print "ehm"
     # Look up the object to be voted on
     lookup_kwargs = {}
     if object_id:
