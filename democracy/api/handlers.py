@@ -200,6 +200,7 @@ class VoteHandler(BaseHandler):
         object_id = attrs.pop('issue')
         attrs.update({'content_type': ctype,
                        'object_id': object_id,
+                       'is_archived': False,
                 })
 
         if self.exists(**attrs):
