@@ -140,6 +140,9 @@ INSTALLED_APPS = (
     'piston',
     'rosetta',
 )
+FORCE_SCRIPT_NAME = "" # removes the django.fcgi from the urls.
+
+
 # comment out in production
 DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False,

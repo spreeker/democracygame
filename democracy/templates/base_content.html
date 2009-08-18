@@ -12,7 +12,8 @@
 {% endblock %}
 
 {% block messagebar %}
-    {% for m in messages %}{{m}}{% endfor %}
+    {% for m in messages %}<div class="notice">{{m}}</div>{% endfor %}
+    {% if flash_msg %}<div class="notice">{{ flash_msg }}</div>{% endif %}
 {% endblock %}
 
 {% block footer %}

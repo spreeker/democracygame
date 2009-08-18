@@ -15,7 +15,13 @@ h4 {
 h3 {
     margin-bottom : 1.25em ;
 }
-
+#messagebar{
+  position: fixed;
+  top: 6em;
+  left: auto;
+  width: 9em;
+  right: 2em;
+}
 /* header style declarations */
 
 .issues p, 
