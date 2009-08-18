@@ -1,14 +1,12 @@
 var debug = false;
-/*if ( debug == true ) {
+if ( debug == true ) {
     $.ajaxSetup({"error":function(XMLHttpRequest,textStatus, errorThrown) {   
             alert(textStatus);
             alert(errorThrown);
             alert(XMLHttpRequest.responseText);
         }
     });
-}*/
-
-//$.ajaxSetup({cache:true, ifModified: true});
+}
 
 $(document).ready(function(){
 
@@ -18,6 +16,74 @@ $(document).ready(function(){
     $(".issuehead").live("click", function() {
         $("div.body").hide();
         $("div.abstainvotes").hide();
+    });
+    // hook click event to title
+    $("div.title").live("click", function(){
+        //find the body whose title was clicked
+        var body = $(this).parent().children("div.body");
+        //slide the panel
+        body.slideToggle();
+    });
+    // hook click event to abstain vote button 
+    $("div.abstain").live("click", function(){
+        //find the body whose title was clicked
+        var body = $(this).parent().parent().parent().children("div.abstainvotes");
+        //slide the panel
+        body.slideToggle();
+    });
+    // hook the vote clicks
+    $("div.for").live("click", function(){
+        isv = $(this).parent().find("#my_vote_issue").attr("value");
+        process_vote(isv, 1);
+    });
+    $("div.against").live("click", function(){
+        isv = $(this).parent().find("#my_vote_issue").attr("value");
+        process_vote(isv, -1);
+    });
+    $("div.unconvincing").live("click", function(){
+        isv = $(this).parent().parent().find("#my_vote_issue").attr("value");
+        process_vote(isv, 10);
+        $(this).parent().parent().find("div.abstainvotes").hide();
+    });
+    $("div.notpolitical").live("click", function(){
+        isv = $(this).parent().parent().find("#my_vote_issue").attr("value");
+        process_vote(isv, 11);
+        $(this).parent().parent().find("div.abstainvotes").hide();
+    });
+    $("div.cantagree").live("click", function(){
+        isv = $(this).parent().parent().find("#my_vote_issue").attr("value");
+        process_vote(isv, 12);
+        $(this).parent().parent().find("div.abstainvotes").hide();
+    });
+    $("div.needsmorework").live("click", function(){
+        isv = $(this).parent().parent().find("#my_vote_issue").attr("value");
+        process_vote(isv, 13);
+        $(this).parent().parent().find("div.abstainvotes").hide();
+    });
+    $("div.badlyworded").live("click", function(){
+        isv = $(this).parent().parent().find("#my_vote_issue").attr("value");
+        process_vote(isv, 14);
+        $(this).parent().parent().find("div.abstainvotes").hide();
+    });
+    $("div.duplicate").live("click", function(){
+        isv = $(this).parent().parent().find("#my_vote_issue").attr("value");
+        process_vote(isv, 15);
+        $(this).parent().parent().find("div.abstainvotes").hide();
+    });
+    $("div.unrelated").live("click", function(){
+        isv = $(this).parent().parent().find("#my_vote_issue").attr("value");
+        process_vote(isv, 16);
+        $(this).parent().parent().find("div.abstainvotes").hide();
+    });
+    $("div.needtoknowmore").live("click", function(){
+        isv = $(this).parent().parent().find("#my_vote_issue").attr("value");
+        process_vote(isv, 17);
+        $(this).parent().parent().find("div.abstainvotes").hide();
+    });
+    $("div.askmelater").live("click", function(){
+        isv = $(this).parent().parent().find("#my_vote_issue").attr("value");
+        process_vote(isv, 18);
+        $(this).parent().parent().find("div.abstainvotes").hide();
     });
 
 });
@@ -170,6 +236,11 @@ $(document).ready(function(){
 });
 */
 function process_vote(issue, new_vote) {
+    $get("/totals/"+issue+"/", function(totals) {
+        $("div.i-"+issue).each(function() {
+            $(this).find("div.votes").replaceWith(totals);
+        });
+    });
     console.log("issue: " + issue);
     console.log("new_vote: " + new_vote);
     $old_vote_txt = $("div.i-"+issue).find("#my_vote").val();
@@ -340,44 +411,7 @@ function getIssueList(sortorder) {
     $.getJSON("/ajax/issues/"+sortorder+"/", function(data) {
         for( var i in data ) {
             id = url2id(data[i][0]);
-            // get the issue content
-            $.get("/issue/"+id+"/", function(issue) {
-                $(issue).appendTo("div#"+sortorder);
-                issueid = $("div.votes",issue).attr('id').replace(/vote/i,"");
-                // get user's current vote.
-                $.get("/myvote/"+issueid+"/", function (myvote) {
-                    issueid = $("#my_vote_issue",myvote).attr('value');
-                    $ordercontainer = $("div#"+sortorder);
-                    $ordercontainer.find("#vote"+issueid).append(myvote);
-                    // hook the vote clicks
-                    $("div.for").die("click");
-                    $("div.for").live("click", function(){
-                        isv = $(this).parent().find("#my_vote_issue").attr("value");
-                        process_vote(isv, 1);
-                    });
-                    $("div.against").die("click");
-                    $("div.against").live("click", function(){
-                        isv = $(this).parent().find("#my_vote_issue").attr("value");
-                        process_vote(isv, -1);
-                    });
-                });
-                // hook click event to title
-                $("div.title").die("click");
-                $("div.title").live("click", function(){
-                    //find the body whose title was clicked
-                    var body = $(this).parent().children("div.body");
-                    //slide the panel
-                    body.slideToggle();
-                });
-                // hook click event to abstain vote button 
-                $("div.abstain").die("click");
-                $("div.abstain").live("click", function(){
-                    //find the body whose title was clicked
-                    var body = $(this).parent().parent().parent().children("div.abstainvotes");
-                    //slide the panel
-                    body.slideToggle();
-                });
-            });
+            getIssue(sortorder, id);
         }
     });
     $("div.abstainvotes").hide();
@@ -387,6 +421,28 @@ function getIssueList(sortorder) {
         var body = $(this).parent().find("div#"+sortorder);
         body.slideToggle();
     });
+}
+
+function getIssue(sortorder, issueid) {
+    // get the issue content
+    $.get("/issue/"+issueid+"/", function(issue) {
+        $(issue).appendTo("div#"+sortorder);
+        // get user's current vote.
+        $.get("/myvote/"+issueid+"/", function (myvote) {
+            $("div#"+sortorder)
+                .find("div.p-"+issueid)
+                .append(myvote);
+            mv = $(".my_vote",myvote).attr('value');
+            if(mv != "None") {
+                $.get("/totals/"+issueid+"/", function (totals) {
+                    $("div#"+sortorder)
+                        .find(".v-"+issueid)
+                        .replaceWith(totals);
+                });
+            }
+        });
+    });
+
 }
 
 function url2id(url) {
