@@ -9,14 +9,6 @@ urlpatterns = patterns('ajax.views',
         view='ajax_vote_cast',
         name='ajax_vote_cast'),
 
-    url(r'^issue/(?P<issueid>\d+)/$',
-        view='ajax_get_issue',
-        name='ajax_get_issue'),
-
-    url(r'^issue/(?P<issueid>\d+)/votes/$',
-        view='ajax_get_issue_votes',
-        name='ajax_get_issue_votes'),
-
     url(r'^issues/(?P<sortorder>\w+)/$',
         view='ajax_get_issues_list_ordered',
         name='ajax_get_issues_list_ordered'),
