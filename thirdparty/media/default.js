@@ -1,18 +1,96 @@
-//var debug = true;
-$.ajaxSetup({"error":function(XMLHttpRequest,textStatus, errorThrown) {   
-      alert(textStatus);
-      alert(errorThrown);
-      alert(XMLHttpRequest.responseText);
+var debug = false;
+if ( debug == true ) {
+    $.ajaxSetup({"error":function(XMLHttpRequest,textStatus, errorThrown) {   
+            alert(textStatus);
+            alert(errorThrown);
+            alert(XMLHttpRequest.responseText);
+        }
+    });
 }
-});
+
 $(document).ready(function(){
 
     getIssueList('new');
+    getIssueList('popular');
+    getIssueList('controversial');
+    $(".issuehead").live("click", function() {
+        $("div.body").hide();
+        $("div.abstainvotes").hide();
+    });
+    // hook click event to title
+    $("div.title").live("click", function(){
+        //find the body whose title was clicked
+        var body = $(this).parent().children("div.body");
+        //slide the panel
+        body.slideToggle();
+    });
+    // hook click event to abstain vote button 
+    $("div.abstain").live("click", function(){
+        //find the body whose title was clicked
+        var body = $(this).parent().parent().parent().children("div.abstainvotes");
+        //slide the panel
+        body.slideToggle();
+    });
+    // hook the vote clicks
+    $("div.for").live("click", function(){
+        isv = $(this).parent().find("#my_vote_issue").attr("value");
+        process_vote(isv, 1);
+    });
+    $("div.against").live("click", function(){
+        isv = $(this).parent().find("#my_vote_issue").attr("value");
+        process_vote(isv, -1);
+    });
+    $("div.unconvincing").live("click", function(){
+        isv = $(this).parent().parent().find("#my_vote_issue").attr("value");
+        process_vote(isv, 10);
+        $(this).parent().parent().find("div.abstainvotes").hide();
+    });
+    $("div.notpolitical").live("click", function(){
+        isv = $(this).parent().parent().find("#my_vote_issue").attr("value");
+        process_vote(isv, 11);
+        $(this).parent().parent().find("div.abstainvotes").hide();
+    });
+    $("div.cantagree").live("click", function(){
+        isv = $(this).parent().parent().find("#my_vote_issue").attr("value");
+        process_vote(isv, 12);
+        $(this).parent().parent().find("div.abstainvotes").hide();
+    });
+    $("div.needsmorework").live("click", function(){
+        isv = $(this).parent().parent().find("#my_vote_issue").attr("value");
+        process_vote(isv, 13);
+        $(this).parent().parent().find("div.abstainvotes").hide();
+    });
+    $("div.badlyworded").live("click", function(){
+        isv = $(this).parent().parent().find("#my_vote_issue").attr("value");
+        process_vote(isv, 14);
+        $(this).parent().parent().find("div.abstainvotes").hide();
+    });
+    $("div.duplicate").live("click", function(){
+        isv = $(this).parent().parent().find("#my_vote_issue").attr("value");
+        process_vote(isv, 15);
+        $(this).parent().parent().find("div.abstainvotes").hide();
+    });
+    $("div.unrelated").live("click", function(){
+        isv = $(this).parent().parent().find("#my_vote_issue").attr("value");
+        process_vote(isv, 16);
+        $(this).parent().parent().find("div.abstainvotes").hide();
+    });
+    $("div.needtoknowmore").live("click", function(){
+        isv = $(this).parent().parent().find("#my_vote_issue").attr("value");
+        process_vote(isv, 17);
+        $(this).parent().parent().find("div.abstainvotes").hide();
+    });
+    $("div.askmelater").live("click", function(){
+        isv = $(this).parent().parent().find("#my_vote_issue").attr("value");
+        process_vote(isv, 18);
+        $(this).parent().parent().find("div.abstainvotes").hide();
+    });
 
+});
     //var lala = $.getJSON('/ajax/issues/new/', null, null);
     //alert(lala.responseText);
     //var lala = eval ( response );
-
+/*
     $("div.folder").each(function() {
         var folder = $(this).attr("id");
         $(this).find("div.issue").each( function() {
@@ -156,9 +234,23 @@ $(document).ready(function(){
         body.slideToggle();
     });
 });
-
+*/
 function process_vote(issue, new_vote) {
-    var old_vote = parseInt($("#issue"+issue).find("#my_vote").val());
+    $get("/totals/"+issue+"/", function(totals) {
+        $("div.i-"+issue).each(function() {
+            $(this).find("div.votes").replaceWith(totals);
+        });
+    });
+    console.log("issue: " + issue);
+    console.log("new_vote: " + new_vote);
+    $old_vote_txt = $("div.i-"+issue).find("#my_vote").val();
+    if($old_vote_txt == "None") {
+        old_vote = -10;
+    }
+    else {
+        old_vote = parseInt($old_vote_txt);
+    }
+    console.log(old_vote);
     if(old_vote == new_vote) {
         return
     }
@@ -170,7 +262,7 @@ function process_vote(issue, new_vote) {
         }, function(data) {
             if(data.status=="success"){
             // fix layouts here
-                $("#issue"+issue).find("#my_vote").html(""+new_vote);
+                $("div.i-"+issue).find("#my_vote").html(""+new_vote);
                 render_bars(issue, new_vote);
             } else if(data.status=="debug") {
                 if(debug) {
@@ -218,6 +310,7 @@ function render_abs(issue, vote) {
 
 function render_bars(issue, new_vote){
     var old_vote = parseInt($(".i-"+issue).find("#my_vote").val());
+    console.log(old_vote);
     // reset the bar colors to their unvoted colors
     $(".i-"+issue).find("td.for").css({'background-color' : '#a1f2a3'});
     $(".i-"+issue).find("td.abstain").css({'background-color' : '#9ef8fb'});
@@ -274,9 +367,9 @@ function render_bars(issue, new_vote){
         }
     }
     if(new_vote != null) {
-        $(".i-"+issue).find("td.for").html(""+vfor);
-        $(".i-"+issue).find("td.abstain").html(""+vabs);
-        $(".i-"+issue).find("td.against").html(""+vaga);
+        $(".i-"+issue).find("div.for").html(""+vfor);
+        $(".i-"+issue).find("div.abstain").html(""+vabs);
+        $(".i-"+issue).find("div.against").html(""+vaga);
         $(".i-"+issue).find("#my_vote").val(new_vote);
     }
     var total = vfor + vabs + vaga;
@@ -301,9 +394,9 @@ function render_bars(issue, new_vote){
     for (var i in per) {
         per[i] = per[i]*100;
     }
-    $(".i-"+issue).find("td.for").width(per['for']+"%");
-    $(".i-"+issue).find("td.abstain").width(per['abs']+"%");
-    $(".i-"+issue).find("td.against").width(per['aga']+"%");
+    $(".i-"+issue).find("div.for").width(per['for']+"%");
+    $(".i-"+issue).find("div.abstain").width(per['abs']+"%");
+    $(".i-"+issue).find("div.against").width(per['aga']+"%");
 }
 
 function handle_errors(error) {
@@ -314,51 +407,44 @@ function handle_errors(error) {
         window.location = "/oauth/auth/";
     }
 }
-
 function getIssueList(sortorder) {
     $.getJSON("/ajax/issues/"+sortorder+"/", function(data) {
-        fillTemplates(data, sortorder);
+        for( var i in data ) {
+            id = url2id(data[i][0]);
+            getIssue(sortorder, id);
+        }
+    });
+    $("div.abstainvotes").hide();
+    $("div#"+sortorder)
+        .hide();
+    $("div."+sortorder).mouseup(function() {
+        var body = $(this).parent().find("div#"+sortorder);
+        body.slideToggle();
     });
 }
-function fillTemplates(jdata, sortorder) {
-    for( var i in jdata ) {
-        iid = url2id(jdata[i][0]);
-        $.getJSON("/ajax/issue/" + iid + "/",null, function(data){
-            id = url2id(data.resource_uri);
-            $("div#genissue").append(
-"        <div class=\"issue i-"+id+"\" id=\"genissue"+id+"\">\n" +
-"          <div class=\"title\">"+data.title+"</div>\n" +
-"          <div class=\"body\">"+data.body+"</div>\n" +
-"          <div class=\"panel\">\n"+
-"            <form action=\"/ajax/vote/cast/\" id=\"vote_form_"+id+"\" method=\"post\">\n" +
-"              <input type=\"hidden\" id=\"my_vote\" name=\"vote\" value=\"\">\n"+
-"              <input type=\"hidden\" id=\"my_vote_issue\" name=\"issue\" value=\""+id+"\">\n" +
-"              <input type=\"hidden\" id=\"my_vote_privacy\" name=\"keep_private\" value=\"False\">\n" +
-"              <table class=\"votes\" id=\"vote"+id+"\"><tbody>\n" +
-"                <tr>\n" +
-"                  <td class=\"for\">0</td>\n" +
-"                  <td class=\"abstain\">0</td>\n" +
-"                  <td class=\"against\">0</td>\n"+
-"                </tr>\n"+
-"              </tbody></table>\n"+
-"            </form>\n"+
-"          </div>\n"+
-"          <div class=\"abstainvotes abs-"+id+"\" id=\"genissuesabs-"+id+"\">\n"+
-"            <div class=\"abs\" id=\"unconvincing\">Unconvincing</div>\n"+
-"            <div class=\"abs\" id=\"notpolitical\">Not Political</div>\n"+
-"            <div class=\"abs\" id=\"cantagree\">Can't completely agree</div>\n"+
-"            <div class=\"abs\" id=\"needsmorework\">Needs more work</div>\n"+
-"            <div class=\"abs\" id=\"badlyworded\">Badly worded</div>\n"+
-"            <div class=\"abs\" id=\"duplicate\">Duplicate</div>\n"+
-"            <div class=\"abs\" id=\"unrelated\">Unrelated source</div>\n"+
-"            <div class=\"abs\" id=\"needtoknowmore\">Need to know more</div>\n"+
-"            <div class=\"abs\" id=\"askmelater\">Ask me later</div>\n"+
-"          </div>\n"+
-"          <div style=\"clear: both;\"></div>\n"+
-"        </div>\n");
+
+function getIssue(sortorder, issueid) {
+    // get the issue content
+    $.get("/issue/"+issueid+"/", function(issue) {
+        $(issue).appendTo("div#"+sortorder);
+        // get user's current vote.
+        $.get("/myvote/"+issueid+"/", function (myvote) {
+            $("div#"+sortorder)
+                .find("div.p-"+issueid)
+                .append(myvote);
+            mv = $(".my_vote",myvote).attr('value');
+            if(mv != "None") {
+                $.get("/totals/"+issueid+"/", function (totals) {
+                    $("div#"+sortorder)
+                        .find(".v-"+issueid)
+                        .replaceWith(totals);
+                });
+            }
         });
-    }
+    });
+
 }
+
 function url2id(url) {
     return url.split(/\//)[4];
 }

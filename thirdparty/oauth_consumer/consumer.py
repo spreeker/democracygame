@@ -141,34 +141,16 @@ class DemoOAuthConsumerApp(django_oauth_consumer.OAuthConsumerApp):
         self.response = self.get_resource(request, api_url)
         request.user = tempuser
         return self.ld()
-    def get_issue_json(self, request, issue_no):
-        tempuser = request.user
-        from django.contrib.auth.models import AnonymousUser
-        request.user = AnonymousUser()
-        api_url = '%sissue/%s/' % (API_SERVER, issue_no)
-        self.response = self.get_resource(request, api_url)
-        request.user = tempuser
-        return self.response
-    
+
     def get_issue_votes(self, request, issue_no):
         api_url = '%sissue/%s/votes/' % (API_SERVER, issue_no)
         self.response = self.get_resource(request, api_url)
         return self.ld()
-    
-    def get_issue_votes_json(self, request, issue_no):
-        api_url = '%sissue/%s/votes/' % (API_SERVER, issue_no)
-        self.response = self.get_resource(request, api_url)
-        return self.response
 
     def get_issue_vote(self, request, issue_no):
         api_url = '%svote/%s/' % (API_SERVER, issue_no)
         self.response = self.get_resource(request, api_url)
         return self.ld()
-
-    def get_issue_vote_json(self, request, issue_no):
-        api_url = '%svote/%s/' % (API_SERVER, issue_no)
-        self.response = self.get_resource(request, api_url)
-        return self.response
 
     def get_issue_votes_user(self, request):
         api_url = '%svote/' % API_SERVER
@@ -186,7 +168,7 @@ class DemoOAuthConsumerApp(django_oauth_consumer.OAuthConsumerApp):
     def get_user(self, request, user_no):
         api_url = '%suser/%s/' % (API_SERVER, user_no)
         self.response = self.get_resource(request, api_url)
-        return self.ld() 
+        return self.ld()
 
     def post_issue(self, request, issue_data):
         api_url = '%sissue/' % API_SERVER
@@ -194,5 +176,4 @@ class DemoOAuthConsumerApp(django_oauth_consumer.OAuthConsumerApp):
         f = open('/Users/thijscoenen/Desktop/out.html', 'w')
         f.write(self.response.read())
         f.close()
-        
         return self.response.status
