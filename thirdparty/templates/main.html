@@ -23,8 +23,8 @@ Page Header with login/logout links.
     <script type="text/javascript" src="/media/default.js"></script>
 </head>
 <body>
-
 <div id="header">
+{% comment %}
 
 {% if not is_menu %}
   <a href="{% url top_level_menu %}" id="menu" class="left"><img src="/media/iphone/btn_header_menu.png" alt="Menu" /></a>
@@ -34,6 +34,7 @@ Page Header with login/logout links.
 {% else %}
   <a href="{% url login %}" id="exit" class="right"><img src="/media/iphone/btn_header_login.png" alt="Login" /></a>
 {% endif %}
+{% endcomment %}
 </div>
 
 
