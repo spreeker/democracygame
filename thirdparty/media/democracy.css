@@ -308,6 +308,15 @@ a img {
 .votes .against:hover {
     background: #f9645e;
 }
+.votes .forselected {
+    background: #49f24d;
+}
+.votes .abstainselected {
+    background: #4cf5fb;
+}
+.votes .againstselected {
+    background: #f9645e;
+}
 
 .abstainvotes {
   background-color: #9ef8fb;
@@ -323,7 +332,7 @@ a img {
 .abs {
   padding: 3px 0 3px 0;
 }
-.abs_sel {
+.absselected {
   background: #4cf5fb;
   padding: 3px 0 3px 0;
 }
