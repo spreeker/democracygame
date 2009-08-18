@@ -99,7 +99,7 @@ a img {
 #header {
   position:relative;
   height:50px;
-  background:url(./bg_header.png) repeat-x;
+  /*background:url(./bg_header.png) repeat-x;*/
 }
 
 #header .left {
@@ -123,7 +123,7 @@ a img {
 
 
 #footer {
-  background:url(./bg_footer.png) repeat-x;
+  /*background:url(./bg_footer.png) repeat-x;*/
   height:57px;
 }
 
