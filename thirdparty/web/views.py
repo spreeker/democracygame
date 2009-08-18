@@ -50,7 +50,7 @@ def issue_ajax(request, issueid):
 
 @cache_control(private=True)
 @vary_on_headers('User-Agent', 'Cookie')
-@cache_page(5*30)
+@cache_page(0)
 def myvote_ajax(request, issueid):
 
     vote = demo.get_issue_vote(request, issueid)
@@ -65,20 +65,23 @@ def myvote_ajax(request, issueid):
     return render_to_response('voteform.html',
         RequestContext(request, {'vote' : vote}))
 
-@cache_page(5*60)
+@cache_page(0)
 def vote_totals_ajax(request, issueid):
 
     votes = demo.get_issue_votes(request, issueid)
+    print votes
     totals = {}
     if votes == []:
         totals['votes_for'] = 0
         totals['votes_against'] = 0
         totals['votes_abstain'] = 0
     else:
-        totals['votes_for'] = votes.pop(u'+1', 0)
+        votes.pop(u'0', None)
+        totals['votes_for'] = votes.pop(u'1', 0)
         totals['votes_against'] = votes.pop(u'-1', 0)
         totals['votes_abstain'] = sum([v for v in votes.values()])
     totals['issueid'] = issueid
+    print totals
     return render_to_response('votetotals.html',
         RequestContext(request, {'totals' : totals } ))
 
