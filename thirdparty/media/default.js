@@ -256,11 +256,11 @@ function process_vote(issue, new_vote) {
                 $.get("/totals/"+issue+"/", function(totals) {
                     $("div.i-"+issue).each(function() {
                         $(this).find("div.votes").replaceWith(totals);
+                        $("div.i-"+issue).find(".my_vote").html(""+new_vote);
+                        render_bars(issue, new_vote);
                     });
                 });
             // fix layouts here
-                $("div.i-"+issue).find(".my_vote").html(""+new_vote);
-                render_bars(issue, new_vote);
             } else if(data.status=="debug") {
                 if(debug) {
                     alert(data.error);
@@ -276,52 +276,28 @@ function render_abs(issue, vote) {
     $(".abs-"+issue).each(function() {
         $(this).children().css({'background-color' : '#9ef8fb'});
     });
-    if (vote == 10) {
-    $(".abs-"+issue).find(".unconvincing").css({'background-color' : '#4cf5fb'});
-    }
-    if (vote == 11) {
-    $(".abs-"+issue).find(".notpolitical").css({'background-color' : '#4cf5fb'});
-    }
-    if (vote == 12) {
-    $(".abs-"+issue).find(".cantagree").css({'background-color' : '#4cf5fb'});
-    }
-    if (vote == 13) {
-    $(".abs-"+issue).find(".needsmorework").css({'background-color' : '#4cf5fb'});
-    }
-    if (vote == 14) {
-    $(".abs-"+issue).find(".badlyworded").css({'background-color' : '#4cf5fb'});
-    }
-    if (vote == 15) {
-    $(".abs-"+issue).find(".duplicate").css({'background-color' : '#4cf5fb'});
-    }
-    if (vote == 16) {
-    $(".abs-"+issue).find(".unrelated").css({'background-color' : '#4cf5fb'});
-    }
-    if (vote == 17) {
-    $(".abs-"+issue).find(".needtoknowmore").css({'background-color' : '#4cf5fb'});
-    }
-    if (vote == 18) {
-    $(".abs-"+issue).find(".askmelater").css({'background-color' : '#4cf5fb'});
-    }
+    $(".abs-"+issue).find(".vabs-"+vote).css({'background-color' : '#4cf5fb'});
 }
 
 function render_bars(issue, new_vote){
     var old_vote = parseInt($(".i-"+issue).find(".my_vote").val());
+    vote = old_vote;
     // reset the bar colors to their unvoted colors
-    $(".i-"+issue).find("td.for").css({'background-color' : '#a1f2a3'});
-    $(".i-"+issue).find("td.abstain").css({'background-color' : '#9ef8fb'});
-    $(".i-"+issue).find("td.against").css({'background-color' : '#f99f9b'});
-    if(new_vote==null) {
-    // first page render, set voted color, if any
-        if(old_vote ==1) {
-            $(".i-"+issue).find("div.for").css({'background-color' : '#49f24d'});
-        }
-        if(old_vote >=10) {
-            $(".i-"+issue).find("div.abstain").css({'background-color' : '#4cf5fb'});
-        }
-        if(old_vote ==-1) {
-            $(".i-"+issue).find("div.against").css({'background-color' : '#f9645e'});
-        }
+    $(".i-"+issue).find("div.for").css({'background-color' : '#a1f2a3'});
+    $(".i-"+issue).find("div.abstain").css({'background-color' : '#9ef8fb'});
+    $(".i-"+issue).find("div.against").css({'background-color' : '#f99f9b'});
+    if(new_vote!=null) {
+        vote = new_vote;
+    }
+    // set voted color, if any
+    if(vote ==1) {
+        $(".i-"+issue).find("div.for").css({'background-color' : '#49f24d'});
+    }
+    if(vote >=10) {
+        $(".i-"+issue).find("div.abstain").css({'background-color' : '#4cf5fb'});
+    }
+    if(vote ==-1) {
+        $(".i-"+issue).find("div.against").css({'background-color' : '#f9645e'});
     }
     // get vote totals
     var vfor = parseInt($(".i-"+issue).find("div.for").html());
