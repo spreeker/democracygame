@@ -204,6 +204,8 @@ class VoteHandler(BaseHandler):
                 })
 
         if self.exists(**attrs):
+            logging.debug("conflict")
+            logging.debug(attrs)
             return rc.DUPLICATE_ENTRY
         if not 'keep_private' in attrs:
             attrs['keep_private'] = False
