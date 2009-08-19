@@ -13,10 +13,6 @@ $(document).ready(function(){
     getIssueList('new');
     getIssueList('popular');
     getIssueList('controversial');
-    $(".issuehead").live("click", function() {
-        $("div.body").hide();
-        $("div.abstainvotes").hide();
-    });
     // hook click event to title
     $("div.title").live("click", function(){
         //find the body whose title was clicked
@@ -48,201 +44,19 @@ $(document).ready(function(){
         //slide the panel
         body.slideUp();
     });
-    $("div.unconvincing").live("click", function(){
+    $("div.abs").live("click", function(){
+        votec = $(this).attr('class').split(' ')
+        for( var i in votec ) {
+            if(votec[i].substr(0,5) == 'vabs-') {
+                vote = votec[i].replace(/vabs-/i,"");
+            }
+        }
         isv = $(this).parent().parent().find(".my_vote_issue").attr("value");
-        process_vote(isv, 10);
+        process_vote(isv, vote);
         $(this).parent().parent().find("div.abstainvotes").hide();
-    });
-    $("div.notpolitical").live("click", function(){
-        isv = $(this).parent().parent().find(".my_vote_issue").attr("value");
-        process_vote(isv, 11);
-        $(this).parent().parent().find("div.abstainvotes").hide();
-    });
-    $("div.cantagree").live("click", function(){
-        isv = $(this).parent().parent().find(".my_vote_issue").attr("value");
-        process_vote(isv, 12);
-        $(this).parent().parent().find("div.abstainvotes").hide();
-    });
-    $("div.needsmorework").live("click", function(){
-        isv = $(this).parent().parent().find(".my_vote_issue").attr("value");
-        process_vote(isv, 13);
-        $(this).parent().parent().find("div.abstainvotes").hide();
-    });
-    $("div.badlyworded").live("click", function(){
-        isv = $(this).parent().parent().find(".my_vote_issue").attr("value");
-        process_vote(isv, 14);
-        $(this).parent().parent().find("div.abstainvotes").hide();
-    });
-    $("div.duplicate").live("click", function(){
-        isv = $(this).parent().parent().find(".my_vote_issue").attr("value");
-        process_vote(isv, 15);
-        $(this).parent().parent().find("div.abstainvotes").hide();
-    });
-    $("div.unrelated").live("click", function(){
-        isv = $(this).parent().parent().find(".my_vote_issue").attr("value");
-        process_vote(isv, 16);
-        $(this).parent().parent().find("div.abstainvotes").hide();
-    });
-    $("div.needtoknowmore").live("click", function(){
-        isv = $(this).parent().parent().find(".my_vote_issue").attr("value");
-        process_vote(isv, 17);
-        $(this).parent().parent().find("div.abstainvotes").hide();
-    });
-    $("div.askmelater").live("click", function(){
-        isv = $(this).parent().parent().find(".my_vote_issue").attr("value");
-        process_vote(isv, 18);
-        $(this).parent().parent().find("div.abstainvotes").hide();
-    });
-
-});
-    //var lala = $.getJSON('/ajax/issues/new/', null, null);
-    //alert(lala.responseText);
-    //var lala = eval ( response );
-/*
-    $("div.folder").each(function() {
-        var folder = $(this).attr("id");
-        $(this).find("div.issue").each( function() {
-            var my_vote = parseInt($("#my_vote", this).val());
-            var my_issue = parseInt($("#my_vote_issue", this).val());
-            var my_privacy = parseInt($("#my_vote_privacy", this).val());
-
-            render_bars(my_issue, null);
-            render_abs(my_issue, my_vote);
-
-            $("td.for", this).mouseup(function(){
-                process_vote(my_issue, 1);
-            });
-            $("td.abstain", this).mouseup(function(){
-                var body = $("#"+folder+my_issue).find("div.abstainvotes");
-                body.slideToggle();
-                //process_vote(my_issue, 17);
-            });
-            $("td.against", this).mouseup(function(){
-                process_vote(my_issue, -1);
-            });
-            $("#"+folder+"-un-"+my_issue).mouseup(function() {
-                process_vote(my_issue, 10);
-            });
-            $(".abstainvotes", this).find("#unconvincing").mouseup(function() {
-                var body = $("#"+folder).find(".abs-"+my_issue);
-                body.slideToggle();
-                $(".abs-"+my_issue).each(function() {
-                    $(this).children().css({'background-color' : '#9ef8fb'});
-                });
-                $(".abs-"+my_issue).find("#unconvincing").css({'background-color' : '#4cf5fb'});
-                process_vote(my_issue, 10);
-            });
-            $(".abstainvotes", this).find("#notpolitical").mouseup(function() {
-                var body = $("#"+folder).find(".abs-"+my_issue);
-                body.slideToggle();
-                $(".abs-"+my_issue).each(function() {
-                    $(this).children().css({'background-color' : '#9ef8fb'});
-                });
-                $(".abs-"+my_issue).find("#notpolitical").css({'background-color' : '#4cf5fb'});
-                process_vote(my_issue, 11);
-            });
-            $(".abstainvotes", this).find("#cantagree").mouseup(function() {
-                var body = $("#"+folder).find(".abs-"+my_issue);
-                body.slideToggle();
-                $(".abs-"+my_issue).each(function() {
-                    $(this).children().css({'background-color' : '#9ef8fb'});
-                });
-                $(".abs-"+my_issue).find("#cantagree").css({'background-color' : '#4cf5fb'});
-                process_vote(my_issue, 12);
-            });
-            $(".abstainvotes", this).find("#needsmorework").mouseup(function() {
-                var body = $("#"+folder).find(".abs-"+my_issue);
-                body.slideToggle();
-                $(".abs-"+my_issue).each(function() {
-                    $(this).children().css({'background-color' : '#9ef8fb'});
-                });
-                $(".abs-"+my_issue).find("#needsmorework").css({'background-color' : '#4cf5fb'});
-                process_vote(my_issue, 13);
-            });
-            $(".abstainvotes", this).find("#badlyworded").mouseup(function() {
-                var body = $("#"+folder).find(".abs-"+my_issue);
-                body.slideToggle();
-                $(".abs-"+my_issue).each(function() {
-                    $(this).children().css({'background-color' : '#9ef8fb'});
-                });
-                $(".abs-"+my_issue).find("#badlyworded").css({'background-color' : '#4cf5fb'});
-                process_vote(my_issue, 14);
-            });
-            $(".abstainvotes", this).find("#duplicate").mouseup(function() {
-                var body = $("#"+folder).find(".abs-"+my_issue);
-                body.slideToggle();
-                $(".abs-"+my_issue).each(function() {
-                    $(this).children().css({'background-color' : '#9ef8fb'});
-                });
-                $(".abs-"+my_issue).find("#duplicate").css({'background-color' : '#4cf5fb'});
-                process_vote(my_issue, 15);
-            });
-            $(".abstainvotes", this).find("#unrelated").mouseup(function() {
-                var body = $("#"+folder).find(".abs-"+my_issue);
-                body.slideToggle();
-                $(".abs-"+my_issue).each(function() {
-                    $(this).children().css({'background-color' : '#9ef8fb'});
-                });
-                $(".abs-"+my_issue).find("#unrelated").css({'background-color' : '#4cf5fb'});
-                process_vote(my_issue, 16);
-            });
-            $(".abstainvotes", this).find("#needtoknowmore").mouseup(function(){
-                var body = $("#"+folder).find(".abs-"+my_issue);
-                body.slideToggle();
-                $(".abs-"+my_issue).each(function() {
-                    $(this).children().css({'background-color' : '#9ef8fb'});
-                });
-                $(".abs-"+my_issue).find("#needtoknowmore").css({'background-color' : '#4cf5fb'});
-                process_vote(my_issue, 17);
-            });
-            $(".abstainvotes", this).find("#askmelater").mouseup(function() {
-                var body = $("#"+folder).find(".abs-"+my_issue);
-                body.slideToggle();
-                $(".abs-"+my_issue).each(function() {
-                    $(this).children().css({'background-color' : '#9ef8fb'});
-                });
-                $(".abs-"+my_issue).find("#askmelater").css({'background-color' : '#4cf5fb'});
-                process_vote(my_issue, 18);
-            });
-        });
-    });
-    // hide all issue bodies
-    $("div.body").each(function() {
-	    $(this).hide();
-    });
-    $("div.folder").each(function() {
-        $(this).hide();
-    });
-    $("div.abstainvotes").each(function() {
-        $(this).hide();
-    });
-    //hook the mouseup events to each title
-    $("div.issue").children("div.title").mouseup(function(){
-    
-        //find the body whose title was clicked
-        var body = $(this).parent().children("div.body");
-
-        //slide the panel
-        body.slideToggle();
-    });
-    $("div.myissues").mouseup(function() {
-        var body = $(this).parent().find("#myissue");
-        body.slideToggle();
-    });
-    $("div.hotissues").mouseup(function() {
-        var body = $(this).parent().find("#hotissue");
-        body.slideToggle();
-    });
-    $("div.newissues").mouseup(function() {
-        var body = $(this).parent().find("#newissue");
-        body.slideToggle();
-    });
-    $("div.genissues").mouseup(function() {
-        var body = $(this).parent().find("#genissue");
-        body.slideToggle();
     });
 });
-*/
+
 function process_vote(issue, new_vote) {
     $old_vote_txt = $("div.i-"+issue).find(".my_vote").val();
     if($old_vote_txt == "None") {
@@ -254,7 +68,7 @@ function process_vote(issue, new_vote) {
     if(old_vote == new_vote) {
         return
     }
-    if(old_vote!=new_vote) {
+    else {
         $.post('/ajax/vote/cast/', {
             issue : issue,
             vote : new_vote,
@@ -390,6 +204,8 @@ function getIssue(sortorder, issueid) {
                 });
             }
         });
+        $("div#"+sortorder).find(".i-"+issueid).find("div.body").hide();
+        $("div#"+sortorder).find(".i-"+issueid).find("div.abstainvotes").hide();
     });
 }
 
