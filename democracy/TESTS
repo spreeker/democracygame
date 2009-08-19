@@ -1,2 +1,2 @@
-python manage.py test
+python manage.py test --settings=testsettings
 python manage.py test tests --settings=voting.tests.settings
