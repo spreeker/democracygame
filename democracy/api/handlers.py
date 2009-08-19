@@ -38,6 +38,7 @@ import gamelogic.actions
 
 from piston.models import Token
 
+import logging
 
 def paginate(request, qs, **kwargs):
     paginator = Paginator(qs, 25)  # TODO add to settings.py
@@ -136,12 +137,12 @@ class IssueList(AnonymousBaseHandler):
         sortorder = kwargs.get("sortorder", "")
         if sortorder == 'popular':
             qs = Vote.objects.get_popular(Issue)
-            qs = qs.values_list('object_id' , 'totalvotes')
+            qs = qs.values_list('object_id', 'totalvotes')
         elif sortorder == 'controversial':
             qs = Vote.objects.get_controversial(Issue)
-            qs = qs.values_list('object_id' , 'avg')
+            qs = qs.values_list('object_id', 'avg')
         elif sortorder == 'new':
-            qs = Issue.objects.all().order_by('-time_stamp')
+            qs = Issue.objects.filter(is_draft=False).order_by('-time_stamp')
             qs = qs.values_list('id', 'time_stamp')
         else:
             return rc.BAD_REQUEST
@@ -204,6 +205,8 @@ class VoteHandler(BaseHandler):
                 })
 
         if self.exists(**attrs):
+            logging.debug("conflict")
+            logging.debug(attrs)
             return rc.DUPLICATE_ENTRY
         if not 'keep_private' in attrs:
             attrs['keep_private'] = False
