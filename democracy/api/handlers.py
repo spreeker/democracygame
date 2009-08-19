@@ -202,11 +202,13 @@ class VoteHandler(BaseHandler):
         attrs.update({'content_type': ctype,
                        'object_id': object_id,
                        'is_archived': False,
+                       'user': request.user.id,
                 })
+        #logging.debug(" post an vote %s " % attrs)
 
         if self.exists(**attrs):
-            logging.debug("conflict")
-            logging.debug(attrs)
+            #logging.debug("conflict")
+            #logging.debug(attrs)
             return rc.DUPLICATE_ENTRY
         if not 'keep_private' in attrs:
             attrs['keep_private'] = False
