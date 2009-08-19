@@ -59,13 +59,10 @@ def ajax_vote_cast(request, next=None, xhr="WTF?"):
 
     # Otherwise submit the vote to Service Provider
     if form.is_valid():
-        print form.cleaned_data
         retstatus = demo.post_vote(request, form.clean())
     else:
         pass #for now
 
-    #print response.read()
-    print retstatus
     if retstatus != 201:
         error = "vote cast failed, code %d" % retstatus
         status = simplejson.dumps({'status': 'debug', 'error': error})
@@ -87,7 +84,6 @@ def ajax_get_issues_list_ordered( request, sortorder, page=None ):
     response = demo.get_issues_list_ordered(request, sortorder, page)
     # Otherwise submit the vote to Service Provider
 
-    #print response.read()
     if response.status != 200:
         error = "getting issue votes failed, code %d, reason %s" % (response.status, response.reason)
         status = simplejson.dumps({'status': 'debug', 'error': error})
