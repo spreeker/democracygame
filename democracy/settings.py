@@ -1,4 +1,4 @@
-# Django settings for eddemocracy project.
+# Django settings for democracy project.
 import logging
 import os
 import sys
@@ -6,8 +6,10 @@ import sys
 # Be sure to create a settings_local.py module with your local settings!
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
-# Add the external dependencies of Edemocracy to the python path. (The external
-# dependencies are included with the Edemocracy source to ease deployment.)
+FORCE_SCRIPT_NAME = "" # removes the django.fcgi from the urls.
+
+# Add the external dependencies of democracy to the python path. (The external
+# dependencies are included with the democracy source to ease deployment.)
 sys.path.append(os.path.split(PROJECT_PATH)[0] + '/external_apps/' ) 
 sys.path.append(os.path.split(PROJECT_PATH)[0] + '/external_libraries/' ) 
 
@@ -20,13 +22,13 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'sqlite3' # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = 'dev.db'
+DATABASE_HOST = ''
+DATABASE_PORT = ''
 
-DATABASE_USER = ''             # Not used with sqlite3.
-DATABASE_PASSWORD = ''         # Not used with sqlite3.
-DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+DATABASE_ENGINE = 'postgresql_psycopg2'
+DATABASE_NAME = 'democracy_democratiespel'
+DATABASE_USER = 'democracy'
+DATABASE_PASSWORD = 'ADkdg5.Q'
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -82,7 +84,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
 #    'django.contrib.csrf.middleware.CsrfMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware', ## !! comment out in production.
+#    'debug_toolbar.middleware.DebugToolbarMiddleware', ## !! comment out in production.
+    'django.middleware.doc.XViewMiddleware',
 #    'django.middleware.cache.FetchFromCacheMiddleware',
 )
 CACHE_MIDDLEWARE_SECONDS = 60
@@ -128,14 +131,12 @@ INSTALLED_APPS = (
     'gamelogic',
     'profiles',
     'api',
-#    'web',
     'voting',
     'issue',
 
     'dashboard',
     
     'tagging',
-#    'pagination',
 	'registration',
     'piston',
     'rosetta',
@@ -150,14 +151,14 @@ DEBUG_TOOLBAR_CONFIG = {
 
 #SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 FORCELOWERCASE_TAGS = True
-MAX_TAG_LENGTH = 20
 
-LOG_FILE_NAME = os.path.join(PROJECT_PATH, "democracy_log.txt")
+#LOG_FILE_NAME = os.path.join(PROJECT_PATH, "democracy_log.txt")
+MAX_TAG_LENGTH = 30
 
-logging.basicConfig(
-    level = logging.DEBUG,
-    format = '%(asctime)s %(levelname)s %(message)s',
-    filename = LOG_FILE_NAME,
-)
+#logging.basicConfig(
+#    level = logging.DEBUG,
+#    format = '%(asctime)s %(levelname)s %(message)s',
+#    filename = LOG_FILE_NAME,
+#)
 
 ACCOUNT_ACTIVATION_DAYS = 1
