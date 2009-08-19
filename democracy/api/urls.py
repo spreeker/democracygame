@@ -29,10 +29,10 @@ auth = OAuthAuthentication(realm='d.preeker.net')
 # Alse the authtication is set to basic so you can test in the browser the
 # api responses
 
-if settings.DEBUG:
-    Emitter.unregister(JSONEmitter)
-    Emitter.register('json', JSONEmitter, 'text/html; charset=utf-8')
-    auth = HttpBasicAuthentication(realm='m.buhrer.net')
+#if settings.DEBUG:
+#    Emitter.unregister(JSONEmitter)
+#    Emitter.register('json', JSONEmitter, 'text/html; charset=utf-8')
+#    auth = HttpBasicAuthentication(realm='m.buhrer.net')
 
 issue = Resource(handler=IssueHandler, authentication=auth )
 user = Resource(handler=UserHandler, authentication=auth )
