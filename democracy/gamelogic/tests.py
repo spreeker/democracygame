@@ -150,7 +150,7 @@ class TestActionData(TestUsers):
         
         # add issues
         for i, issue in enumerate(self.issues):
-            actions.propose(self.users[i] , issue , 10*issue , 1 , "example.com" , "website" )
+            actions.propose(self.users[i], issue, 10*issue, 1, "example.com" ,"website", )
 
         # test the adding of issues was succesfull
         # this get run multiple times , dubplicate issues should not be created

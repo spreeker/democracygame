@@ -75,6 +75,7 @@ def propose(user, title, body, direction, source_url,
             source_type = source_type,
             body = body,
             user = user,
+            is_draft = is_draft,
         )
         new_issue.save()
 
