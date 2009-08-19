@@ -18,3 +18,5 @@ settings_local.py
 *~
 *.sqlite3
 *.log
+democracy/media/admin
+thirdparty/media/admin
