@@ -69,7 +69,6 @@ def myvote_ajax(request, issueid):
 def vote_totals_ajax(request, issueid):
 
     votes = demo.get_issue_votes(request, issueid)
-    print votes
     totals = {}
     if votes == []:
         totals['votes_for'] = 0
@@ -81,7 +80,6 @@ def vote_totals_ajax(request, issueid):
         totals['votes_against'] = votes.pop(u'-1', 0)
         totals['votes_abstain'] = sum([v for v in votes.values()])
     totals['issueid'] = issueid
-    print totals
     return render_to_response('votetotals.html',
         RequestContext(request, {'totals' : totals } ))
 
@@ -135,7 +133,6 @@ def issues_add_issue(request, issue_no=None):
                     'issue_no' : issue_no,
                 }
             )
-            print 'STATUS', status
             
             #return HttpResponseRedirect(reverse('web_issue_detail', args = [new_issue.pk]))
             if status == 201:
