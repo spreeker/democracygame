@@ -1,8 +1,9 @@
 #!/bin/bash 
- 
+
+
 NAME="m"
 PROJECT_DIR="/var/git/democracy/thirdparty" 
-SETTINGS="settings_local" 
+SETTINGS="settings_preeker" 
 PYTHONPATH="/var/git/democracy/external_apps" 
  
 # Do not change anything below unless you know what you do 
@@ -48,3 +49,4 @@ case "$1" in
       exit 1
 esac
 
+chmod 777 $SOCKET
