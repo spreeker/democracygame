@@ -20,3 +20,5 @@ logging.basicConfig(
     filename = LOG_FILE_NAME,
 )
 
+
+CACHE_BACKEND = 'dummy:///'
