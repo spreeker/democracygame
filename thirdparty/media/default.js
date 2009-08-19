@@ -126,35 +126,19 @@ function render_bars(issue, new_vote){
     var vfor = parseInt($(".i-"+issue).find("div.for").html());
     var vabs = parseInt($(".i-"+issue).find("div.abstain").html());
     var vaga = parseInt($(".i-"+issue).find("div.against").html());
-    //alert (vfor+" "+vabs+" "+vaga);
-    // update vote totals, subtract from old vote totals and reset colors.
-    if(new_vote != null) {
-        $(".i-"+issue).find("div.for").html(""+vfor);
-        $(".i-"+issue).find("div.abstain").html(""+vabs);
-        $(".i-"+issue).find("div.against").html(""+vaga);
-        $(".i-"+issue).find(".my_vote").val(new_vote);
-    }
+    // Get the percentages to make the bars the right size.
     var total = vfor + vabs + vaga;
     var per = new Array();
     per['for'] = vfor / total;
     per['abs'] = vabs / total;
     per['aga'] = vaga / total;
-    var biggest = "none";
-    var big = 0;
+    // The following is not a graceful solution... the minimum width is never
+    // 10% unless the vote total of one of the votes is 0. I would like to see
+    // a nicer solution for an arbitrary set of values (more than 3 types)
+    //
+    // Please mail, if you find one: Conrado Buhrer - conrado@buhrer.net
     for (var i in per) {
-        if(per[i] > big) {
-            big = per[i];
-            biggest = i;
-        }
-    }
-    for (var i in per) {
-        if(per[i] < 0.1) {
-            per[biggest] -= (0.1 - per[i]);
-            per[i] = 0.1;
-        }
-    }
-    for (var i in per) {
-        per[i] = per[i]*100;
+        per[i] = 10+ (per[i]*70);
     }
     $(".i-"+issue).find("div.for").width(per['for']+"%");
     $(".i-"+issue).find("div.abstain").width(per['abs']+"%");
