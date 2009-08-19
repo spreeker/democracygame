@@ -1,0 +1,50 @@
+#!/bin/bash 
+ 
+NAME="m"
+PROJECT_DIR="/var/git/democracy/thirdparty" 
+SETTINGS="settings_local" 
+PYTHONPATH="/var/git/democracy/external_apps" 
+ 
+# Do not change anything below unless you know what you do 
+ 
+PIDFILE="$PROJECT_DIR/$NAME.pid" 
+SOCKET="$PROJECT_DIR/$NAME.sock" 
+DAEMON=/usr/bin/python 
+PATH=/sbin:/bin:/usr/sbin:/usr/bin 
+OPTS="manage.py runfcgi --settings=$SETTINGS socket=$SOCKET pidfile=$PIDFILE method=prefork minspare=1 maxspare=1 maxchildren=10 maxrequests=100" 
+ 
+fail () { 
+    echo "failed!" 
+    exit 1 
+} 
+ 
+success () { 
+    echo "$NAME." 
+} 
+ 
+case "$1" in
+  start)
+      echo -n "Starting $NAME: "
+      if PYTHONPATH=$PYTHONPATH start-stop-daemon -d $PROJECT_DIR --start --quiet --pidfile $PIDFILE --exec $DAEMON -- $OPTS ; then
+        success
+      else
+        fail
+      fi
+    ;;
+  stop)
+      echo -n "Stopping $NAME: "
+      if PYTHONPATH=$PYTHONPATH start-stop-daemon -d $PROJECT_DIR --stop --quiet --oknodo --retry 30 --pidfile $PIDFILE --exec $DAEMON ; then
+        success
+      else
+        fail
+      fi
+    ;;
+  restart)
+      $0 stop
+      $0 start
+    ;;
+  *)
+      echo "Usage: $0 {start|stop|restart}"
+      exit 1
+esac
+
