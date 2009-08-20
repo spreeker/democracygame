@@ -37,5 +37,5 @@ class VoteForm(forms.Form):
     vote = forms.IntegerField(widget=forms.Select(choices = possible_votes),
                                 label=_(u'vote'))
     issue = forms.IntegerField( widget = forms.HiddenInput())
-    keep_private = forms.BooleanField(required = False)
+#    keep_private = forms.BooleanField(required = False)
     
