@@ -1,12 +1,11 @@
-{% extends "main.html" %}
+{% extends "main_unscripted.html" %}
 
 {% block content %}
 <div class="blockmessage">
-<h2>Welcome!</h2>
-<p>To make use of Thirdparty you must authorize us on Emocracy <br />
-Follow the link below to authenticate.</p>
+<h2>Welkom!</h2>
+<p>Om deze site de kunnen gebruiken moet u met <a class="auth" href="auth/">Democratie authenticeren</a>
+</p>
 
-<p><a class="auth" href="auth/">Authenticate</a></p>
 </div>
 {% include "menu_footer.html" %}
 {% endblock %}
