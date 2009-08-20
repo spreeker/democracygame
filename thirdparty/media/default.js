@@ -71,8 +71,7 @@ function process_vote(issue, new_vote) {
     else {
         $.post('/ajax/vote/cast/', {
             issue : issue,
-            vote : new_vote,
-            keep_private : false
+            vote : new_vote
         }, function(data) {
             if(data.status=="success"){
                 $.get("/totals/"+issue+"/", function(totals) {
