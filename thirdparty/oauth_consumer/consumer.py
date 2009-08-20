@@ -120,6 +120,7 @@ class DemoOAuthConsumerApp(django_oauth_consumer.OAuthConsumerApp):
         """
         api_url = '%svote/' % API_SERVER
         self.response = self.post_resource(request, api_url, content=vote_data)
+        print vote_data
         return self.response.status
 
     # public? cached?
