@@ -4,7 +4,7 @@
 <div class="blockmessage">
 <form method="post" action=".">
 <div id="username_container">
-<label style="margin-top:5px">Username:</label><br />
+<label style="margin-top:5px">Gebruikersnaam:</label><br />
 {{ form.username }}
 </div>
 <div id="email_container">
@@ -12,15 +12,15 @@
 {{ form.email }}
 </div>
 <div id="password1_container">
-<label style="margin-top:5px">Password:</label><br />
+<label style="margin-top:5px">Wachtwoord:</label><br />
 {{ form.password1 }}
 </div>
 <div id="password2_container">
-<label style="margin-top:5px">Password (again):</label><br />
+    <label style="margin-top:5px">Nog een keer:</label><br />
 {{ form.password2 }}
 </div>
 {% if form.errors %}
-Some field not valid. <br />
+Er is een fout opgetreeden. <br />
 {% endif %}
 
 <input type="submit" value="register">
