@@ -1,4 +1,4 @@
-{% extends "main.html" %}
+{% extends "main_unscripted.html" %}
 {% load i18n %}
 
 {% block content %}
@@ -7,11 +7,11 @@
 	{% blocktrans %}	
 	Welcome {{ user }} !
 
-    <p>Your account on Thirdparty is now active.</p>
+    <p>Your account on this site is now active.</p>
 
     <p>You have also been logged in automatically.</p>
 
-    <h2><a href="/oauth/auth/">Now please AUTHENTICATE with Emocracy.</a></h2>
+    <h2><a href="/oauth/auth/">Now please AUTHENTICATE with Democracy.</a></h2>
 
 	{% endblocktrans %}
     {% else %}
