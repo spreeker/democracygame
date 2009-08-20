@@ -80,7 +80,7 @@ def issue_list(request, *args, **kwargs):
 
     if 'sortorder' in kwargs:
         issues, page = order_issues(request, kwargs['sortorder'], issues)
-    if 'tag' in kwargs:
+    elif 'tag' in kwargs:
         tag = "\"%s\"" % kwargs['tag']
         issues = Issue.tagged.with_any(tag)
         page = paginate(request, issues)
