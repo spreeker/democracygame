@@ -72,6 +72,7 @@ def ajax_vote_cast(request, next=None, xhr="WTF?"):
     status = simplejson.dumps({'status': "success"})
     return http.HttpResponse(status, mimetype="application/json")
 
+
 def ajax_get_issues_list_ordered( request, sortorder, page=None ):
     """
     Return sorted by `sortorder` issues list
@@ -80,6 +81,7 @@ def ajax_get_issues_list_ordered( request, sortorder, page=None ):
     # lookup issue votecount from cache
     # return json
     error = ""
+
 
     response = demo.get_issues_list_ordered(request, sortorder, page)
     # Otherwise submit the vote to Service Provider
