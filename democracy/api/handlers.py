@@ -437,7 +437,7 @@ class TagHandler(BaseHandler):
 
         if tags:
             issues = TaggedItem.objects.get_by_model(Issue, tags)
-            print issues
+            #print issues
         else: 
             issues = [] 
         page = paginate(request, issues, **kwargs)
