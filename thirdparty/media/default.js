@@ -180,7 +180,7 @@ function getIssueList(sortorder, page, click) {
     }
     if (click == true) {
         $("div.outer-"+sortorder).slideUp( function() {
-            $("div#"+sortorder).empty();
+            $("div#"+sortorder).children(".issue").remove();
             $("div.outer-"+sortorder).slideDown();
         });
     }
