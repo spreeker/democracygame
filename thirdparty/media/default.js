@@ -179,7 +179,7 @@ function getIssueList(sortorder, page, click) {
         $("div.less-"+sortorder).show();
     }
     if (click == true) {
-        $("div.outer-"+sortorder).slideUp("slow", function() {
+        $("div.outer-"+sortorder).slideUp( function() {
             $("div#"+sortorder).empty();
             $("div.outer-"+sortorder).slideDown();
         });
@@ -198,7 +198,6 @@ function getIssueList(sortorder, page, click) {
             $("div.more-"+sortorder).show();
         }
     });
-    $("div.abstainvotes").hide();
 }
 
 function getIssue(sortorder, issueid) {
