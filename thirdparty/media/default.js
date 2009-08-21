@@ -180,11 +180,11 @@ function getIssueList(sortorder, page, click) {
     }
     if (click == true) {
         $("div.outer-"+sortorder).slideUp( function() {
-            $("div#"+sortorder).children(".issue").remove();
             $("div.outer-"+sortorder).slideDown();
         });
     }
     $.getJSON("/ajax/issues/"+sortorder+".page/"+page+"/", function(data) {
+        $("div#"+sortorder).children(".issue").remove();
         for( var i in data ) {
             id = url2id(data[i][0]);
             getIssue(sortorder, id);
