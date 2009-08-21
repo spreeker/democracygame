@@ -166,6 +166,19 @@ a img {
   /*min-height:260px;*/
 }
 
+.more {
+    height: 32px;
+    text-align: center;
+    display: block;
+    border-top: 1px dotted #aaa;
+}
+.less {
+    height: 32px;
+    text-align: center;
+    display: block;
+    border-bottom: 1px dotted #aaa;
+}
+
 .folder table {
   width:100%;
   background:#FFF;
@@ -184,8 +197,6 @@ a img {
 .folder td img {
   display:block;
 }
-
-
 
 .list .panel {
   /*padding:0.1em 0 0.1em 0;*/
@@ -359,7 +370,8 @@ a img {
   border-top: 0.2em solid black;
 }
 */
-#menu div.folder {
+
+#menu div.outer {
   background-color: #fff;
   margin:0;
   border-top: 0.2em solid black;

@@ -10,9 +10,22 @@ if ( debug == true ) {
 
 $(document).ready(function(){
 
-    getIssueList('new');
-    getIssueList('popular');
-    getIssueList('controversial');
+    $("div.outer")
+        .hide();
+    getIssueList('new', 1, false);
+    getIssueList('popular', 1, false);
+    getIssueList('controversial', 1, false);
+    // hook up the pagination buttons
+    $("div.more").live("click", function(){
+        var sortorder = $(this).parent().children("div.folder").attr("id");
+        var currentpage = $("div#"+sortorder).data("page");
+        getIssueList(sortorder, currentpage +1, true );
+    });
+    $("div.less").live("click", function(){
+        var sortorder = $(this).parent().children("div.folder").attr("id");
+        var currentpage = $("div#"+sortorder).data("page");
+        getIssueList(sortorder, currentpage -1, true);
+    });
     // hook click event to title
     $("div.title").live("click", function(){
         //find the body whose title was clicked
@@ -53,7 +66,12 @@ $(document).ready(function(){
         }
         isv = $(this).parent().parent().find(".my_vote_issue").attr("value");
         process_vote(isv, vote);
-        $(this).parent().parent().find("div.abstainvotes").hide();
+        $(this).parent().parent().find("div.abstainvotes").slideUp();
+    });
+    // sort order header clicks
+    $("div.issuehead").live("click", function() {
+        var body = $(this).next("div.outer");
+        body.slideToggle();
     });
 });
 
@@ -152,26 +170,42 @@ function handle_errors(error) {
         window.location = "/oauth/auth/";
     }
 }
-function getIssueList(sortorder) {
-    $.getJSON("/ajax/issues/"+sortorder+"/", function(data) {
+function getIssueList(sortorder, page, click) {
+    $("div#"+sortorder).data("page", page);
+    if(page == 1) {
+        $("div.less-"+sortorder).hide();
+    }
+    else {
+        $("div.less-"+sortorder).show();
+    }
+    if (click == true) {
+        $("div.outer-"+sortorder).slideUp("slow", function() {
+            $("div#"+sortorder).empty();
+            $("div.outer-"+sortorder).slideDown();
+        });
+    }
+    $.getJSON("/ajax/issues/"+sortorder+".page/"+page+"/", function(data) {
         for( var i in data ) {
             id = url2id(data[i][0]);
             getIssue(sortorder, id);
         }
     });
-    $("div.abstainvotes").hide();
-    $("div#"+sortorder)
-        .hide();
-    $("div."+sortorder).mouseup(function() {
-        var body = $(this).parent().find("div#"+sortorder);
-        body.slideToggle();
+    $.getJSON("/ajax/issues/"+sortorder+".page/"+(page+1)+"/", function(data) {
+        if(data.length == 0){
+            $("div.more-"+sortorder).hide();
+        }
+        else {
+            $("div.more-"+sortorder).show();
+        }
     });
+    $("div.abstainvotes").hide();
 }
 
 function getIssue(sortorder, issueid) {
     // get the issue content
     $.get("/issue/"+issueid+"/", function(issue) {
         $(issue).appendTo("div#"+sortorder);
+        $("div#"+sortorder).find(".i-"+issueid).hide();
         // get user's current vote.
         $.get("/myvote/"+issueid+"/", function (myvote) {
             $("div#"+sortorder)
@@ -189,6 +223,7 @@ function getIssue(sortorder, issueid) {
         });
         $("div#"+sortorder).find(".i-"+issueid).find("div.body").hide();
         $("div#"+sortorder).find(".i-"+issueid).find("div.abstainvotes").hide();
+        $("div#"+sortorder).find(".i-"+issueid).slideDown();
     });
 }
 
