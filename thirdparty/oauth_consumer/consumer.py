@@ -162,7 +162,7 @@ class DemoOAuthConsumerApp(django_oauth_consumer.OAuthConsumerApp):
         if page == None:
             api_url = '%s/issues/%s/' %(API_SERVER, sortorder)
         else:
-            api_url = '%s/issues/%s\.page/%s/' %(API_SERVER, sortorder, page)
+            api_url = '%s/issues/%s.page/%s/' %(API_SERVER, sortorder, page)
         self.response = self.get_resource(request, api_url)
         return self.response
 
