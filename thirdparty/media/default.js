@@ -10,22 +10,9 @@ if ( debug == true ) {
 
 $(document).ready(function(){
 
-    $("div.outer")
-        .hide();
-    getIssueList('new', 1, false);
-    getIssueList('popular', 1, false);
-    getIssueList('controversial', 1, false);
-    // hook up the pagination buttons
-    $("div.more").live("click", function(){
-        var sortorder = $(this).parent().children("div.folder").attr("id");
-        var currentpage = $("div#"+sortorder).data("page");
-        getIssueList(sortorder, currentpage +1, true );
-    });
-    $("div.less").live("click", function(){
-        var sortorder = $(this).parent().children("div.folder").attr("id");
-        var currentpage = $("div#"+sortorder).data("page");
-        getIssueList(sortorder, currentpage -1, true);
-    });
+    getIssueList('new');
+    getIssueList('popular');
+    getIssueList('controversial');
     // hook click event to title
     $("div.title").live("click", function(){
         //find the body whose title was clicked
@@ -66,12 +53,7 @@ $(document).ready(function(){
         }
         isv = $(this).parent().parent().find(".my_vote_issue").attr("value");
         process_vote(isv, vote);
-        $(this).parent().parent().find("div.abstainvotes").slideUp();
-    });
-    // sort order header clicks
-    $("div.issuehead").live("click", function() {
-        var body = $(this).next("div.outer");
-        body.slideToggle();
+        $(this).parent().parent().find("div.abstainvotes").hide();
     });
 });
 
@@ -89,7 +71,8 @@ function process_vote(issue, new_vote) {
     else {
         $.post('/ajax/vote/cast/', {
             issue : issue,
-            vote : new_vote
+            vote : new_vote,
+            keep_private : false
         }, function(data) {
             if(data.status=="success"){
                 $.get("/totals/"+issue+"/", function(totals) {
@@ -143,19 +126,35 @@ function render_bars(issue, new_vote){
     var vfor = parseInt($(".i-"+issue).find("div.for").html());
     var vabs = parseInt($(".i-"+issue).find("div.abstain").html());
     var vaga = parseInt($(".i-"+issue).find("div.against").html());
-    // Get the percentages to make the bars the right size.
+    //alert (vfor+" "+vabs+" "+vaga);
+    // update vote totals, subtract from old vote totals and reset colors.
+    if(new_vote != null) {
+        $(".i-"+issue).find("div.for").html(""+vfor);
+        $(".i-"+issue).find("div.abstain").html(""+vabs);
+        $(".i-"+issue).find("div.against").html(""+vaga);
+        $(".i-"+issue).find(".my_vote").val(new_vote);
+    }
     var total = vfor + vabs + vaga;
     var per = new Array();
     per['for'] = vfor / total;
     per['abs'] = vabs / total;
     per['aga'] = vaga / total;
-    // The following is not a graceful solution... the minimum width is never
-    // 10% unless the vote total of one of the votes is 0. I would like to see
-    // a nicer solution for an arbitrary set of values (more than 3 types)
-    //
-    // Please mail, if you find one: Conrado Buhrer - conrado@buhrer.net
+    var biggest = "none";
+    var big = 0;
     for (var i in per) {
-        per[i] = 10+ (per[i]*70);
+        if(per[i] > big) {
+            big = per[i];
+            biggest = i;
+        }
+    }
+    for (var i in per) {
+        if(per[i] < 0.1) {
+            per[biggest] -= (0.1 - per[i]);
+            per[i] = 0.1;
+        }
+    }
+    for (var i in per) {
+        per[i] = per[i]*100;
     }
     $(".i-"+issue).find("div.for").width(per['for']+"%");
     $(".i-"+issue).find("div.abstain").width(per['abs']+"%");
@@ -170,33 +169,19 @@ function handle_errors(error) {
         window.location = "/oauth/auth/";
     }
 }
-function getIssueList(sortorder, page, click) {
-    $("div#"+sortorder).data("page", page);
-    if(page == 1) {
-        $("div.less-"+sortorder).hide();
-    }
-    else {
-        $("div.less-"+sortorder).show();
-    }
-    if (click == true) {
-        $("div.outer-"+sortorder).slideUp( function() {
-            $("div.outer-"+sortorder).slideDown();
-        });
-    }
-    $.getJSON("/ajax/issues/"+sortorder+".page/"+page+"/", function(data) {
-        $("div#"+sortorder).children(".issue").remove();
+function getIssueList(sortorder) {
+    $.getJSON("/ajax/issues/"+sortorder+"/", function(data) {
         for( var i in data ) {
             id = url2id(data[i][0]);
             getIssue(sortorder, id);
         }
     });
-    $.getJSON("/ajax/issues/"+sortorder+".page/"+(page+1)+"/", function(data) {
-        if(data.length == 0){
-            $("div.more-"+sortorder).hide();
-        }
-        else {
-            $("div.more-"+sortorder).show();
-        }
+    $("div.abstainvotes").hide();
+    $("div#"+sortorder)
+        .hide();
+    $("div."+sortorder).mouseup(function() {
+        var body = $(this).parent().find("div#"+sortorder);
+        body.slideToggle();
     });
 }
 
@@ -204,7 +189,6 @@ function getIssue(sortorder, issueid) {
     // get the issue content
     $.get("/issue/"+issueid+"/", function(issue) {
         $(issue).appendTo("div#"+sortorder);
-        $("div#"+sortorder).find(".i-"+issueid).hide();
         // get user's current vote.
         $.get("/myvote/"+issueid+"/", function (myvote) {
             $("div#"+sortorder)
@@ -222,7 +206,6 @@ function getIssue(sortorder, issueid) {
         });
         $("div#"+sortorder).find(".i-"+issueid).find("div.body").hide();
         $("div#"+sortorder).find(".i-"+issueid).find("div.abstainvotes").hide();
-        $("div#"+sortorder).find(".i-"+issueid).slideDown();
     });
 }
 

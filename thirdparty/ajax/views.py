@@ -10,12 +10,8 @@ from django.utils.html import escape
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 
-from django.utils import simplejson as json
-
 from oauth_consumer.consumer import DemoOAuthConsumerApp
 from forms import VoteForm
-
-from utils import index_conversion
 
 demo = DemoOAuthConsumerApp()
 
@@ -76,8 +72,7 @@ def ajax_vote_cast(request, next=None, xhr="WTF?"):
     status = simplejson.dumps({'status': "success"})
     return http.HttpResponse(status, mimetype="application/json")
 
-
-def ajax_get_issues_list_ordered( request, sortorder, page=1 ):
+def ajax_get_issues_list_ordered( request, sortorder, page=None ):
     """
     Return sorted by `sortorder` issues list
     """
@@ -86,38 +81,14 @@ def ajax_get_issues_list_ordered( request, sortorder, page=1 ):
     # return json
     error = ""
 
-    local_paginate = 5
-    remote_paginate = 25
-    try:
-        page = int(page)
-    except:
-        pass
-
-    (remote_start, remote_end ) = index_conversion(page, local_paginate, remote_paginate)
-
-    remote_pages = []
-    get = remote_start[0]+1
-    while get <= (remote_end[0]+1):
-        response = demo.get_issues_list_ordered(request, sortorder, get)
-        page = json.loads(response.read())
-        if remote_start[0] == remote_end[0]:
-            remote_pages.extend(page[remote_start[1]:remote_end[1]+1])
-        elif get == remote_start[0]+1:
-            remote_pages.extend(page[remote_start[1]:])
-        elif get == remote_end[0]+1:
-            remote_pages.extend(page[:remote_end[1]+1])
-        else:
-            remote_pages.extend(page)
-        get += 1
-
-    print remote_pages
+    response = demo.get_issues_list_ordered(request, sortorder, page)
     # Otherwise submit the vote to Service Provider
 
     if response.status != 200:
-        error = "getting issue list failed, code %d, reason %s" % (response.status, response.reason)
+        error = "getting issue votes failed, code %d, reason %s" % (response.status, response.reason)
         status = simplejson.dumps({'status': 'debug', 'error': error})
         return http.HttpResponseServerError(status, mimetype="application/json")
 
     # Save the vote and signal that it was saved
-    status = json.dumps(remote_pages)
+    status = response.read()
     return http.HttpResponse(status, mimetype="application/json")
