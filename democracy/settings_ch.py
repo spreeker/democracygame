@@ -13,6 +13,7 @@ BASE_PATH = os.path.dirname(__file__)
 DEBUG = False
 
 SERVER_EMAIL = 'reinder@rustema.nl'
+DEFAULT_FROM_EMAIL = 'webmaster@democratiespel.nl'
 
 ADMINS = (
     ('ReindeR Rustema', 'webmaster@democratiespel.nl'),
