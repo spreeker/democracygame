@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-13 12:25+0200\n"
+"POT-Creation-Date: 2009-10-19 10:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,20 +16,20 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: settings-ch.py:144 settings.py:54
+#: settings.py:53
+msgid "Dutch"
+msgstr ""
+
+#: settings.py:54
 msgid "English"
 msgstr ""
 
-#: settings-ch.py:145 settings.py:55
+#: settings.py:55
 msgid "Spanish"
 msgstr ""
 
-#: settings-ch.py:146 settings.py:56
+#: settings.py:56
 msgid "German"
-msgstr ""
-
-#: settings-ch.py:147 settings.py:53
-msgid "Dutch"
 msgstr ""
 
 #: settings.py:57
@@ -69,28 +69,32 @@ msgstr ""
 msgid "succesfully added multiply"
 msgstr ""
 
-#: issue/forms.py:8
+#: issue/forms.py:9
 msgid "your issue title"
 msgstr ""
 
-#: issue/forms.py:9
+#: issue/forms.py:10
 msgid "arguments"
 msgstr ""
 
-#: issue/forms.py:13
+#: issue/forms.py:14
 msgid "external source of information"
 msgstr ""
 
-#: issue/forms.py:14
+#: issue/forms.py:15
 msgid "source type"
 msgstr ""
 
-#: issue/forms.py:15
+#: issue/forms.py:16
 msgid "your vote"
 msgstr ""
 
-#: issue/forms.py:17 templates/dashboard/my_issues.html:101
+#: issue/forms.py:18 templates/dashboard/my_issues.html:101
 msgid "publish"
+msgstr ""
+
+#: issue/forms.py:19 issue/forms.py:26
+msgid "tags"
 msgstr ""
 
 #: issue/models.py:18
@@ -115,6 +119,14 @@ msgstr ""
 
 #: issue/models.py:23
 msgid "image"
+msgstr ""
+
+#: issue/views.py:121
+msgid "You voted succesfull, to save your votes please register"
+msgstr ""
+
+#: issue/views.py:149
+msgid "You cannot multiply yet!"
 msgstr ""
 
 #: profiles/forms.py:20
@@ -168,7 +180,7 @@ msgid ""
 "issue later.\n"
 "        We do not allow change because people might have voted. If content "
 "changes,  votes\n"
-"        are invalidated.You can archive and hide it by not publishing your "
+"        are invalidated. You can archive and hide it by not publishing your "
 "issue.\n"
 "        "
 msgstr ""
@@ -181,15 +193,15 @@ msgstr ""
 msgid "proposed by you"
 msgstr ""
 
-#: templates/dashboard/my_issues.html:84 templates/issue/issue_list.html:41
+#: templates/dashboard/my_issues.html:84 templates/issue/issue_list.html:44
 msgid "YES"
 msgstr ""
 
-#: templates/dashboard/my_issues.html:88 templates/issue/issue_list.html:45
+#: templates/dashboard/my_issues.html:88 templates/issue/issue_list.html:48
 msgid "NO"
 msgstr ""
 
-#: templates/dashboard/my_issues.html:96 templates/issue/issue_list.html:53
+#: templates/dashboard/my_issues.html:96 templates/issue/issue_list.html:56
 msgid "blank"
 msgstr ""
 
@@ -197,11 +209,15 @@ msgstr ""
 msgid "hide"
 msgstr ""
 
-#: templates/dashboard/my_issues.html:106 templates/issue/issue_list.html:57
+#: templates/dashboard/my_issues.html:106 templates/issue/issue_list.html:60
 msgid "multiply"
 msgstr ""
 
-#: templates/dashboard/my_issues.html:108
+#: templates/dashboard/my_issues.html:112
+msgid "tag"
+msgstr ""
+
+#: templates/dashboard/my_issues.html:114
 msgid "created by"
 msgstr ""
 
