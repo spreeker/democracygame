@@ -4,10 +4,10 @@
 <strong>{{user.get_profile.ranking }}</strong>
 <a href="http://nl/wiki/index.php/Punten">score</a> {{user.get_profile.score}}
 <a href="http://nl/wiki/index.php/Burger">{% trans user.get_profile.role %}</a>
-<a href="{% url logout %}">{% trans "logout" %}</a>.
+<a href="{% url logout %}">{% trans "logout" %}</a>
 
 {% else %}
     <a href="{% url registration_register %}">{% trans "register" %} </a> | 
-    <a href="{% url auth_login %}">{% trans "log in" %} </a>.
+    <a href="{% url auth_login %}">{% trans "log in" %} </a>
 {% endif %}
 
