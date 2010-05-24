@@ -1,20 +1,17 @@
-{% extends "base_content.html" %}
 
+
+{% extends "base_content.html" %}
+{% load i18n %}
 
 {% block content %}
-<div style="border-color:gray;border-width:0px 0px 0px 0px;border-style:solid;margin:0em 2em 1em 2em;padding-bottom:2em">
-<h3>{{profile.title}}</h3>
-<div style="font-family:serif;line-height:120%">
-{{profile.description|striptags|linebreaks|truncatewords_html:200}}
-</div>
-{% if profile.url%}
-url {{profile.url|urlizetrunc:30}}
-{% else %}
-No url given.
-{% endif %}
 
-<h3 style="font-family:serif;position:relative;right:1em">Details for {{user_to_show.username}}</h3>
-<a href="{% url web_issues_for_user user_to_show.username %}">Show {{user_to_show.username}}'s issues</a><br />
-<a href="{% url web_votes_for_user user_to_show.username %}">Show {{user_to_show.username}}'s votes</a><br />
-</div>
+<h2> Details For Registered User {{ user_to_show.username }} </h2>
+    {% with user_to_show.get_profile as profile %}
+    score <h3>{{profile.score}}</h3>
+    role <h3>{{profile.role}}</h3>
+    website <h3>{{profile.url|urlizetrunc:30}}</h3>
+    votes public <h3>{{profile.votes_public}}</h3>
+    id verified <h3>{{profile.id_is_verified}}</h3>
+    description <h3>{{profile.description}}</h3>
+    {% endwith %}
 {% endblock %}

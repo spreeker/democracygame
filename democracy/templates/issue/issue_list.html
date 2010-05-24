@@ -48,17 +48,18 @@
     <input type="submit" value="{% trans "NO" %}"/>
 </form><form action="{% url vote issue.pk %}" method="post">
     <input type="hidden" name="next" class="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
-    <select name="direction" onChange="this.form.submit();">
+    <select name="direction">
         {% for blank_vote in blank_votes %}
              <option value="{{ blank_vote.0 }}">{% trans blank_vote.1 %}</option>
         {% endfor %}
     </select>
+    <input type="submit" value="{% trans "blank" %}"/>
 </form>
 <form action="{% url multiply issue.pk %}" method="post">
     <input type="hidden" name="next" class="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
     <input type="submit" value="{% trans "multiply" %}"/>
 </form>
-created by {{ issue.user }}
+created by <a href="{% url userprofile issue.user.username %}">{{ issue.user }}</a>
 </div>{# end forms #}
 </li>
 {% endfor %}

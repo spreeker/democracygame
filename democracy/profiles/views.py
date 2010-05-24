@@ -134,18 +134,15 @@ def activate(request, activation_key,
                               context_instance=context)
 
 def userprofile_show(request, username):
-    user = get_object_or_404(User, username = username) 
+    user = get_object_or_404(User, username=username) 
 
-    form = 0
-    if request.user.is_authenticated:
-        form = ChangeProfile( instance= user.get_profile() )
-
-    context = RequestContext(request, {
-        'form' : form,
-    })
-    if user == request.user:
+    if user == request.user and request.user.is_authenticated:
+        form = ChangeProfile(instance=user.get_profile())
+        context = RequestContext(request, {'form' : form,})
         return render_to_response('profiles/self_detail.html', context)
+
     else:
+        context = RequestContext(request, {'user_to_show' : user})    
         return render_to_response('profiles/user_detail.html', context)
 
 @login_required
