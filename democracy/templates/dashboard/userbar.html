@@ -1,9 +1,11 @@
 {% load i18n %}
 {% if user.is_authenticated %}
-<a href="{% url userprofile user %}">{{user.username}}</a>
-<strong>{{user.get_profile.ranking }}</strong>
-<a href="http://nl/wiki/index.php/Punten">score</a> {{user.get_profile.score}}
-<a href="http://nl/wiki/index.php/Burger">{% trans user.get_profile.role %}</a>
+<a href="{% url userprofile user %}">{{user.username}}</a> |
+<a href="http://www.democratiespel.nl/wiki/index.php/Rang">{% trans "ranking" %}</a>
+<strong>{{user.get_profile.ranking }}</strong> | 
+<a href="http://www.democratiespel.nl/wiki/index.php/Punten">score</a> 
+{{user.get_profile.score}} |
+<a href="http://www.democratiespel.nl/wiki/index.php/Rol">{% trans user.get_profile.role %}</a> |
 <a href="{% url logout %}">{% trans "logout" %}</a>
 
 {% else %}

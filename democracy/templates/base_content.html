@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block mainmenu %}
-    <a href="{% url api_doc %}">API</a> | 
-    <a href="{% url index %}"> {% trans "issues" %} </a> |
+    <a href="http://www.democratiespel.nl/wiki/">help</a> | 
+    <a href="{% url index %}"> {% trans "all issues" %} </a> |
     <a href="{% url dashboard_issues %}"> {% trans "your issues" %} </a> |
     <a href="{% url dashboard_votes %}"> {% trans "your votes" %} </a> |
 {% endblock %}
