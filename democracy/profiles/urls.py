@@ -9,6 +9,7 @@ from django.contrib.auth import views as auth_views
 from profiles.views import activate
 from profiles.views import userprofile_show
 from profiles.views import change_description
+from profiles.views import compare_votes_to_user
 
 from profiles.forms import RegistrationTermsOfServiceUniqueEmail
 
@@ -62,4 +63,7 @@ urlpatterns = patterns('',
        url(r'^changedescription/$',
             change_description,
             name='change_description',),
+       url(r'^compare_votes_to_user/(?P<username>\w+)/$',
+            compare_votes_to_user,
+            name='compare_votes_to_user',),
        )

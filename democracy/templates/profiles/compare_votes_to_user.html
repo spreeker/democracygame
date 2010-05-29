@@ -1,0 +1,14 @@
+
+
+{% extends "base_content.html" %}
+{% load i18n %}
+
+{% block content %}
+<h2> Your votes compared to <a href="{% url userprofile user_to_compare.username %}">{{ user_to_compare.username }}</a>'s </h2>
+
+<table>
+<tr><td>No votes by {{user_to_compare.username}}</td><td>Agree </td><td>Blank</td><td>Disagree</td><td>No votes by you</td></tr>
+<tr><td>{{n_votes_player}}</td><td class="for">{{n_agree}} / {{n_total_intersection}}</td><td class="blank">{{n_blank}} / {{n_total_intersection}}</td><td class="against">{{n_disagree}} / {{n_total_intersection}}</td><td>{{n_votes_user}}</td></tr>
+</table>
+
+{% endblock %}

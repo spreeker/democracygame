@@ -25,6 +25,7 @@ from registration.models import RegistrationProfile
 from django.conf import settings
 
 from gamelogic import actions
+from voting.models import Vote
 
 import datetime
 
@@ -196,3 +197,52 @@ def search_user(request):
         'num_pages' : paginator.num_pages,
     })
     return render_to_response('profiles/search_user.html', context)
+
+def compare_votes_to_user(request, username):
+    '''Compare ``request.user``'s voting history with user with ``username``.'''
+    # TODO : hook this up with some caching!
+    user = get_object_or_404(User, username = username)
+    # Grab the votes from the database, construct dictionaries keyed by 
+    # object_id (of an Issue) and values being an integer that describes the
+    # actual vote, (-1, 0, 1) for (against, blanc, for) respectively.
+    if request.user.is_authenticated():
+        players_votes = Vote.objects.get_user_votes(request.user)
+        players_votedict = dict((vote.object_id, vote.vote) for vote in players_votes.all())
+    else:
+        votedict = request.session.get('vote_history', dict())
+        players_votedict = dict((i, int(x)) for i, x in votedict.items())
+    users_votes = Vote.objects.get_user_votes(user)
+    users_votedict = dict((vote.object_id, vote.vote) for vote in users_votes.all())
+    # Now compare the two dictionaries of votes and construct a tuple with 
+    n_agree = 0
+    n_disagree = 0
+    n_blank = 0
+    for k, vote in players_votedict.items():
+        if users_votedict.has_key(k):
+            # If both vote the same, that is agreement.
+            if users_votedict[k] == vote:
+                n_agree += 1
+            # Both voting blanc (even if for different reasons) is consirdered
+            # to be in agreement. Assuming blanc votes have integers larger than
+            # unity!
+            elif (users_votedict[k] > 1 and vote > 1):
+                n_agree += 1
+            # One blanc vote and one other is considered neither agreement nor 
+            # disagreement.
+            elif (users_votedict[k] > 1 or vote > 1):
+                n_blank += 1
+            # Disagreement:
+            else:
+                n_disagree += 1
+    n_total_intersection = n_agree + n_disagree + n_blank
+
+    context = RequestContext(request, {
+        'user_to_compare' : user,
+        'n_votes_user' : len(users_votedict) - n_total_intersection,
+        'n_votes_player' : len(players_votedict) - n_total_intersection,
+        'n_agree' : n_agree,
+        'n_disagree' : n_disagree,
+        'n_blank' : n_blank,
+        'n_total_intersection' : n_total_intersection,
+    })
+    return render_to_response('profiles/compare_votes_to_user.html', context)
