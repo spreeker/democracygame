@@ -1,0 +1,16 @@
+
+
+{% extends "base_content.html" %}
+{% load i18n %}
+
+{% block content %}
+<h2> Your votes compared to parties participating in this year's elections.</h2>
+
+<table>
+<tr><td>Party</td><td>Agree </td><td>Blank</td><td>Disagree</td></tr>
+{% for username, n_agree, n_blank, n_disagree, n_total_intersection in compared %}
+<tr><td><a href="{% url userprofile username %}">{{username}}</a></td><td class="for">{{n_agree}} / {{n_total_intersection}}</td><td class="blank">{{n_blank}} / {{n_total_intersection}}</td><td class="against">{{n_disagree}} / {{n_total_intersection}}</td></tr>
+{% endfor %}
+</table>
+
+{% endblock %}

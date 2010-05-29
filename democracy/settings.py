@@ -140,6 +140,7 @@ INSTALLED_APPS = (
 	'registration',
     'piston',
     'rosetta',
+    'juni2010',
 )
 FORCE_SCRIPT_NAME = "" # removes the django.fcgi from the urls.
 

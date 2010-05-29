@@ -30,7 +30,9 @@ urlpatterns = patterns('',
     #
     (r'^profile/', include('profiles.urls')),
     (r'^i18n/', include('django.conf.urls.i18n')),
-    # 
+    #
+    url(r'^juni2010/$', 'juni2010.views.compare_to_parties', name='juni_2010'),
+    #
     url(r'^$' , 'issue.views.issue_list', name="index"),
 )
 
