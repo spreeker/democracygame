@@ -10,10 +10,13 @@ from profiles.views import activate
 from profiles.views import userprofile_show
 from profiles.views import change_description
 from profiles.views import compare_votes_to_user
+from profiles.views import issue_list_user
 
 from profiles.forms import RegistrationTermsOfServiceUniqueEmail
 
 from registration.views import register
+
+# TODO: fix indentation
 
 urlpatterns = patterns('',
        # Activation keys get matched by \w+ instead of the more specific
@@ -66,4 +69,7 @@ urlpatterns = patterns('',
        url(r'^compare_votes_to_user/(?P<username>\w+)/$',
             compare_votes_to_user,
             name='compare_votes_to_user',),
+       url(r'^issues_by/(?P<username>\w+)/$',
+            issue_list_user,
+            name='issue_list_user',)
        )

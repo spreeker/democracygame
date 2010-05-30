@@ -12,6 +12,7 @@
     votes public <h3>{{profile.votes_public}}</h3>
     id verified <h3>{{profile.id_is_verified}}</h3>
     description <h3>{{profile.description}}</h3>
-    <a href="{% url compare_votes_to_user user_to_show.username %}">compare your votes with {{user_to_show.username}}'s votes</a>
+    <h3><a href="{% url issue_list_user user_to_show.username %}">{% trans "Proposed issues" %}</a></h3>
+    <h3><a href="{% url compare_votes_to_user user_to_show.username %}">{% trans "compare your votes with the votes by " %}{{user_to_show.username}}</a></h3>
     {% endwith %}
 {% endblock %}

@@ -19,6 +19,8 @@ from forms import UserSearchForm
 from django.contrib.auth.forms import PasswordResetForm
 from models import UserProfile
 from issue.models import Issue
+from issue.views import issue_list
+
 
 # Imports for activate view
 from registration.models import RegistrationProfile
@@ -246,3 +248,19 @@ def compare_votes_to_user(request, username):
         'n_total_intersection' : n_total_intersection,
     })
     return render_to_response('profiles/compare_votes_to_user.html', context)
+
+def issue_list_user(request, username):
+    '''
+    For a user, specified by the ``username`` parameter, show his / her issues.
+    
+    Note : the current implementation depends on the views module of the issue
+    app in democracy game's implementation.
+    '''
+    user = get_object_or_404(User, username=username)
+    issues = Issue.objects.filter(user=user)
+    return issue_list(
+        request, 
+        extra_context={'username':username}, 
+        template_name='profiles/issue_list_user.html',
+        issues=issues,
+    )

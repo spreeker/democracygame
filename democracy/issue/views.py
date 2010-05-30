@@ -69,14 +69,32 @@ def issue_list(request, *args, **kwargs):
     """ 
     shows issues to vote on in different sortings
     based on collective knowlegde from votings on them
+    
+    Note by using the keyword arguments ``template_name``, ``extra_context`` and
+    ``issues`` one can reuse most or all of the display-an-issue-code (no need
+    to reimplement that stuff). How to use:
+    
+    1 build a view function that calls and returns this view
+    2 construct a QuerySet of Issues pass it in with as ``issues``
+    3 save a (edited) copy of "issue/issue_list.html" somewhere
+    4 pass in the template location as ``template_name``
+    5 pass in a dictionary of extra context variables as ``extra_context``
+    
+    These keywords were added whilst constructing a page that shows a user's
+    issues without reimplementing this function etc.
     """
-    template_name= "issue/issue_list.html"
+    
+    template_name = kwargs.get('template_name', "issue/issue_list.html")
+    extra_context = kwargs.get('extra_context', dict())
 
     if not request.method == "GET":
         return HttpResponseBadRequest
 
-    issues = Issue.objects.select_related().order_by('-time_stamp')
-    issues = issues.filter( is_draft=False )
+    if kwargs.has_key('issues'):
+        issues = kwargs['issues']
+    else:
+        issues = Issue.objects.select_related().order_by('-time_stamp')
+        issues = issues.filter( is_draft=False )
 
     if 'sortorder' in kwargs:
         issues, page = order_issues(request, kwargs['sortorder'], issues)
@@ -93,16 +111,17 @@ def issue_list(request, *args, **kwargs):
     if flash_msg:
         del request.session['flash_msg']
 
-
-    c = RequestContext(request, {
+    context = extra_context
+    context.update({
         'blank_votes' : blank_votes.items(),
         'possible_votes' : possible_votes,
         'issues'  : issues, 
         'page' : page,
         'votedata' : Vote,
         'flash_msg' : flash_msg,
-    }) 
-   
+    })
+
+    c = RequestContext(request, context)    
     t = loader.get_template(template_name)
     return HttpResponse(t.render(c))
 
