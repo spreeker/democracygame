@@ -9,7 +9,7 @@
 <table>
 <tr><td>partij</td><td>eens </td><td>blanco</td><td>oneens</td></tr>
 {% for username, n_agree, n_blank, n_disagree, n_total_intersection in compared %}
-<tr><td><a href="{% url userprofile username %}">{{username}}</a></td><td class="for">{{n_agree}} / {{n_total_intersection}}</td><td class="blank">{{n_blank}} / {{n_total_intersection}}</td><td class="against">{{n_disagree}} / {{n_total_intersection}}</td></tr>
+<tr><td><a href="{% url userprofile username %}">{{username}}</a></td><td class="for">{{n_agree}}</td><td class="blank">{{n_blank}}</td><td class="against">{{n_disagree}}</td></tr>
 {% endfor %}
 </table>
 <h3>Over deze pagina (disclaimer)</h3>
