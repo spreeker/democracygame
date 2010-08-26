@@ -46,19 +46,22 @@ def paginate(request, qs):
 
 
 def order_issues(request, sortorder, issues):
-    """ return page and qs of issues derived from voting data.  """
+    """
+    return page and qs of issues derived from voting data. 
+
+    """
     if sortorder == 'popular':
-        qs = Vote.objects.get_popular(Issue)
+        votes = Vote.objects.get_popular(Issue)
     elif sortorder == 'controversial':
-        qs = Vote.objects.get_controversial(Issue)
+        votes = Vote.objects.get_controversial(Issue)
     else:
-        #elif sortorder == 'new': 
-        # we dont need voting data for this one.
-        #default issues is wat we want
+        votes = Vote.objects.get_user_votes(request.user, Issue) #get user votes.
+        votes = votes.values_list('object_id', )
+        issues = issues.exclude(id__in=votes)
         page = paginate(request, issues)
         return page.object_list, page 
 
-    page = paginate(request, qs)
+    page = paginate(request, votes)
     object_ids = [ d['object_id'] for d in page.object_list ]
     issues = issues.filter( is_draft = False ) 
     issues = issues.filter( id__in=object_ids )
