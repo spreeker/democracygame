@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-08-13 12:25+0200\n"
-"PO-Revision-Date: 2009-11-06 17:55\n"
+"PO-Revision-Date: 2010-05-30 23:26\n"
 "Last-Translator: ReindeR Rustema <reinder@rustema.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -176,7 +176,7 @@ msgstr ""
 
 #: templates/dashboard/my_issues.html:50
 msgid "proposed by you"
-msgstr ""
+msgstr "door u voorgesteld"
 
 #: templates/dashboard/my_issues.html:84 templates/issue/issue_list.html:41
 msgid "YES"
@@ -200,7 +200,7 @@ msgstr ""
 
 #: templates/dashboard/my_issues.html:108
 msgid "created by"
-msgstr ""
+msgstr "contribution from "
 
 #: templates/dashboard/my_votes.html:8
 msgid "My votes"
