@@ -120,7 +120,6 @@ class DemoOAuthConsumerApp(django_oauth_consumer.OAuthConsumerApp):
         """
         api_url = '%svote/' % API_SERVER
         self.response = self.post_resource(request, api_url, content=vote_data)
-        print vote_data
         return self.response.status
 
     # public? cached?
@@ -162,7 +161,7 @@ class DemoOAuthConsumerApp(django_oauth_consumer.OAuthConsumerApp):
         if page == None:
             api_url = '%s/issues/%s/' %(API_SERVER, sortorder)
         else:
-            api_url = '%s/issues/%s.page/%s/' %(API_SERVER, sortorder, page)
+            api_url = '%s/issues/%s\.page/%s/' %(API_SERVER, sortorder, page)
         self.response = self.get_resource(request, api_url)
         return self.response
 
