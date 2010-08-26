@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
 V 23
-/svn/!svn/ver/156/trunk
+/svn/!svn/ver/185/trunk
 END
 LICENSE.txt
 K 25
@@ -12,20 +12,20 @@ END
 INSTALL.txt
 K 25
 svn:wc:ra_dav:version-url
-V 34
-/svn/!svn/ver/93/trunk/INSTALL.txt
+V 35
+/svn/!svn/ver/176/trunk/INSTALL.txt
 END
 CHANGELOG.txt
 K 25
 svn:wc:ra_dav:version-url
 V 37
-/svn/!svn/ver/131/trunk/CHANGELOG.txt
+/svn/!svn/ver/185/trunk/CHANGELOG.txt
 END
 setup.py
 K 25
 svn:wc:ra_dav:version-url
 V 32
-/svn/!svn/ver/150/trunk/setup.py
+/svn/!svn/ver/183/trunk/setup.py
 END
 MANIFEST.in
 K 25
