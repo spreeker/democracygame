@@ -35,6 +35,11 @@ class IndexTest(TestCase):
         urls = [ ]
         urls.append('/')
         urls.append(reverse('my_issues', args=["new"]))
+        urls.append(reverse('my_issues', args=['popular']))
+        urls.append(reverse('my_issues', args=['controversial']))
+        urls.append(reverse('my_issues', args=['for']))
+        urls.append(reverse('my_issues', args=['against']))
+
         for url in urls:
             response = self.client.get(url)
             self.assertEqual(response.status_code , 200)
