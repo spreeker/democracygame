@@ -28,7 +28,7 @@ class Vote(models.Model):
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField() 
     payload = generic.GenericForeignKey('content_type', 'object_id')
-
+    # voto AKA direction.
     vote = models.IntegerField(choices = possible_votes.items() )
     time_stamp = models.DateTimeField(editable = False , default=datetime.now )
     # optional **kwargs
