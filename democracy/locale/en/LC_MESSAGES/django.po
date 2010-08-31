@@ -2,12 +2,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-13 12:25+0200\n"
+"POT-Creation-Date: 2010-08-31 20:20+0200\n"
 "PO-Revision-Date: 2010-05-30 23:26\n"
 "Last-Translator: ReindeR Rustema <reinder@rustema.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,24 +16,34 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Translated-Using: django-rosetta 0.4.3.svn\n"
 
-#: settings-ch.py:144 settings.py:54
+#: settings.py:53
+msgid "Dutch"
+msgstr ""
+
+#: settings.py:54
 msgid "English"
 msgstr ""
 
-#: settings-ch.py:145 settings.py:55
+#: settings.py:55
 msgid "Spanish"
 msgstr ""
 
-#: settings-ch.py:146 settings.py:56
+#: settings.py:56
 msgid "German"
-msgstr ""
-
-#: settings-ch.py:147 settings.py:53
-msgid "Dutch"
 msgstr ""
 
 #: settings.py:57
 msgid "French"
+msgstr ""
+
+#: gamelogic/actions.py:55
+#, python-format
+msgid "You voted successfully on %s"
+msgstr ""
+
+#: gamelogic/actions.py:82
+#, python-format
+msgid "You created issue \"%s\" successfully"
 msgstr ""
 
 #: gamelogic/models.py:9
@@ -69,28 +79,32 @@ msgstr ""
 msgid "succesfully added multiply"
 msgstr ""
 
-#: issue/forms.py:8
+#: issue/forms.py:9
 msgid "your issue title"
 msgstr ""
 
-#: issue/forms.py:9
+#: issue/forms.py:10
 msgid "arguments"
 msgstr ""
 
-#: issue/forms.py:13
+#: issue/forms.py:14
 msgid "external source of information"
 msgstr ""
 
-#: issue/forms.py:14
+#: issue/forms.py:15
 msgid "source type"
 msgstr ""
 
-#: issue/forms.py:15
+#: issue/forms.py:16
 msgid "your vote"
 msgstr ""
 
-#: issue/forms.py:17 templates/dashboard/my_issues.html:101
+#: issue/forms.py:18 templates/dashboard/my_issues.html:101
 msgid "publish"
+msgstr ""
+
+#: issue/forms.py:19 issue/forms.py:26
+msgid "tags"
 msgstr ""
 
 #: issue/models.py:18
@@ -117,6 +131,18 @@ msgstr ""
 msgid "image"
 msgstr ""
 
+#: issue/views.py:145
+msgid "You voted succesfull, to save your votes please register"
+msgstr ""
+
+#: issue/views.py:155
+msgid "You did not pick a valid option"
+msgstr ""
+
+#: issue/views.py:182
+msgid "You cannot multiply yet!"
+msgstr ""
+
 #: profiles/forms.py:20
 msgid "Username"
 msgstr ""
@@ -129,8 +155,8 @@ msgstr ""
 msgid "mainpage"
 msgstr ""
 
-#: templates/base_content.html:5 templates/issue/issue_list.html:11
-msgid "issues"
+#: templates/base_content.html:5 templates/web/sidebar.html:45
+msgid "all issues"
 msgstr ""
 
 #: templates/base_content.html:6 templates/dashboard/my_issues.html:8
@@ -142,14 +168,17 @@ msgid "your votes"
 msgstr ""
 
 #: templates/dashboard/my_issues.html:9 templates/issue/issue_list.html:12
+#: templates/profiles/issue_list_user.html:12
 msgid "popular"
 msgstr ""
 
 #: templates/dashboard/my_issues.html:10 templates/issue/issue_list.html:13
+#: templates/profiles/issue_list_user.html:13
 msgid "controversial"
 msgstr ""
 
 #: templates/dashboard/my_issues.html:11 templates/issue/issue_list.html:14
+#: templates/profiles/issue_list_user.html:14
 msgid "new"
 msgstr ""
 
@@ -164,9 +193,12 @@ msgstr ""
 #: templates/dashboard/my_issues.html:36
 msgid ""
 "\n"
-"        Make sure you check your spelling. It is not possible to change your issue later.\n"
-"        We do not allow change because people might have voted. If content changes,  votes\n"
-"        are invalidated.You can archive and hide it by not publishing your issue.\n"
+"        Make sure you check your spelling. It is not possible to change your "
+"issue later.\n"
+"        We do not allow change because people might have voted. If content "
+"changes,  votes\n"
+"        are invalidated. You can archive and hide it by not publishing your "
+"issue.\n"
 "        "
 msgstr ""
 
@@ -178,15 +210,18 @@ msgstr ""
 msgid "proposed by you"
 msgstr "door u voorgesteld"
 
-#: templates/dashboard/my_issues.html:84 templates/issue/issue_list.html:41
+#: templates/dashboard/my_issues.html:84 templates/issue/issue_list.html:47
+#: templates/profiles/issue_list_user.html:44
 msgid "YES"
 msgstr "yes"
 
-#: templates/dashboard/my_issues.html:88 templates/issue/issue_list.html:45
+#: templates/dashboard/my_issues.html:88 templates/issue/issue_list.html:51
+#: templates/profiles/issue_list_user.html:48
 msgid "NO"
 msgstr "no"
 
-#: templates/dashboard/my_issues.html:96 templates/issue/issue_list.html:53
+#: templates/dashboard/my_issues.html:96 templates/issue/issue_list.html:60
+#: templates/profiles/issue_list_user.html:56
 msgid "blank"
 msgstr ""
 
@@ -194,11 +229,16 @@ msgstr ""
 msgid "hide"
 msgstr ""
 
-#: templates/dashboard/my_issues.html:106 templates/issue/issue_list.html:57
+#: templates/dashboard/my_issues.html:106 templates/issue/issue_list.html:64
+#: templates/profiles/issue_list_user.html:60
 msgid "multiply"
 msgstr ""
 
-#: templates/dashboard/my_issues.html:108
+#: templates/dashboard/my_issues.html:112
+msgid "tag"
+msgstr ""
+
+#: templates/dashboard/my_issues.html:114
 msgid "created by"
 msgstr "contribution from "
 
@@ -214,18 +254,38 @@ msgstr "ordered by time"
 msgid "DELETE"
 msgstr "delete"
 
-#: templates/dashboard/userbar.html:7
+#: templates/dashboard/userbar.html:4
+msgid "ranking"
+msgstr ""
+
+#: templates/dashboard/userbar.html:9
 msgid "logout"
 msgstr ""
 
-#: templates/dashboard/userbar.html:10 templates/profiles/login.html:24
+#: templates/dashboard/userbar.html:12 templates/profiles/login.html:25
 #: templates/web/sidebar.html:55
 msgid "register"
 msgstr ""
 
-#: templates/dashboard/userbar.html:11 templates/profiles/logout.html:7
+#: templates/dashboard/userbar.html:13 templates/profiles/logout.html:7
 #: templates/web/sidebar.html:57
 msgid "log in"
+msgstr ""
+
+#: templates/issue/issue_list.html:11
+msgid "issues"
+msgstr ""
+
+#: templates/issue/issue_list.html:15
+msgid "for"
+msgstr ""
+
+#: templates/issue/issue_list.html:16
+msgid "against"
+msgstr ""
+
+#: templates/issue/issue_list.html:55
+msgid "blank vote because.."
 msgstr ""
 
 #: templates/piston/authorize_token.html:4
@@ -239,17 +299,23 @@ msgstr ""
 #: templates/piston/authorize_token.html:10
 msgid ""
 "\n"
-"    You came on this page because you want to use your voting data and/or play\n"
+"    You came on this page because you want to use your voting data and/or "
+"play\n"
 "    the democracy game on an other website/service than ours.\n"
 "    To protect your data *you* need to authorize the 3rd\n"
-"    party on this page to acces your data. You can revoke granted acces later if you want.\n"
+"    party on this page to acces your data. You can revoke granted acces "
+"later if you want.\n"
 msgstr ""
 
-#: templates/profiles/login.html:18
+#: templates/profiles/issue_list_user.html:11
+msgid "issues for"
+msgstr ""
+
+#: templates/profiles/login.html:19
 msgid "Try again, username and password don't match."
 msgstr ""
 
-#: templates/profiles/login.html:25
+#: templates/profiles/login.html:26
 msgid "reset password"
 msgstr ""
 
@@ -282,6 +348,15 @@ msgstr ""
 
 #: templates/profiles/self_detail.html:22
 msgid "change password"
+msgstr ""
+
+#: templates/profiles/user_detail.html:15
+#, fuzzy
+msgid "Proposed issues"
+msgstr "door u voorgesteld"
+
+#: templates/profiles/user_detail.html:16
+msgid "compare your votes with the votes by "
 msgstr ""
 
 #: templates/registration/activate.html:6
@@ -328,7 +403,9 @@ msgid "Password change"
 msgstr ""
 
 #: templates/registration/password_change_form.html:8
-msgid "Please enter your old password, for security's sake, and then enter your new password twice so we can verify you typed it in correctly."
+msgid ""
+"Please enter your old password, for security's sake, and then enter your new "
+"password twice so we can verify you typed it in correctly."
 msgstr ""
 
 #: templates/registration/password_change_form.html:13
@@ -367,7 +444,9 @@ msgid "Enter new password"
 msgstr ""
 
 #: templates/registration/password_reset_confirm.html:11
-msgid "Please enter your new password twice so we can verify you typed it in correctly."
+msgid ""
+"Please enter your new password twice so we can verify you typed it in "
+"correctly."
 msgstr ""
 
 #: templates/registration/password_reset_confirm.html:23
@@ -375,7 +454,9 @@ msgid "Password reset unsuccessful"
 msgstr ""
 
 #: templates/registration/password_reset_confirm.html:25
-msgid "The password reset link was invalid, possibly because it has already been used.  Please request a new password reset."
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a new password reset."
 msgstr ""
 
 #: templates/registration/password_reset_done.html:6
@@ -383,7 +464,9 @@ msgid "Password reset successful"
 msgstr ""
 
 #: templates/registration/password_reset_done.html:8
-msgid "We've e-mailed you instructions for setting your password to the e-mail address you submitted. You should be receiving it shortly."
+msgid ""
+"We've e-mailed you instructions for setting your password to the e-mail "
+"address you submitted. You should be receiving it shortly."
 msgstr ""
 
 #: templates/registration/password_reset_email.html:2
@@ -417,7 +500,9 @@ msgid "Password reset"
 msgstr ""
 
 #: templates/registration/password_reset_form.html:8
-msgid "Forgotten your password? Enter your e-mail address below, and we'll e-mail instructions for setting a new one."
+msgid ""
+"Forgotten your password? Enter your e-mail address below, and we'll e-mail "
+"instructions for setting a new one."
 msgstr ""
 
 #: templates/registration/password_reset_form.html:12
@@ -540,7 +625,8 @@ msgid ""
 " \n"
 "\n"
 "        <a href=\"http://nl/wiki/index.php/Burger\">%(role)s</a>.<br />\n"
-"\t\t<a href=\"http://nl/wiki/index.php/Punten\">score</a> is %(score)s<br /><br />\n"
+"\t\t<a href=\"http://nl/wiki/index.php/Punten\">score</a> is %(score)s<br /"
+"><br />\n"
 "        <p>\n"
 "\t\tfor : %(total_for)s \n"
 "\t\tagainst : %(total_against)s\n"
@@ -563,10 +649,6 @@ msgstr ""
 
 #: templates/web/sidebar.html:38
 msgid "You are missing the following actions: "
-msgstr ""
-
-#: templates/web/sidebar.html:45
-msgid "all issues"
 msgstr ""
 
 #: templates/web/sidebar.html:46
@@ -609,11 +691,11 @@ msgstr ""
 msgid "cast a vote"
 msgstr ""
 
-#: voting/managers.py:12 web/forms.py:66 web/forms.py:82
+#: voting/managers.py:12
 msgid "Against"
 msgstr ""
 
-#: voting/managers.py:13 web/forms.py:66 web/forms.py:82
+#: voting/managers.py:13
 msgid "For"
 msgstr ""
 
@@ -659,29 +741,4 @@ msgstr ""
 
 #: voting/managers.py:34
 msgid "Multiply"
-msgstr ""
-
-#: web/forms.py:62
-msgid "Tag"
-msgstr ""
-
-#: web/forms.py:66 web/forms.py:82
-msgid "Blank..."
-msgstr ""
-
-#: web/util.py:34 web/util.py:38 web/util.py:66
-msgid "I did not vote"
-msgstr ""
-
-#: web/views.py:64
-msgid "All Issues"
-msgstr ""
-
-#: web/views.py:121
-#, python-format
-msgid "Issues for %(username)s"
-msgstr ""
-
-#: web/views.py:355
-msgid "Issue object does not exist"
 msgstr ""
