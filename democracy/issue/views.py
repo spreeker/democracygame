@@ -48,16 +48,20 @@ def paginate(request, qs):
 def order_issues(request, sortorder, issues):
     """
     return page and qs of issues derived from voting data. 
-
     """
     if sortorder == 'popular':
         votes = Vote.objects.get_popular(Issue)
     elif sortorder == 'controversial':
         votes = Vote.objects.get_controversial(Issue)
+    elif sortorder == 'for':
+        votes = Vote.objects.get_top(Issue)
+    elif sortorder == 'against':
+        votes = Vote.objects.get_bottom(Issue)
     else:
-        votes = Vote.objects.get_user_votes(request.user, Issue) #get user votes.
-        votes = votes.values_list('object_id', )
-        issues = issues.exclude(id__in=votes)
+        if request.user.is_authenticated(): 
+            votes = Vote.objects.get_user_votes(request.user, Issue) #get user votes.
+            votes = votes.values_list('object_id', )
+            issues = issues.exclude(id__in=votes)
         page = paginate(request, issues)
         return page.object_list, page 
 
@@ -132,8 +136,6 @@ def record_vote(request, issue_id ):
     """
     Wrapper function for the voting.views.vote_on_object function
 
-    what if user is anonymous?
-
     """
     if not request.user.is_authenticated() and request.REQUEST.has_key('direction'):
         vote_history = request.session.get("vote_history", {})
@@ -147,7 +149,16 @@ def record_vote(request, issue_id ):
 
     if request.REQUEST.has_key('direction'):
         direction = request.REQUEST['direction']
-        return vote_on_object(request, Issue, direction , object_id=issue_id ) 
+        if int(direction) not in possible_votes:
+            logging.debug(direction)
+            logging.debug(possible_votes)
+            message = _("You did not pick a valid option")
+            request.session["flash_msg"] = message
+            next = request.REQUEST.get('next', '/' )
+            return HttpResponseRedirect( next )
+        else:
+            return vote_on_object(request, Issue, direction , object_id=issue_id ) 
+
     return HttpResponseRedirect('/')
 
 def record_multiply(request , issue_id ):
@@ -194,6 +205,7 @@ def propose_issue(request):
                 form.cleaned_data['source_type'],
                 form.cleaned_data['is_draft'],
             )
+            print new_issue.id
             if form.cleaned_data['tags']:
                 actions.tag(
                     request.user,
