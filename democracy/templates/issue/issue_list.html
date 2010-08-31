@@ -9,9 +9,12 @@
 
 <div class="issues">
 <h2> {% trans "issues"%} </h2>
-<h4> <a href="{% url issue_list 'popular' %}"> {% trans 'popular' %} </a> |
+<h4><a href="{% url issue_list 'popular' %}"> {% trans 'popular' %} </a> |
     <a href="{% url issue_list 'controversial' %}">{%trans 'controversial' %}</a> | 
-    <a href="{% url issue_list 'new' %}">{% trans 'new' %}</a> | </h4>
+    <a href="{% url issue_list 'new' %}">{% trans 'new' %}</a> |
+    <a href="{% url issue_list 'for' %}">{% trans 'for' %}</a> | 
+    <a href="{% url issue_list 'against' %}">{% trans 'against' %}</a> 
+</h4>
 <ul>
 {% for issue in issues %}
 
@@ -49,6 +52,7 @@
 </form><form action="{% url vote issue.pk %}" method="post">
     <input type="hidden" name="next" class="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
     <select name="direction">
+    <option value="-10">{% trans "blank vote because.." %}</option>
         {% for blank_vote in blank_votes %}
              <option value="{{ blank_vote.0 }}">{% trans blank_vote.1 %}</option>
         {% endfor %}
