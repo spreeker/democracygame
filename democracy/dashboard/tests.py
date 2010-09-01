@@ -10,12 +10,12 @@ class IndexTest(TestCase):
     """ 
     def setUp(self):
         super(IndexTest , self).setUp()
-        u = User.objects.create_user("test","s@p.com","test")
+        self.u = User.objects.create_user("test","s@p.com","test")
         self.i = Issue( title="test" , body="test", user=u )
         self.i.save()
 
     def tearDown(self):
-        super( IndexTest , self ).tearDown()
+        super(IndexTest ,self).tearDown()
 
 
     def test_smoke_test(self):
@@ -56,3 +56,4 @@ class IndexTest(TestCase):
         #response = self.client.get(url)
 
         #self.assertContains(response, "<div class=\"for\"> 1</div>")
+
