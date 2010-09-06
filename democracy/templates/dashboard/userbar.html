@@ -7,7 +7,6 @@
 {{user.get_profile.score}} |
 <a href="http://www.democratiespel.nl/wiki/index.php/Rol">{% trans user.get_profile.role %}</a> |
 <a href="{% url logout %}">{% trans "logout" %}</a>
-
 {% else %}
     <a href="{% url registration_register %}">{% trans "register" %} </a> | 
     <a href="{% url auth_login %}">{% trans "log in" %} </a>
