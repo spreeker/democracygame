@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="/media/blueprint/print.css" type="text/css" media="print" />    
 <!--[if lt IE 8]><link rel="stylesheet" href="css/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
 <link href="/media/index.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="/media/jquery.js"></script>
+<script type="text/javascript" src="/media/js/jquery.js"></script>
 {% block extra_head %} 
 {% endblock %}
 </head>
@@ -13,18 +13,16 @@
 
 <div class="container">
 <div id="header" class="container">
-<div id="mainmenu" class="span-16">
+<div id="mainmenu" class="span-14">
     {% block mainmenu %} <a href="/">{% trans "mainpage" %}</a> | {% endblock %}
 </div>
-<div id="userbar" class="span-8 last">
-    &nbsp; 
+<div id="userbar" class="span-10 last">
 {% block userbar %}{% endblock %}
 </div>
 </div>
 
 <div class="container">
 <div id="sidebar" class="span-6">
-  &nbsp;
   {% block sidebar %}{% endblock %}
 </div>
 <div id="content" class="span-15 last">
@@ -34,9 +32,7 @@
 <div id="messagebar"> 
 {% block messagebar %}{% endblock %}
 </div>
-   &nbsp;
-<div>
-</div></div>
+</div>
 
 <div id="footer" class="span-24 last">
  {% block footer %}
