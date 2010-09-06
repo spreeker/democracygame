@@ -106,7 +106,7 @@ class IssueVotesHandler(AnonymousBaseHandler):
         except Issue.DoesNotExist:
             return rc.NOT_HERE
 
-        votes = Vote.objects.get_for_object(issue)
+        votes = Vote.objects.get_object_votes(issue)
         return votes
 
     @classmethod

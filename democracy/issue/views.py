@@ -21,6 +21,7 @@ from django.views.generic.list_detail import object_list
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.utils.translation import ugettext as _
+from django.utils import simplejson
 
 from tagging.forms import TagField
 
@@ -46,19 +47,26 @@ def paginate(request, qs):
 
 
 def order_issues(request, sortorder, issues):
-    """ return page and qs of issues derived from voting data.  """
+    """
+    return page and qs of issues derived from voting data. 
+    """
     if sortorder == 'popular':
-        qs = Vote.objects.get_popular(Issue)
+        votes = Vote.objects.get_popular(Issue)
     elif sortorder == 'controversial':
-        qs = Vote.objects.get_controversial(Issue)
+        votes = Vote.objects.get_controversial(Issue)
+    elif sortorder == 'for':
+        votes = Vote.objects.get_top(Issue)
+    elif sortorder == 'against':
+        votes = Vote.objects.get_bottom(Issue)
     else:
-        #elif sortorder == 'new': 
-        # we dont need voting data for this one.
-        #default issues is wat we want
+        if request.user.is_authenticated(): 
+            votes = Vote.objects.get_user_votes(request.user, Issue) #get user votes.
+            votes = votes.values_list('object_id', )
+            issues = issues.exclude(id__in=votes)
         page = paginate(request, issues)
         return page.object_list, page 
 
-    page = paginate(request, qs)
+    page = paginate(request, votes)
     object_ids = [ d['object_id'] for d in page.object_list ]
     issues = issues.filter( is_draft = False ) 
     issues = issues.filter( id__in=object_ids )
@@ -128,32 +136,54 @@ def issue_list(request, *args, **kwargs):
 def record_vote(request, issue_id ):
     """
     Wrapper function for the voting.views.vote_on_object function
-
-    what if user is anonymous?
-
+    It does 3 cases:
+        -handle anonymous votes
+        -handle and validate normal direction votes. (TODO) formvalidation??
+        -handle ajax votes
     """
     if not request.user.is_authenticated() and request.REQUEST.has_key('direction'):
-        vote_history = request.session.get("vote_history", {})
-        vote_history[int(issue_id)] = request.REQUEST['direction']
-        request.session['vote_history'] = vote_history
-        request.session.modified = True
-        message = _("You voted succesfull, to save your votes please register")
-        request.session["flash_msg"] = message
-        next = request.REQUEST.get('next', '/' )
-        return HttpResponseRedirect( next )
-
+        return handle_anonymous_vote(request, issue_id)
+    
     if request.REQUEST.has_key('direction'):
-        direction = request.REQUEST['direction']
-        return vote_on_object(request, Issue, direction , object_id=issue_id ) 
+        direction = int(request.REQUEST['direction'])
+        if (not request.is_ajax()) and not possible_votes.has_key(direction):
+            message = _("You did not pick a valid option")
+            request.session["flash_msg"] = message
+            next = request.REQUEST.get('next', '/' )
+            return HttpResponseRedirect(next) 
+        return vote_on_object(request, Issue, direction, object_id=issue_id, allow_xmlhttprequest=True ) 
+
+    logging.debug("i get out")
     return HttpResponseRedirect('/')
 
-def record_multiply(request , issue_id ):
+def handle_anonymous_vote(request, issue_id):
+
+    vote_history = request.session.get("vote_history", {})
+    vote_history[int(issue_id)] = request.REQUEST['direction']
+    request.session['vote_history'] = vote_history
+    request.session.modified = True
+
+    message = _("You voted succesfull, to save your votes please register")
+    if request.is_ajax():
+        issue = get_object_or_404(Issue, id=issue_id)
+        return HttpResponse(simplejson.dumps({
+            'succes' : True,
+            'message': message,
+            'score': Vote.objects.get_object_votes(issue),
+            }))
+    request.session["flash_msg"] = message
+    next = request.REQUEST.get('next', '/' )
+    return HttpResponseRedirect(next)
+
+
+
+def record_multiply(request, issue_id ):
     """
     Wrapper funtion around gamelogic.actions.multiply
     """
     if not request.method == "POST": 
         return HttpResponseBadRequest()
-    issue = get_object_or_404( Issue, id=issue_id ) 
+    issue = get_object_or_404(Issue, id=issue_id) 
 
     possible_actions = actions.get_actions(request.user) 
     next = request.REQUEST.get('next', '/' )
@@ -167,7 +197,7 @@ def record_multiply(request , issue_id ):
 
     message = _("You cannot multiply yet!")
     request.user.message_set.create(message=message)    
-    return HttpResponseRedirect( next )
+    return HttpResponseRedirect(next)
 
 
 def propose_issue(request):
@@ -191,6 +221,7 @@ def propose_issue(request):
                 form.cleaned_data['source_type'],
                 form.cleaned_data['is_draft'],
             )
+            print new_issue.id
             if form.cleaned_data['tags']:
                 actions.tag(
                     request.user,

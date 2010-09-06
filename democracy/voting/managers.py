@@ -42,7 +42,7 @@ class VoteManager(models.Manager):
 
     def get_for_object(self, obj):
         """
-        Get queryset for votes on object
+        Get qs for votes on object
         """
         ctype = ContentType.objects.get_for_model(obj)
         return self.filter(content_type = ctype.pk,
@@ -69,37 +69,37 @@ class VoteManager(models.Manager):
         if not user.is_authenticated():
             return {} 
 
-        queryset = self.filter( user=user )
-        queryset = queryset.filter( is_archived=False )
+        qs = self.filter( user=user )
+        qs = qs.filter( is_archived=False )
         ctype = ContentType.objects.get_for_model(objects[0])
-        queryset = queryset.filter(content_type=ctype, object_id__in=object_ids)
-        votes = list(queryset)
+        qs = qs.filter(content_type=ctype, object_id__in=object_ids)
+        votes = list(qs)
         vote_dict = dict([( vote.object_id, vote ) for vote in votes ])
         return vote_dict
 
     def get_user_votes(self, user, obj=None):
         """
-        Get queryset for active votes by user
+        Get qs for active votes by user
         """
         return self.filter(user=user, is_archived=False).order_by("-time_stamp")
     
-    def get_for_object(self, obj, all=False):
+    def get_object_votes(self, obj, all=False):
         """
         Get a dictionary mapping vote to votecount
         """
         object_id = obj._get_pk_val()
         ctype = ContentType.objects.get_for_model(obj)
-        queryset = self.filter(content_type=ctype, object_id=object_id)
+        qs = self.filter(content_type=ctype, object_id=object_id)
     
         if not all:
-            queryset = queryset.filter(is_archived=False) # only pick active votes
+            qs = qs.filter(is_archived=False) # only pick active votes
 
-        queryset = queryset.values('vote')
-        queryset = queryset.annotate(vcount=Count("vote")).order_by()
+        qs = qs.values('vote')
+        qs = qs.annotate(vcount=Count("vote")).order_by()
 
         vote_dict = {}
         
-        for count in queryset:
+        for count in qs:
             if count['vote'] >= 10 : # sum up all blank votes
                 vote_dict[0] = vote_dict.get(0,0) + count['vcount']
             vote_dict[count['vote']] = count['vcount']
@@ -115,16 +115,16 @@ class VoteManager(models.Manager):
         if not object_ids:
             return {}
         ctype = ContentType.objects.get_for_model(objects[0])
-        queryset = self.filter(content_type=ctype, object_id__in=object_ids)
+        qs = self.filter(content_type=ctype, object_id__in=object_ids)
 
         if not all: # only pick active votes
-            queryset = queryset.filter(is_archived=False) 
+            qs = qs.filter(is_archived=False) 
 
-        queryset = queryset.values('object_id', 'vote',)
-        queryset = queryset.annotate(vcount=Count("vote")).order_by()
+        qs = qs.values('object_id', 'vote',)
+        qs = qs.annotate(vcount=Count("vote")).order_by()
        
         vote_dict = {}
-        for votecount  in queryset:
+        for votecount  in qs:
             object_id = votecount['object_id']
             votes = vote_dict.setdefault(object_id , {})
             if votecount['vote'] >= 10:  # sum up all blank votes
@@ -136,18 +136,63 @@ class VoteManager(models.Manager):
     def get_popular(self, Model, object_ids=None):
         """ return qs ordered by popularity """
         ctype = ContentType.objects.get_for_model(Model)
-        queryset = self.filter(content_type=ctype,)
-        queryset = queryset.filter(is_archived=False) 
+        qs = self.filter(content_type=ctype,)
+        qs = qs.filter(is_archived=False) 
 
         if object_ids: # to get the most popular from a list
-            queryset = queryset.filter(object_id__in=object_ids)
+            qs = qs.filter(object_id__in=object_ids)
 
-        queryset = queryset.values('object_id',)
-        queryset = queryset.annotate(totalvotes=Count("vote")).order_by()
-        queryset = queryset.order_by('-totalvotes')
-        #queryset = queryset.values_list('object_id' , 'totalvotes')
+        qs = qs.values('object_id',)
+        qs = qs.annotate(totalvotes=Count("vote")).order_by()
+        qs = qs.order_by('-totalvotes')
+        #qs = qs.values_list('object_id' , 'totalvotes')
        
-        return queryset
+        return qs
+
+    def get_count(self, Model, object_ids=None, direction=1):
+        """
+        Find list ordered by count of votes for a direction.
+        """
+        ctype = ContentType.objects.get_for_model(Model)
+        qs = self.filter(content_type=ctype,)
+        qs = qs.filter(is_archived=False) 
+
+        if object_ids: # to get the most popular from a list
+            qs = qs.filter(object_id__in=object_ids)
+        
+        qs = qs.values('object_id',)
+        qs = qs.filter(vote=direction)
+        qs = qs.annotate(totalvotes=Count("vote")).order_by()
+        qs = qs.order_by('-totalvotes')
+        
+        return qs
+
+    def get_top(self, Model, object_ids=None):
+        """
+        Find the votes which are possitive recieved.
+        """
+        ctype = ContentType.objects.get_for_model(Model)
+        qs = self.filter(content_type=ctype,)
+        qs = qs.filter(is_archived=False) 
+
+        if object_ids: # to get the most popular from a list
+            qs = qs.filter(object_id__in=object_ids)
+        
+        qs = qs.values('object_id',)
+        qs = qs.filter(vote__in=[-1,1])
+        qs = qs.annotate(avg=Avg("vote")).order_by()
+        qs = qs.order_by('-avg')
+        
+        return qs
+
+    def get_bottom(self, Model, object_ids=None):
+        """
+        Find the votes which are worst recieved
+        """
+        qs = self.get_top(Model, object_ids)
+        qs = qs.reverse()
+
+        return qs
 
     def get_controversial(self, Model, object_ids=None):
         """ 
@@ -157,21 +202,21 @@ class VoteManager(models.Manager):
         indicates controversy.
         """
         ctype = ContentType.objects.get_for_model(Model)
-        queryset = self.filter(content_type=ctype,)
-        queryset = queryset.filter(is_archived=False) 
-        queryset = queryset.filter(vote__in=[-1,1])
+        qs = self.filter(content_type=ctype,)
+        qs = qs.filter(is_archived=False) 
+        qs = qs.filter(vote__in=[-1,1])
 
         if object_ids: # to get the most popular from a list
-            queryset = queryset.filter(object_id__in=object_ids)
+            qs = qs.filter(object_id__in=object_ids)
 
-        queryset = queryset.values('object_id',)
-        queryset = queryset.annotate(avg=Avg("vote")).order_by()
-        queryset = queryset.order_by('avg')
-        queryset = queryset.filter(avg__gt= -0.3 )
-        queryset = queryset.filter(avg__lt= 0.3 )
-        #queryset = queryset.values_list('object_id' , 'avg')
+        qs = qs.values('object_id',)
+        qs = qs.annotate(avg=Avg("vote")).order_by()
+        qs = qs.order_by('avg')
+        qs = qs.filter(avg__gt= -0.3 )
+        qs = qs.filter(avg__lt= 0.3 )
+        #qs = qs.values_list('object_id' , 'avg')
 
-        return queryset
+        return qs
 
     def get_for_direction(self, Model, directions=[1,-1]):
         """
@@ -179,11 +224,11 @@ class VoteManager(models.Manager):
         TODO
         """
         ctype = ContentType.objects.get_for_model(Model)
-        queryset = self.filter(content_type=ctype,)
-        queryset = queryset.filter(is_archived=False) 
-        queryset = queryset.filter(vote__in=directions)
+        qs = self.filter(content_type=ctype,)
+        qs = qs.filter(is_archived=False) 
+        qs = qs.filter(vote__in=directions)
 
-        return queryset
+        return qs
 
     def record_vote(self, user, obj, direction, keep_private=False, api_interface=None):
         """

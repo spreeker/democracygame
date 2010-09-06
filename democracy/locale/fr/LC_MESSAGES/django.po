@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-10-19 10:08+0200\n"
+"POT-Creation-Date: 2010-08-31 20:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,6 +34,16 @@ msgstr ""
 
 #: settings.py:57
 msgid "French"
+msgstr ""
+
+#: gamelogic/actions.py:55
+#, python-format
+msgid "You voted successfully on %s"
+msgstr ""
+
+#: gamelogic/actions.py:82
+#, python-format
+msgid "You created issue \"%s\" successfully"
 msgstr ""
 
 #: gamelogic/models.py:9
@@ -121,11 +131,15 @@ msgstr ""
 msgid "image"
 msgstr ""
 
-#: issue/views.py:121
+#: issue/views.py:145
 msgid "You voted succesfull, to save your votes please register"
 msgstr ""
 
-#: issue/views.py:149
+#: issue/views.py:155
+msgid "You did not pick a valid option"
+msgstr ""
+
+#: issue/views.py:182
 msgid "You cannot multiply yet!"
 msgstr ""
 
@@ -141,8 +155,8 @@ msgstr ""
 msgid "mainpage"
 msgstr ""
 
-#: templates/base_content.html:5 templates/issue/issue_list.html:11
-msgid "issues"
+#: templates/base_content.html:5 templates/web/sidebar.html:45
+msgid "all issues"
 msgstr ""
 
 #: templates/base_content.html:6 templates/dashboard/my_issues.html:8
@@ -154,14 +168,17 @@ msgid "your votes"
 msgstr ""
 
 #: templates/dashboard/my_issues.html:9 templates/issue/issue_list.html:12
+#: templates/profiles/issue_list_user.html:12
 msgid "popular"
 msgstr ""
 
 #: templates/dashboard/my_issues.html:10 templates/issue/issue_list.html:13
+#: templates/profiles/issue_list_user.html:13
 msgid "controversial"
 msgstr ""
 
 #: templates/dashboard/my_issues.html:11 templates/issue/issue_list.html:14
+#: templates/profiles/issue_list_user.html:14
 msgid "new"
 msgstr ""
 
@@ -193,15 +210,18 @@ msgstr ""
 msgid "proposed by you"
 msgstr ""
 
-#: templates/dashboard/my_issues.html:84 templates/issue/issue_list.html:44
+#: templates/dashboard/my_issues.html:84 templates/issue/issue_list.html:47
+#: templates/profiles/issue_list_user.html:44
 msgid "YES"
 msgstr ""
 
-#: templates/dashboard/my_issues.html:88 templates/issue/issue_list.html:48
+#: templates/dashboard/my_issues.html:88 templates/issue/issue_list.html:51
+#: templates/profiles/issue_list_user.html:48
 msgid "NO"
 msgstr ""
 
-#: templates/dashboard/my_issues.html:96 templates/issue/issue_list.html:56
+#: templates/dashboard/my_issues.html:96 templates/issue/issue_list.html:60
+#: templates/profiles/issue_list_user.html:56
 msgid "blank"
 msgstr ""
 
@@ -209,7 +229,8 @@ msgstr ""
 msgid "hide"
 msgstr ""
 
-#: templates/dashboard/my_issues.html:106 templates/issue/issue_list.html:60
+#: templates/dashboard/my_issues.html:106 templates/issue/issue_list.html:64
+#: templates/profiles/issue_list_user.html:60
 msgid "multiply"
 msgstr ""
 
@@ -233,18 +254,38 @@ msgstr ""
 msgid "DELETE"
 msgstr ""
 
-#: templates/dashboard/userbar.html:7
+#: templates/dashboard/userbar.html:4
+msgid "ranking"
+msgstr ""
+
+#: templates/dashboard/userbar.html:9
 msgid "logout"
 msgstr ""
 
-#: templates/dashboard/userbar.html:10 templates/profiles/login.html:24
+#: templates/dashboard/userbar.html:12 templates/profiles/login.html:25
 #: templates/web/sidebar.html:55
 msgid "register"
 msgstr ""
 
-#: templates/dashboard/userbar.html:11 templates/profiles/logout.html:7
+#: templates/dashboard/userbar.html:13 templates/profiles/logout.html:7
 #: templates/web/sidebar.html:57
 msgid "log in"
+msgstr ""
+
+#: templates/issue/issue_list.html:11
+msgid "issues"
+msgstr ""
+
+#: templates/issue/issue_list.html:15
+msgid "for"
+msgstr ""
+
+#: templates/issue/issue_list.html:16
+msgid "against"
+msgstr ""
+
+#: templates/issue/issue_list.html:55
+msgid "blank vote because.."
 msgstr ""
 
 #: templates/piston/authorize_token.html:4
@@ -266,11 +307,15 @@ msgid ""
 "later if you want.\n"
 msgstr ""
 
-#: templates/profiles/login.html:18
+#: templates/profiles/issue_list_user.html:11
+msgid "issues for"
+msgstr ""
+
+#: templates/profiles/login.html:19
 msgid "Try again, username and password don't match."
 msgstr ""
 
-#: templates/profiles/login.html:25
+#: templates/profiles/login.html:26
 msgid "reset password"
 msgstr ""
 
@@ -303,6 +348,14 @@ msgstr ""
 
 #: templates/profiles/self_detail.html:22
 msgid "change password"
+msgstr ""
+
+#: templates/profiles/user_detail.html:15
+msgid "Proposed issues"
+msgstr ""
+
+#: templates/profiles/user_detail.html:16
+msgid "compare your votes with the votes by "
 msgstr ""
 
 #: templates/registration/activate.html:6
@@ -597,10 +650,6 @@ msgstr ""
 msgid "You are missing the following actions: "
 msgstr ""
 
-#: templates/web/sidebar.html:45
-msgid "all issues"
-msgstr ""
-
 #: templates/web/sidebar.html:46
 msgid "my issues"
 msgstr ""
@@ -641,11 +690,11 @@ msgstr ""
 msgid "cast a vote"
 msgstr ""
 
-#: voting/managers.py:12 web/forms.py:66 web/forms.py:82
+#: voting/managers.py:12
 msgid "Against"
 msgstr ""
 
-#: voting/managers.py:13 web/forms.py:66 web/forms.py:82
+#: voting/managers.py:13
 msgid "For"
 msgstr ""
 
@@ -691,29 +740,4 @@ msgstr ""
 
 #: voting/managers.py:34
 msgid "Multiply"
-msgstr ""
-
-#: web/forms.py:62
-msgid "Tag"
-msgstr ""
-
-#: web/forms.py:66 web/forms.py:82
-msgid "Blank..."
-msgstr ""
-
-#: web/util.py:34 web/util.py:38 web/util.py:66
-msgid "I did not vote"
-msgstr ""
-
-#: web/views.py:64
-msgid "All Issues"
-msgstr ""
-
-#: web/views.py:121
-#, python-format
-msgid "Issues for %(username)s"
-msgstr ""
-
-#: web/views.py:355
-msgid "Issue object does not exist"
 msgstr ""

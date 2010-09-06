@@ -1,18 +1,18 @@
-9
+10
 
 dir
-156
+186
 http://django-tagging.googlecode.com/svn/trunk
 http://django-tagging.googlecode.com/svn
 
 
 
-2009-07-08T00:15:22.035920Z
-156
-devin.carlen@gmail.com
+2010-01-22T10:37:25.746231Z
+185
+brosner
 has-props
 
-svn:special svn:externals svn:needs-lock
+
 
 
 
@@ -69,11 +69,11 @@ file
 
 
 
-2009-07-18T17:34:55.000000Z
-2298a5dfd7903940c220d522f991f5ed
-2007-08-20T09:19:55.193228Z
-93
-jonathan.buchanan
+2010-08-26T19:41:04.853386Z
+ac9fa28ea77b752f4778035c5103f90b
+2010-01-22T09:23:52.337873Z
+176
+brosner
 has-props
 
 
@@ -95,7 +95,7 @@ has-props
 
 
 
-534
+533
 
 CHANGELOG.txt
 file
@@ -103,11 +103,11 @@ file
 
 
 
-2009-07-18T17:34:55.000000Z
-0591d66a8ffdbde408f3321407270f6d
-2008-01-22T13:02:34.889764Z
-131
-jonathan.buchanan
+2010-08-26T19:41:04.853386Z
+efd038e00ff3922c4c294452336e1bfa
+2010-01-22T10:37:25.746231Z
+185
+brosner
 has-props
 
 
@@ -129,7 +129,7 @@ has-props
 
 
 
-4108
+4363
 
 setup.py
 file
@@ -137,11 +137,11 @@ file
 
 
 
-2009-07-18T17:34:55.000000Z
-25fc4f14cabc76ec9a0c4a611fbc1acc
-2008-10-07T17:01:02.624553Z
-150
-jacob.kaplanmoss
+2010-08-26T19:41:04.853386Z
+790ff939638b8ea9ed2d3cd0ab22f7e8
+2010-01-22T10:31:02.397004Z
+183
+brosner
 has-props
 
 
@@ -163,7 +163,7 @@ has-props
 
 
 
-2494
+2320
 
 docs
 dir

@@ -16,28 +16,28 @@ r"""
 >>> users = []
 >>> for username in ['u1', 'u2', 'u3', 'u4']:
 ...     users.append(User.objects.create_user(username, '%s@test.com' % username, 'test'))
->>> Vote.objects.get_for_object(i1)
+>>> Vote.objects.get_object_votes(i1)
 {}
 >>> Vote.objects.record_vote(users[0], i1, 1)
 (False, False, <Vote: 1 on "i1" by u1>)
->>> Vote.objects.get_for_object(i1)
+>>> Vote.objects.get_object_votes(i1)
 {1: 1}
 >>> _, _, _ = Vote.objects.record_vote(users[0], i1, -1)
->>> Vote.objects.get_for_object(i1)
+>>> Vote.objects.get_object_votes(i1)
 {-1: 1}
 >>> for user in users:
 ...     _, _, _ = Vote.objects.record_vote(user, i1, +1)
->>> Vote.objects.get_for_object(i1)
+>>> Vote.objects.get_object_votes(i1)
 {1: 4}
 >>> for user in users[:2]:
 ...     _,_,_ = Vote.objects.record_vote(user, i1, 10)
->>> Vote.objects.get_for_object(i1)
+>>> Vote.objects.get_object_votes(i1)
 {0: 2, 1: 2, 10: 2}
 >>> for user in users[:2]:
 ...     _,_,_ = Vote.objects.record_vote(user, i1, -1)
 >>> i2 = Item.objects.create(name='i2')
 >>> _,_,_ = Vote.objects.record_vote(users[0], i2, 10)
->>> Vote.objects.get_for_object(i1)
+>>> Vote.objects.get_object_votes(i1)
 {1: 2, -1: 2}
 >>> try:
 ...     Vote.objects.record_vote(i1, user, -2)
@@ -85,15 +85,14 @@ r"""
 
 # Popular #################################################
 
->>> i5 = Item.objects.create(name='i5')
->>> i6 = Item.objects.create(name='i6')
->>> _ = Vote.objects.record_vote(users[1] , i5, 10)
->>> _ = Vote.objects.record_vote(users[0] , i6, 10)
->>> _ = Vote.objects.record_vote(users[1] , i6, 10)
->>> qs = Vote.objects.get_popular(Item)
->>> qs.values_list('object_id' , 'totalvotes')
 [(1, 4), (2, 4), (3, 4), (4, 4), (6, 2), (5, 1)]
 >>> qs = Vote.objects.get_controversial(Item)
 >>> qs.values_list('object_id' , 'avg')
 [(1, 0.0)]
+>>> qs = Vote.objects.get_top(Item)
+>>> qs.values_list('object_id' , 'avg')
+[(2, 1.0), (4, 1.0), (3, 0.5), (1, 0.0)]
+>>> qs = Vote.objects.get_count(Item)
+>>> qs.values_list('object_id' , 'totalvotes')
+[(2, 4), (3, 3), (4, 3), (1, 2)]
 """

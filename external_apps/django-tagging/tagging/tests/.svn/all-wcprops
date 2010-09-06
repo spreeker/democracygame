@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
 V 37
-/svn/!svn/ver/151/trunk/tagging/tests
+/svn/!svn/ver/170/trunk/tagging/tests
 END
 __init__.py
 K 25
@@ -13,19 +13,19 @@ settings.py
 K 25
 svn:wc:ra_dav:version-url
 V 49
-/svn/!svn/ver/137/trunk/tagging/tests/settings.py
+/svn/!svn/ver/161/trunk/tagging/tests/settings.py
 END
 tests.py
 K 25
 svn:wc:ra_dav:version-url
 V 46
-/svn/!svn/ver/151/trunk/tagging/tests/tests.py
+/svn/!svn/ver/170/trunk/tagging/tests/tests.py
 END
 models.py
 K 25
 svn:wc:ra_dav:version-url
 V 47
-/svn/!svn/ver/134/trunk/tagging/tests/models.py
+/svn/!svn/ver/170/trunk/tagging/tests/models.py
 END
 tags.txt
 K 25

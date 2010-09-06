@@ -3,9 +3,12 @@
 a {
     text-decoration : none ;
 }
+#sidebar A:visited {
+    color : gray ;
+}   
 h2 {
     text-align : center ;
-    border-bottom : 0.05em solid black ;
+    border-bottom : 0.05em solid #CCC;
     margin-bottom: 0em;
 }
 h4 {
@@ -24,6 +27,7 @@ h3 {
 }
 /* header style declarations */
 
+/* Issue display specific styles */
 .issues p, 
 .issues .title,
 .issues .votecounts,
@@ -31,6 +35,10 @@ h3 {
 .issues h3 {
     margin-left : 4em ;
 }
+.issues p {
+    margin-right: 4em;
+}
+
 #proposetips{
     margin-left : 0em;
 }
@@ -54,7 +62,7 @@ h3 {
     display : inline ;
 }
 .issues ul li {
-    border-bottom : 1px solid black ;
+    border-bottom : 1px solid #CCC ;
     padding : 1.2em 1em 1.25em 0;
 }
 .issue_left {
@@ -88,35 +96,34 @@ h3 {
     list-style-type:none;
 }
 .votes ul li {
-    border-bottom : 1px solid black ;
+    border-bottom : 1px solid #CCC;
     padding : 1.2em 1em 1.25em 0;
 }
 
-/* Issue display specific styles */
 
 /* Vote link/report style declarations */
 
 .for {
-    background-color:#99ff99;
-    color:black;
+    font-family: fantasy;
+    font-size: large;
+    color:green;
     padding:0em 1em 0em 1em;
 }
 
 .against {
-    background-color:#ff6666;
-    color:black;
+    font-family: fantasy;
+    font-size: large;
+    color:red;
     padding:0em 1em 0em 1em;
 }
 
 .blank {
-    background-color:#cccccc;
-    color:black;
+    font-family: fantasy;
+    font-size: large;
+    color:gray;
     padding:0em 1em 0em 1em;
 }
 
 #footer {
     clear : both;
 }
-
-
-

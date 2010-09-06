@@ -15,7 +15,7 @@ class IndexTest(TestCase):
         self.i.save()
 
     def tearDown(self):
-        super( IndexTest , self ).tearDown()
+        super(IndexTest ,self).tearDown()
 
 
     def test_smoke_test(self):
@@ -35,6 +35,11 @@ class IndexTest(TestCase):
         urls = [ ]
         urls.append('/')
         urls.append(reverse('my_issues', args=["new"]))
+        urls.append(reverse('my_issues', args=['popular']))
+        urls.append(reverse('my_issues', args=['controversial']))
+        urls.append(reverse('my_issues', args=['for']))
+        urls.append(reverse('my_issues', args=['against']))
+
         for url in urls:
             response = self.client.get(url)
             self.assertEqual(response.status_code , 200)
@@ -51,3 +56,4 @@ class IndexTest(TestCase):
         #response = self.client.get(url)
 
         #self.assertContains(response, "<div class=\"for\"> 1</div>")
+

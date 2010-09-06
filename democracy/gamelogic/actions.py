@@ -52,7 +52,7 @@ def vote(user, issue, direction, keep_private , api_interface=None ):
     if repeated_vote: return
     
     logging.debug("User " + user.username + " voted " + unicode(new_vote.vote) + " on issue object with pk =" + unicode(issue.id) + ".")
-    user.message_set.create(message="You voted successfully on %s" % issue.title  )
+    user.message_set.create(message=_("You voted successfully on %s") % issue.title  )
 
     score.vote(user, issue, direction, voted_already)
     levels.upgrade[userprofile.role](userprofile)
@@ -79,7 +79,7 @@ def propose(user, title, body, direction, source_url,
         )
         new_issue.save()
 
-        user.message_set.create(message="You created issue \"%s\" successfully " % new_issue.title  )
+        user.message_set.create(message=_("You created issue \"%s\" successfully") % new_issue.title  )
         score.propose(user)
         levels.upgrade[userprofile.role](userprofile)
     else:

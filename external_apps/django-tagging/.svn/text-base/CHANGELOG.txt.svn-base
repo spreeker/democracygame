@@ -2,9 +2,16 @@
 Django Tagging Changelog
 ========================
 
+Version 0.3.1, 22nd January 2010:
+---------------------------------
 
-SVN Trunk Changes:
-------------------
+* Fixed Django 1.2 support (did not add anything new)
+* Fixed #95 — tagging.register won't stomp on model attributes
+
+Version 0.3.0, 22nd August 2009:
+--------------------------------
+
+* Fixes for Django 1.0 compatibility.
 
 * Added a ``tagging.generic`` module for working with list of objects
   which have generic relations, containing a ``fetch_content_objects``
