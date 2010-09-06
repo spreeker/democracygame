@@ -8,7 +8,7 @@
 {% vote_counts_for_objects issues as counts_dct %}
 
 <div class="issues">
-<h2> {% trans "issues"%} </h2>
+<h2> {% trans "Issues"%} </h2>
 <h4><a href="{% url issue_list 'popular' %}"> {% trans 'popular' %} </a> |
     <a href="{% url issue_list 'controversial' %}">{%trans 'controversial' %}</a> | 
     <a href="{% url issue_list 'new' %}">{% trans 'new' %}</a> |
@@ -27,13 +27,11 @@
 <li id="{{ issue.pk }}" class="issue">
     <h3> {{ issue|capfirst }}</h3> 
 <div class="issue_left">
-    {% if vote %}
     <div class=score>
-        <div class="for"> {{ score.1 }}</div>
-        <div class="blank"> {{ score.0 }}</div>
-        <div class="against"> {{ score.2 }}</div>
+        <div class="for">{% if vote %}{{ score.1 }}{% endif %}</div>
+        <div class="blank">{% if vote %}{{ score.0 }}{% endif %}</div>
+        <div class="against">{% if vote %}{{ score.2 }}{% endif %}</div>
     </div>
-    {% endif %}
 </div>
 <p> {{ issue.body }} </p>
 <div class="yourvote">
@@ -41,7 +39,7 @@
 {% for key , direction in possible_votes.items %}{% ifequal key vote.vote %}{% trans direction %}{% endifequal %}{% endfor %}
 {% endif %}
 </div>
-<div class="forms">
+<div class="forms" id="{{ issue.pk }}">
 <form action="{% url vote issue.pk %}" method="post">
     <input type="hidden" name="direction" class="direction" value="1" />
     <input type="hidden" name="next" class="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
@@ -50,9 +48,9 @@
     <input type="hidden" name="direction" class="direction" value="-1" />
     <input type="hidden" name="next" class="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
     <input type="submit" value="{% trans "NO" %}"/>
-</form><form action="{% url vote issue.pk %}" method="post">
+</form><form action="{% url vote issue.pk %}" method="post" class=blank>
     <input type="hidden" name="next" class="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
-    <select name="direction" onchange="submit();">
+    <select name="direction">
     <option value="-10">{% trans "blank vote because.." %}</option>
         {% for blank_vote in blank_votes %}
              <option value="{{ blank_vote.0 }}">{% trans blank_vote.1 %}</option>
@@ -91,6 +89,8 @@ created by <a href="{% url userprofile issue.user.username %}">{{ issue.user }}<
 
 {%block sidebar %}
     {% include "dashboard/tag_cloud.html" %}
-    &nbsp;
 {% endblock %}
 
+{% block extra_head %}    
+    <script type="text/javascript" src="/media/js/vote.js"></script>
+{% endblock %}
