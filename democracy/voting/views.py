@@ -151,7 +151,7 @@ def xmlhttprequest_vote_on_object(request, model, direction,
 
     # Vote and respond
     #Vote.objects.record_vote(request.user, obj, vote)
-    vote(request.user, obj, direction, False, api_interface="dashboard") 
+    actions.vote(request.user, obj, direction, keep_private=False,) 
     return HttpResponse(simplejson.dumps({
         'success': True,
         'score': Vote.objects.get_object_votes(obj),

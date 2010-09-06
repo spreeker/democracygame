@@ -83,7 +83,7 @@ class VoteManager(models.Manager):
         """
         return self.filter(user=user, is_archived=False).order_by("-time_stamp")
     
-    def get_for_object(self, obj, all=False):
+    def get_object_votes(self, obj, all=False):
         """
         Get a dictionary mapping vote to votecount
         """

@@ -16,28 +16,28 @@ r"""
 >>> users = []
 >>> for username in ['u1', 'u2', 'u3', 'u4']:
 ...     users.append(User.objects.create_user(username, '%s@test.com' % username, 'test'))
->>> Vote.objects.get_for_object(i1)
+>>> Vote.objects.get_object_votes(i1)
 {}
 >>> Vote.objects.record_vote(users[0], i1, 1)
 (False, False, <Vote: 1 on "i1" by u1>)
->>> Vote.objects.get_for_object(i1)
+>>> Vote.objects.get_object_votes(i1)
 {1: 1}
 >>> _, _, _ = Vote.objects.record_vote(users[0], i1, -1)
->>> Vote.objects.get_for_object(i1)
+>>> Vote.objects.get_object_votes(i1)
 {-1: 1}
 >>> for user in users:
 ...     _, _, _ = Vote.objects.record_vote(user, i1, +1)
->>> Vote.objects.get_for_object(i1)
+>>> Vote.objects.get_object_votes(i1)
 {1: 4}
 >>> for user in users[:2]:
 ...     _,_,_ = Vote.objects.record_vote(user, i1, 10)
->>> Vote.objects.get_for_object(i1)
+>>> Vote.objects.get_object_votes(i1)
 {0: 2, 1: 2, 10: 2}
 >>> for user in users[:2]:
 ...     _,_,_ = Vote.objects.record_vote(user, i1, -1)
 >>> i2 = Item.objects.create(name='i2')
 >>> _,_,_ = Vote.objects.record_vote(users[0], i2, 10)
->>> Vote.objects.get_for_object(i1)
+>>> Vote.objects.get_object_votes(i1)
 {1: 2, -1: 2}
 >>> try:
 ...     Vote.objects.record_vote(i1, user, -2)

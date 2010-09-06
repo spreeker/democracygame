@@ -3,6 +3,9 @@
 a {
     text-decoration : none ;
 }
+#sidebar A:visited {
+    color : gray ;
+}   
 h2 {
     text-align : center ;
     border-bottom : 0.05em solid #CCC;
@@ -24,6 +27,7 @@ h3 {
 }
 /* header style declarations */
 
+/* Issue display specific styles */
 .issues p, 
 .issues .title,
 .issues .votecounts,
@@ -96,7 +100,6 @@ h3 {
     padding : 1.2em 1em 1.25em 0;
 }
 
-/* Issue display specific styles */
 
 /* Vote link/report style declarations */
 
