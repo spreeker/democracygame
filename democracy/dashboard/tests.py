@@ -10,7 +10,7 @@ class IndexTest(TestCase):
     """ 
     def setUp(self):
         super(IndexTest , self).setUp()
-        self.u = User.objects.create_user("test","s@p.com","test")
+        u = User.objects.create_user("test","s@p.com","test")
         self.i = Issue( title="test" , body="test", user=u )
         self.i.save()
 
