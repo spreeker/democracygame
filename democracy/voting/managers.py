@@ -167,7 +167,7 @@ class VoteManager(models.Manager):
         
         return qs
 
-    def get_top(self, Model, object_ids=None):
+    def get_top(self, Model, object_ids=None, reverse=False):
         """
         Find the votes which are possitive recieved.
         """
@@ -180,8 +180,13 @@ class VoteManager(models.Manager):
         
         qs = qs.values('object_id',)
         qs = qs.filter(vote__in=[-1,1])
+        qs = qs.annotate(totalvotes=Count("vote"))
+        qs = qs.filter(totalvotes__gt=2) 
         qs = qs.annotate(avg=Avg("vote")).order_by()
-        qs = qs.order_by('-avg')
+        if reverse:
+            qs = qs.order_by('avg')
+        else:
+            qs = qs.order_by('-avg')
         
         return qs
 
@@ -189,8 +194,7 @@ class VoteManager(models.Manager):
         """
         Find the votes which are worst recieved
         """
-        qs = self.get_top(Model, object_ids)
-        qs = qs.reverse()
+        qs = self.get_top(Model, object_ids, reverse=True)
 
         return qs
 
