@@ -180,6 +180,8 @@ class VoteManager(models.Manager):
         
         qs = qs.values('object_id',)
         qs = qs.filter(vote__in=[-1,1])
+        qs = qs.annotate(totalvotes=Count("vote"))
+        qs = qs.filter(totalvotes__gt=2) 
         qs = qs.annotate(avg=Avg("vote")).order_by()
         if reverse:
             qs = qs.order_by('avg')
