@@ -39,7 +39,7 @@
 {% for key , direction in possible_votes.items %}{% ifequal key vote.vote %}{% trans direction %}{% endifequal %}{% endfor %}
 {% endif %}
 </div>
-<div class="forms" id="{{ issue.pk }}">
+<div class="forms" id="id{{ issue.pk }}">
 <form action="{% url vote issue.pk %}" method="post">
     <input type="hidden" name="direction" class="direction" value="1" />
     <input type="hidden" name="next" class="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
@@ -48,10 +48,10 @@
     <input type="hidden" name="direction" class="direction" value="-1" />
     <input type="hidden" name="next" class="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
     <input type="submit" value="{% trans "NO" %}"/>
-</form><form action="{% url vote issue.pk %}" method="post" class=blank>
+</form><form action="{% url vote issue.pk %}" method="post" class="blank">
     <input type="hidden" name="next" class="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
     <select name="direction">
-    <option value="-10">{% trans "blank vote because.." %}</option>
+        <option value="-10">{% trans "blank vote because.." %}</option>
         {% for blank_vote in blank_votes %}
              <option value="{{ blank_vote.0 }}">{% trans blank_vote.1 %}</option>
         {% endfor %}

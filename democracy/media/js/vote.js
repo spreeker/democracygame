@@ -37,7 +37,7 @@ function vote(){
     // Find the issue id under consideration:
     var forms = $(this).parent();
     var issue = forms.parent();
-    var issue_id = issue.attr('id');
+    var issue_id = issue.attr('id').match(/\d+/g);
     var direction = $("input[name=direction]", this).val();
     if (direction == undefined){
         var direction = $("select option:selected", this).val();
