@@ -24,7 +24,7 @@
     {% dict_entry_for_item issue from request.session.vote_history as vote %}
 {% endif %}
 
-<li id="{{ issue.pk }}" class="issue">
+<li id="id{{ issue.pk }}" class="issue">
     <h3> {{ issue|capfirst }}</h3> 
 <div class="issue_left">
     <div class=score>
