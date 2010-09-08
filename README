@@ -20,7 +20,7 @@ requirements:
 # python2.6 , oauth library needs it.
 # markup
 # dist-utils
-# django-trunk
+# django-trunk (10-2010)
 
 # gettext
 

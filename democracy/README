@@ -1,0 +1,17 @@
+
+
+Directory layout.
+
+apache - apache config example files
+api - piston based oauth rest api.
+dashboard - all personal views on users own data
+fixure - example data to fill database
+gamelogic - gamelogic of democracy, score keeping, leveling.
+issue - all code related to votable issues.
+juni2010 - special verkiezingen view.
+local - language tranlation files.
+media - static files, javascript.
+profile - user profile data, some registration, passwerd recovery etc.
+tagcloud - personalized tacloud functions.
+templates - base templates for entire site.
+voting - generic voting code. lots of managers code.
