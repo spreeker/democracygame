@@ -39,7 +39,7 @@
 {% for key , direction in possible_votes.items %}{% ifequal key vote.vote %}{% trans direction %}{% endifequal %}{% endfor %}
 {% endif %}
 </div>
-<div class="forms" id="id{{ issue.pk }}">
+<div class="forms" id="fid{{ issue.pk }}">
 <form action="{% url vote issue.pk %}" method="post">
     <input type="hidden" name="direction" class="direction" value="1" />
     <input type="hidden" name="next" class="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
