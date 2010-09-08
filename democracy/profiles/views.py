@@ -166,40 +166,6 @@ def change_description(request):
     })
     return render_to_response('profiles/self_detail.html', context)
 
-def search_user(request):
-    
-    form = UserSearchForm(request.REQUEST)
-    search_string = ''
-    if form.is_valid():
-        search_string = form.cleaned_data["search_string"]
-
-    if search_string :
-        qs = User.objects.filter(username__icontains = search_string)
-    else:
-        qs = User.objects.all()
-    
-    paginator = Paginator(qs, 20)
-    
-    # Grab page number from the HTTP GET parameters if present.
-    page_no = int(request.GET.get('page', '1'))
-    
-    # See wether requested page is available at all from the paginator.
-    try:
-        current_page = paginator.page(page_no)
-    except (EmptyPage, InvalidPage):
-        current_page = paginator.page(paginator.num_pages)
- 
-    if search_string:
-        form.fields["search_string"].initial = search_string
-    
-    context = RequestContext(request, {
-        'form' : form,
-        'current_page' : current_page,
-        'search_string' : search_string,
-        'num_pages' : paginator.num_pages,
-    })
-    return render_to_response('profiles/search_user.html', context)
-
 def compare_votes_to_user(request, username):
     '''Compare ``request.user``'s voting history with user with ``username``.'''
     # TODO : hook this up with some caching!

@@ -59,16 +59,11 @@ class ClientTestRegistration(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response , 'errorlist' )
 
-##import unittest
-#import utils
-#import views
+
+## TODO
 #
-#class DocStrings(unittest.TestCase):
-#    
-#    def test_DocStrings(self):
-#        import doctest
-#        doctest.testmod(modules name)
-#        doctest.testmod(views)
+#   Do some anonymous votes.
+#   Do register
+#   Check if votes are in DB now.
 #
-#if __name__ == '__main__':
-#        unittest.main()
+
