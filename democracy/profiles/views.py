@@ -215,18 +215,3 @@ def compare_votes_to_user(request, username):
     })
     return render_to_response('profiles/compare_votes_to_user.html', context)
 
-def issue_list_user(request, username):
-    '''
-    For a user, specified by the ``username`` parameter, show his / her issues.
-    
-    Note : the current implementation depends on the views module of the issue
-    app in democracy game's implementation.
-    '''
-    user = get_object_or_404(User, username=username)
-    issues = Issue.objects.filter(user=user)
-    return issue_list(
-        request, 
-        extra_context={'username':username}, 
-        template_name='profiles/issue_list_user.html',
-        issues=issues,
-    )

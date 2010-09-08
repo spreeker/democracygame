@@ -5,9 +5,9 @@ Propose a new issue.
 Vote on an issue
 Publish hide an issue
 Tag an issue
-Multuply an issue
+Mulitply an issue
 show Issues in ordering
-
+show User issues.
 """
 import logging
 from django.contrib.auth.models import User
@@ -132,6 +132,24 @@ def issue_list(request, *args, **kwargs):
     c = RequestContext(request, context)    
     t = loader.get_template(template_name)
     return HttpResponse(t.render(c))
+
+
+def issue_list_user(request, username):
+    '''
+    For a user, specified by the ``username`` parameter, show his / her issues.
+    
+    Note : the current implementation depends on the views module of the issue
+    app in democracy game's implementation.
+    '''
+    user = get_object_or_404(User, username=username)
+    issues = Issue.objects.filter(user=user)
+    return issue_list(
+        request, 
+        extra_context={'username':username}, 
+        template_name='issue/issue_list_user.html',
+        issues=issues,
+    )
+
 
 def record_vote(request, issue_id ):
     """

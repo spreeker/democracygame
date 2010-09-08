@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase 
 from gamelogic.tests import TestActionData 
 from issue.models import Issue
+from voting.models import Vote
 
 class IndexTest(TestCase):
     """
@@ -23,6 +24,8 @@ class IndexTest(TestCase):
         urls = [ ]
         urls.append('/')
         urls.append(reverse('api_doc'))
+        urls.append(reverse('issue_list_user', args=['test']))
+
         for url in urls:
             response = self.client.get(url)
             self.assertEqual(response.status_code , 200)
@@ -34,6 +37,7 @@ class IndexTest(TestCase):
 
         urls = [ ]
         urls.append('/')
+        urls.append(reverse('dashboard_votes'))
         urls.append(reverse('my_issues', args=["new"]))
         urls.append(reverse('my_issues', args=['popular']))
         urls.append(reverse('my_issues', args=['controversial']))
@@ -57,3 +61,5 @@ class IndexTest(TestCase):
 
         #self.assertContains(response, "<div class=\"for\"> 1</div>")
 
+
+    ##TODO test_vote? test_post issue?
