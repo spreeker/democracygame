@@ -8,6 +8,7 @@
 {% vote_counts_for_objects issues as counts_dct %}
 
 <div class="issues">
+{% block issue_menu %}
 <h2> {% trans "Issues"%} </h2>
 <h4><a href="{% url issue_list 'popular' %}"> {% trans 'popular' %} </a> |
     <a href="{% url issue_list 'controversial' %}">{%trans 'controversial' %}</a> | 
@@ -15,9 +16,9 @@
     <a href="{% url issue_list 'for' %}">{% trans 'for' %}</a> | 
     <a href="{% url issue_list 'against' %}">{% trans 'against' %}</a> 
 </h4>
+{% endblock %}
 <ul>
 {% for issue in issues %}
-
 {% dict_entry_for_item issue from vote_dct as vote %}
 {% dict_entry_for_item issue from counts_dct as score %}
 {% if not vote %}
@@ -25,7 +26,7 @@
 {% endif %}
 
 <li id="id{{ issue.pk }}" class="issue">
-    <h3> {{ issue|capfirst }}</h3> 
+    <h3>{{ issue|capfirst }}</h3> 
 <div class="issue_left">
     <div class="score">
         <div class="for">{% if vote %}{{ score.1 }}{% endif %}</div>

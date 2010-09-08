@@ -1,15 +1,15 @@
 {% extends "base.html" %}
-
+{% load i18n %}
 {% block content %}
 <form method="post" action=".">
 <table>
 {{form.as_table}}
 </table>
 {% if form.errors %}
-Some problem ocurred, big deal.
+{% trans "Some problem ocurred, big deal." %}
 {% endif %}
 
-<input type="submit" value="register">
+<input type="submit" value="{% trans "register" %}">
 </form>
 
 {% endblock %}
