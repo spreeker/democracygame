@@ -1,8 +1,7 @@
 {% load i18n %}
 {% load tagging_tags %}
-{% if issues %}<h2> Tags </h2>
+<h2> Tags </h2>
 {% tag_cloud_for_model issue.issue as issue_tags %}
 {% for tag in issue_tags %}
 <a href="{% url issue_with_tag tag.name %}"><font size="{{ tag.font_size }}">{{ tag.name }}</font></a>
 {% endfor %}
-{% endif %}

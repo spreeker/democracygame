@@ -29,12 +29,13 @@
 
         <form action="/i18n/setlang/" method="post">
             <input name="next" type="hidden" value="{{ request.get_full_path }}"/>
-        <select name="language">
+        <select name="language" onChange="submit();">
+            <option value="">{% trans 'pick language..' %}</option>
             {% for lang in LANGUAGES %}
                 <option value="{{ lang.0 }}">{{ lang.1 }}</option>
             {% endfor %}
         </select>
         <input type="submit" value="Go" />
-    </form>
+        </form>
 </div>
 {% endblock %}

@@ -78,11 +78,11 @@ function vote(){
     return false;
 }
 $(function(){
-    $("form").click(function(){
+    $(".forms").find("form").click(function(){
        vote.apply(this);
        return false;
        });  
-    $("form").change(function(){
+    $(".forms").find("form").change(function(){
         vote.apply(this);
         return false;
         });
