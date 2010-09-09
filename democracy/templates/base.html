@@ -10,18 +10,18 @@
 {% endblock %}
 </head>
 <body>
-<div id="header" class="container">
+<div id="header" class="container box" >
 <div id="mainmenu" class="span-14">
     {% block mainmenu %} <a href="/">{% trans "mainpage" %}</a> | {% endblock %}
 </div>
-<div id="userbar" class="span-10 last">
+<div id="userbar" class="span-10 last " >
 {% block userbar %}{% endblock %}
 </div>
 </div>
 
 <div class="container">
 <div id="sidebar" class="span-6">
-  {% block sidebar %}{% endblock %}
+  {% block sidebar %}&nbsp;{% endblock %}
 </div>
 <div id="content" class="span-15 last">
     {% block content %}{% endblock %}

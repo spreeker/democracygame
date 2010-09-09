@@ -8,11 +8,11 @@ from voting.models import Vote
 
 from django.contrib.auth.models import User
 from django.db import transaction
-from django.test import TestCase 
+from django.test import TestCase
 
 
 class TestUsers(TestCase):
-    usernames = ['test1', 'test2','test3']
+    usernames = ['test0', 'test1','test2', 'test3', 'test4', 'test5']
     profiles = [] 
     users = [] 
     
@@ -20,6 +20,7 @@ class TestUsers(TestCase):
         self.load_users() # loads users from DB or creates them
         levels.MIN_SCORE_ACTIVE_CITIZENS = 10
         levels.MAX_OPINION_LEADERS = 2
+        levels.MAX_PARLEMENT = 2
         score.PROPOSE_SCORE = 2
         score.PROPOSE_VOTE_SCORE = 1
 
@@ -27,10 +28,12 @@ class TestUsers(TestCase):
         User.objects.delete()        
 
     def __str__(self):
-        data = " User Profile.role  score \n "
+        data = "%15s %18s %6s %6s\n" % ("User", "Role", "Score", "Votes")
         for i,u in enumerate(self.users):
+
+            v = Vote.objects.get_for_object(u).count()
             p = self.profiles[i]
-            data += "%15s %15s %4d" % ( u.username , p.role , p.score )
+            data += "%15s %18s %4d %4d" % (u.username, p.role, p.score, v)
             data += "\n"
 
         return data
@@ -51,17 +54,17 @@ class TestUsers(TestCase):
         try:
             user = User.objects.get( username = name )
         except User.DoesNotExist :
-            user = User.objects.create_user( name , '%s@example.com' % name  , 'testpw' )
+            user = User.objects.create_user(name, '%s@example.com' % name, 'testpw' )
         return user
 
     def get_profile (self , user ):
         try:
-            profile = UserProfile.objects.get( user = user ) 
+            profile = UserProfile.objects.get(user=user) 
         except UserProfile.DoesNotExist :
-            profile = UserProfile.objects.create( user = user , score = 0 , role = 'citizen' )
+            profile = UserProfile.objects.create(user=user, score=0, role='citizen' )
         return profile 
 
-    def reset(self , score = 0 , role = "citizen" ):
+    def reset(self, score=0 , role="citizen"):
         """ set all users on score and role 
         """
         for p in self.profiles:
@@ -76,35 +79,35 @@ class TestLeveling(TestUsers):
     def test_create_op(self):
         self.reset()
 
-        levels.change_score( self.profiles[0] , 11 )    
+        levels.change_score(self.users[0] ,11)    
         self.load_users()
-        self.assertEqual( self.profiles[0].role , 'opinion leader' )
+        self.assertEqual(self.profiles[0].role ,'opinion leader' )
 
     def test_create2_op(self):
         """ create 2 opinion leaders
         """
         self.test_create_op()
 
-        levels.change_score( self.profiles[1] , 12 )
+        levels.change_score(self.users[1] , 12 )
         self.load_users()
-        self.assertEqual( self.profiles[0].role , 'opinion leader' )
-        self.assertEqual( self.profiles[1].role , 'opinion leader' )
+        self.assertEqual(self.profiles[0].role , 'opinion leader' )
+        self.assertEqual(self.profiles[1].role , 'opinion leader' )
 
     def test_swap_leaders(self):
         self.test_create2_op()
-        # now a 3rd opinion leader cannot be created
-        # so now p3 becomes active citizen
+        #now a 3rd opinion leader cannot be created
+        #so now p3 becomes active citizen
         self.profiles[2].score = 0
-        levels.change_score( self.profiles[2] , 11 )
-        self.assertEqual( self.profiles[2].role , 'active citizen' )
-        levels.change_score( self.profiles[2] , +2 )
+        levels.change_score(self.users[2] , 11 )
+        self.assertEqual(self.profiles[2].role , 'active citizen' )
+        levels.change_score(self.users[2] , +2 )
         #now t3 has highest score and will be opinion leader
-        self.assertEqual( self.profiles[2].role , 'opinion leader' )
-        # this is still true because we still have to reload from the database        
-        self.assertEqual( self.profiles[0].role , 'opinion leader' )
-        # reload  to see the correct value
+        self.assertEqual(self.profiles[2].role , 'opinion leader' )
+        #this is still true because we still have to reload from the database        
+        self.assertEqual(self.profiles[0].role , 'opinion leader' )
+        #reload  to see the correct value
         self.load_users()
-        self.assertEqual( self.profiles[0].role , 'active citizen' )
+        self.assertEqual(self.profiles[0].role , 'active citizen' )
 
     def test_down_grade(self):
         for p in self.profiles:
@@ -112,20 +115,20 @@ class TestLeveling(TestUsers):
             p.role = "opinion leader"
             p.save()
 
-        levels.change_score( self.profiles[0] , - self.profiles[0].score + 1 )
+        levels.change_score(self.users[0] , - self.profiles[0].score + 1 )
         self.load_users()
-        self.assertEqual( self.profiles[0].role , 'citizen')
+        self.assertEqual(self.profiles[0].role , 'citizen')
 
         self.profiles[0].score = 11
         self.profiles[0].role = 'opinion leader'
         self.profiles[0].save()
 
-        levels.change_score( self.profiles[0] , 1 )
+        levels.change_score( self.users[0] , 1 )
         # now profile 0  should be downgraded to active citizen again
         self.load_users()
         # first p0 will be opl because there are not enough.
         self.assertEqual( self.profiles[0].role , 'opinion leader')
-        levels.change_score( self.profiles[2] , 1 )
+        levels.change_score( self.users[2] , 1 )
         self.load_users()
         # now p3 will be opl and p1 active citizen
         self.assertEqual( self.profiles[2].role , 'opinion leader')
@@ -145,7 +148,7 @@ class TestActionData(TestUsers):
         self.reset( levels.MIN_SCORE_ACTIVE_CITIZENS, "active citizen" )
         self.load_users()
         # make sure default values in db are now ok
-        self.assertEqual( User.objects.count() , 3 )
+        self.assertEqual( User.objects.count() , len(self.users))
         self.assertEqual( self.profiles[0].score , levels.MIN_SCORE_ACTIVE_CITIZENS )
         
         # add issues
@@ -159,15 +162,15 @@ class TestActionData(TestUsers):
     def tearDown(self):
         super(TestActionData, self).tearDown()
 
-        qs = Issue.objects.filter( title__startswith="issue" )
+        qs = Issue.objects.filter(title__startswith="issue")
         qs.delete()
         Vote.objects.all().delete()
         MultiplyIssue.objects.all().delete()
 
-    def do_vote(self, user, issue, vote ):
+    def do_vote(self, user, issue, direction ):
         profile = user.get_profile()
         vote_func = actions.role_to_actions[profile.role]['vote']
-        vote_func(user, issue, vote, False) 
+        vote_func(user, issue, direction, False) 
 
     def do_multiply(self , user , issue ):
         # only Opinion leaders can multiply 
@@ -181,13 +184,17 @@ class TestActionData(TestUsers):
 
         multiply_func(user, issue)
 
+    def do_vote_user(self, user, voted_user, direction):
+        profile = user.get_profile()
+        vote_func = actions.role_to_actions[profile.role]['vote user']
+        vote_func(user, voted_user, direction, False)
 
 class TestActions(TestActionData):
     """ test all different actions a user can do """
 
     def test_vote(self):
         # in the test setup we define 3 issues. 
-        # and an issue user also votes on it.
+        # and an issue createor/user also votes on it.
         # 3 issues is 3 default votes
 
         issue1 = Issue.objects.get(title="issue1")  
@@ -198,46 +205,77 @@ class TestActions(TestActionData):
         self.load_users() 
         delta = score.PROPOSE_SCORE + levels.MIN_SCORE_ACTIVE_CITIZENS 
         # check if score has changed after vote
-        self.assertEqual( self.profiles[0].score - delta, score.VOTE_SCORE )
+        self.assertEqual(self.profiles[0].score - delta, score.VOTE_SCORE )
         # check if identical repeated vote on own issue changes nothing
         self.do_vote( self.users[0], issue1, 1 ) 
         self.load_users() 
-        self.assertEqual( self.profiles[0].score - delta, score.VOTE_SCORE )
+        self.assertEqual(self.profiles[0].score - delta, score.VOTE_SCORE )
 
-        self.do_vote( self.users[0], issue2 , 1 ) 
+        self.do_vote(self.users[0], issue2 , 1 ) 
         # score should stay the same
-        self.assertEqual( self.profiles[0].score - delta, score.VOTE_SCORE )
+        self.assertEqual(self.profiles[0].score - delta, score.VOTE_SCORE )
 
         # check if different vote gets into the database
         allVotes = Vote.objects.all().count()
-        self.assertEqual( allVotes, 4 )
+        self.assertEqual(allVotes, 4 )
 
         # now we change our mind a lot. this should result in no extra point and just 1 extra vote
         # in the database
-        self.do_vote( self.users[0], issue2, -1 ) 
-        self.do_vote( self.users[0], issue2, -1 ) 
-        self.do_vote( self.users[0], issue1, 1 ) 
-
+        self.do_vote(self.users[0], issue2, -1) 
+        self.do_vote(self.users[0], issue2, -1) 
+        self.do_vote(self.users[0], issue1, 1) 
         self.load_users() 
-        self.assertEqual( self.profiles[0].score - delta , score.VOTE_SCORE )
+        self.assertEqual(self.profiles[0].score - delta , score.VOTE_SCORE)
         allVotes = Vote.objects.all().count()
-        self.assertEqual( allVotes, 5 )
-
+        self.assertEqual(allVotes, 5 )
+        # now do some a invalid vote..
+        self.assertRaises(ValueError, self.do_vote, self.users[0], issue2, -20)
+        
     def test_multiply(self):
                
-        issue = Issue.objects.get( title = "issue2" )
+        issue = Issue.objects.get(title = "issue2")
 
-        self.do_multiply( self.users[0] , issue )
+        self.do_multiply(self.users[0] ,issue)
 
         # do a multiply on issue
-        count_multiplies = MultiplyIssue.objects.filter( issue = issue ).count()
-        self.assertEqual( count_multiplies , 1 ) 
+        count_multiplies = MultiplyIssue.objects.filter(issue=issue).count()
+        self.assertEqual(count_multiplies ,1) 
         # do too many multiplies on issue
         import gamelogic.models
         maxM = gamelogic.models.MAX_MULTIPLIERS
         for x in range(maxM + 10 ):
-            self.do_multiply( self.users[0] , issue ) 
+            self.do_multiply(self.users[0] ,issue) 
 
-        count_multiplies = MultiplyIssue.objects.filter( issue = issue ).count()
-        self.assertEqual( count_multiplies , maxM )
+        count_multiplies = MultiplyIssue.objects.filter(issue=issue ).count()
+        self.assertEqual(count_multiplies, maxM )
         
+
+class TestAdvancedLevels(TestActions, TestLeveling):
+
+    def test_candidate(self):
+        # create 2 opinion leaders
+        self.test_create2_op()
+        # one votes on the other, so one should become parlement member.
+        self.do_vote_user(self.users[0], self.users[1], 1)
+        qs = Vote.objects.all()
+        self.load_users()
+        self.assertEqual(self.profiles[1].role , 'parlement member')
+
+        self.do_vote_user(self.users[1], self.users[0], 1)
+        self.do_vote_user(self.users[2], self.users[0], 1)
+        # now user3 votes on user2 make user2 a candidate..
+        self.do_vote_user(self.users[3], self.users[2], 1)
+        self.assertEqual(self.profiles[2].role , 'candidate')
+        # now voting on yourself should do nothing.
+        total = Vote.objects.count()
+        self.do_vote_user(self.users[2], self.users[2], 1)
+        ntotal = Vote.objects.count()  
+        self.assertEqual(total, ntotal)
+        # now user4 votes on user2 which should make him parlement member.
+        # and downgrade user1 to candidate 
+        self.do_vote_user(self.users[4], self.users[2], 1)
+        self.load_users()
+        self.assertEqual(self.profiles[2].role , 'parlement member')
+        self.assertEqual(self.profiles[1].role , 'candidate')
+        #print self
+
