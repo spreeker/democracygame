@@ -84,7 +84,7 @@ def issue_list(request, *args, **kwargs):
     
     1 build a view function that calls and returns this view
     2 construct a QuerySet of Issues pass it in with as ``issues``
-    !!@!@ 3 save a (edited) copy of "issue/issue_list.html" somewhere
+    3 save a (edited) copy of "issue/issue_list.html" somewhere
     4 pass in the template location as ``template_name``
     5 pass in a dictionary of extra context variables as ``extra_context``
     
@@ -147,12 +147,12 @@ def issue_list_user(request, username, sortorder=None):
     )
 
 
-def record_vote(request, issue_id ):
+def record_vote(request, issue_id):
     """
     Wrapper function for the voting.views.vote_on_object function
     It does 3 cases:
         -handle anonymous votes
-        -handle and validate normal direction votes. (TODO) formvalidation??
+        -handle and validate normal direction votes. 
         -handle ajax votes
     """
     if not request.user.is_authenticated() and request.REQUEST.has_key('direction'):
@@ -166,12 +166,10 @@ def record_vote(request, issue_id ):
             next = request.REQUEST.get('next', '/' )
             return HttpResponseRedirect(next) 
         return vote_on_object(request, Issue, direction, object_id=issue_id, allow_xmlhttprequest=True ) 
-
-    logging.debug("i get out")
+        
     return HttpResponseRedirect('/')
 
 def handle_anonymous_vote(request, issue_id):
-
     vote_history = request.session.get("vote_history", {})
     vote_history[int(issue_id)] = request.REQUEST['direction']
     request.session['vote_history'] = vote_history

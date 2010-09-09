@@ -1,14 +1,20 @@
-
-
 {% extends "base_content.html" %}
 {% load i18n %}
 
 {% block content %}
-<h2> Your votes compared to <a href="{% url userprofile user_to_compare.username %}">{{ user_to_compare.username }}</a>'s </h2>
+<h2>{% trans "Your votes compared with " %}<a href="{% url userprofile user_to_compare.username %}">{{ user_to_compare.username }}</a></h2>
 
 <table>
 <tr><td>No votes by {{user_to_compare.username}}</td><td>Agree </td><td>Blank</td><td>Disagree</td><td>No votes by you</td></tr>
 <tr><td>{{n_votes_player}}</td><td class="for">{{n_agree}} / {{n_total_intersection}}</td><td class="blank">{{n_blank}} / {{n_total_intersection}}</td><td class="against">{{n_disagree}} / {{n_total_intersection}}</td><td>{{n_votes_user}}</td></tr>
 </table>
+
+<h1>{% trans "Vote on " %}{{user_to_compare.username}}?</h1> 
+<p>{% trans "Every player can vote on one person. Persons with the most votes will get into the parlement."%}</p> 
+<form action=" {% url vote_user user_to_compare.id %}" method="post">
+    <input type="hidden" name="direction" class="direction" value="1" />
+    <input type="hidden" name="next" class="next" value="{{ request.get_full_path }}" />
+    <input type="submit" value="{% trans "VOTE ON" %} {{user_to_compare.username}}"/>
+</form>
 
 {% endblock %}
