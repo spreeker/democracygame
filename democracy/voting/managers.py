@@ -27,6 +27,7 @@ blank_votes = {
     18 : _(u'Ask me later'),
     19 : _(u'Too personal'),
 }
+
 normal_votes = votes.copy()
 normal_votes.update(blank_votes)
 
@@ -77,11 +78,19 @@ class VoteManager(models.Manager):
         vote_dict = dict([( vote.object_id, vote ) for vote in votes ])
         return vote_dict
 
-    def get_user_votes(self, user, obj=None):
+    def get_user_votes(self, user, Model=None, obj=None):
         """
         Get qs for active votes by user
         """
-        return self.filter(user=user, is_archived=False).order_by("-time_stamp")
+        qs = self.filter(user=user, is_archived=False)
+        if Model:
+            ctype = ContentType.objects.get_for_model(Model)
+            qs = qs.filter(content_type=ctype,)
+        if obj:
+            object_id = obj._get_pk_val()
+            qs = qs.filter(object_id=object_id)
+
+        return qs.order_by("-time_stamp")
     
     def get_object_votes(self, obj, all=False):
         """
@@ -133,7 +142,7 @@ class VoteManager(models.Manager):
 
         return vote_dict
 
-    def get_popular(self, Model, object_ids=None):
+    def get_popular(self, Model, object_ids=None, reverse=False):
         """ return qs ordered by popularity """
         ctype = ContentType.objects.get_for_model(Model)
         qs = self.filter(content_type=ctype,)
@@ -144,10 +153,11 @@ class VoteManager(models.Manager):
 
         qs = qs.values('object_id',)
         qs = qs.annotate(totalvotes=Count("vote")).order_by()
-        qs = qs.order_by('-totalvotes')
-        #qs = qs.values_list('object_id' , 'totalvotes')
+
+        if reverse:
+            return qs.order_by('totalvotes')
+        return qs.order_by('-totalvotes')
        
-        return qs
 
     def get_count(self, Model, object_ids=None, direction=1):
         """
@@ -224,8 +234,7 @@ class VoteManager(models.Manager):
 
     def get_for_direction(self, Model, directions=[1,-1]):
         """
-        return objects with a specific direction for ...
-        TODO
+        return votes with a specific direction for ...
         """
         ctype = ContentType.objects.get_for_model(Model)
         qs = self.filter(content_type=ctype,)

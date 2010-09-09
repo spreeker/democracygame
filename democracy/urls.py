@@ -12,7 +12,7 @@ from django.conf import settings
 
 urlpatterns = patterns('',
     (r'^api/v0/', include('api.urls')),
-    (r'^dashboard/', include('dashboard.urls')),
+    (r'^my/', include('dashboard.urls')),
     (r'^issue/', include('issue.urls')),
 
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),

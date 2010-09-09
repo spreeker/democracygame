@@ -5,17 +5,13 @@ function displaymessage(txt){
 function getScoresFrom(score){
     // results = json
     // we need some logic to display the scores properly.
+    // default are empty strings.
     _for = ""; blank = ""; against = "";
-    for (direction in score){
-        console.log(direction);
-        if(direction == 1){ _for = score[1];}
-        else if (direction == -1){ against = score[-1];}
-        else {
-            if( blank == "") { blank = 0; }
-            console.log("blank_" + direction);
-            blank += results.score[direction]; 
-        }
-    }
+    //check if we got valid scores and update.  
+    if (score[1]) { _for = score[1] }
+    if (score[0]) { blank = score[0] }
+    if (score[-1]) { against = score[-1]}
+    //create the new displayable score object.
     score = new Object(); 
     score._for = _for; 
     score.blank = blank;
@@ -28,16 +24,14 @@ function handleError(xhr, textStatus){
     document.open();
     document.write(xhr.responseText);
     document.close();
-    return;
 }
-
 
 
 function vote(){
     // Find the issue id under consideration:
     var forms = $(this).parent();
     var issue = forms.parent();
-    var issue_id = issue.attr('id');
+    var issue_id = issue.attr('id').match(/\d+/g);
     var direction = $("input[name=direction]", this).val();
     if (direction == undefined){
         var direction = $("select option:selected", this).val();
@@ -51,6 +45,7 @@ function vote(){
         // if an error occurs print this on screen.
         if(textStatus.match(/error/g)) {
             handleError(xhr, textStatus);
+            return;
         }
         // get the results to show on screen.
         results = $.parseJSON(xhr.responseText);
@@ -78,11 +73,11 @@ function vote(){
     return false;
 }
 $(function(){
-    $("form").click(function(){
+    $(".forms").find("form").click(function(){
        vote.apply(this);
        return false;
        });  
-    $("form").change(function(){
+    $(".forms").find("form").change(function(){
         vote.apply(this);
         return false;
         });

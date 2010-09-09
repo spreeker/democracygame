@@ -19,14 +19,6 @@ class ChangeDescriptionForm(forms.ModelForm):
 class UserSearchForm(forms.Form):
     search_string = forms.CharField(max_length = 30, initial = _(u'Username'))
 
-class RegistrationTermsOfServiceUniqueEmail(
-        RegistrationFormUniqueEmail
-        ):
-        """
-        Subclass of RegistrationForms which enforces
-        an unique email.
-        """
-
 
 class ChangeProfile(forms.ModelForm):
     class Meta:

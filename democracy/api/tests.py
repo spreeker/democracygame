@@ -21,12 +21,12 @@ class APIMainTest(TestActionData):
     """ We inherit from TestActionData from gameactions.tests so the
     DB get filled with some more testusers and issues to test the api with.
     """
+    usernames = ['test1', 'test2','test3',]
 
     def setUp(self):
         super(APIMainTest , self).setUp()
 
         self.auth_string = 'Basic %s' % base64.encodestring('test1:testpw').rstrip()
-
         if hasattr(self, 'init_delegate'):
             self.init_delegate()
         

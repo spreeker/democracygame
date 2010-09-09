@@ -5,9 +5,9 @@ Propose a new issue.
 Vote on an issue
 Publish hide an issue
 Tag an issue
-Multuply an issue
+Mulitply an issue
 show Issues in ordering
-
+show User issues.
 """
 import logging
 from django.contrib.auth.models import User
@@ -33,8 +33,8 @@ from voting.models import Vote
 from voting.views import vote_on_object
 
 
-def paginate(request, qs):
-    paginator = Paginator(qs, 8) #TODO add to settings.py
+def paginate(request, qs, pagesize=8):
+    paginator = Paginator(qs, pagesize) #TODO add to settings.py
     try:
         pageno = int(request.GET.get('page', '1'))
     except ValueError:
@@ -63,15 +63,15 @@ def order_issues(request, sortorder, issues):
             votes = Vote.objects.get_user_votes(request.user, Issue) #get user votes.
             votes = votes.values_list('object_id', )
             issues = issues.exclude(id__in=votes)
-        page = paginate(request, issues)
-        return page.object_list, page 
+        return issues 
 
-    page = paginate(request, votes)
-    object_ids = [ d['object_id'] for d in page.object_list ]
+    #page = paginate(request, votes, 500)
+    #object_ids = [ d['object_id'] for d in page.object_list ]
+    votes = votes.values_list('object_id')
     issues = issues.filter( is_draft = False ) 
-    issues = issues.filter( id__in=object_ids )
+    issues = issues.filter( id__in=votes )
 
-    return issues, page
+    return issues.select_related()
 
 def issue_list(request, *args, **kwargs):
     """ 
@@ -104,16 +104,14 @@ def issue_list(request, *args, **kwargs):
         issues = Issue.objects.select_related().order_by('-time_stamp')
         issues = issues.filter( is_draft=False )
 
-    if 'sortorder' in kwargs:
-        issues, page = order_issues(request, kwargs['sortorder'], issues)
+    if kwargs.get('sortorder', False):
+        issues = order_issues(request, kwargs['sortorder'], issues)
     elif 'tag' in kwargs:
         tag = "\"%s\"" % kwargs['tag']
         issues = Issue.tagged.with_any(tag)
-        page = paginate(request, issues)
-        issues = page.object_list
-    else:
-        page = paginate(request, issues)
-        issues = page.object_list
+
+    page = paginate(request, issues)
+    issues = page.object_list
 
     flash_msg = request.session.get("flash_msg","")
     if flash_msg:
@@ -133,12 +131,28 @@ def issue_list(request, *args, **kwargs):
     t = loader.get_template(template_name)
     return HttpResponse(t.render(c))
 
-def record_vote(request, issue_id ):
+
+def issue_list_user(request, username, sortorder=None):
+    """ 
+    For a user, specified by the ``username`` parameter, show his / her issues.
+    """ 
+    user = get_object_or_404(User, username=username)
+    issues = Issue.objects.filter(user=user)
+    return issue_list(
+        request, 
+        extra_context={'username':username}, 
+        template_name='issue/issue_list_user.html',
+        issues=issues,
+        sortorder=sortorder,
+    )
+
+
+def record_vote(request, issue_id):
     """
     Wrapper function for the voting.views.vote_on_object function
     It does 3 cases:
         -handle anonymous votes
-        -handle and validate normal direction votes. (TODO) formvalidation??
+        -handle and validate normal direction votes. 
         -handle ajax votes
     """
     if not request.user.is_authenticated() and request.REQUEST.has_key('direction'):
@@ -152,12 +166,10 @@ def record_vote(request, issue_id ):
             next = request.REQUEST.get('next', '/' )
             return HttpResponseRedirect(next) 
         return vote_on_object(request, Issue, direction, object_id=issue_id, allow_xmlhttprequest=True ) 
-
-    logging.debug("i get out")
+        
     return HttpResponseRedirect('/')
 
 def handle_anonymous_vote(request, issue_id):
-
     vote_history = request.session.get("vote_history", {})
     vote_history[int(issue_id)] = request.REQUEST['direction']
     request.session['vote_history'] = vote_history

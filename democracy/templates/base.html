@@ -10,20 +10,18 @@
 {% endblock %}
 </head>
 <body>
-<div style="color:white;background-color:#cc3300;text-align:center">Speel het Democratiespel nu met <a style="color:white;text-decoration:underline" href="{% url juni_2010 %}">de verkiezingsprogramma's voor de Tweede Kamerverkiezingen!</a> (BETA)</div>
-<div class="container">
-<div id="header" class="container">
+<div id="header" class="container box" >
 <div id="mainmenu" class="span-14">
     {% block mainmenu %} <a href="/">{% trans "mainpage" %}</a> | {% endblock %}
 </div>
-<div id="userbar" class="span-10 last">
+<div id="userbar" class="span-10 last " >
 {% block userbar %}{% endblock %}
 </div>
 </div>
 
 <div class="container">
 <div id="sidebar" class="span-6">
-  {% block sidebar %}{% endblock %}
+  {% block sidebar %}&nbsp;{% endblock %}
 </div>
 <div id="content" class="span-15 last">
     {% block content %}{% endblock %}
