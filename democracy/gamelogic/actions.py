@@ -51,7 +51,7 @@ def vote_issue(user, issue, direction, keep_private , api_interface=None ):
     if repeated_vote: return
     
     logging.debug("User %s voted %s on ISSUE %s" % 
-    ( user.username, unicode(new_vote.vote), unicode(issue.title) )) 
+    ( user.username, new_vote.vote, issue.title )) 
 
     user.message_set.create(message=_("You voted successfully on %s") % issue.title  )
 
