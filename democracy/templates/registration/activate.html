@@ -2,17 +2,10 @@
 {% load i18n %}
 
 {% block content %}
-	{% if account %}
 	{% blocktrans %}	
-	Welcome {{ account }} !
-
 	Your account on democracy has been created. 
-
 	{% endblocktrans %}
-    {% else %}
-		{% trans "Something went wrong. Your account is probably already active" %}
-
-	{% endif %}
+    <a href="{% url auth_login %}">{% trans "Login" %}</a>
 
 	{% if votes_saved %}
         {% trans "Your previous anonymous votes have been saved to your profile!" %}

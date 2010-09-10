@@ -23,6 +23,7 @@ from issue.views import issue_list
 
 # Imports for activate view
 from registration.models import RegistrationProfile
+from registration.signals import user_activated
 from django.conf import settings
 
 from gamelogic import actions
@@ -60,82 +61,20 @@ def migrate_votes(request, user, votes):
 
         actions.vote(user, issue, int(direction), keep_private=False)   
 
-def activate(request, activation_key,
-             template_name='registration/activate.html',
-             extra_context=None):
-    """
-    THIS COMES FROM EXTERNAL APPS REGISTRATION.
-    modifications will be marked with a line like below.    
-    we need modification to make saving annonymous votes possible
-    to a new profile.
-    =================================================================
-    Activate a ``User``'s account from an activation key, if their key
-    is valid and hasn't expired.
-    
-    By default, use the template ``registration/activate.html``; to
-    change this, pass the name of a template as the keyword argument
-    ``template_name``.
-    
-    **Required arguments**
-    
-    ``activation_key``
-       The activation key to validate and use for activating the
-       ``User``.
-    
-    **Optional arguments**
-       
-    ``extra_context``
-        A dictionary of variables to add to the template context. Any
-        callable object in this dictionary will be called to produce
-        the end result which appears in the context.
-    
-    ``template_name``
-        A custom template to use.
-    
-    **Context:**
-    
-    ``account``
-        The ``User`` object corresponding to the account, if the
-        activation was successful. ``False`` if the activation was not
-        successful.
-    
-    ``expiration_days``
-        The number of days for which activation keys stay valid after
-        registration.
-    
-    Any extra variables supplied in the ``extra_context`` argument
-    (see above).
-    
-    **Template:**
-    
-    registration/activate.html or ``template_name`` keyword argument.
-    
-    """
-    activation_key = activation_key.lower() # Normalize before trying anything with it.
-    account = RegistrationProfile.objects.activate_user(activation_key)
-    if extra_context is None:
-        extra_context = {}
-    context = RequestContext(request)
-    #====================================================
-    # custom democracy code below
-    #====================================================
+
+def activate_user(sender, *args, **kwargs):
+    """ if user has voted migrate his votes""" 
+    user = kwargs.get('user')
+    request = kwargs.get('request')
     session_votes = False
     if request.session.has_key("vote_history"):
         session_votes = True    
-        if account: 
-            migrate_votes(request, account, request.session["vote_history"])
+        if user: 
+            migrate_votes(request, user, request.session["vote_history"])
             del request.session["vote_history"]
 
-    extra_context.update( { 'votes_saved' : session_votes } )
-    #=========================================================
-    # end custom code
-    #========================================================
-    for key, value in extra_context.items():
-        context[key] = callable(value) and value() or value
-    return render_to_response(template_name,
-                              { 'account': account,
-                                'expiration_days': settings.ACCOUNT_ACTIVATION_DAYS },
-                              context_instance=context)
+user_activated.connect(activate_user)
+
 
 def userprofile_show(request, username):
     user = get_object_or_404(User, username=username) 
