@@ -19,7 +19,7 @@ r"""
 >>> Vote.objects.get_object_votes(i1)
 {}
 >>> Vote.objects.record_vote(users[0], i1, 1)
-(False, False, <Vote: 1 on "i1" by u1>)
+(False, False, <Vote: 1 on i1  by u1>)
 >>> Vote.objects.get_object_votes(i1)
 {1: 1}
 >>> _, _, _ = Vote.objects.record_vote(users[0], i1, -1)
@@ -86,7 +86,7 @@ r"""
 # Popular #################################################
 
 [(1, 4), (2, 4), (3, 4), (4, 4), (6, 2), (5, 1)]
->>> qs = Vote.objects.get_controversial(Item)
+>>> qs = Vote.objects.get_controversial(Item, min_tv=2)
 >>> qs.values_list('object_id' , 'avg')
 [(1, 0.0)]
 >>> qs = Vote.objects.get_top(Item)

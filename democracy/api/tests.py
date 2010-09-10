@@ -645,10 +645,10 @@ class IssueListTest( OAuthTests ):
 
     def test_get_controversial(self):
         """ test get the controversial issues as list """
-        url = reverse("api_sort_order", args=["controversial"] )
+        url = reverse("api_sort_order", args=["controversial"])
         # vote on an issue so we get one controversial one..
         vote_func = actions.role_to_actions[self.profiles[0].role]['vote'] 
-        vote_func( self.users[0] , self.issue3 , -1 , False)
+        vote_func(self.users[0], self.issue3, -1, False)
 
         response = self.do_oauth_request( url , http_method="GET" )
         expected = """[
@@ -657,7 +657,7 @@ class IssueListTest( OAuthTests ):
         0.0
     ]
 ]"""    % { 
-        "i3" : reverse( "api_issue" , args=[self.issue3.pk] ) , 
+        "i3" : reverse("api_issue", args=[self.issue3.pk]) , 
         }
-        self.assertEqual( expected , response.content )
+        self.assertEqual(expected, response.content)
 

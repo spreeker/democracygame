@@ -177,7 +177,7 @@ class VoteManager(models.Manager):
         
         return qs
 
-    def get_top(self, Model, object_ids=None, reverse=False):
+    def get_top(self, Model, object_ids=None, reverse=False, min_tv=2):
         """
         Find the votes which are possitive recieved.
         """
@@ -187,11 +187,11 @@ class VoteManager(models.Manager):
 
         if object_ids: # to get the most popular from a list
             qs = qs.filter(object_id__in=object_ids)
-        
+
         qs = qs.values('object_id',)
         qs = qs.filter(vote__in=[-1,1])
         qs = qs.annotate(totalvotes=Count("vote"))
-        qs = qs.filter(totalvotes__gt=2) 
+        qs = qs.filter(totalvotes__gt=min_tv) 
         qs = qs.annotate(avg=Avg("vote")).order_by()
         if reverse:
             qs = qs.order_by('avg')
@@ -200,15 +200,15 @@ class VoteManager(models.Manager):
         
         return qs
 
-    def get_bottom(self, Model, object_ids=None):
+    def get_bottom(self, Model, object_ids=None, min_tv=2):
         """
         Find the votes which are worst recieved
         """
-        qs = self.get_top(Model, object_ids, reverse=True)
+        qs = self.get_top(Model, object_ids, reverse=True, min_tv=2)
 
         return qs
 
-    def get_controversial(self, Model, object_ids=None):
+    def get_controversial(self, Model, object_ids=None, min_tv=1):
         """ 
         return qs ordered by controversy , 
         meaning it divides the ppl in 50/50.
@@ -222,9 +222,12 @@ class VoteManager(models.Manager):
 
         if object_ids: # to get the most popular from a list
             qs = qs.filter(object_id__in=object_ids)
+        elif min_tv > 1:
+            qs = qs.annotate(totalvotes=Count("vote"))
+            qs = qs.filter(totalvotes__gt=min_tv) 
 
         qs = qs.values('object_id',)
-        qs = qs.annotate(avg=Avg("vote")).order_by()
+        qs = qs.annotate(avg=Avg("vote"))
         qs = qs.order_by('avg')
         qs = qs.filter(avg__gt= -0.3 )
         qs = qs.filter(avg__lt= 0.3 )
@@ -276,3 +279,51 @@ class VoteManager(models.Manager):
                         )
             vote.save()
         return repeated_vote, voted_already, vote
+
+# Generic annotation code to annotate qs from other Models with
+# data from the Vote table its a modification of the generic_annotate
+# found in utils/generic.py 
+# 
+# more info:
+#
+# http://djangosnippets.org/snippets/2034/
+# http://github.com/coleifer/django-simple-ratings/
+#
+from django.contrib.contenttypes.models import ContentType
+from django.db import connection, models
+
+def vote_annotate(queryset, gfk_field, aggregate_field, aggregator=models.Sum, desc=True):
+    ordering = desc and '-vscore' or 'vscore'
+    content_type = ContentType.objects.get_for_model(queryset.model)
+    
+    qn = connection.ops.quote_name
+    
+    # collect the params we'll be using
+    params = (
+        aggregator.name, # the function that's doing the aggregation
+        qn(aggregate_field), # the field containing the value to aggregate
+        qn(gfk_field.model._meta.db_table), # table holding gfk'd item info
+        qn(gfk_field.ct_field + '_id'), # the content_type field on the GFK
+        content_type.pk, # the content_type id we need to match
+        qn(gfk_field.fk_field), # the object_id field on the GFK
+        qn(queryset.model._meta.db_table), # the table and pk from the main
+        qn(queryset.model._meta.pk.name)   # part of the query
+    )
+    
+    extra = """
+        SELECT %s(%s) AS aggregate_score
+        FROM %s
+        WHERE (
+            %s=%s AND
+            %s=%s.%s AND
+            is_archived=FALSE AND
+            "votes"."vote" IN (-1,1))
+    """ % params
+    
+    queryset = queryset.extra(select={
+        'vscore': extra
+    },
+    order_by=[ordering]
+    )
+    
+    return queryset
