@@ -7,7 +7,7 @@ from django.db.models.signals import post_save
 
 class UserProfile(models.Model):
 
-    user = models.ForeignKey(User, unique = True)
+    user = models.OneToOneField(User)
     score = models.IntegerField(default = 0 ) 
     # game activity
     total_for = models.IntegerField(default = 0)
