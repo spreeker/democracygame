@@ -5,7 +5,6 @@ from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import Http404
-from django.db.models.signals import post_save
 from django.http import HttpResponseRedirect
 from django.contrib.auth.views import password_reset
 from django.utils.translation import ugettext as _
@@ -33,22 +32,6 @@ from voting.views import vote_on_object
 import datetime
 import logging
 
-def create_userprofile(sender, **kwargs):
-    """
-    When a User model instance is saved this function is called to create
-    a UserProfile instance if none exists already. (This function listens for
-    post_save signals coming from the User model.)
-    If you create a user anywhere , in the admin or
-    official registration way , this code will make sure there is a userprofile. 
-    """
-    new_user = kwargs['instance']
-    try:
-        new_user.get_profile()
-    except:
-        new_profile = UserProfile(user = new_user, score = 0, role = 'citizen')
-        new_profile.save()
-
-post_save.connect(create_userprofile, sender = User)
 
 def migrate_votes(request, user, votes):
     """When an User registers, migrate the users session votes to REAL votes."""
