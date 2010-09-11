@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 
 from gamelogic.models import roles 
 
+from django.db.models.signals import post_save
 
 class UserProfile(models.Model):
 
@@ -24,4 +25,23 @@ class UserProfile(models.Model):
 
 
     def ranking(self):
-        return UserProfile.objects.filter( score__gte = self.score ).count()
+        return UserProfile.objects.filter(score__gte = self.score).count()
+
+
+def create_userprofile(sender, **kwargs):
+    """
+    When a User model instance is saved this function is called to create
+    a UserProfile instance if none exists already. (This function listens for
+    post_save signals coming from the User model.)
+    If you create a user anywhere , in the admin or
+    official registration way , this code will make sure there is a userprofile. 
+    """
+    new_user = kwargs['instance']
+    if kwargs["created"]:
+        new_profile = UserProfile(user=new_user, score=0, role='citizen')
+        new_profile.save()
+
+
+post_save.connect(create_userprofile, sender=User, dispatch_uid="users-profilecreation-signal")
+
+
