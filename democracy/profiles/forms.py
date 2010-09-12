@@ -21,8 +21,10 @@ class UserSearchForm(forms.Form):
 
 
 class ChangeProfile(forms.ModelForm):
+    error_css_class = 'error'
+    required_css_class = 'notice'
+
     class Meta:
         model = UserProfile
         fields = ('title', 'description', 'url', 
-                   'id_is_verified', 'votes_public', 'show_identity' )
-        
+                   'votes_public', 'show_identity' )

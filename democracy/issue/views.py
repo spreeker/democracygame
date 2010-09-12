@@ -35,7 +35,7 @@ from django.db.models import Count, Avg, Sum
 
 
 def paginate(request, qs, pagesize=8):
-    paginator = Paginator(qs, pagesize) #TODO add to settings.py
+    paginator = Paginator(qs, pagesize)
     try:
         pageno = int(request.GET.get('page', '1'))
     except ValueError:

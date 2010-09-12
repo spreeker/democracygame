@@ -35,11 +35,6 @@
     </div>
 </div>
 <p> {{ issue.body }} </p>
-<div class="yourvote">
-{% if vote.vote %}
-{% for key , direction in possible_votes.items %}{% ifequal key vote.vote %}{% trans direction %}{% endifequal %}{% endfor %}
-{% endif %}
-</div>
 <div class="forms" id="fid{{ issue.pk }}">
 <form action="{% url vote issue.pk %}" method="post">
     <input type="hidden" name="direction" class="direction" value="1" />
@@ -59,11 +54,20 @@
     </select>
     <input type="submit" value="{% trans "blank" %}"/>
 </form>
+{% comment %}
 <form action="{% url multiply issue.pk %}" method="post">
     <input type="hidden" name="next" class="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
     <input type="submit" value="{% trans "multiply" %}"/>
 </form>
+{% endcomment %}
 created by <a href="{% url userprofile issue.user.username %}">{{ issue.user }}</a>
+<div class="yourvote">
+{% if vote.vote %}
+{% for key , direction in possible_votes.items %}{% ifequal key vote.vote %}{% trans direction %}{% endifequal %}{% endfor %}
+{% endif %}
+</div>
+
+
 </div>{# end forms #}
 </li>
 {% endfor %}
