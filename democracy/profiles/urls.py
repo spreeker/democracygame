@@ -1,6 +1,4 @@
-import settings
 from django.conf.urls.defaults import *
-from django.core.urlresolvers import reverse
 
 from django.views.generic.simple import redirect_to
 
@@ -9,14 +7,18 @@ from django.contrib.auth import views as auth_views
 
 #from registration.views import activate
 from profiles.views import userprofile_show
+from profiles.views import ranking 
 from profiles.views import change_description
-from profiles.views import compare_votes_to_user
-from profiles.views import record_vote_on_user
+from profiles.views.votes import compare_votes_to_user
+from profiles.views.votes import record_vote_on_user
 
 from registration.views import register
 from registration.views import activate
 
+
 urlpatterns = patterns('',
+    #ranking
+    url(r'^ranking/$', ranking, name='ranking'),
     # views dealing with users.
     url(r'^compare_votes_to_user/(?P<username>\w+)/$', compare_votes_to_user,
         name='compare_votes_to_user',),
@@ -66,3 +68,4 @@ urlpatterns = patterns('',
     url(r'^password/reset/done/$', auth_views.password_reset_done,
        name='auth_password_reset_done'),
 ) 
+

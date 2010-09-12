@@ -1,0 +1,17 @@
+{% extends "base_content.html" %}
+{% load i18n %}
+
+
+{% block content %}
+
+<h2> {% trans "Rankings" %} </h2> 
+<div> 
+    <table>
+        <tr><th> name </td><td>  score </td></tr>
+    {% for profile in page.object_list %}
+        <tr><td>{{ profile.user.username }}</td><td> {{ profile.score }}</td></tr>
+    {% endfor %}
+    </table>
+</div>
+
+{% endblock %}
