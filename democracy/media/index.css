@@ -148,6 +148,10 @@ h3 {
     color:gray;
     padding:0em 1em 0em 1em;
 }
+/* tags */
+#sidebar .green { color:#264409; }
+#sidebar .yellow { color:#514721; }
+#sidebar .red { color:#8a1f11 }
 
 #footer {
     clear : both;
