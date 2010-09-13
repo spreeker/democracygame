@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
-
+from django.db.models.query import QuerySet
 from registration.signals import user_activated
 
 from gamelogic import actions
@@ -136,10 +136,15 @@ def compare_votes_to_user(request, username):
     blank_issues = _issue_vote(blank_issues)
 
     ## TAG CLOUD STUFF.
-    agree_tags = Tag.objects.usage_for_model(Issue, counts=True, filters=dict(id__in=id_agree))
-    disagree_tags = Tag.objects.usage_for_model(Issue, counts=True, filters=dict(id__in=id_disagree))
+    try :
+        agree_tags = Tag.objects.usage_for_model(Issue, counts=True, filters=dict(id__in=id_agree))
+    except QuerySet.EmptyResultSet:
+        agree_tags = []
+    try:
+        disagree_tags = Tag.objects.usage_for_model(Issue, counts=True, filters=dict(id__in=id_disagree))
+    except QuerySet.EmptyResultSet:
+        disagree_tags = [] 
 
-    #tags_agree = dict((tag.name, tag) for tag in agree_tags)
     tags_dagree= dict((tag.name, tag) for tag in disagree_tags)
     all_tags = []
 
