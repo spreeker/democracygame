@@ -2,6 +2,7 @@
 
 from voting.models import Vote
 from voting.views import vote_on_object
+from voting.managers import possible_votes
 from gamelogic import actions
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -13,6 +14,9 @@ from registration.signals import user_activated
 from gamelogic import actions
 from issue.models import Issue
 from django.contrib.auth.views import password_reset
+
+from tagging.models import Tag
+from tagging.utils import calculate_cloud
 
 def migrate_votes(request, user, votes):
     """When an User registers, migrate the 
@@ -70,50 +74,99 @@ def compare_to_user(request, username):
 
 
 def compare_votes_to_user(request, username):
-    '''Compare ``request.user``'s voting history with ``username``.'''
+    """Compare ``request.user``'s voting history with ``username``."""
     user = get_object_or_404(User, username = username)
-    # Grab the votes from the database, construct dictionaries keyed by 
-    # object_id (of an Issue) and values being an integer that describes the
-    # actual vote, (-1, 0, 1) for (against, blanc, for) respectively.
+    user_votes = Vote.objects.get_user_votes(user, Model=Issue)
+
     if request.user.is_authenticated():
-        players_votes = Vote.objects.get_user_votes(request.user)
+        players_votes = Vote.objects.get_user_votes(request.user, Model=Issue)
+        vote_keys = players_votes.values_list('object_id')
         players_votedict = dict((vote.object_id, vote.vote) for vote in players_votes.all())
+        #players_votedict = players_votes.values('object_id', 'vote')
     else:
         votedict = request.session.get('vote_history', dict())
         players_votedict = dict((i, int(x)) for i, x in votedict.items())
-    users_votes = Vote.objects.get_user_votes(user)
-    users_votedict = dict((vote.object_id, vote.vote) for vote in users_votes.all())
-    # Now compare the two dictionaries of votes and construct a tuple with 
-    n_agree = 0
-    n_disagree = 0
-    n_blank = 0
-    for k, vote in players_votedict.items():
-        if users_votedict.has_key(k):
+        vote_keys = players_votedict.keys()
+
+    intersection_votes = user_votes.filter(object_id__in=vote_keys)
+    intersection_votes = intersection_votes.values_list('object_id','vote')
+
+    # Now compare votes.
+    id_agree = [] 
+    id_disagree = [] 
+    id_blank = []
+    for k, vote in intersection_votes:
+        if players_votedict.has_key(k): # must always be true..
             # If both vote the same, that is agreement.
-            if users_votedict[k] == vote:
-                n_agree += 1
-            # Both voting blanc (even if for different reasons) is consirdered
-            # to be in agreement. Assuming blanc votes have integers larger than
-            # unity!
-            elif (users_votedict[k] > 1 and vote > 1):
-                n_agree += 1
-            # One blanc vote and one other is considered neither agreement nor 
+            if players_votedict[k] == vote:
+                id_agree.append(k) 
+            # Both voting blanc is consirdered to be in agreement. 
+            elif (players_votedict[k] > 1 and vote > 1):
+                id_agree.append(k) 
+            # One blanc vote is considered neither agreement nor 
             # disagreement.
-            elif (users_votedict[k] > 1 or vote > 1):
-                n_blank += 1
+            elif (players_votedict[k] > 1 or vote > 1):
+                id_blank.append(k)
             # Disagreement:
             else:
-                n_disagree += 1
+                id_disagree.append(k)
+
+
+    n_agree, n_disagree, n_blank =  len(id_agree) , len(id_disagree) , len(id_blank)
     n_total_intersection = n_agree + n_disagree + n_blank
+    # get the issues + votes!
+    
+    def _cmp(issueA, issueB):
+        return cmp(issueA[0].title.lower(), issueB[0].title.lower())
+
+    def _issue_vote(qs):
+        issue_vote = []
+        issues = dict((issue.id, issue) for issue in qs.all())
+        for id, issue in issues.items():
+            vote = players_votedict[id]
+            issue_vote.append((issue, possible_votes[vote]))
+            issue_vote.sort(_cmp)
+        return issue_vote
+
+    agree_issues = Issue.objects.filter(id__in=id_agree)
+    agree_issues = _issue_vote(agree_issues) 
+    disagree_issues = Issue.objects.filter(id__in=id_disagree)
+    disagree_issues = _issue_vote(disagree_issues)
+    blank_issues = Issue.objects.filter(id__in=id_blank)
+    blank_issues = _issue_vote(blank_issues)
+
+    ## TAG CLOUD STUFF.
+    agree_tags = Tag.objects.usage_for_model(Issue, counts=True, filters=dict(id__in=id_agree))
+    disagree_tags = Tag.objects.usage_for_model(Issue, counts=True, filters=dict(id__in=id_disagree))
+
+    #tags_agree = dict((tag.name, tag) for tag in agree_tags)
+    tags_dagree= dict((tag.name, tag) for tag in disagree_tags)
+    all_tags = []
+
+    for a_tag in agree_tags:
+        a_tag.status = 'agree'
+        if tags_dagree.has_key(a_tag.name):
+            d_tag = tags_dagree[a_tag.name]
+            d_tag.count = d_tag.count + a_tag.count
+            d_tag.status = 'conflict'
+            all_tags.append(d_tag)
+            tags_dagree.pop(a_tag.name)
+        else:
+            all_tags.append(a_tag)
+
+    all_tags.extend(tags_dagree.values())
+    cloud = calculate_cloud(all_tags)
+
 
     context = RequestContext(request, {
         'user_to_compare' : user,
-        'n_votes_user' : len(users_votedict) - n_total_intersection,
-        'n_votes_player' : len(players_votedict) - n_total_intersection,
         'n_agree' : n_agree,
         'n_disagree' : n_disagree,
         'n_blank' : n_blank,
         'n_total_intersection' : n_total_intersection,
+        'agree_issues' : agree_issues,
+        'disagree_issues' : disagree_issues,
+        'blank_issues' : blank_issues,
+        'cloud' : cloud,
     })
     return render_to_response('profiles/compare_votes_to_user.html', context)
-
