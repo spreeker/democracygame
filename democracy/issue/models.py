@@ -29,10 +29,10 @@ class Issue(models.Model):
     Issue which we are supposed to vote on
     """
     user = models.ForeignKey(User)
-    title = models.CharField( blank=True, max_length=200)
-    time_stamp = models.DateTimeField( default= datetime.now() )
-    url = models.URLField( verify_exists=False)
-    source_type = models.CharField( max_length=20, choices=source_types)
+    title = models.CharField(blank=True, max_length=200)
+    time_stamp = models.DateTimeField(default= datetime.now() )
+    url = models.URLField(verify_exists=False)
+    source_type = models.CharField(max_length=20, choices=source_types)
     body = models.TextField(max_length=2000)
 
     is_draft = models.BooleanField( default=True )

@@ -177,6 +177,13 @@ def issue_list_user(request, username, sortorder=None):
         sortorder=sortorder,
     )
 
+def single_issue(request, id):
+    """
+    Show a single issue, with a lot of detail
+    and with slugfield url
+    """
+
+
 
 def record_vote(request, issue_id):
     """
