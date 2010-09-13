@@ -6,6 +6,7 @@ from voting.managers import possible_votes
 from gamelogic import actions
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.db.models.sql.datastructures import EmptyResultSet
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.db.models.query import QuerySet
@@ -138,11 +139,11 @@ def compare_votes_to_user(request, username):
     ## TAG CLOUD STUFF.
     try :
         agree_tags = Tag.objects.usage_for_model(Issue, counts=True, filters=dict(id__in=id_agree))
-    except QuerySet.EmptyResultSet:
+    except EmptyResultSet:
         agree_tags = []
     try:
         disagree_tags = Tag.objects.usage_for_model(Issue, counts=True, filters=dict(id__in=id_disagree))
-    except QuerySet.EmptyResultSet:
+    except EmptyResultSet:
         disagree_tags = [] 
 
     tags_dagree= dict((tag.name, tag) for tag in disagree_tags)
