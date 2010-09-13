@@ -3,6 +3,10 @@
 a {
     text-decoration : none ;
 }
+a:hover {
+    text-decoration : underline;
+}
+
 #sidebar A:visited {
     color : gray ;
 }   
@@ -12,8 +16,13 @@ h2 {
     margin-bottom: 0em;
 }
 h4 {
-    margin-top: 0em;
+    margin-top: 0.5em;
+    color : #CCC;
     text-align : center ;
+}
+h4 a{
+    margin-right: 1em;
+    margin-left: 1em;
 }
 h3 {
     margin-bottom : 1.25em ;
@@ -26,6 +35,19 @@ h3 {
   right: 2em;
 }
 /* header style declarations */
+
+#header {padding:1.5em;margin-bottom:1.5em;
+        color: #CCC;
+}
+#header a{
+    margin-right: 0.5em;
+    margin-left: 0.5em;
+}
+#header .score {
+    display: inline;
+    text-decoration: bold;
+    color : green;
+}
 
 /* Issue display specific styles */
 .issues p, 
@@ -42,7 +64,10 @@ h3 {
 #proposetips{
     margin-left : 0em;
 }
-.issues .yourvote {
+.yourvote {
+
+}
+.issues {
     float : right;
 }
 .issues .scoretag {
@@ -123,6 +148,10 @@ h3 {
     color:gray;
     padding:0em 1em 0em 1em;
 }
+/* tags */
+#sidebar .green { color:#264409; }
+#sidebar .yellow { color:#514721; }
+#sidebar .red { color:#8a1f11 }
 
 #footer {
     clear : both;

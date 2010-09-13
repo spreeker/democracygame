@@ -16,5 +16,4 @@ urlpatterns = patterns('issue.views',
     url(r'^(?P<sortorder>\w+)/$', issue_list , name='issue_list'),
     url(r'^by/(?P<username>\w+)/$', issue_list_user, name='issue_list_user'),
     url(r'^by/(?P<username>\w+)/(?P<sortorder>\w+)/$', issue_list_user, name='issue_list_user_sort'),
-
 )

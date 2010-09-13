@@ -28,13 +28,14 @@ from tagging.forms import TagField
 from gamelogic import actions
 from issue.models import Issue
 from issue.forms import IssueForm, Publish, TagForm
-from voting.managers import possible_votes, blank_votes
+from voting.managers import possible_votes, blank_votes, vote_annotate
 from voting.models import Vote
 from voting.views import vote_on_object
+from django.db.models import Count, Avg, Sum 
 
 
 def paginate(request, qs, pagesize=8):
-    paginator = Paginator(qs, pagesize) #TODO add to settings.py
+    paginator = Paginator(qs, pagesize)
     try:
         pageno = int(request.GET.get('page', '1'))
     except ValueError:
@@ -49,29 +50,55 @@ def paginate(request, qs, pagesize=8):
 def order_issues(request, sortorder, issues):
     """
     return page and qs of issues derived from voting data. 
+    
+    we are trying to do some aggegration using gfk's. Which is
+    not easy to do. this is a somewhat of a workaround.
+    
+    wait for django 1.3?
+
+    or look at:
+    http://github.com/coleifer/django-simple-ratings/tree/master/ratings
+
+    i imlpemented it but its 100x slower!
+    the commented out code is faster.
     """
+    def merge_qs(votes,issues):
+        """ with this method me shrink the issues qs using a paginated
+            vote qs.
+            so the vote_annotate will run fast.
+        """
+        page = paginate(request, votes, 8)
+        object_ids = [ d['object_id'] for d in page.object_list ]
+        votes = votes.values_list('object_id')
+        issues = issues.filter( id__in=object_ids )
+        return page, issues
+
     if sortorder == 'popular':
         votes = Vote.objects.get_popular(Issue)
+        page, issues = merge_qs(votes, issues)
+        issues = vote_annotate(issues, Vote.payload, 'id', Count)
+        return page, issues
     elif sortorder == 'controversial':
-        votes = Vote.objects.get_controversial(Issue)
+        votes = Vote.objects.get_controversial(Issue, min_tv=6)
+        return merge_qs(votes, issues)
     elif sortorder == 'for':
-        votes = Vote.objects.get_top(Issue)
+        votes = Vote.objects.get_top(Issue, min_tv=6)
+        page, issues = merge_qs(votes, issues)
+        issues = vote_annotate(issues, Vote.payload, 'vote', Sum)
+        return page, issues
     elif sortorder == 'against':
-        votes = Vote.objects.get_bottom(Issue)
+        votes = Vote.objects.get_bottom(Issue, min_tv=6)
+        page, issues = merge_qs(votes, issues)
+        issues = vote_annotate(issues, Vote.payload, 'vote', Sum, desc=False)
     else:
+        # assume 'new' ordering, which means finding issues for which
+        # the user has no votes for.
         if request.user.is_authenticated(): 
             votes = Vote.objects.get_user_votes(request.user, Issue) #get user votes.
             votes = votes.values_list('object_id', )
             issues = issues.exclude(id__in=votes)
-        return issues 
 
-    #page = paginate(request, votes, 500)
-    #object_ids = [ d['object_id'] for d in page.object_list ]
-    votes = votes.values_list('object_id')
-    issues = issues.filter( is_draft = False ) 
-    issues = issues.filter( id__in=votes )
-
-    return issues.select_related()
+    return False, issues
 
 def issue_list(request, *args, **kwargs):
     """ 
@@ -98,6 +125,8 @@ def issue_list(request, *args, **kwargs):
     if not request.method == "GET":
         return HttpResponseBadRequest
 
+    page = False 
+
     if kwargs.has_key('issues'):
         issues = kwargs['issues']
     else:
@@ -105,13 +134,15 @@ def issue_list(request, *args, **kwargs):
         issues = issues.filter( is_draft=False )
 
     if kwargs.get('sortorder', False):
-        issues = order_issues(request, kwargs['sortorder'], issues)
+        #pagination is now done on vote table
+        page, issues = order_issues(request, kwargs['sortorder'], issues)
     elif 'tag' in kwargs:
         tag = "\"%s\"" % kwargs['tag']
         issues = Issue.tagged.with_any(tag)
 
-    page = paginate(request, issues)
-    issues = page.object_list
+    if not page: 
+        page = paginate(request, issues)
+        issues = page.object_list
 
     flash_msg = request.session.get("flash_msg","")
     if flash_msg:

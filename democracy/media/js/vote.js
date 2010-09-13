@@ -52,12 +52,9 @@ function vote(){
         score = getScoresFrom(results.score)  
         score_box =  $('.score', issue)
         // update issue with new scores.
-        console.log(_for);
-        console.log(blank);
-        console.log(against);
-        $('.for', score_box).text(_for);
-        $('.blank', score_box).text(blank);
-        $('.against', score_box).text(against);
+        $('.for', score_box).text(score._for);
+        $('.blank', score_box).text(score.blank);
+        $('.against', score_box).text(score.against);
         // notify user of any messages.
         if(results.message){
             displaymessage(results.message);    

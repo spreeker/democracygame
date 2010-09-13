@@ -1,0 +1,42 @@
+{% extends "base_content.html" %}
+{% load i18n %}
+
+{% block content %}
+
+<h2> {% trans "Rankings" %} </h2> 
+<div> 
+    <table>
+        <thead><th>{% trans "Rank" %}</th><th>{% trans "Name" %}</th><th>{% trans "Score" %}</th><th>{% trans "Role" %}</th></thead>
+        <tbody>
+    {% for profile in page.object_list %}
+        <tr class="{% cycle 'odd' 'even' %}">
+                <td>{{forloop.counter}}</td>
+                <td><a href="{% url userprofile profile.user.username %}">{{ profile.user.username }}</a></td>
+                <td>{{ profile.score }}</td>
+                <td>{{ profile.role }}</td>
+        </tr>
+    {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page.has_previous %}
+            <a href="?page={{ page.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            {% trans "Page" %}{{ page.number }}{% trans "of" %}{{ page.paginator.num_pages }}.
+        </span>
+
+        {% if page.has_next %}
+            <a href="?page={{ page.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+
+

@@ -2,52 +2,48 @@
 {% load i18n %}
 {% load voting_tags %}
 
-{% block content %}
-<div class="issues">
-
-<h2>{% trans "your issues" %}</h2>
-<h4><a href="{% url my_issues 'popular' %}"> {% trans 'popular' %} </a> |
-    <a href="{% url my_issues 'controversial' %}">{%trans 'controversial' %}</a> | 
-    <a href="{% url my_issues 'new' %}">{% trans 'new' %}</a> | </h4>
-
-{% if issueform %}
-       {% if actions.propose %}
-        <div class="container">
-        <div class="span-13 append-3">
-        <h3> {% trans "propose your issue" %} </h3>
-           <form action="{{ request.get_full_path }}" method="post">
-        {% for field in issueform %}
-            {% if field.errors %} 
-            {% for error in field.errors %}
-                <div class="error span-8 append-8">{{error}}</div> 
-            {% endfor %}
-            {% endif %}
-            <div class="column span-5">
-                {{ field.label_tag }}
-            </div>
-            <div class="column span-8 last"> {{ field }} </div>
-        {% endfor %}
-           <div class="column span-8 prepend-5 last">
-           <input type="submit" value="{% trans "submit issue" %}"/>
-           </div>
-           </form>
-        </div>
-        <div id='proposetips' class="span-4 last">
+{% block gamenews %}
+{% if actions.propose %}
+        <div class="notice">
         {% blocktrans %}
         Make sure you check your spelling. It is not possible to change your issue later.
         We do not allow change because people might have voted. If content changes,  votes
-        are invalidated. You can archive and hide it by not publishing your issue.
+        are invalidated. You can archive / hide the old issue by not publishing your issue.
         {% endblocktrans %}
         </div>
-        </div>
-        {% else %} <h2>{% trans "You cannot propose yet or anymore, you need more points" %}</h2>
-        {% endif %}
 {% endif %}
+{% endblock %}
 
+{% block content %}
+
+<h2>{% trans "Propose issues" %}</h2>
+{% if actions.propose %}
+<p></p>
+<fieldset>
+<form action="{{ request.get_full_path }}" method="post">
+<table>
+{% for field in issueform %} 
+{% for error in field.errors %}
+    <tr><td></td><td class="error">{{error}}</td></tr>
+{% endfor %}
+   <tr><th>{{ field.label_tag }}</th><td>{{ field }}</td></tr>
+{% endfor %}
+   <tr><td> <input type="submit" value="{% trans "submit issue" %}"/></td></tr>
+</table>
+</form>
+</fieldset>
+<div class="issues">
 {% votes_by_user user on issues as vote_dct %}
 {% vote_counts_for_objects issues as counts_dct %}
 
-<h2> {% trans "proposed by you" %}</h2>
+<h2> {% trans "Proposed by you" %}</h2>
+<h4><a href="{% url issue_list 'popular' %}"> {% trans 'popular' %} </a> |
+    <a href="{% url issue_list 'for' %}">{% trans 'for' %}</a> | 
+    <a href="{% url issue_list 'controversial' %}">{%trans 'controversial' %}</a> | 
+    <a href="{% url issue_list 'against' %}">{% trans 'against' %}</a> 
+    <a href="{% url issue_list 'new' %}">{% trans 'new' %}</a> |
+</h4>
+
 <ul>
 {% for issue in issues %}
 
@@ -55,7 +51,7 @@
 {% dict_entry_for_item issue from counts_dct as score %}
 
 <li id="issue{{ issue.pk }}" >
-    <a name="{{issue.pk}}"></a>
+    <r name="{{issue.pk}}"></a>
     <h3> <a href="{{ issue.url }}">{{ issue }}</a> </h3> 
 <div class="issue_left">
     {% if vote.vote %}
@@ -117,6 +113,9 @@
 {% endfor %}
 </ul>
 </div>
+{% else %} <p class="notice">{% trans "You cannot propose yet, you need more points" %}</p>
+{% endif %}
+
 
 <div class="pagination">
     <span class="step-links">

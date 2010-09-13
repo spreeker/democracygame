@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-31 20:20+0200\n"
+"POT-Creation-Date: 2010-09-10 21:13+0200\n"
 "PO-Revision-Date: 2010-06-03 09:14\n"
 "Last-Translator: ReindeR Rustema <reinder@rustema.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,12 +36,12 @@ msgstr "Duits"
 msgid "French"
 msgstr "Frans"
 
-#: gamelogic/actions.py:55
+#: gamelogic/actions.py:56 gamelogic/actions.py:82
 #, python-format
 msgid "You voted successfully on %s"
 msgstr ""
 
-#: gamelogic/actions.py:82
+#: gamelogic/actions.py:111
 #, python-format
 msgid "You created issue \"%s\" successfully"
 msgstr ""
@@ -62,20 +62,28 @@ msgstr "Actieve burger"
 msgid "Opinion Leader"
 msgstr "opinieleider"
 
-#: gamelogic/models.py:27
+#: gamelogic/models.py:13 templates/profiles/user_detail.html:20
+msgid "Candidate"
+msgstr ""
+
+#: gamelogic/models.py:14
+msgid "Parliament member"
+msgstr ""
+
+#: gamelogic/models.py:28
 #, python-format
 msgid "%(user)s  multiplies for %(issue)s"
 msgstr "% (user) verzwaart %(issue)s "
 
-#: gamelogic/models.py:38
+#: gamelogic/models.py:39
 msgid "You have no multiplies left"
 msgstr "U mag geen voorstellen meer verzwaren"
 
-#: gamelogic/models.py:41
+#: gamelogic/models.py:42
 msgid "You cannot not multiplie on your own issues"
 msgstr "U mag uw eigen voorstellen niet verzwaren"
 
-#: gamelogic/models.py:44
+#: gamelogic/models.py:45
 msgid "succesfully added multiply"
 msgstr "Voorstel weegt nu zwaarder"
 
@@ -107,40 +115,41 @@ msgstr "publiceer"
 msgid "tags"
 msgstr "tags"
 
-#: issue/models.py:18
+#: issue/models.py:21 templates/profiles/self_detail.html:8
+#: templates/profiles/user_detail.html:9
 msgid "website"
 msgstr "website"
 
-#: issue/models.py:19
+#: issue/models.py:22
 msgid "video"
 msgstr "video"
 
-#: issue/models.py:20
+#: issue/models.py:23
 msgid "audio"
 msgstr "audio"
 
-#: issue/models.py:21
+#: issue/models.py:24
 msgid "book"
 msgstr "boek"
 
-#: issue/models.py:22
+#: issue/models.py:25
 msgid "document"
 msgstr "document"
 
-#: issue/models.py:23
+#: issue/models.py:26
 msgid "image"
 msgstr "beeld"
 
-#: issue/views.py:145
+#: issue/views.py:178 profiles/views.py:130
+msgid "You did not pick a valid option"
+msgstr ""
+
+#: issue/views.py:192
 msgid "You voted succesfull, to save your votes please register"
 msgstr ""
 "Uw stem was succesvol, om uw stemmen op te slaan moet u zich registreren."
 
-#: issue/views.py:155
-msgid "You did not pick a valid option"
-msgstr ""
-
-#: issue/views.py:182
+#: issue/views.py:224
 msgid "You cannot multiply yet!"
 msgstr "U mag geen voorstellen meer verzwaren"
 
@@ -152,11 +161,11 @@ msgstr "gebruikersnaam"
 msgid "democracy game"
 msgstr "democratiespel"
 
-#: templates/base.html:17
+#: templates/base.html:15
 msgid "mainpage"
 msgstr "homepage"
 
-#: templates/base_content.html:5 templates/web/sidebar.html:45
+#: templates/base_content.html:5
 msgid "all issues"
 msgstr "alle voorstellen"
 
@@ -168,18 +177,22 @@ msgstr "mijn voorstellen"
 msgid "your votes"
 msgstr "mijn stemmen"
 
-#: templates/dashboard/my_issues.html:9 templates/issue/issue_list.html:12
-#: templates/profiles/issue_list_user.html:12
+#: templates/base_content.html:33
+msgid "pick language.."
+msgstr ""
+
+#: templates/dashboard/my_issues.html:9 templates/issue/issue_list.html:13
+#: templates/issue/issue_list_user.html:13
 msgid "popular"
 msgstr "populair"
 
-#: templates/dashboard/my_issues.html:10 templates/issue/issue_list.html:13
-#: templates/profiles/issue_list_user.html:13
+#: templates/dashboard/my_issues.html:10 templates/issue/issue_list.html:14
+#: templates/issue/issue_list_user.html:14
 msgid "controversial"
 msgstr "controversieel"
 
-#: templates/dashboard/my_issues.html:11 templates/issue/issue_list.html:14
-#: templates/profiles/issue_list_user.html:14
+#: templates/dashboard/my_issues.html:11 templates/issue/issue_list.html:15
+#: templates/issue/issue_list_user.html:15
 msgid "new"
 msgstr "nieuw"
 
@@ -219,17 +232,14 @@ msgid "proposed by you"
 msgstr "doe een voorstel"
 
 #: templates/dashboard/my_issues.html:84 templates/issue/issue_list.html:47
-#: templates/profiles/issue_list_user.html:44
 msgid "YES"
 msgstr "ja"
 
 #: templates/dashboard/my_issues.html:88 templates/issue/issue_list.html:51
-#: templates/profiles/issue_list_user.html:48
 msgid "NO"
 msgstr "nee"
 
 #: templates/dashboard/my_issues.html:96 templates/issue/issue_list.html:60
-#: templates/profiles/issue_list_user.html:56
 msgid "blank"
 msgstr "blanco"
 
@@ -238,7 +248,6 @@ msgid "hide"
 msgstr "video"
 
 #: templates/dashboard/my_issues.html:106 templates/issue/issue_list.html:64
-#: templates/profiles/issue_list_user.html:60
 msgid "multiply"
 msgstr "verzwaar"
 
@@ -270,26 +279,26 @@ msgstr ""
 msgid "logout"
 msgstr "afmelden"
 
-#: templates/dashboard/userbar.html:12 templates/profiles/login.html:25
-#: templates/web/sidebar.html:55
+#: templates/dashboard/userbar.html:11 templates/profiles/login.html:25
+#: templates/registration/registration_form.html:12
 msgid "register"
 msgstr "registreren"
 
-#: templates/dashboard/userbar.html:13 templates/profiles/logout.html:7
-#: templates/web/sidebar.html:57
+#: templates/dashboard/userbar.html:12 templates/profiles/logout.html:7
 msgid "log in"
 msgstr "aanmelden"
 
-#: templates/issue/issue_list.html:11
-msgid "issues"
+#: templates/issue/issue_list.html:12
+#, fuzzy
+msgid "Issues"
 msgstr "voorstellen"
 
-#: templates/issue/issue_list.html:15
+#: templates/issue/issue_list.html:16 templates/issue/issue_list_user.html:16
 #, fuzzy
 msgid "for"
 msgstr "voor"
 
-#: templates/issue/issue_list.html:16
+#: templates/issue/issue_list.html:17 templates/issue/issue_list_user.html:17
 #, fuzzy
 msgid "against"
 msgstr "tegen"
@@ -297,6 +306,11 @@ msgstr "tegen"
 #: templates/issue/issue_list.html:55
 msgid "blank vote because.."
 msgstr ""
+
+#: templates/issue/issue_list_user.html:12
+#, fuzzy
+msgid "Issues for"
+msgstr "voorstellen"
 
 #: templates/piston/authorize_token.html:4
 msgid "3rd party Authorization Page"
@@ -322,10 +336,24 @@ msgstr ""
 "beschermen moet u toestemming geven voor het gebruik. U kunt uw toestemming "
 "later altijd terug trekken.\n"
 
-#: templates/profiles/issue_list_user.html:11
+#: templates/profiles/compare_votes_to_user.html:5
+msgid "Your votes compared with "
+msgstr ""
+
+#: templates/profiles/compare_votes_to_user.html:12
 #, fuzzy
-msgid "issues for"
-msgstr "voorstellen"
+msgid "Vote on "
+msgstr "stem"
+
+#: templates/profiles/compare_votes_to_user.html:13
+msgid ""
+"Every player can vote on one person. Persons with the most votes will get "
+"into the parlement."
+msgstr ""
+
+#: templates/profiles/compare_votes_to_user.html:17
+msgid "VOTE ON"
+msgstr ""
 
 #: templates/profiles/login.html:19
 msgid "Try again, username and password don't match."
@@ -339,7 +367,7 @@ msgstr "| reset mijn wachtwoord"
 msgid "You are now logged out."
 msgstr "Je bent nu afgemeld"
 
-#: templates/profiles/search_user.html:6 templates/web/search_tag.html:6
+#: templates/profiles/search_user.html:6
 msgid "search"
 msgstr "zoeken"
 
@@ -347,33 +375,76 @@ msgstr "zoeken"
 msgid "No users were found that match you query ..."
 msgstr "Gezochte gebruikers niet gevonden..."
 
-#: templates/profiles/search_user.html:19 templates/web/issue_detail.html:57
-#: templates/web/search_tag.html:19
+#: templates/profiles/search_user.html:19
 msgid "previous"
 msgstr "vorige"
 
-#: templates/profiles/search_user.html:21 templates/web/search_tag.html:21
+#: templates/profiles/search_user.html:21
 #, python-format
 msgid "page %(no)s of %(np)s "
 msgstr "pagina %(geen)s  van %(NP)s "
 
-#: templates/profiles/search_user.html:23 templates/web/issue_detail.html:63
-#: templates/web/search_tag.html:23
+#: templates/profiles/search_user.html:23
 msgid "next"
 msgstr "volgende"
 
-#: templates/profiles/self_detail.html:22
+#: templates/profiles/self_detail.html:6 templates/profiles/user_detail.html:7
+msgid "score"
+msgstr "punten"
+
+#: templates/profiles/self_detail.html:7 templates/profiles/user_detail.html:8
+msgid "role"
+msgstr ""
+
+#: templates/profiles/self_detail.html:9
+#: templates/profiles/user_detail.html:10
+msgid "votes public"
+msgstr ""
+
+#: templates/profiles/self_detail.html:10
+#: templates/profiles/user_detail.html:11
+msgid "id verified"
+msgstr ""
+
+#: templates/profiles/self_detail.html:11
+#: templates/profiles/user_detail.html:12
+msgid "description"
+msgstr ""
+
+#: templates/profiles/self_detail.html:12
+msgid "email"
+msgstr ""
+
+#: templates/profiles/self_detail.html:13
+msgid "show identity"
+msgstr ""
+
+#: templates/profiles/self_detail.html:21
 msgid "change password"
 msgstr "wachtwoord wijzigen"
 
-#: templates/profiles/user_detail.html:15
+#: templates/profiles/self_detail.html:25
+msgid "Your candidate"
+msgstr ""
+
+#: templates/profiles/self_detail.html:30
+#: templates/profiles/user_detail.html:24
+msgid "no candidate chosen yet"
+msgstr ""
+
+#: templates/profiles/user_detail.html:5
+msgid "Details for registered user"
+msgstr ""
+
+#: templates/profiles/user_detail.html:14
 #, fuzzy
-msgid "Proposed issues"
+msgid "issues proposed by"
 msgstr "doe een voorstel"
 
-#: templates/profiles/user_detail.html:16
-msgid "compare your votes with the votes by "
-msgstr ""
+#: templates/profiles/user_detail.html:15
+#, fuzzy
+msgid "compare your votes with"
+msgstr "mijn stemmen"
 
 #: templates/registration/activate.html:6
 #, python-format
@@ -393,6 +464,15 @@ msgstr "Er is iets fout is gegaan. Uw account is waarschijnlijk al actief"
 #: templates/registration/activate.html:18
 msgid "Your previous anonymous votes have been saved to your profile!"
 msgstr "Uw vorige anonieme stemmen zijn opgeslagen in uw profiel"
+
+#: templates/registration/activation_complete.html:5
+msgid ""
+"\n"
+"\t<p>\n"
+"\tYou have been succesfully registered!\n"
+"\t</p>\n"
+"\t"
+msgstr ""
 
 #: templates/registration/logged_out.html:4
 msgid "Home"
@@ -527,11 +607,11 @@ msgstr ""
 "Wachtwoord vergeten? Voer uw e-mailadres in en wij e-mailen u instructies "
 "voor het instellen van een nieuw wachtwoord"
 
-#: templates/registration/password_reset_form.html:12
+#: templates/registration/password_reset_form.html:13
 msgid "E-mail address:"
 msgstr "e-mailadres:"
 
-#: templates/registration/password_reset_form.html:12
+#: templates/registration/password_reset_form.html:13
 msgid "Reset my password"
 msgstr "| reset mijn wachtwoord"
 
@@ -555,179 +635,9 @@ msgstr ""
 "bevestigingslink vindt die u moet openen in uw browser om uw registratie te "
 "bevestigen. Uw huidige stemmen worden dan opgeslagen bij uw profiel. </p>"
 
-#: templates/web/become_candidate.html:8
-msgid "Yes, run for office."
-msgstr "Ja, kandidaat volksvertegenwoordiger worden"
-
-#: templates/web/issue_body.html:4
-msgid "by"
-msgstr "door"
-
-#: templates/web/issue_body.html:4
-msgid "on"
-msgstr "aan"
-
-#: templates/web/issue_body.html:4
-msgid "at"
-msgstr "op"
-
-#: templates/web/issue_body.html:7
-msgid "source"
-msgstr "bron"
-
-#: templates/web/issue_body.html:14 templates/web/issue_sidebar.html:25
-msgid "add tag"
-msgstr "voeg tag toe"
-
-#: templates/web/issue_detail.html:24 templates/web/issue_detail.html.py:33
-#: templates/web/voteform.html:3
-msgid "Vote on this issue"
-msgstr "stem over dit onderwerp"
-
-#: templates/web/issue_detail.html:26
-msgid "Vote"
-msgstr "stem"
-
-#: templates/web/issue_detail.html:27 templates/web/issue_detail.html.py:36
-#: templates/web/voteform.html:8
-msgid "Keep private"
-msgstr "houd privé"
-
-#: templates/web/issue_detail.html:35
-msgid "Motivation"
-msgstr "motivatie"
-
-#: templates/web/issue_detail.html:42
-msgid "Tag this issue"
-msgstr "tag dit voorstel"
-
-#: templates/web/issue_detail.html:44
-msgid "Popular tags"
-msgstr "populaire tags"
-
-#: templates/web/issue_detail.html:45
-msgid "other tag"
-msgstr "andere tag"
-
-#: templates/web/issue_detail.html:48
-msgid "Errors"
-msgstr "fouten"
-
-#: templates/web/issue_detail.html:59
-#, python-format
-msgid ""
-"\n"
-"        question %(N)s of %(num_pages)s\n"
-"        "
+#: templates/registration/registration_form.html:9
+msgid "Some problem ocurred, big deal."
 msgstr ""
-"\n"
-"vraag %(N)s  van %(num_pages)s "
-
-#: templates/web/issue_detail.html:65
-msgid "show results"
-msgstr "toon resultaten"
-
-#: templates/web/issue_sidebar.html:16
-msgid "more information"
-msgstr "meer informatie"
-
-#: templates/web/issue_sidebar.html:33
-msgid "score"
-msgstr "punten"
-
-#: templates/web/issue_sidebar.html:34
-msgid "votes"
-msgstr "stemmen"
-
-#: templates/web/mandate.html:7
-#, python-format
-msgid "Yes, mandate %(name)s."
-msgstr "Ja, mandaat %(name)."
-
-#: templates/web/search_tag.html:15
-msgid "No tags were found that match you query ..."
-msgstr "gezochte gebruikers niet gevonden..."
-
-#: templates/web/sidebar.html:9
-#, python-format
-msgid ""
-" \n"
-"\n"
-"        <a href=\"http://nl/wiki/index.php/Burger\">%(role)s</a>.<br />\n"
-"\t\t<a href=\"http://nl/wiki/index.php/Punten\">score</a> is %(score)s<br /"
-"><br />\n"
-"        <p>\n"
-"\t\tfor : %(total_for)s \n"
-"\t\tagainst : %(total_against)s\n"
-"\t\tblank : %(total_blank)s\n"
-"        </p>\n"
-"        "
-msgstr ""
-"<a href=\"http://democratiespel.nl/wiki/index.php/Burger\">%(role)s</a>.<br /"
-">\n"
-"<a href=\"http://democratiespel.nl/wiki/index.php/Punten\">score</a> is %"
-"(score)s<br /><br />\n"
-"<p>\n"
-"voor : %(total_for)s\n"
-"tegen : %(total_against)s\n"
-"blanco : %(total_blank)s\n"
-"</p>"
-
-#: templates/web/sidebar.html:21
-#, python-format
-msgid ""
-"  \n"
-"                As a %(role)s you can: \n"
-"        "
-msgstr "Als %(role)s  kunt u:"
-
-#: templates/web/sidebar.html:31
-msgid "propose issue"
-msgstr "doe een voorstel"
-
-#: templates/web/sidebar.html:38
-msgid "You are missing the following actions: "
-msgstr "u mist de volgende acties:"
-
-#: templates/web/sidebar.html:46
-msgid "my issues"
-msgstr "mijn voorstellen"
-
-#: templates/web/sidebar.html:47
-msgid "my votes"
-msgstr "mijn stemmen"
-
-#: templates/web/sidebar.html:48
-msgid "my profile"
-msgstr "mijn profiel"
-
-#: templates/web/sidebar.html:49
-msgid "log out"
-msgstr "uitloggen"
-
-#: templates/web/sort_order_block.html:3
-msgid "most recent"
-msgstr "recentste"
-
-#: templates/web/sort_order_block.html:4
-msgid "most voted on"
-msgstr "de meeste stemmen op"
-
-#: templates/web/sort_order_block.html:5
-msgid "highest score"
-msgstr "hoogste score"
-
-#: templates/web/sort_order_block.html:6
-msgid "hottest"
-msgstr "populairst"
-
-#: templates/web/sort_order_block.html:6
-msgid "currently sorting by hotness"
-msgstr "momenteel de populairste aan het sorteren"
-
-#: templates/web/voteform.html:4
-msgid "cast a vote"
-msgstr "stem"
 
 #: voting/managers.py:12
 msgid "Against"
@@ -777,9 +687,140 @@ msgstr "vraag me later"
 msgid "Too personal"
 msgstr "te persoonlijk"
 
-#: voting/managers.py:34
+#: voting/managers.py:35
 msgid "Multiply"
 msgstr "verzwaren"
+
+#, fuzzy
+#~ msgid "Proposed issues"
+#~ msgstr "doe een voorstel"
+
+#~ msgid "Yes, run for office."
+#~ msgstr "Ja, kandidaat volksvertegenwoordiger worden"
+
+#~ msgid "by"
+#~ msgstr "door"
+
+#~ msgid "on"
+#~ msgstr "aan"
+
+#~ msgid "at"
+#~ msgstr "op"
+
+#~ msgid "source"
+#~ msgstr "bron"
+
+#~ msgid "add tag"
+#~ msgstr "voeg tag toe"
+
+#~ msgid "Vote on this issue"
+#~ msgstr "stem over dit onderwerp"
+
+#~ msgid "Keep private"
+#~ msgstr "houd privé"
+
+#~ msgid "Motivation"
+#~ msgstr "motivatie"
+
+#~ msgid "Tag this issue"
+#~ msgstr "tag dit voorstel"
+
+#~ msgid "Popular tags"
+#~ msgstr "populaire tags"
+
+#~ msgid "other tag"
+#~ msgstr "andere tag"
+
+#~ msgid "Errors"
+#~ msgstr "fouten"
+
+#~ msgid ""
+#~ "\n"
+#~ "        question %(N)s of %(num_pages)s\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "vraag %(N)s  van %(num_pages)s "
+
+#~ msgid "show results"
+#~ msgstr "toon resultaten"
+
+#~ msgid "more information"
+#~ msgstr "meer informatie"
+
+#~ msgid "votes"
+#~ msgstr "stemmen"
+
+#~ msgid "Yes, mandate %(name)s."
+#~ msgstr "Ja, mandaat %(name)."
+
+#~ msgid "No tags were found that match you query ..."
+#~ msgstr "gezochte gebruikers niet gevonden..."
+
+#~ msgid ""
+#~ " \n"
+#~ "\n"
+#~ "        <a href=\"http://nl/wiki/index.php/Burger\">%(role)s</a>.<br />\n"
+#~ "\t\t<a href=\"http://nl/wiki/index.php/Punten\">score</a> is %(score)"
+#~ "s<br /><br />\n"
+#~ "        <p>\n"
+#~ "\t\tfor : %(total_for)s \n"
+#~ "\t\tagainst : %(total_against)s\n"
+#~ "\t\tblank : %(total_blank)s\n"
+#~ "        </p>\n"
+#~ "        "
+#~ msgstr ""
+#~ "<a href=\"http://democratiespel.nl/wiki/index.php/Burger\">%(role)s</a>."
+#~ "<br />\n"
+#~ "<a href=\"http://democratiespel.nl/wiki/index.php/Punten\">score</a> is %"
+#~ "(score)s<br /><br />\n"
+#~ "<p>\n"
+#~ "voor : %(total_for)s\n"
+#~ "tegen : %(total_against)s\n"
+#~ "blanco : %(total_blank)s\n"
+#~ "</p>"
+
+#~ msgid ""
+#~ "  \n"
+#~ "                As a %(role)s you can: \n"
+#~ "        "
+#~ msgstr "Als %(role)s  kunt u:"
+
+#~ msgid "propose issue"
+#~ msgstr "doe een voorstel"
+
+#~ msgid "You are missing the following actions: "
+#~ msgstr "u mist de volgende acties:"
+
+#~ msgid "my issues"
+#~ msgstr "mijn voorstellen"
+
+#~ msgid "my votes"
+#~ msgstr "mijn stemmen"
+
+#~ msgid "my profile"
+#~ msgstr "mijn profiel"
+
+#~ msgid "log out"
+#~ msgstr "uitloggen"
+
+#~ msgid "most recent"
+#~ msgstr "recentste"
+
+#~ msgid "most voted on"
+#~ msgstr "de meeste stemmen op"
+
+#~ msgid "highest score"
+#~ msgstr "hoogste score"
+
+#~ msgid "hottest"
+#~ msgstr "populairst"
+
+#~ msgid "currently sorting by hotness"
+#~ msgstr "momenteel de populairste aan het sorteren"
+
+#~ msgid "cast a vote"
+#~ msgstr "stem"
 
 #~ msgid "Tag"
 #~ msgstr "tag"

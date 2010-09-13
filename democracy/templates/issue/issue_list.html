@@ -11,10 +11,10 @@
 {% block issue_menu %}
 <h2> {% trans "Issues"%} </h2>
 <h4><a href="{% url issue_list 'popular' %}"> {% trans 'popular' %} </a> |
-    <a href="{% url issue_list 'controversial' %}">{%trans 'controversial' %}</a> | 
-    <a href="{% url issue_list 'new' %}">{% trans 'new' %}</a> |
     <a href="{% url issue_list 'for' %}">{% trans 'for' %}</a> | 
-    <a href="{% url issue_list 'against' %}">{% trans 'against' %}</a> 
+    <a href="{% url issue_list 'controversial' %}">{%trans 'controversial' %}</a> | 
+    <a href="{% url issue_list 'against' %}">{% trans 'against' %}</a> |
+    <a href="{% url issue_list 'new' %}">{% trans 'new' %}</a>
 </h4>
 {% endblock %}
 <ul>
@@ -35,11 +35,6 @@
     </div>
 </div>
 <p> {{ issue.body }} </p>
-<div class="yourvote">
-{% if vote.vote %}
-{% for key , direction in possible_votes.items %}{% ifequal key vote.vote %}{% trans direction %}{% endifequal %}{% endfor %}
-{% endif %}
-</div>
 <div class="forms" id="fid{{ issue.pk }}">
 <form action="{% url vote issue.pk %}" method="post">
     <input type="hidden" name="direction" class="direction" value="1" />
@@ -59,11 +54,19 @@
     </select>
     <input type="submit" value="{% trans "blank" %}"/>
 </form>
+{% comment %}
 <form action="{% url multiply issue.pk %}" method="post">
     <input type="hidden" name="next" class="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
     <input type="submit" value="{% trans "multiply" %}"/>
 </form>
+{% endcomment %}
 created by <a href="{% url userprofile issue.user.username %}">{{ issue.user }}</a>
+<div class="yourvote">
+{% if vote.vote %}
+{% for key , direction in possible_votes.items %}{% ifequal key vote.vote %}{% trans direction %}{% endifequal %}{% endfor %}
+{% endif %}
+</div>
+
 </div>{# end forms #}
 </li>
 {% endfor %}

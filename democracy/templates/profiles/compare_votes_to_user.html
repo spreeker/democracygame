@@ -5,16 +5,67 @@
 <h2>{% trans "Your votes compared with " %}<a href="{% url userprofile user_to_compare.username %}">{{ user_to_compare.username }}</a></h2>
 
 <table>
-<tr><td>No votes by {{user_to_compare.username}}</td><td>Agree </td><td>Blank</td><td>Disagree</td><td>No votes by you</td></tr>
-<tr><td>{{n_votes_player}}</td><td class="for">{{n_agree}} / {{n_total_intersection}}</td><td class="blank">{{n_blank}} / {{n_total_intersection}}</td><td class="against">{{n_disagree}} / {{n_total_intersection}}</td><td>{{n_votes_user}}</td></tr>
+<thead><th>{% trans "Agree"%}</th><th>{% trans Blank %}</th><th>{% trans "Disagree" %}</th><th>{% trans "Total" %}</th></thead>
+<tbody>
+<tr><td class="for">{{n_agree}}</td><td class="blank">{{n_blank}}</td><td class="against">{{n_disagree}}</td><td>{{n_total_intersection}}</tr>
+</tbody>
 </table>
 
-<h1>{% trans "Vote on " %}{{user_to_compare.username}}?</h1> 
-<p>{% trans "Every player can vote on one person. Persons with the most votes will get into the parlement."%}</p> 
+<h2>{% trans "compared issues" %}</h2>
+
+<table class="success">
+<thead><th>{% trans "Title" %} </th><th>{% trans "Vote" %}</th></thead>
+<tbody>
+{% for issue, vote in agree_issues %}
+    <tr><td>{{issue.title|capfirst}}</td><td class="green">{% trans vote %}</td></tr>
+{% endfor %}
+</tbody>
+</table>
+<table class="error">
+<thead><th>{% trans "Title" %} </th><th>{% trans "Vote" %}</th></thead>
+<tbody>
+{% for issue, vote in disagree_issues %}
+    <tr><td>{{issue.title|capfirst}}</td><td class="green">{% trans vote %}</td></tr>
+{% endfor %}
+</tbody>
+</table>
+
+<table class="notice">
+<thead><th>{% trans "Title" %} </th><th>{% trans "Vote" %}</th></thead>
+<tbody>
+{% for issue, vote in blank_issues %}
+    <tr><td>{{issue.title|capfirst}}</td><td>{% trans vote %}</td></tr>
+{% endfor %}
+</tbody>
+</table>
+
+
+{% endblock %}
+
+{% block gamenews %}
+<h2>{% trans "Candidate?" %}</h2><p></p>
+<p class="notice">{% trans "Every player can vote on one person. Persons with the most votes will get into the parlement."%}</p> 
 <form action=" {% url vote_user user_to_compare.id %}" method="post">
     <input type="hidden" name="direction" class="direction" value="1" />
     <input type="hidden" name="next" class="next" value="{{ request.get_full_path }}" />
     <input type="submit" value="{% trans "VOTE ON" %} {{user_to_compare.username}}"/>
 </form>
+{% endblock %}
+
+
+{% block sidebar %}
+<h2> Tags </h2>
+{% for tag in cloud %}
+    {% if tag.status %}
+        {% if tag.status = 'agree' %}
+<a class="green" href="{% url issue_with_tag tag.name %}"><font size="{{ tag.font_size }}">{{ tag.name }}</font></a>
+        {% endif %} 
+        {% if tag.status = 'conflict' %}
+<a class="yellow" href="{% url issue_with_tag tag.name %}"><font size="{{ tag.font_size }}">{{ tag.name }}</font></a>
+        {% endif %}
+    {% else %}
+<a class="red" href="{% url issue_with_tag tag.name %}"><font size="{{ tag.font_size }}">{{ tag.name }}</font></a>
+{% endif %}
+{% endfor %}
 
 {% endblock %}
