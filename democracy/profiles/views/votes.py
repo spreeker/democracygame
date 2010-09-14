@@ -19,6 +19,8 @@ from django.contrib.auth.views import password_reset
 from tagging.models import Tag
 from tagging.utils import calculate_cloud
 
+from profiles.views import get_user_candidate_context
+
 def migrate_votes(request, user, votes):
     """When an User registers, migrate the 
        users session votes to REAL votes.
@@ -62,20 +64,48 @@ def record_vote_on_user(request, user_id):
         return vote_on_object(request, User, direction, object_id=user_id, allow_xmlhttprequest=True ) 
     return HttpResponseRedirect('/')
 
-def compare_to_user(request, username):
-    """
-    Compare username with request.user.
 
-    Tag cloud match.
-    Votes count match.
-    Details on differences.
+def get_tagcloud_intersection(agree_issues, disagree_issues):
+    try :
+        agree_tags = Tag.objects.usage_for_model(Issue, 
+            counts=True, filters=dict(id__in=agree_issues))
+    except EmptyResultSet:
+        agree_tags = []
+    try:
+        disagree_tags = Tag.objects.usage_for_model(Issue, 
+            counts=True, filters=dict(id__in=disagree_issues))
+    except EmptyResultSet:
+        disagree_tags = [] 
 
-    """
-    pass
+    tags_dagree= dict((tag.name, tag) for tag in disagree_tags)
+    all_tags = []
+    # loop over al for tags, look if tag also exists in disagree tag
+    # if so add a status with 'conflict' to the tag.
+    # agree_tags have 'agree' status
+    # disagree_tags have no status.
+    for a_tag in agree_tags:
+        a_tag.status = 'agree'
+        if tags_dagree.has_key(a_tag.name):
+            d_tag = tags_dagree[a_tag.name]
+            d_tag.count = d_tag.count + a_tag.count
+            d_tag.status = 'conflict'
+            all_tags.append(d_tag)
+            tags_dagree.pop(a_tag.name)
+        else:
+            all_tags.append(a_tag)
+
+    all_tags.extend(tags_dagree.values())
+    return calculate_cloud(all_tags)
 
 
 def compare_votes_to_user(request, username):
-    """Compare ``request.user``'s voting history with ``username``."""
+    """ Compare ``request.user``'s voting history with ``username``.
+        sidebar:
+            Collored Tag cloud. Green=Agree, Yellow=Conflict, Red=Disagree.
+        gamenews:
+            Candidate info.
+            user details.
+    """
     user = get_object_or_404(User, username = username)
     user_votes = Vote.objects.get_user_votes(user, Model=Issue)
 
@@ -115,12 +145,12 @@ def compare_votes_to_user(request, username):
 
     n_agree, n_disagree, n_blank =  len(id_agree) , len(id_disagree) , len(id_blank)
     n_total_intersection = n_agree + n_disagree + n_blank
+
     # get the issues + votes!
-    
-    def _cmp(issueA, issueB):
+    def _cmp(issueA, issueB): #comapre issues.
         return cmp(issueA[0].title.lower(), issueB[0].title.lower())
 
-    def _issue_vote(qs):
+    def _issue_vote(qs): #create list with tuples (issue, direction)
         issue_vote = []
         issues = dict((issue.id, issue) for issue in qs.all())
         for id, issue in issues.items():
@@ -136,34 +166,9 @@ def compare_votes_to_user(request, username):
     blank_issues = Issue.objects.filter(id__in=id_blank)
     blank_issues = _issue_vote(blank_issues)
 
-    ## TAG CLOUD STUFF.
-    try :
-        agree_tags = Tag.objects.usage_for_model(Issue, counts=True, filters=dict(id__in=id_agree))
-    except EmptyResultSet:
-        agree_tags = []
-    try:
-        disagree_tags = Tag.objects.usage_for_model(Issue, counts=True, filters=dict(id__in=id_disagree))
-    except EmptyResultSet:
-        disagree_tags = [] 
-
-    tags_dagree= dict((tag.name, tag) for tag in disagree_tags)
-    all_tags = []
-
-    for a_tag in agree_tags:
-        a_tag.status = 'agree'
-        if tags_dagree.has_key(a_tag.name):
-            d_tag = tags_dagree[a_tag.name]
-            d_tag.count = d_tag.count + a_tag.count
-            d_tag.status = 'conflict'
-            all_tags.append(d_tag)
-            tags_dagree.pop(a_tag.name)
-        else:
-            all_tags.append(a_tag)
-
-    all_tags.extend(tags_dagree.values())
-    cloud = calculate_cloud(all_tags)
-
-
+    ## Get tagcloud of vote intersection.
+    cloud = get_tagcloud_intersection(id_agree, id_disagree)
+    
     context = RequestContext(request, {
         'user_to_compare' : user,
         'n_agree' : n_agree,
@@ -174,5 +179,6 @@ def compare_votes_to_user(request, username):
         'disagree_issues' : disagree_issues,
         'blank_issues' : blank_issues,
         'cloud' : cloud,
-    })
+        })
+    context.update(get_user_candidate_context(request, user))
     return render_to_response('profiles/compare_votes_to_user.html', context)

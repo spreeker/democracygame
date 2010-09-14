@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-
+from django.db.models.sql.datastructures import EmptyResultSet
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect
@@ -10,13 +10,33 @@ from django.core.urlresolvers import reverse
 from profiles.forms import ChangeProfile
 from profiles.models import UserProfile
 from voting.models import Vote
+from issue.models import Issue
+from tagging.models import Tag
+from tagging.utils import calculate_cloud
+
 
 # Imports for activate view
 
 import logging
 
-def userprofile_show(request, username):
-    user = get_object_or_404(User, username=username) 
+def get_user_tag_cloud(user):
+    votes = Vote.objects.get_user_votes(user, Model=Issue)
+    votes = votes.values_list('object_id') 
+    try :
+        tags = Tag.objects.usage_for_model(Issue, 
+            counts=True, filters=dict(id__in=votes))
+    except EmptyResultSet:
+        tags = []
+
+    return calculate_cloud(tags)
+
+
+def get_user_candidate_context(request, user,):
+    """
+    return context with:
+    candidate : candidate of user
+    followers : users who made user their candidate.(followers)
+    """
     context = {}
     #who did this user vote on? 
     candidate = Vote.objects.get_user_votes(user, Model=User)
@@ -29,12 +49,21 @@ def userprofile_show(request, username):
     followers = followers.filter(is_archived=False)
     if len(followers):
         context.update({'followers': followers })
+    return context
+
+def userprofile_show(request, username):
+    user = get_object_or_404(User, username=username) 
+    context = {'viewed_user' : user}
+
+    context.update(get_user_candidate_context(request,user))
 
     if user == request.user and request.user.is_authenticated:
         form = ChangeProfile(instance=user.get_profile())
         context.update({'form' : form, 'personal' : True })
 
-    context.update({'viewed_user' : user})
+    context.update({'tags' : get_user_tag_cloud(user),
+        'issuecount' : Issue.objects.filter(user=user.id).count(), 
+    })
     context = RequestContext(request, context)
     return render_to_response('profiles/user_detail.html', context)
 
