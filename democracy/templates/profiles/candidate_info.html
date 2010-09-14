@@ -1,0 +1,18 @@
+{% load i18n %}<h2>{% trans "Candidate" %}</h2>  
+{% if personal %}<p>{% trans "Your candidate"%}:</p> {% endif %}
+
+<p>{% if candidate %} <a href="{% url userprofile candidate %}"> <h3>{{ candidate.username }}<h3></a>
+{% else %} {% trans "No candidate chosen yet" %} 
+{% endif %}</p>
+
+<h2>{% if personal %}{% trans "Your followers"%}
+{% else %}{% trans "Followers" %}
+{% endif %} </h2> 
+
+<p>{% if followers %}
+    {% for candidate in followers %} <a href="{% url userprofile candidate.user %}">
+    <h3>{{ candidate.user.username }}<h3></a>
+    {% endfor %}
+{% else %} {% trans "nobody's candidate" %}
+{% endif %}</p>
+

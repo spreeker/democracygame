@@ -47,47 +47,52 @@ def paginate(request, qs, pagesize=8):
     return page
 
 
-def order_issues(request, sortorder, issues):
+def order_issues(request, sortorder, issues, min_tv=6, subset=None):
     """
     return page and qs of issues derived from voting data. 
     
-    we are trying to do some aggegration using gfk's. Which is
-    not easy to do. this is a somewhat of a workaround.
-    
-    wait for django 1.3?
+    returns issues ordered by
+        popularity - issues with a lot of votes.
+        controversiality - vote for/agains = 50/50
+        for     - mostpeople vote for.
+        against -issues most people vote against.
+        new     -issues you have not voted on.
 
-    or look at:
+    we are trying to do some aggegration using gfk's. Which is
+    not easy to do or look at:
     http://github.com/coleifer/django-simple-ratings/tree/master/ratings
 
-    i imlpemented it but its 100x slower!
-    the commented out code is faster.
+    min_tv = minimal total votes. only issues are considered which have
+    min_tv amount of votes.
     """
+    issue_ids = None
+    if subset:
+        issue_ids = issues.values_list('id')
+
     def merge_qs(votes,issues):
-        """ with this method me shrink the issues qs using a paginated
-            vote qs.
-            so the vote_annotate will run fast.
+        """ with this method shrinks the issues qs using a paginated
+            vote qs. so the vote_annotate will run fast.
         """
         page = paginate(request, votes, 8)
         object_ids = [ d['object_id'] for d in page.object_list ]
         votes = votes.values_list('object_id')
-        issues = issues.filter( id__in=object_ids )
+        issues = issues.filter(id__in=object_ids)
         return page, issues
 
     if sortorder == 'popular':
-        votes = Vote.objects.get_popular(Issue)
+        votes = Vote.objects.get_popular(Issue, object_ids=issue_ids)
         page, issues = merge_qs(votes, issues)
         issues = vote_annotate(issues, Vote.payload, 'id', Count)
-        return page, issues
     elif sortorder == 'controversial':
-        votes = Vote.objects.get_controversial(Issue, min_tv=6)
+        votes = Vote.objects.get_controversial(Issue, object_ids=issue_ids, min_tv=min_tv)
         return merge_qs(votes, issues)
     elif sortorder == 'for':
-        votes = Vote.objects.get_top(Issue, min_tv=6)
+        votes = Vote.objects.get_top(Issue, object_ids=issue_ids, min_tv=min_tv)
         page, issues = merge_qs(votes, issues)
         issues = vote_annotate(issues, Vote.payload, 'vote', Sum)
         return page, issues
     elif sortorder == 'against':
-        votes = Vote.objects.get_bottom(Issue, min_tv=6)
+        votes = Vote.objects.get_bottom(Issue, object_ids=issue_ids, min_tv=min_tv)
         page, issues = merge_qs(votes, issues)
         issues = vote_annotate(issues, Vote.payload, 'vote', Sum, desc=False)
     else:
@@ -135,7 +140,10 @@ def issue_list(request, *args, **kwargs):
 
     if kwargs.get('sortorder', False):
         #pagination is now done on vote table
-        page, issues = order_issues(request, kwargs['sortorder'], issues)
+        min_tv = kwargs.get('min_tv', 6)
+        subset = kwargs.get('subset', None)
+        page, issues = order_issues(request, kwargs['sortorder'], 
+            issues, min_tv, subset)
     elif 'tag' in kwargs:
         tag = "\"%s\"" % kwargs['tag']
         issues = Issue.tagged.with_any(tag)
@@ -168,14 +176,43 @@ def issue_list_user(request, username, sortorder=None):
     For a user, specified by the ``username`` parameter, show his / her issues.
     """ 
     user = get_object_or_404(User, username=username)
-    issues = Issue.objects.filter(user=user)
+    issues = Issue.objects.filter(user=user.id)
+    issues = issues.select_related()
     return issue_list(
         request, 
-        extra_context={'username':username}, 
+        extra_context={'username': username}, 
         template_name='issue/issue_list_user.html',
         issues=issues,
         sortorder=sortorder,
+        min_tv=2,
+        subset=True,
     )
+
+@login_required
+def my_issue_list(request, sortorder=None):
+    user = get_object_or_404(User, request.user)
+    issues = Issue.objects.filter(user=user)
+    issues = issues.select_related()
+    return issue_list(
+        request,
+        template_name='issue/my_issue_list.html',
+        issues=issues,
+        sortorder=sortorder,
+        min_tv=1,
+        subset=True,
+    )
+
+def propose_issue(request):
+    pass
+
+
+def single_issue(request, id):
+    """
+    Show a single issue, with a lot of detail
+    and with slugfield url
+    """
+    pass
+
 
 
 def record_vote(request, issue_id):

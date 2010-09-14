@@ -49,6 +49,10 @@ class VoteManager(models.Manager):
         return self.filter(content_type = ctype.pk,
             object_id = obj.pk)
 
+    def get_for_model(self, Model):
+        ctype = ContentType.objects.get_for_model(Model)
+        return self.filter(content_type = ctype.pk)
+
     def get_for_user(self, user , obj):
         """
         Get the vote made on an give object by user return None if it not exists

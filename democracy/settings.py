@@ -127,20 +127,21 @@ INSTALLED_APPS = (
     'django.contrib.markup',
 
     'debug_toolbar', # comment out in production!!
+    'south',    # comment out in production!!
 
     'gamelogic',
     'profiles',
     'api',
     'voting',
     'issue',
+    'juni2010',
 
     'dashboard',
-    
+    # external apps 
     'tagging',
 	'registration',
     'piston',
     'rosetta',
-    'juni2010',
 )
 FORCE_SCRIPT_NAME = "" # removes the django.fcgi from the urls.
 

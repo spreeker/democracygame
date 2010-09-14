@@ -6,20 +6,22 @@ a {
 a:hover {
     text-decoration : underline;
 }
-
-#sidebar A:visited {
+#sidebar #tags A:visited {
     color : gray ;
 }   
 h2 {
     text-align : center ;
     border-bottom : 0.05em solid #CCC;
-    margin-bottom: 0em;
+    margin-bottom: 0.5em;
 }
 h4 {
     margin-top: 0.5em;
-    color : #CCC;
     text-align : center ;
 }
+.issues h4 {
+    color: #CCC;
+}
+
 h4 a{
     margin-right: 1em;
     margin-left: 1em;
@@ -34,6 +36,7 @@ h3 {
   width: 9em;
   right: 2em;
 }
+
 /* header style declarations */
 
 #header {padding:1.5em;margin-bottom:1.5em;
@@ -48,6 +51,21 @@ h3 {
     text-decoration: bold;
     color : green;
 }
+
+/* center content */
+.centercontent {
+    margin-left: 5.5em;
+    margin-top: 1.5em;
+}
+
+td textarea {
+    width: 300px; height:80px;  
+}
+
+.error th { background: #FBC2C4; }
+.success th { background: #C6D880; }
+.notice th { background:#FFD324; }
+
 
 /* Issue display specific styles */
 .issues p, 
@@ -69,6 +87,7 @@ h3 {
 }
 .issues {
     float : right;
+    width : 100%;
 }
 .issues .scoretag {
     margin-left : 2em ;

@@ -2,19 +2,20 @@
 {% load i18n %}
 
 {% block content %}
-<h2>{% trans "Details for "%}{{ viewed_user.username }} </h2>
+<h2>{{ viewed_user.username }} {% trans "rank" %}{{profile.ranking }}</h2>
     {% with viewed_user.get_profile as profile %}
+    <div class="centercontent">
     <table>
-    <tr><td>{% trans "score" %}        </td><td> {{profile.score}}             </td></tr>
-    <tr><td>{% trans "role" %}         </td><td> {{profile.role}}               </td></tr>
-    <tr><td>{% trans "title" %}         </td><td> {{profile.title}}               </td></tr>
-    <tr><td>{% trans "website" %}      </td><td> {{profile.url|urlizetrunc:30}} </td></tr>
-    <tr><td>{% trans "about" %}  </td><td> {{profile.description}}        </td></tr>
+    <tr><th>{% trans "score" %}        </th><td> {{profile.score}}             </td></tr>
+    <tr><th>{% trans "role" %}         </th><td> {{profile.role}}               </td></tr>
+    <tr><th>{% trans "title" %}         </th><td> {{profile.title}}               </td></tr>
+    <tr><th>{% trans "website" %}      </th><td> {{profile.url|urlizetrunc:30}} </td></tr>
+    <tr><th>{% trans "about" %}  </th><td> {{profile.description}}        </td></tr>
     <!--<tr><th>{% trans "id verified" %}  </th><td> {{profile.id_is_verified}}     </td></tr> --!>
     {% if personal %}                                                           </td></tr>
-    <tr><td>{% trans "votes public" %} </td><td> {{profile.votes_public}}       </td></tr>
-    <tr><td>{% trans "email" %}        </td><td> {{user.email}}                 </td></tr>
-    <tr><td>{% trans "show identity" %}</td><td> {{profile.show_identity}}      </td></tr>
+    <tr><th>{% trans "votes public" %} </th><td> {{profile.votes_public}}       </td></tr>
+    <tr><th>{% trans "email" %}        </th><td> {{user.email}}                 </td></tr>
+    <tr><th>{% trans "show identity" %}</th><td> {{profile.show_identity}}      </td></tr>
     </table>
     <form action="{% url change_description %}" method="POST">
     <fieldset>
@@ -24,39 +25,32 @@
         <tr><td>{% trans "website" %}      </td><td> {{form.url}}           </td></tr>
         <tr><td>{% trans "votes public" %} </td><td> {{form.votes_public}}       </td></tr>
         <tr><td>{% trans "show identity" %}</td><td> {{form.show_identity}}      </td></tr>
-        <tr><td>{% trans "about" %}        </td></tr>
-        <tr><td></td><td> {{ form.description }} </td></tr>
+        <tr><td>{% trans "about" %}        </td><td></td></tr>
+        <tr><td colspan=2>{{form.description}}</td></tr>
         <tr><td><input type="submit" value="Change profile"> </td></tr>
         </table>
     </fieldset>
     </form>
     <a href={% url auth_password_change %}>{% trans "change password" %}</a>
     {% else %}
-    </table>
-    <h3><a href="{% url issue_list_user viewed_user.username %}">{{ viewed_user.username}}{% trans "issues"%}</a></h3>
-    <h3><a href="{% url compare_votes_to_user viewed_user.username %}">{% trans "compare your votes with" %} {{viewed_user.username}}</a></h3>
+    </table>{% if issuecount %}
+        <h4 class="success"><a href="{% url issue_list_user viewed_user.username %}">{{ viewed_user.username}} {% trans "issues"%}</a></h4>
+    {% endif %}
+    <h4 class="notice"><a href="{% url compare_votes_to_user viewed_user.username %}">{% trans "compare your votes with" %} {{viewed_user.username}}</a></h4>
     {% endif %}
     {% endwith %}
+    </div>
 {% endblock %}
 
-{% block sidebar %}<h2>
-    {% if personal %}{% trans "Your candidate"%}
-    {% else %}{% trans "Candidate" %} 
-    {% endif %} </h2>  
-    
-    <p>{% if candidate %} <a href="{% url userprofile candidate %}">
-        <h3>{{ candidate.username }}<h3></a>
-    {% else %} {% trans "No candidate chosen yet" %} 
-    {% endif %}</p>
-    <h2>{% if personal %}{% trans "Your followers"%}
-    {% else %}{% trans "Followers" %}
-    {% endif %} </h2> 
+{% block sidebar %}
+<h2> Tags </h2> <p>{% trans "tagcloud of" %} {{ viewed_user.username }}</p>
+<div id="colored">
+{% for tag in tags %}
+<a href="{% url issue_with_tag tag.name %}"><font size="{{ tag.font_size }}">{{ tag.name }}</font></a>
+{% endfor %}
+</div>
+{% endblock %}
 
-    <p>{% if followers %}
-        {% for candidate in followers %} <a href="{% url userprofile candidate.user %}">
-        <h3>{{ candidate.user.username }}<h3></a>
-        {% endfor %}
-    {% else %} {% trans "nobody's candidate" %}
-
-    {% endif %}</p>
+{% block gamenews %}
+    {% include "profiles/candidate_info.html" %}
 {% endblock %}

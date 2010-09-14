@@ -9,8 +9,11 @@ TODO
 from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib import admin
+
 from django.utils.translation import ugettext_lazy as _
 from issue.managers import IssueManager
+
 
 import tagging
 
@@ -29,10 +32,11 @@ class Issue(models.Model):
     Issue which we are supposed to vote on
     """
     user = models.ForeignKey(User)
-    title = models.CharField( blank=True, max_length=200)
-    time_stamp = models.DateTimeField( default= datetime.now() )
-    url = models.URLField( verify_exists=False)
-    source_type = models.CharField( max_length=20, choices=source_types)
+    title = models.CharField(blank=True, max_length=200)
+    #slug = models.SlugField()
+    time_stamp = models.DateTimeField(default= datetime.now() )
+    url = models.URLField(verify_exists=False)
+    source_type = models.CharField(max_length=20, choices=source_types)
     body = models.TextField(max_length=2000)
 
     is_draft = models.BooleanField( default=True )
@@ -48,3 +52,17 @@ class Issue(models.Model):
        
 
 tagging.register(Issue)
+
+class IssueAdmin(admin.ModelAdmin):
+    #prepopulated_fields = {'slug' : ("title",)} 
+
+    date_hierarchy = "time_stamp"
+    list_display = ('title', 'time_stamp', 'user', 'votes' ) 
+    list_filter = ('title', 'time_stamp', 'user', 'votes' )
+
+    def votes(self , obj):
+        return Vote.objects.get_for_object(obj).count()
+
+
+admin.site.register(Issue, IssueAdmin)
+
