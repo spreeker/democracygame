@@ -3,9 +3,9 @@
 
 {% block content %}
 <h2>{% trans "Your votes compared with " %}<a href="{% url userprofile user_to_compare.username %}">{{ user_to_compare.username }}</a></h2>
-
+<div class="centercontent">
 <table>
-<thead><th>{% trans "Agree"%}</th><th>{% trans Blank %}</th><th>{% trans "Disagree" %}</th><th>{% trans "Total" %}</th></thead>
+<thead><th>{% trans "Agree"%}</th><th>{% trans "Blank" %}</th><th>{% trans "Disagree" %}</th><th>{% trans "Total" %}</th></thead>
 <tbody>
 <tr><td class="for">{{n_agree}}</td><td class="blank">{{n_blank}}</td><td class="against">{{n_disagree}}</td><td>{{n_total_intersection}}</tr>
 </tbody>
@@ -13,14 +13,6 @@
 
 <h2>{% trans "compared issues" %}</h2>
 
-<table class="success">
-<thead><th>{% trans "Title" %} </th><th>{% trans "Vote" %}</th></thead>
-<tbody>
-{% for issue, vote in agree_issues %}
-    <tr><td>{{issue.title|capfirst}}</td><td class="green">{% trans vote %}</td></tr>
-{% endfor %}
-</tbody>
-</table>
 <table class="error">
 <thead><th>{% trans "Title" %} </th><th>{% trans "Vote" %}</th></thead>
 <tbody>
@@ -30,16 +22,23 @@
 </tbody>
 </table>
 
-<table class="notice">
+<table class="success">
 <thead><th>{% trans "Title" %} </th><th>{% trans "Vote" %}</th></thead>
+<tbody>
+{% for issue, vote in agree_issues %}
+    <tr><td>{{issue.title|capfirst}}</td><td class="green">{% trans vote %}</td></tr>
+{% endfor %}
+</tbody>
+</table>
+<table class="notice">
+<thead><th>{% trans "Title" %}</th><th>{% trans "Vote" %}</th></thead>
 <tbody>
 {% for issue, vote in blank_issues %}
     <tr><td>{{issue.title|capfirst}}</td><td>{% trans vote %}</td></tr>
 {% endfor %}
 </tbody>
 </table>
-
-
+</div>
 {% endblock %}
 
 {% block gamenews %}
@@ -50,11 +49,25 @@
     <input type="hidden" name="next" class="next" value="{{ request.get_full_path }}" />
     <input type="submit" value="{% trans "VOTE ON" %} {{user_to_compare.username}}"/>
 </form>
-{% endblock %}
 
+<p><h5>{{ user_to_compare.username }} {% trans "Candidate" %} </h5> 
+{% if candidate %}<a href="{% url userprofile candidate %}">
+        <h4>{{ candidate.username }}<h4></a>
+{% else %} {% trans "No candidate chosen yet" %}
+{% endif %}</p>
+<h2>{% trans "Followers" %} </h2> 
+<p>{% if followers %}
+{% for candidate in followers %} <a href="{% url userprofile candidate.user %}">
+    <h3>{{ candidate.user.username }}<h3></a>
+{% endfor %}
+{% else %} {% trans "nobody's candidate" %}
+{% endif %}</p>
+
+{% endblock %}
 
 {% block sidebar %}
 <h2> Tags </h2>
+<div id="colored">
 {% for tag in cloud %}
     {% if tag.status %}
         {% if tag.status = 'agree' %}
@@ -67,5 +80,5 @@
 <a class="red" href="{% url issue_with_tag tag.name %}"><font size="{{ tag.font_size }}">{{ tag.name }}</font></a>
 {% endif %}
 {% endfor %}
-
+</div>
 {% endblock %}
