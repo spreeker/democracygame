@@ -90,9 +90,9 @@ r"""
 >>> qs.values_list('object_id' , 'avg')
 [(1, 0.0)]
 >>> qs = Vote.objects.get_top(Item)
->>> qs.values_list('object_id' , 'avg')
+>>> qs.values_list('object_id' , 'score')
 [(2, 1.0), (4, 1.0), (3, 0.5), (1, 0.0)]
 >>> qs = Vote.objects.get_count(Item)
->>> qs.values_list('object_id' , 'totalvotes')
+>>> qs.values_list('object_id' , 'score')
 [(2, 4), (3, 3), (4, 3), (1, 2)]
 """

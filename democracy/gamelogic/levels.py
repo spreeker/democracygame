@@ -78,8 +78,8 @@ def opinion_leader(user, userprofile):
     votes_on_user = Vote.objects.get_for_object(user).count()
     
     if votes_on_user:
-        logging.debug(votes_on_user)
-        logging.debug(user)
+        #logging.debug(votes_on_user)
+        #logging.debug(user)
         userprofile.role = 'candidate'
         return 'candidate'
  
@@ -112,7 +112,7 @@ def candidate(user, userprofile):
     lowest_parlement_member = User.objects.get(
         id=lowest_vote_count['object_id']).get_profile()
 
-    if votes_on_user > lowest_vote_count['totalvotes']: 
+    if votes_on_user > lowest_vote_count['score']: 
         userprofile.role = 'parlement member'
         #downgrade lowest member
         lowest_parlement_member.role = 'candidate'

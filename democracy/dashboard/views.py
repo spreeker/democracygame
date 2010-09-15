@@ -20,6 +20,7 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from gamelogic import actions
 from issue.models import Issue
 from issue.views import propose_issue
+from issue.views import order_issues
 from voting.managers import possible_votes, blank_votes
 from voting.models import Vote
 from voting.views import vote_on_object
@@ -27,7 +28,7 @@ from voting.views import vote_on_object
 from tagging.generic import fetch_content_objects
 
 def paginate(request, qs, ipp=9):
-    paginator = Paginator(qs, ipp) #TODO add to settings.py
+    paginator = Paginator(qs, ipp) 
     try:
         pageno = int(request.GET.get('page', '1'))
     except ValueError:
@@ -69,6 +70,7 @@ def my_issue_list(request, *args, **kwargs):
     template_name= "dashboard/my_issues.html"
 
     issueform = propose_issue(request)
+
     issues = Issue.objects.select_related().order_by('-time_stamp')
     issues = issues.filter( user=request.user ) 
 

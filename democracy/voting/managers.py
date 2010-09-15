@@ -5,12 +5,15 @@ from django.db.models import Avg, Count, Sum
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 
 
 votes = {
     -1 : _(u"Against"),
     1  : _(u"For"),
+    #not used in db.just for template compatibility.
+    2 : _(u"Against"),
+    0 : _(u"Blank"),
 }
 blank_votes = {
     # content related problems with issues:
@@ -38,6 +41,9 @@ multiply_votes = {
 possible_votes = normal_votes.copy() 
 possible_votes.update(multiply_votes)
 
+#TODO factor out score methods. get_top, get_bottom, controversial, popular
+#NOTE previous score functions give vote object an score field which you can
+#use to sort issues.
 
 class VoteManager(models.Manager):
 
@@ -156,11 +162,11 @@ class VoteManager(models.Manager):
             qs = qs.filter(object_id__in=object_ids)
 
         qs = qs.values('object_id',)
-        qs = qs.annotate(totalvotes=Count("vote")).order_by()
+        qs = qs.annotate(score=Count("vote")).order_by()
 
         if reverse:
-            return qs.order_by('totalvotes')
-        return qs.order_by('-totalvotes')
+            return qs.order_by('score')
+        return qs.order_by('-score')
        
 
     def get_count(self, Model, object_ids=None, direction=1):
@@ -176,8 +182,8 @@ class VoteManager(models.Manager):
         
         qs = qs.values('object_id',)
         qs = qs.filter(vote=direction)
-        qs = qs.annotate(totalvotes=Count("vote")).order_by()
-        qs = qs.order_by('-totalvotes')
+        qs = qs.annotate(score=Count("vote")).order_by()
+        qs = qs.order_by('-score')
         
         return qs
 
@@ -196,11 +202,11 @@ class VoteManager(models.Manager):
         qs = qs.filter(vote__in=[-1,1])
         qs = qs.annotate(totalvotes=Count("vote"))
         qs = qs.filter(totalvotes__gt=min_tv) 
-        qs = qs.annotate(avg=Avg("vote")).order_by()
+        qs = qs.annotate(score=Avg("vote")).order_by()
         if reverse:
-            qs = qs.order_by('avg')
+            qs = qs.order_by('score')
         else:
-            qs = qs.order_by('-avg')
+            qs = qs.order_by('-score')
         
         return qs
 
