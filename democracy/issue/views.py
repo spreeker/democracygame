@@ -320,7 +320,8 @@ def propose_issue(request):
                 form.cleaned_data['direction'],
                 form.cleaned_data['url'],
                 form.cleaned_data['source_type'],
-                form.cleaned_data['is_draft'],
+                #form.cleaned_data['is_draft'], 
+                False,
             )
             if form.cleaned_data['tags']:
                 actions.tag(

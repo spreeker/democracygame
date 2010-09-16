@@ -13,7 +13,7 @@ from django.contrib import admin
 
 from django.utils.translation import ugettext_lazy as _
 from issue.managers import IssueManager
-from issue.slugfield import AutoSlugField
+from issue.fields import AutoSlugField
 
 import tagging
 
