@@ -82,7 +82,7 @@ def order_issues(request, sortorder, issues, min_tv=6, subset=None):
         id_issue = dict((issue.id, issue) for issue in issues)
         return [ id_issue[id] for score, id in scores ]
 
-    def merge_qs(votes,issues):
+    def merge_qs(votes, issues):
         """ with this method shrinks the issues qs using a paginated
             vote qs. so the vote_annotate will run fast.
         """
@@ -207,7 +207,7 @@ def issue_list_user(request, username, sortorder=None):
         template_name='issue/issue_list_user.html',
         issues=issues,
         sortorder=sortorder,
-        min_tv=2,
+        min_tv=1,
         subset=True,
     )
 

@@ -62,7 +62,7 @@ def userprofile_show(request, username):
         context.update({'form' : form, 'personal' : True })
 
     context.update({'tags' : get_user_tag_cloud(user),
-        'issuecount' : Issue.objects.filter(user=user.id).count(), 
+        'issuecount' : Issue.objects.filter(user=user.id, is_draft=False).count(), 
     })
     context = RequestContext(request, context)
     return render_to_response('profiles/user_detail.html', context)
