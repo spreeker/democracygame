@@ -7,7 +7,8 @@
 {% votes_by_user user on issues as vote_dct %}
 {% vote_counts_for_objects issues as counts_dct %}
 
-<div class="issues"> {% block propose %} {% endblock %}
+<div class="issues"> 
+{% block propose %} {% endblock %}
 {% block issue_menu %}
 <h2> {% trans "Issues"%} </h2>
 <h4><a href="{% url issue_list 'popular' %}"> {% trans 'popular' %} </a> |
@@ -17,6 +18,7 @@
     <a href="{% url issue_list 'new' %}">{% trans 'new' %}</a>
 </h4>
 {% endblock %}
+
 <ul>
 {% for issue in issues %}
 {% dict_entry_for_item issue from vote_dct as vote %}
@@ -25,7 +27,9 @@
     {% dict_entry_for_item issue from request.session.vote_history as vote %}
 {% endif %}
 
+{% block issue %}
 {% include "issue/issue.html" %}
+{% endblock %}
 
 {% endfor %}
 </ul>

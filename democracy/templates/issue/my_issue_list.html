@@ -32,6 +32,7 @@
 </table>
 </form>
 {% else %} <p class="notice">{% trans "You cannot propose yet, you need more points" %}</p>
+{% endif %}
 </fieldset>
 {% endblock %}
 
@@ -50,4 +51,4 @@
 {% include "issue/my_issue.html" %}
 {% endblock %}
 
-
+{% block extra_head %} {% endblock %}

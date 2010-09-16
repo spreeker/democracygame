@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load voting_tags %}
 
 <li id="id{{ issue.pk }}" class="issue">
 
@@ -13,7 +14,7 @@
 </div>
 
 <p> {{ issue.body }} </p>
-
+{% block extrainfo %} {% endblock %}
 <div class="forms" id="fid{{ issue.pk }}">
 
 <form action="{% url vote issue.pk %}" method="post">
@@ -41,9 +42,7 @@
 </form>
 {% endblock %}
 
-{% block extraform %}
-
-{% endblock %}
+{% block extraform %}{% endblock %}
 
 {% comment %}
 <form action="{% url multiply issue.pk %}" method="post">
@@ -56,7 +55,7 @@
 created by <a href="{% url userprofile issue.user.username %}">{{ issue.user }}</a>
 <div class="yourvote">
 {% if vote.vote %}
-{% for key , direction in possible_votes.items %}{% ifequal key vote.vote %}{% trans direction %}{% endifequal %}{% endfor %}
+{{ vote.vote|vote_display }}
 {% endif %}
 </div>
 

@@ -128,15 +128,15 @@ INSTALLED_APPS = (
 
     'debug_toolbar', # comment out in production!!
     'south',    # comment out in production!!
-
+    #Democracy
     'gamelogic',
     'profiles',
     'api',
     'voting',
     'issue',
     'juni2010',
-
     'dashboard',
+
     # external apps 
     'tagging',
 	'registration',

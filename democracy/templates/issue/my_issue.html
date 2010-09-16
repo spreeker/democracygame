@@ -1,0 +1,33 @@
+{% extends "issue/issue.html" %}
+{% load i18n %}
+{% load voting_tags %}
+
+{% block blankform %} {% endblock %}
+
+{% block extrainfo %}
+<div class="votecounts notice">
+{% for k, count in score.items %}
+{% if count %}
+<div class="scoretag"> {{ k|vote_display }} - {{count}} </div> 
+{% endif %}
+{% endfor %}
+</div>
+{% endblock %}
+
+{% block extraform %}
+
+<form action="{% url publish issue.pk %}" method="post">
+    <input type="hidden" name="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
+    <input type="hidden" value={% if issue.is_draft %}"0"{% else %}"1"{% endif %} name="is_draft"/>
+    <input type="submit" value="{% if issue.is_draft %}{% trans "Publish" %}{% else %}{% trans "Hide" %}{% endif %}"/>
+</form>
+
+<form action="{% url tag_issue issue.pk %}" method="post">
+    <input type="hidden" name="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
+    <input type="text" name="tags" maxlength="100" value="{% for tag in issue.tags %}{{tag}}, {% endfor %}" />
+    {# hits the db each time optimze like voting?? #}
+    <input type="submit" value="{% trans "tag" %}"/>
+</form>
+
+
+{% endblock %}
