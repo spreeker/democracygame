@@ -17,7 +17,7 @@
 <thead><th>{% trans "Title" %} </th><th>{% trans "Vote" %}</th></thead>
 <tbody>
 {% for issue, vote in disagree_issues %}
-    <tr><td>{{issue.title|capfirst}}</td><td class="green">{% trans vote %}</td></tr>
+    <tr><td><a href="{% url single_issue issue.slug %}">{{issue.title|capfirst}}</a></td><td>{% trans vote %}</td></tr>
 {% endfor %}
 </tbody>
 </table>
@@ -26,7 +26,7 @@
 <thead><th>{% trans "Title" %} </th><th>{% trans "Vote" %}</th></thead>
 <tbody>
 {% for issue, vote in agree_issues %}
-    <tr><td>{{issue.title|capfirst}}</td><td class="green">{% trans vote %}</td></tr>
+    <tr><td><a href="{% url single_issue issue.slug %}">{{issue.title|capfirst}}</a></td><td>{% trans vote %}</td></tr>
 {% endfor %}
 </tbody>
 </table>
@@ -34,7 +34,7 @@
 <thead><th>{% trans "Title" %}</th><th>{% trans "Vote" %}</th></thead>
 <tbody>
 {% for issue, vote in blank_issues %}
-    <tr><td>{{issue.title|capfirst}}</td><td>{% trans vote %}</td></tr>
+    <tr><td><a href="{% url single_issue issue.slug %}">{{issue.title|capfirst}}</a></td><td>{% trans vote %}</td></tr>
 {% endfor %}
 </tbody>
 </table>

@@ -148,7 +148,6 @@ def issue_list(request, *args, **kwargs):
 
     if kwargs.has_key('issues'):
         issues = kwargs['issues']
-        issues = issues.filter( is_draft=False )
     else:
         issues = Issue.objects.select_related().order_by('-time_stamp')
         issues = issues.filter( is_draft=False )
@@ -200,6 +199,7 @@ def issue_list_user(request, username, sortorder=None):
     """ 
     user = get_object_or_404(User, username=username)
     issues = Issue.objects.filter(user=user.id)
+    issues = issues.filter( is_draft=False )
     issues = issues.select_related()
     return issue_list(
         request, 
@@ -214,6 +214,7 @@ def issue_list_user(request, username, sortorder=None):
 @login_required
 def my_issue_list(request, sortorder='new'):
     issues = Issue.objects.filter(user=request.user)
+    issues = issues.filter( is_draft=False )
     issues = issues.select_related()
     issueform = propose_issue(request)
     return issue_list(
@@ -227,13 +228,15 @@ def my_issue_list(request, sortorder='new'):
     )
 
 
-def single_issue(request, id):
+def single_issue(request, title):
     """
     Show a single issue, with a lot of detail
     and with slugfield url
     """
-    pass
+    issue = get_object_or_404(Issue, slug=title)
 
+    return issue_list(
+        request, issues=[issue],)
 
 
 def record_vote(request, issue_id):

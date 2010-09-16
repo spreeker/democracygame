@@ -95,6 +95,7 @@ def get_tagcloud_intersection(agree_issues, disagree_issues):
             all_tags.append(a_tag)
 
     all_tags.extend(tags_dagree.values())
+    
     return calculate_cloud(all_tags)
 
 
@@ -168,6 +169,10 @@ def compare_votes_to_user(request, username):
 
     ## Get tagcloud of vote intersection.
     cloud = get_tagcloud_intersection(id_agree, id_disagree)
+
+    def tag_cmp(tagA, tagB):
+        return cmp(tagA.name, tagB.name)
+    cloud.sort(tag_cmp)
     
     context = RequestContext(request, {
         'user_to_compare' : user,

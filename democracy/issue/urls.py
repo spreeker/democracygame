@@ -13,6 +13,7 @@ urlpatterns = patterns('issue.views',
     url(r'^by/(?P<username>\w+)/(?P<sortorder>\w+)/$', 'issue_list_user', name='issue_list_user_sort'),
     url(r'^made/by/me/(?P<sortorder>\w+)/$', 'my_issue_list', name='my_issues_sort'),
     url(r'^made/by/me/$', 'my_issue_list' , name='my_issues'),
+    url(r'^title/(?P<title>[-\w]+)/$', 'single_issue', name='single_issue'),
     url(r'^(?P<sortorder>\w+)/$', 'issue_list' , name='issue_list'),
     #url(r'^(?P<sortorder>\w+)/$', cache_page(issue_list, 1*10) , name='issue_list'),
 )
