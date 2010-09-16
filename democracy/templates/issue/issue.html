@@ -52,8 +52,8 @@
 {% endcomment %}
 
 created by <a href="{% url userprofile issue.user.username %}">{{ issue.user }}</a> <div class="yourvote">
-{% if vote.vote %}
-{{ vote.vote|vote_display }}
+{% if vote.direction %}
+{{ vote.direction|vote_display }}
 {% endif %}
 
 </div>

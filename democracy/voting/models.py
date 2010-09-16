@@ -29,7 +29,7 @@ class Vote(models.Model):
     object_id = models.PositiveIntegerField() 
     payload = generic.GenericForeignKey('content_type', 'object_id')
     # voto AKA direction.
-    vote = models.IntegerField(choices = possible_votes.items() )
+    direction = models.IntegerField(choices = possible_votes.items(), default=1 )
     time_stamp = models.DateTimeField(editable = False , default=datetime.now )
     # optional **kwargs
     is_archived = models.BooleanField(default = False)
@@ -39,7 +39,7 @@ class Vote(models.Model):
     objects = VoteManager()
 
     def __unicode__(self):
-        return u"%s on %s  by %s" % (self.vote, self.payload, self.user.username)
+        return u"%s on %s  by %s" % (self.direction, self.payload, self.user.username)
 
     class Meta:
         db_table = 'votes'

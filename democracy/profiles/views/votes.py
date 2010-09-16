@@ -113,7 +113,7 @@ def compare_votes_to_user(request, username):
     if request.user.is_authenticated():
         players_votes = Vote.objects.get_user_votes(request.user, Model=Issue)
         vote_keys = players_votes.values_list('object_id')
-        players_votedict = dict((vote.object_id, vote.vote) for vote in players_votes.all())
+        players_votedict = dict((vote.object_id, vote.direction) for vote in players_votes.all())
         #players_votedict = players_votes.values('object_id', 'vote')
     else:
         votedict = request.session.get('vote_history', dict())
@@ -121,7 +121,7 @@ def compare_votes_to_user(request, username):
         vote_keys = players_votedict.keys()
 
     intersection_votes = user_votes.filter(object_id__in=vote_keys)
-    intersection_votes = intersection_votes.values_list('object_id','vote')
+    intersection_votes = intersection_votes.values_list('object_id','direction')
 
     # Now compare votes.
     id_agree = [] 
