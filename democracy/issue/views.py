@@ -172,6 +172,11 @@ def issue_list(request, *args, **kwargs):
     if flash_msg:
         del request.session['flash_msg']
 
+    possible_votes.update({
+        #not used in db.just for template compatibility.
+        2 : _(u"Against"), # index -1 fails in templates.
+        0 : _(u"Blank"),   # 0 is included to sum up all blank votes.
+    })
 
     context = extra_context
     context.update({

@@ -13,7 +13,7 @@ from django.contrib import admin
 
 from django.utils.translation import ugettext_lazy as _
 from issue.managers import IssueManager
-
+from issue.slugfield import AutoSlugField
 
 import tagging
 
@@ -33,7 +33,8 @@ class Issue(models.Model):
     """
     user = models.ForeignKey(User)
     title = models.CharField(blank=True, max_length=200)
-    #slug = models.SlugField()
+    slug = AutoSlugField(['title'], max_length=50, unique=True) 
+    #slug = models.SlugField( max_length=80, null=True, unique=True)
     time_stamp = models.DateTimeField(default= datetime.now() )
     url = models.URLField(verify_exists=False)
     source_type = models.CharField(max_length=20, choices=source_types)
@@ -53,8 +54,9 @@ class Issue(models.Model):
 
 tagging.register(Issue)
 
+
 class IssueAdmin(admin.ModelAdmin):
-    #prepopulated_fields = {'slug' : ("title",)} 
+    prepopulated_fields = {'slug' : ("title",)} 
 
     date_hierarchy = "time_stamp"
     list_display = ('title', 'time_stamp', 'user', 'votes' ) 

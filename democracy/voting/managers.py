@@ -11,9 +11,6 @@ from django.utils.translation import ugettext_lazy as _
 votes = {
     -1 : _(u"Against"),
     1  : _(u"For"),
-    #not used in db.just for template compatibility.
-    2 : _(u"Against"),
-    0 : _(u"Blank"),
 }
 blank_votes = {
     # content related problems with issues:
