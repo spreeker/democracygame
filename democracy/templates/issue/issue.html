@@ -3,7 +3,7 @@
 
 <li id="id{{ issue.pk }}" class="issue">
 
-    <h3>{{ issue|capfirst }}</h3> 
+<h3><a href="{% url single_issue issue.slug %}">{{ issue|capfirst }}</a></h3>
 
 <div class="issue_left">
     <div class="score">
@@ -51,12 +51,11 @@
 </form>
 {% endcomment %}
 
-
-created by <a href="{% url userprofile issue.user.username %}">{{ issue.user }}</a>
-<div class="yourvote">
+created by <a href="{% url userprofile issue.user.username %}">{{ issue.user }}</a> <div class="yourvote">
 {% if vote.vote %}
 {{ vote.vote|vote_display }}
 {% endif %}
+
 </div>
 
 </div>{# end forms #}
