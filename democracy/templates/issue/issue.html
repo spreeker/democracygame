@@ -51,9 +51,9 @@
 </form>
 {% endcomment %}
 
-created by <a href="{% url userprofile issue.user.username %}">{{ issue.user }}</a> <div class="yourvote">
+{% trans "by" %} <a href="{% url userprofile issue.user.username %}">{{ issue.user }}</a> <div class="yourvote">
 {% if vote.direction %}
-{{ vote.direction|vote_display }}
+{% trans "your vote" %} : {{ vote.direction|vote_display }}
 {% endif %}
 
 </div>

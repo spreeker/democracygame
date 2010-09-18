@@ -2,7 +2,8 @@
 
 from voting.models import Vote
 from voting.views import vote_on_object
-from voting.managers import possible_votes
+from voting.managers import possible_votes, votes
+from django.utils.translation import ugettext_lazy as _
 from gamelogic import actions
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -156,7 +157,8 @@ def compare_votes_to_user(request, username):
         issues = dict((issue.id, issue) for issue in qs.all())
         for id, issue in issues.items():
             vote = players_votedict[id]
-            issue_vote.append((issue, possible_votes[vote]))
+            #issue_vote.append((issue, possible_votes[vote]))
+            issue_vote.append((issue, votes.get(vote, _('blank'))))
             issue_vote.sort(_cmp)
         return issue_vote
 

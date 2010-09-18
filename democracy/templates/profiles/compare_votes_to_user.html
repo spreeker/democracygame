@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block content %}
-<h2>{% trans "Your votes compared with " %}<a href="{% url userprofile user_to_compare.username %}">{{ user_to_compare.username }}</a></h2>
+<h2>{% trans "Your votes compared with" %} <a href="{% url userprofile user_to_compare.username %}"> {{ user_to_compare.username }}</a></h2>
 <div class="centercontent">
 <table>
 <thead><th>{% trans "Agree"%}</th><th>{% trans "Blank" %}</th><th>{% trans "Disagree" %}</th><th>{% trans "Total" %}</th></thead>
@@ -14,7 +14,7 @@
 <h2>{% trans "compared issues" %}</h2>
 
 <table class="error">
-<thead><th>{% trans "Title" %} </th><th>{% trans "Vote" %}</th></thead>
+<thead><th>{% trans "You disagree about" %} </th><th>{% trans "Your Vote" %}</th></thead>
 <tbody>
 {% for issue, vote in disagree_issues %}
     <tr><td><a href="{% url single_issue issue.slug %}">{{issue.title|capfirst}}</a></td><td>{% trans vote %}</td></tr>
@@ -23,7 +23,7 @@
 </table>
 
 <table class="success">
-<thead><th>{% trans "Title" %} </th><th>{% trans "Vote" %}</th></thead>
+<thead><th>{% trans "You agree about" %} </th><th>{% trans "Your Vote" %}</th></thead>
 <tbody>
 {% for issue, vote in agree_issues %}
     <tr><td><a href="{% url single_issue issue.slug %}">{{issue.title|capfirst}}</a></td><td>{% trans vote %}</td></tr>
@@ -31,10 +31,10 @@
 </tbody>
 </table>
 <table class="notice">
-<thead><th>{% trans "Title" %}</th><th>{% trans "Vote" %}</th></thead>
+<thead><th>{% trans "On of you voted blank" %}</th><th>{% trans "Your Vote" %}</th></thead>
 <tbody>
 {% for issue, vote in blank_issues %}
-    <tr><td><a href="{% url single_issue issue.slug %}">{{issue.title|capfirst}}</a></td><td>{% trans vote %}</td></tr>
+    <tr><td><a href="{% url single_issue issue.slug %}">{{issue.title|capfirst }}</a></td><td>{% trans vote %}</td></tr>
 {% endfor %}
 </tbody>
 </table>

@@ -158,6 +158,7 @@ def issue_list(request, *args, **kwargs):
         subset = kwargs.get('subset', None)
         page, issues = order_issues(request, kwargs['sortorder'], 
             issues, min_tv, subset)
+
     elif 'tag' in kwargs:
         tag = "\"%s\"" % kwargs['tag']
         issues = Issue.tagged.with_any(tag)
@@ -238,6 +239,41 @@ def single_issue(request, title):
     return issue_list(
         request, issues=[issue],)
 
+def search_issue(request):
+
+    slug = request.GET.get('searchbox', "")
+    issues = Issue.objects.filter(is_draft=False, title__icontains=slug)
+    issues = issues.select_related()
+    #logging.debug(issues)
+    return issue_list(
+        request, 
+        #template_name='issue/search.html',
+        issues=issues,
+        subset=True,
+        )
+
+def xhr_search_issue(request,):
+    """
+    Search view for js autocomplete.
+
+    'title' - string of at least 2 characters or none.
+    """
+    if request.method != 'GET':
+        return json_error_response(
+        'XMLHttpRequest search issues can only be made using GET.')
+
+    title = request.GET.get('term', '')
+
+    results = [] 
+    if len(title) > 2:
+        issue_result = Issue.objects.filter(is_draft=False,
+            slug__icontains=title) 
+        results = [ i.title for i in issue_result[:100]]
+        
+    return HttpResponse(simplejson.dumps(results), mimetype='application/json') 
+
+
+        
 
 def record_vote(request, issue_id):
     """
@@ -358,8 +394,6 @@ def tag_issue(request, issue_id):
 def json_error_response(error_message):
     return HttpResponse(simplejson.dumps(dict(success=False,
                     error_message=error_message)))
-
-
 
 def xhr_publish_issue(request, issue_id):
     if request.method == 'GET':
