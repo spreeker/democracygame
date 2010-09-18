@@ -59,8 +59,8 @@ class IssueAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug' : ("title",)} 
 
     date_hierarchy = "time_stamp"
-    list_display = ('title', 'time_stamp', 'user', 'votes' ) 
-    list_filter = ('title', 'time_stamp', 'user', 'votes' )
+    list_display = ('title', 'time_stamp', 'user', 'is_draft' ) 
+    list_filter = ('title', 'time_stamp', 'user', 'is_draft' )
 
     def votes(self , obj):
         return Vote.objects.get_for_object(obj).count()
