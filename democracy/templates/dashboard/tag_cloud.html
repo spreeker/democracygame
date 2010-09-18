@@ -1,6 +1,6 @@
 {% load i18n %}
 {% load tagging_tags %}
-<h2> Tags </h2>
+<h2>{% trans "Subjects" %}</h2>
 <div id="tags">
 {% tag_cloud_for_model issue.issue as issue_tags %}
 {% for tag in issue_tags %}
