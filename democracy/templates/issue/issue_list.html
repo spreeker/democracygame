@@ -10,12 +10,13 @@
 <div class="issues"> 
 {% block propose %} {% endblock %}
 {% block issue_menu %}
-<h2> {% trans "Vote!"%} </h2>
-<h4><a href="{% url issue_list 'popular' %}"> {% trans 'popular' %} </a> |
+<h2> {% trans "Vote!"%} </h2> 
+<h4> | <a href="{% url issue_list 'popular' %}"> {% trans 'popular' %} </a> |
     <a href="{% url issue_list 'for' %}">{% trans 'for' %}</a> | 
     <a href="{% url issue_list 'controversial' %}">{%trans 'controversial' %}</a> | 
     <a href="{% url issue_list 'against' %}">{% trans 'against' %}</a> |
-    <a href="{% url issue_list 'new' %}">{% trans 'new' %}</a>
+    <a href="{% url issue_list 'new' %}">{% trans 'new' %}</a> |
+    <a href="{% url issue_list 'unseen' %}">{% trans 'unseen' %}</a> |
 </h4>
 {% endblock %}
 
