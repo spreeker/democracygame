@@ -225,7 +225,9 @@ def my_issue_list(request, sortorder='new'):
         sortorder=sortorder,
         min_tv=1,
         subset=True,
-        extra_context={'issueform' : issueform},
+        extra_context={'issueform' : issueform,
+        'showurl' : True, #show the external url
+        },
     )
 
 
@@ -237,7 +239,9 @@ def single_issue(request, title):
     issue = get_object_or_404(Issue, slug=title)
 
     return issue_list(
-        request, issues=[issue],)
+        request, issues=[issue],
+        extra_context={'showurl' : True}, #show the external url
+        )
 
 def search_issue(request):
 

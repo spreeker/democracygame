@@ -56,6 +56,11 @@
 {% trans "your vote" %} : {{ vote.direction|vote_display }}
 {% endif %}
 
+{% if showurl %}
+    <div class="notice">
+    {% trans "extra information" %} :
+<a href="{{ issue.url }}">{{ issue.url }}</a></div>
+{% endif %}
 </div>
 
 </div>{# end forms #}
