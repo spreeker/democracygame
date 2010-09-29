@@ -1,0 +1,54 @@
+{% extends "issue/issue_list.html" %}
+{% load i18n %}
+{% load voting_tags %}
+
+{% block gamenews %}
+{% if actions.propose %}
+        <div class="notice">
+        {% blocktrans %}
+        Make sure you check your spelling. It is not possible to change your issue later.
+        We do not allow change because people might have voted. If content changes,  votes
+        are invalidated. You can hide the old issue.
+        {% endblocktrans %}
+        </div>
+{% endif %}
+{% endblock %}
+
+
+{% block propose %}
+<h2>{% trans "Your issues" %}</h2>
+<p></p>
+<fieldset><legend>{% trans "propose issue" %}</legend>
+{% if actions.propose %}
+<form action="{{ request.get_full_path }}" method="post">
+<table>
+{% for field in issueform %} 
+{% for error in field.errors %}
+    <tr><td></td><td class="error">{{error}}</td></tr>
+{% endfor %}
+   <tr><th>{{ field.label_tag }}</th><td>{{ field }}</td></tr>
+{% endfor %}
+   <tr><td> <input type="submit" value="{% trans "submit issue" %}"/></td></tr>
+</table>
+</form>
+{% else %} <p class="notice">{% trans "You cannot propose yet, you need more points" %}</p>
+{% endif %}
+</fieldset>
+{% endblock %}
+
+{% block issue_menu %}
+<h2> {% trans "Proposed by you" %}</h2>
+<h4><a href="{% url my_issues_sort 'popular' %}"> {% trans 'popular' %} </a> |
+    <a href="{% url my_issues_sort 'for' %}">{% trans 'for' %}</a> | 
+    <a href="{% url my_issues_sort 'controversial' %}">{%trans 'controversial' %}</a> | 
+    <a href="{% url my_issues_sort 'against' %}">{% trans 'against' %}</a> |
+    <a href="{% url my_issues_sort 'new' %}">{% trans 'new' %}</a> |
+</h4>
+{% endblock %}
+
+
+{% block issue %}
+{% include "issue/my_issue.html" %}
+{% endblock %}
+
+{% block extra_head %} {% endblock %}

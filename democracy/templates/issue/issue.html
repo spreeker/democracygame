@@ -1,8 +1,9 @@
 {% load i18n %}
+{% load voting_tags %}
 
 <li id="id{{ issue.pk }}" class="issue">
 
-    <h3>{{ issue|capfirst }}</h3> 
+<h3><a href="{% url single_issue issue.slug %}">{{ issue|capfirst }}</a></h3>
 
 <div class="issue_left">
     <div class="score">
@@ -13,7 +14,7 @@
 </div>
 
 <p> {{ issue.body }} </p>
-
+{% block extrainfo %} {% endblock %}
 <div class="forms" id="fid{{ issue.pk }}">
 
 <form action="{% url vote issue.pk %}" method="post">
@@ -41,9 +42,7 @@
 </form>
 {% endblock %}
 
-{% block extraform %}
-
-{% endblock %}
+{% block extraform %}{% endblock %}
 
 {% comment %}
 <form action="{% url multiply issue.pk %}" method="post">
@@ -52,11 +51,15 @@
 </form>
 {% endcomment %}
 
+{% trans "by" %} <a href="{% url userprofile issue.user.username %}">{{ issue.user }}</a> <div class="yourvote">
+{% if vote.direction %}
+{% trans "your vote" %} : {{ vote.direction|vote_display }}
+{% endif %}
 
-created by <a href="{% url userprofile issue.user.username %}">{{ issue.user }}</a>
-<div class="yourvote">
-{% if vote.vote %}
-{% for key , direction in possible_votes.items %}{% ifequal key vote.vote %}{% trans direction %}{% endifequal %}{% endfor %}
+{% if showurl %}
+    <div class="notice">
+    {% trans "extra information" %} :
+<a href="{{ issue.url }}">{{ issue.url }}</a></div>
 {% endif %}
 </div>
 

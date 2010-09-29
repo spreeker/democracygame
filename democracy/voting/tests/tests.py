@@ -52,19 +52,19 @@ r"""
 >>> _ = Vote.objects.record_vote(users[0], i3, -1)
 >>> _ = Vote.objects.record_vote(users[0], i4, 11)
 >>> vote = Vote.objects.get_for_user(users[0], i2)
->>> (vote.vote)
+>>> (vote.direction)
 1
 >>> vote = Vote.objects.get_for_user(users[0], i3 )
->>> (vote.vote)
+>>> (vote.direction)
 -1
 >>> vote = Vote.objects.get_for_user(users[0], i4)
->>> vote.vote
+>>> vote.direction
 11
 
 ## In bulk
 
 >>> votes = Vote.objects.get_for_user_in_bulk(users[0], [i1, i2, i3, i4])
->>> [(id, vote.vote) for id, vote in votes.items()]
+>>> [(id, vote.direction) for id, vote in votes.items()]
 [(1, -1), (2, 1), (3, -1), (4, 11)]
 >>> Vote.objects.get_for_user_in_bulk(users[0], [])
 {}
@@ -75,7 +75,7 @@ r"""
 ...     _ = Vote.objects.record_vote(user, i4, +1)
 
 >>> votes = Vote.objects.get_for_user_in_bulk(users[1], [i1, i2, i3, i4])
->>> [(id, vote.vote) for id, vote in votes.items()]
+>>> [(id, vote.direction) for id, vote in votes.items()]
 [(1, -1), (2, 1), (3, 1), (4, 1)]
 
 >>> Vote.objects.get_for_objects_in_bulk([i1, i2, i3, i4])
@@ -90,9 +90,9 @@ r"""
 >>> qs.values_list('object_id' , 'avg')
 [(1, 0.0)]
 >>> qs = Vote.objects.get_top(Item)
->>> qs.values_list('object_id' , 'avg')
+>>> qs.values_list('object_id' , 'score')
 [(2, 1.0), (4, 1.0), (3, 0.5), (1, 0.0)]
 >>> qs = Vote.objects.get_count(Item)
->>> qs.values_list('object_id' , 'totalvotes')
+>>> qs.values_list('object_id' , 'score')
 [(2, 4), (3, 3), (4, 3), (1, 2)]
 """

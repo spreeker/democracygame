@@ -61,7 +61,7 @@ class IssueVotesHandler(AnonymousBaseHandler):
     """Return votes for issue
     """
     allowed_methods = ('GET', )
-    fields = ('vote', 'vote_count', )
+    fields = ('direction', 'vote_count', )
     model = Vote
 
     def read(self, request, id, *args, **kwargs):
@@ -137,7 +137,7 @@ class IssueList(AnonymousBaseHandler):
         sortorder = kwargs.get("sortorder", "")
         if sortorder == 'popular':
             qs = Vote.objects.get_popular(Issue)
-            qs = qs.values_list('object_id', 'totalvotes')
+            qs = qs.values_list('object_id', 'score')
         elif sortorder == 'controversial':
             qs = Vote.objects.get_controversial(Issue)
             qs = qs.values_list('object_id', 'avg')
@@ -163,7 +163,7 @@ class VoteHandler(BaseHandler):
     """Read and Post votes for user.
     """
     allowed_methods = ('GET', 'POST', )
-    fields = ('vote', 'time_stamp', 'issue_uri', 'keep_private', )
+    fields = ('direction', 'time_stamp', 'issue_uri', 'keep_private', )
     model = Vote
 
     def read(self, request, id=None, **kwargs):
@@ -218,7 +218,7 @@ class VoteHandler(BaseHandler):
         gamelogic.actions.vote(
                 request.user,
                 Issue.objects.get(id=attrs['object_id']),
-                int(attrs['vote']),
+                int(attrs['direction']),
                 attrs['keep_private'],
                 api_interface=request.throttle_extra,
         )

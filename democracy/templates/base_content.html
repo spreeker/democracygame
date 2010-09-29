@@ -3,8 +3,22 @@
 {% block mainmenu %}
     <a href="http://www.democratiespel.nl/wiki/">help</a> | 
     <a href="{% url index %}"> {% trans "all issues" %} </a> |
-    <a href="{% url dashboard_issues %}"> {% trans "your issues" %} </a> |
+    <a href="{% url my_issues %}"> {% trans "your issues" %} </a> |
+    <a href="{% url ranking %}"> {% trans "players" %} </a> |
+    <a href="{% url juni_2010 %}"> {% trans "stemadvies" %} </a> |
+
+{% block search %}
+    <form action={% url search_issue %} method="get">
+        <input type="text" id="searchbox" name="searchbox"/>
+        <input type="submit" name="search" value="{% trans "search issue" %}"/>
+    </form>
 {% endblock %}
+{% endblock %}
+
+{% block extra_head %}    
+    <script type="text/javascript" src="/media/js/search.js"></script>
+{% endblock %}
+ 
 
 {% block userbar %}
     {% include "dashboard/userbar.html" %}
@@ -38,3 +52,5 @@
         </form>
 </div>
 {% endblock %}
+
+

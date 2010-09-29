@@ -37,7 +37,7 @@ def compare_to_parties(request):
     # First for the player/site visitor:
     if request.user.is_authenticated():
         players_votes = Vote.objects.get_user_votes(request.user)
-        players_votedict = dict((vote.object_id, vote.vote) for vote in players_votes.all())
+        players_votedict = dict((vote.object_id, vote.direction) for vote in players_votes.all())
     else:
         votedict = request.session.get('vote_history', dict())
         players_votedict = dict((i, int(x)) for i, x in votedict.items())
@@ -45,7 +45,7 @@ def compare_to_parties(request):
     compared = []
     for user in party_users:
         users_votes = Vote.objects.get_user_votes(user)
-        users_votedict = dict((vote.object_id, vote.vote) for vote in users_votes.all())
+        users_votedict = dict((vote.object_id, vote.direction) for vote in users_votes.all())
         
                 
         # Now compare the two dictionaries of votes and construct a tuple with 

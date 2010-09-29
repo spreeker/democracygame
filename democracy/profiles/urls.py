@@ -7,6 +7,7 @@ from django.contrib.auth import views as auth_views
 
 #from registration.views import activate
 from profiles.views import userprofile_show
+from profiles.views import search_user, xhr_search_user
 from profiles.views import ranking 
 from profiles.views import change_description
 from profiles.views.votes import compare_votes_to_user
@@ -17,6 +18,9 @@ from registration.views import activate
 
 
 urlpatterns = patterns('',
+    #search
+    url(r'^search/$', search_user, name='search_user'),
+    url(r'^xhr_search/$', xhr_search_user, name='xhr_search_user'),
     #ranking
     url(r'^ranking/$', ranking, name='ranking'),
     # views dealing with users.

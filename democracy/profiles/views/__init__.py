@@ -3,6 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.db.models.sql.datastructures import EmptyResultSet
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404
+from django.http import HttpResponse, HttpResponseServerError
+from django.utils import simplejson
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
@@ -62,10 +64,41 @@ def userprofile_show(request, username):
         context.update({'form' : form, 'personal' : True })
 
     context.update({'tags' : get_user_tag_cloud(user),
-        'issuecount' : Issue.objects.filter(user=user.id).count(), 
+        'issuecount' : Issue.objects.filter(user=user.id, is_draft=False).count(), 
     })
     context = RequestContext(request, context)
     return render_to_response('profiles/user_detail.html', context)
+
+
+def search_user(request):
+    username = request.GET.get('searchbox', "")
+    users = User.objects.filter(username__icontains=username)
+    #logging.debug(issues)
+    return ranking(request, users) 
+
+def json_error_response(error_message):
+    return HttpResponse(simplejson.dumps(dict(success=False,
+                    error_message=error_message)))
+
+
+def xhr_search_user(request,):
+    """
+    Search view for js autocomplete.
+
+    'user' - string of at least 2 characters or none.
+    """
+    if request.method != 'GET':
+        return json_error_response(
+        'XMLHttpRequest search issues can only be made using GET.')
+
+    name = request.GET.get('term', '')
+
+    results = [] 
+    if len(name) > 2:
+        users_result = User.objects.filter(username__icontains=name) 
+        results = [ u.username for u in users_result[:100]]
+        
+    return HttpResponse(simplejson.dumps(results), mimetype='application/json') 
 
 @login_required
 def change_description(request):
@@ -90,12 +123,15 @@ def change_description(request):
 
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
-def ranking(request):
+def ranking(request, qs=None):
     """Display a list of players ordered by rank""" 
-
-    ranks = UserProfile.objects.all().order_by('-score')
-    logging.debug(ranks)
-    paginator = Paginator(ranks, 50) 
+    if not qs:
+        users = UserProfile.objects.all().order_by('-score')
+    else:
+        users = UserProfile.objects.filter(user__in=qs.values_list('id'))
+    users = users.select_related()
+    #logging.debug(ranks)
+    paginator = Paginator(users, 50) 
     pageno = int(request.GET.get('page','1'))
    
     try:
@@ -103,8 +139,13 @@ def ranking(request):
     except(EmptyPage, InvalidPage):
         page = paginator.page(paginator.num_pages)
 
+    for i, profile in enumerate(page.object_list):
+        if qs:
+            profile.rank = profile.ranking
+        else:
+            profile.rank =  (pageno - 1) * 50 + i + 1
 
-    context = RequestContext(request, {'page' : page } )
+    context = RequestContext(request, {'page' : page, } )
     return render_to_response('profiles/ranking.html', context)
 
 

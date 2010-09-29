@@ -37,12 +37,11 @@ class IndexTest(TestCase):
 
         urls = [ ]
         urls.append('/')
-        urls.append(reverse('dashboard_votes'))
-        urls.append(reverse('my_issues', args=["new"]))
-        urls.append(reverse('my_issues', args=['popular']))
-        urls.append(reverse('my_issues', args=['controversial']))
-        urls.append(reverse('my_issues', args=['for']))
-        urls.append(reverse('my_issues', args=['against']))
+        urls.append(reverse('my_issues_sort', args=["new"]))
+        urls.append(reverse('my_issues_sort', args=['popular']))
+        urls.append(reverse('my_issues_sort', args=['controversial']))
+        urls.append(reverse('my_issues_sort', args=['for']))
+        urls.append(reverse('my_issues_sort', args=['against']))
 
         for url in urls:
             response = self.client.get(url)

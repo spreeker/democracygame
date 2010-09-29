@@ -5,7 +5,7 @@ from django.db.models import Avg, Count, Sum
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 
 
 votes = {
@@ -38,6 +38,9 @@ multiply_votes = {
 possible_votes = normal_votes.copy() 
 possible_votes.update(multiply_votes)
 
+#TODO factor out score methods. get_top, get_bottom, controversial, popular
+#NOTE previous score functions give vote object an score field which you can
+#use to sort issues.
 
 class VoteManager(models.Manager):
 
@@ -107,15 +110,15 @@ class VoteManager(models.Manager):
         if not all:
             qs = qs.filter(is_archived=False) # only pick active votes
 
-        qs = qs.values('vote')
-        qs = qs.annotate(vcount=Count("vote")).order_by()
+        qs = qs.values('direction')
+        qs = qs.annotate(vcount=Count("direction")).order_by()
 
         vote_dict = {}
         
         for count in qs:
-            if count['vote'] >= 10 : # sum up all blank votes
+            if count['direction'] >= 10 : # sum up all blank votes
                 vote_dict[0] = vote_dict.get(0,0) + count['vcount']
-            vote_dict[count['vote']] = count['vcount']
+            vote_dict[count['direction']] = count['vcount']
 
         return vote_dict
 
@@ -133,16 +136,16 @@ class VoteManager(models.Manager):
         if not all: # only pick active votes
             qs = qs.filter(is_archived=False) 
 
-        qs = qs.values('object_id', 'vote',)
-        qs = qs.annotate(vcount=Count("vote")).order_by()
+        qs = qs.values('object_id', 'direction',)
+        qs = qs.annotate(vcount=Count("direction")).order_by()
        
         vote_dict = {}
         for votecount  in qs:
             object_id = votecount['object_id']
             votes = vote_dict.setdefault(object_id , {})
-            if votecount['vote'] >= 10:  # sum up all blank votes
+            if votecount['direction'] >= 10:  # sum up all blank votes
                 votes[0] = votes.get(0,0) + votecount['vcount']
-            votes[votecount['vote']] =  votecount['vcount']
+            votes[votecount['direction']] =  votecount['vcount']
 
         return vote_dict
 
@@ -156,11 +159,11 @@ class VoteManager(models.Manager):
             qs = qs.filter(object_id__in=object_ids)
 
         qs = qs.values('object_id',)
-        qs = qs.annotate(totalvotes=Count("vote")).order_by()
+        qs = qs.annotate(score=Count("direction")).order_by()
 
         if reverse:
-            return qs.order_by('totalvotes')
-        return qs.order_by('-totalvotes')
+            return qs.order_by('score')
+        return qs.order_by('-score')
        
 
     def get_count(self, Model, object_ids=None, direction=1):
@@ -175,9 +178,9 @@ class VoteManager(models.Manager):
             qs = qs.filter(object_id__in=object_ids)
         
         qs = qs.values('object_id',)
-        qs = qs.filter(vote=direction)
-        qs = qs.annotate(totalvotes=Count("vote")).order_by()
-        qs = qs.order_by('-totalvotes')
+        qs = qs.filter(direction=direction)
+        qs = qs.annotate(score=Count("direction")).order_by()
+        qs = qs.order_by('-score')
         
         return qs
 
@@ -193,14 +196,14 @@ class VoteManager(models.Manager):
             qs = qs.filter(object_id__in=object_ids)
 
         qs = qs.values('object_id',)
-        qs = qs.filter(vote__in=[-1,1])
-        qs = qs.annotate(totalvotes=Count("vote"))
+        qs = qs.filter(direction__in=[-1,1])
+        qs = qs.annotate(totalvotes=Count("direction"))
         qs = qs.filter(totalvotes__gt=min_tv) 
-        qs = qs.annotate(avg=Avg("vote")).order_by()
+        qs = qs.annotate(score=Avg("direction")).order_by()
         if reverse:
-            qs = qs.order_by('avg')
+            qs = qs.order_by('score')
         else:
-            qs = qs.order_by('-avg')
+            qs = qs.order_by('-score')
         
         return qs
 
@@ -222,16 +225,16 @@ class VoteManager(models.Manager):
         ctype = ContentType.objects.get_for_model(Model)
         qs = self.filter(content_type=ctype,)
         qs = qs.filter(is_archived=False) 
-        qs = qs.filter(vote__in=[-1,1])
+        qs = qs.filter(direction__in=[-1,1])
 
         if object_ids: # to get the most popular from a list
             qs = qs.filter(object_id__in=object_ids)
         elif min_tv > 1:
-            qs = qs.annotate(totalvotes=Count("vote"))
+            qs = qs.annotate(totalvotes=Count("direction"))
             qs = qs.filter(totalvotes__gt=min_tv) 
 
         qs = qs.values('object_id',)
-        qs = qs.annotate(avg=Avg("vote"))
+        qs = qs.annotate(avg=Avg("direction"))
         qs = qs.order_by('avg')
         qs = qs.filter(avg__gt= -0.3 )
         qs = qs.filter(avg__lt= 0.3 )
@@ -246,7 +249,7 @@ class VoteManager(models.Manager):
         ctype = ContentType.objects.get_for_model(Model)
         qs = self.filter(content_type=ctype,)
         qs = qs.filter(is_archived=False) 
-        qs = qs.filter(vote__in=directions)
+        qs = qs.filter(direction__in=directions)
 
         return qs
 
@@ -269,7 +272,7 @@ class VoteManager(models.Manager):
         if votes:
             voted_already = True
             for v in votes:
-                if direction == v.vote: #check if you do the same vote again.
+                if direction == v.direction: #check if you do the same vote again.
                     repeated_vote = True
                 else:
                     v.is_archived = True
@@ -277,7 +280,7 @@ class VoteManager(models.Manager):
         vote = None
         if not repeated_vote:
             vote = self.create( user=user, content_type=ctype,
-                         object_id=obj._get_pk_val(), vote=direction,
+                         object_id=obj._get_pk_val(), direction=direction,
                          api_interface=api_interface, is_archived=False, 
                          keep_private=keep_private
                         )
@@ -321,7 +324,7 @@ def vote_annotate(queryset, gfk_field, aggregate_field, aggregator=models.Sum, d
             %s=%s AND
             %s=%s.%s AND
             is_archived=FALSE AND
-            "votes"."vote" IN (-1,1))
+            "votes"."direction" IN (-1,1))
     """ % params
     
     queryset = queryset.extra(select={

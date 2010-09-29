@@ -61,42 +61,59 @@ def order_issues(request, sortorder, issues, min_tv=6, subset=None):
     we are trying to do some aggegration using gfk's. Which is
     not easy to do or look at:
     http://github.com/coleifer/django-simple-ratings/tree/master/ratings
+    or tagging generic!
 
-    min_tv = minimal total votes. only issues are considered which have
-    min_tv amount of votes.
+    *min_tv*  minimal total votes. only issues are considered which have
+        min_tv amount of votes.
+    
+    *subset*  if you want to run the vote management functions on a smaller
+        subset of votes derived from the given issues, set to True. dont set this
+        on true is issues not filtered.
     """
     issue_ids = None
     if subset:
         issue_ids = issues.values_list('id')
 
-    def merge_qs(votes,issues):
+    #sort issue on their vote score value.
+    #this is faster then hitting the db again for an anotation.
+    def _sort_issues(votes, issues,):
+        scores = [(v['score'], v['object_id'],) for v in votes.all()] 
+        #scores.sort()
+        id_issue = dict((issue.id, issue) for issue in issues)
+        return [ id_issue[id] for score, id in scores ]
+
+    def merge_qs(votes, issues):
         """ with this method shrinks the issues qs using a paginated
             vote qs. so the vote_annotate will run fast.
         """
         page = paginate(request, votes, 8)
-        object_ids = [ d['object_id'] for d in page.object_list ]
-        votes = votes.values_list('object_id')
+        object_ids = [ d['object_id'] for d in page.object_list ] #d = direction.
         issues = issues.filter(id__in=object_ids)
         return page, issues
 
     if sortorder == 'popular':
         votes = Vote.objects.get_popular(Issue, object_ids=issue_ids)
         page, issues = merge_qs(votes, issues)
-        issues = vote_annotate(issues, Vote.payload, 'id', Count)
+        issues = _sort_issues(page.object_list, issues)
+        #issues = vote_annotate(issues, Vote.payload, 'id', Count)
     elif sortorder == 'controversial':
         votes = Vote.objects.get_controversial(Issue, object_ids=issue_ids, min_tv=min_tv)
         return merge_qs(votes, issues)
     elif sortorder == 'for':
         votes = Vote.objects.get_top(Issue, object_ids=issue_ids, min_tv=min_tv)
         page, issues = merge_qs(votes, issues)
-        issues = vote_annotate(issues, Vote.payload, 'vote', Sum)
+        #issues = vote_annotate(issues, Vote.payload, 'vote', Sum)
+        issues = _sort_issues(page.object_list, issues)
         return page, issues
     elif sortorder == 'against':
         votes = Vote.objects.get_bottom(Issue, object_ids=issue_ids, min_tv=min_tv)
         page, issues = merge_qs(votes, issues)
-        issues = vote_annotate(issues, Vote.payload, 'vote', Sum, desc=False)
+        issues = _sort_issues(page.object_list, issues)
+        #issues = vote_annotate(issues, Vote.payload, 'vote', Sum, desc=False)
+    elif sortorder == 'new':
+        issues = issues.order_by('-time_stamp')
     else:
-        # assume 'new' ordering, which means finding issues for which
+        # assume 'unseen' ordering, which means finding issues for which
         # the user has no votes for.
         if request.user.is_authenticated(): 
             votes = Vote.objects.get_user_votes(request.user, Issue) #get user votes.
@@ -127,9 +144,6 @@ def issue_list(request, *args, **kwargs):
     template_name = kwargs.get('template_name', "issue/issue_list.html")
     extra_context = kwargs.get('extra_context', dict())
 
-    if not request.method == "GET":
-        return HttpResponseBadRequest
-
     page = False 
 
     if kwargs.has_key('issues'):
@@ -144,9 +158,11 @@ def issue_list(request, *args, **kwargs):
         subset = kwargs.get('subset', None)
         page, issues = order_issues(request, kwargs['sortorder'], 
             issues, min_tv, subset)
+
     elif 'tag' in kwargs:
         tag = "\"%s\"" % kwargs['tag']
         issues = Issue.tagged.with_any(tag)
+        issues = issues.filter( is_draft=False )
 
     if not page: 
         page = paginate(request, issues)
@@ -156,6 +172,12 @@ def issue_list(request, *args, **kwargs):
     if flash_msg:
         del request.session['flash_msg']
 
+    possible_votes.update({
+        #not used in db.just for template compatibility.
+        2 : _(u"Against"), # index -1 fails in templates.
+        0 : _(u"Blank"),   # 0 is included to sum up all blank votes.
+    })
+
     context = extra_context
     context.update({
         'blank_votes' : blank_votes.items(),
@@ -164,6 +186,7 @@ def issue_list(request, *args, **kwargs):
         'page' : page,
         'votedata' : Vote,
         'flash_msg' : flash_msg,
+        'actions' : actions.get_actions(request.user),
     })
 
     c = RequestContext(request, context)    
@@ -177,6 +200,7 @@ def issue_list_user(request, username, sortorder=None):
     """ 
     user = get_object_or_404(User, username=username)
     issues = Issue.objects.filter(user=user.id)
+    issues = issues.filter( is_draft=False )
     issues = issues.select_related()
     return issue_list(
         request, 
@@ -184,15 +208,16 @@ def issue_list_user(request, username, sortorder=None):
         template_name='issue/issue_list_user.html',
         issues=issues,
         sortorder=sortorder,
-        min_tv=2,
+        min_tv=1,
         subset=True,
     )
 
 @login_required
-def my_issue_list(request, sortorder=None):
-    user = get_object_or_404(User, request.user)
-    issues = Issue.objects.filter(user=user)
+def my_issue_list(request, sortorder='new'):
+    issues = Issue.objects.filter(user=request.user)
+    issues = issues.filter( is_draft=False )
     issues = issues.select_related()
+    issueform = propose_issue(request)
     return issue_list(
         request,
         template_name='issue/my_issue_list.html',
@@ -200,20 +225,59 @@ def my_issue_list(request, sortorder=None):
         sortorder=sortorder,
         min_tv=1,
         subset=True,
+        extra_context={'issueform' : issueform,
+        'showurl' : True, #show the external url
+        },
     )
 
-def propose_issue(request):
-    pass
 
-
-def single_issue(request, id):
+def single_issue(request, title):
     """
     Show a single issue, with a lot of detail
     and with slugfield url
     """
-    pass
+    issue = get_object_or_404(Issue, slug=title)
+
+    return issue_list(
+        request, issues=[issue],
+        extra_context={'showurl' : True}, #show the external url
+        )
+
+def search_issue(request):
+
+    slug = request.GET.get('searchbox', "")
+    issues = Issue.objects.filter(is_draft=False, title__icontains=slug)
+    issues = issues.select_related()
+    #logging.debug(issues)
+    return issue_list(
+        request, 
+        #template_name='issue/search.html',
+        issues=issues,
+        subset=True,
+        )
+
+def xhr_search_issue(request,):
+    """
+    Search view for js autocomplete.
+
+    'title' - string of at least 2 characters or none.
+    """
+    if request.method != 'GET':
+        return json_error_response(
+        'XMLHttpRequest search issues can only be made using GET.')
+
+    title = request.GET.get('term', '')
+
+    results = [] 
+    if len(title) > 2:
+        issue_result = Issue.objects.filter(is_draft=False,
+            slug__icontains=title) 
+        results = [ i.title for i in issue_result[:100]]
+        
+    return HttpResponse(simplejson.dumps(results), mimetype='application/json') 
 
 
+        
 
 def record_vote(request, issue_id):
     """
@@ -299,9 +363,9 @@ def propose_issue(request):
                 form.cleaned_data['direction'],
                 form.cleaned_data['url'],
                 form.cleaned_data['source_type'],
-                form.cleaned_data['is_draft'],
+                #form.cleaned_data['is_draft'], 
+                False,
             )
-            print new_issue.id
             if form.cleaned_data['tags']:
                 actions.tag(
                     request.user,
@@ -330,18 +394,48 @@ def tag_issue(request, issue_id):
     next = request.REQUEST.get('next', '/' )
     return HttpResponseRedirect(next) 
 
-@login_required
+
+def json_error_response(error_message):
+    return HttpResponse(simplejson.dumps(dict(success=False,
+                    error_message=error_message)))
+
+def xhr_publish_issue(request, issue_id):
+    if request.method == 'GET':
+        return json_error_response(
+            'XMLHttpRequest votes can only be made using POST.')
+    if not request.user.is_authenticated():
+        return json_error_response('Not authenticated.')
+
+    try:
+        issue = Issue.objects.get(id=issue_id, user=request.user)
+    except ObjectDoesNotExist:
+        return json_error_response('No Issue found ') 
+
+    form = Publish(request.POST)
+    if form.is_valid(): 
+        issue.is_draft = True if form.cleaned_data['is_draft'] else False
+        issue.save()
+
+    return HttpResponse(simplejson.dumps({
+        'success': True,
+    }))
+    
+
 def publish_issue(request, issue_id):
     """
     publish or not to publish issue
     """
-    if request.method != "POST":
+    logging.debug("i get here") 
+    if request.is_ajax():
+        return xhr_publish_issue(request, issue_id)
+
+    if request.method != "POST" or not request.user.is_authenticated():
         return HttpResponseBadRequest
 
     issue = get_object_or_404(Issue, id=issue_id, user=request.user)
     
     form = Publish(request.POST)
-    
+
     if form.is_valid(): 
         issue.is_draft = True if form.cleaned_data['is_draft'] else False
         issue.save()

@@ -15,7 +15,7 @@ class IssueForm(forms.Form):
     source_type = forms.ChoiceField(label=_("source type"), choices = source_types )
     direction = forms.TypedChoiceField(label=_("your vote"), choices = votes.items(),coerce=int )
 
-    is_draft = forms.BooleanField(label=_("publish"), initial=True, required=False)
+#    is_draft = forms.BooleanField(label=_("publish"), initial=True, required=False)
     tags = TagField(label=_("tags"), required=True)
 
 class Publish(forms.Form):

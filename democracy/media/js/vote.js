@@ -36,6 +36,8 @@ function vote(){
     if (direction == undefined){
         var direction = $("select option:selected", this).val();
     }
+    var action = $(this).attr('action');
+
     var data = {
         'direction' : direction,
         'issue_id' : issue_id,
@@ -62,7 +64,7 @@ function vote(){
     };
     $.ajax({
         type : "POST",
-        url : "/issue/vote/" + issue_id ,
+        url : action ,
         data : data,
         dataType : "json",
         complete : afterVote,

@@ -3,19 +3,38 @@
 <head><title>{% block title %}{% trans "democracy game" %}{% endblock %} </title>
 <link rel="stylesheet" href="/media/blueprint/screen.css" type="text/css" media="screen, projection" />
 <link rel="stylesheet" href="/media/blueprint/print.css" type="text/css" media="print" />    
+<meta name="google-site-verification" content="SAvGm7bTN2xLL6tgpKLU0jwn08UITM6hctXBTgOyetg" />
 <!--[if lt IE 8]><link rel="stylesheet" href="css/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
 <link href="/media/index.css" rel="stylesheet" type="text/css" />
 <LINK REL="SHORTCUT ICON" hreF="/media/favicon.ico">
 <script type="text/javascript" src="/media/js/jquery.js"></script>
+<script type="text/javascript" src="/media/js/jquery-ui-1.8.4.custom.min.js"></script>
+<link rel="stylesheet" href="/media/css/jquery-ui-1.8.4.custom.css" type="text/css" media="screen, projection" />
 {% block extra_head %} 
 {% endblock %}
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-18636668-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
 </head>
 <body>
 <div id="header" class="container " >
-<div id="mainmenu" class="span-13">
+<div id="mainmenu" class="span-12">
     {% block mainmenu %} <a href="/">{% trans "mainpage" %}</a>  {% endblock %}
 </div>
-<div id="userbar" class="span-11 last " >
+<div id="userbar" class="span-12 last " >
 {% block userbar %}{% endblock %}
 </div>
 </div>

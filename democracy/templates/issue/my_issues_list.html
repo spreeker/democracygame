@@ -1,4 +1,4 @@
-{% extends "base_content.html" %}
+{% extends "issue/issue_list.html" %}
 {% load i18n %}
 {% load voting_tags %}
 
@@ -14,12 +14,12 @@
 {% endif %}
 {% endblock %}
 
-{% block content %}
 
+{% block propose %}
 <h2>{% trans "Your issues" %}</h2>
-{% if actions.propose %}
 <p></p>
 <fieldset><legend>{% trans "propose issue" %}</legend>
+{% if actions.propose %}
 <form action="{{ request.get_full_path }}" method="post">
 <table>
 {% for field in issueform %} 
@@ -31,78 +31,23 @@
    <tr><td> <input type="submit" value="{% trans "submit issue" %}"/></td></tr>
 </table>
 </form>
-</fieldset>
-<div class="issues">
-{% votes_by_user user on issues as vote_dct %}
-{% vote_counts_for_objects issues as counts_dct %}
-
-<h2> {% trans "Proposed by you" %}</h2>
-<h4><a href="{% url my_issues 'popular' %}"> {% trans 'popular' %} </a> |
-    <a href="{% url my_issues 'for' %}">{% trans 'for' %}</a> | 
-    <a href="{% url my_issues 'controversial' %}">{%trans 'controversial' %}</a> | 
-    <a href="{% url my_issues 'against' %}">{% trans 'against' %}</a> 
-    <a href="{% url my_issues 'new' %}">{% trans 'new' %}</a> |
-</h4>
-
-<ul>
-{% for issue in issues %}
-
-{% dict_entry_for_item issue from vote_dct as vote %}
-{% dict_entry_for_item issue from counts_dct as score %}
-
-<li id="issue{{ issue.pk }}" >
-    <r name="{{issue.pk}}"></a>
-    <h3> <a href="{{ issue.url }}">{{ issue }}</a> </h3> 
-<div class="issue_left">
-    {% if vote.vote %}
-    <div class="for"> {{ score.1 }}</div>
-    <div class="blank"> {{ score.0 }}</div>
-    <div class="against"> {{ score.2 }}</div>
-    {% endif %}
-</div>
-<p> {{ issue.body }} </p>
-<div class="yourvote">
-{% if vote.vote %}
-{% for key , direction in possible_votes.items %}{% ifequal key vote.vote %}{% trans direction %}{% endifequal %}{% endfor %}
-{% endif %}
-</div>
-
-<div class="votecounts notice">
-{% for k, count in score.items %}
-{% if count %}
-{% for key , direction in possible_votes.items %}{% ifequal key k %}<div class="scoretag">{% trans direction %} {{count}} </div> {% endifequal %}{% endfor %}
-{% endif %}
-{% endfor %}
-</div>
-
-{% block exraform %}
-<form action="{% url publish issue.pk %}" method="post">
-    <input type="hidden" name="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
-    <input type="hidden" value={% if issue.is_draft %}"0"{% else %}"1"{% endif %} name="is_draft"/>
-    <input type="submit" value="{% if issue.is_draft %}{% trans "Publish" %}{% else %}{% trans "Hide" %}{% endif %}"/>
-</form>
-
-<form action="{% url tag_issue issue.pk %}" method="post">
-    <input type="hidden" name="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
-    <input type="text" name="tags" maxlength="100" value="{% for tag in issue.tags %}{{tag}}, {% endfor %}" />
-    {# hits the db each time optimze like voting?? #}
-    <input type="submit" value="{% trans "tag" %}"/>
-</form>
-{% endblock %}
-
-</ul>
-
-{% include "pagination.html" %}
-
-</div>
 {% else %} <p class="notice">{% trans "You cannot propose yet, you need more points" %}</p>
-{% endif %}
-
-
+</fieldset>
 {% endblock %}
 
-{%block sidebar %}
-    {% include "dashboard/tag_cloud.html" %}
-    &nbsp;
+{% block issue_menu %}
+<h2> {% trans "Proposed by you" %}</h2>
+<h4><a href="{% url my_issues_sort 'popular' %}"> {% trans 'popular' %} </a> |
+    <a href="{% url my_issues_sort 'for' %}">{% trans 'for' %}</a> | 
+    <a href="{% url my_issues_sort 'controversial' %}">{%trans 'controversial' %}</a> | 
+    <a href="{% url my_issues_sort 'against' %}">{% trans 'against' %}</a> |
+    <a href="{% url my_issues_sort 'new' %}">{% trans 'new' %}</a> |
+</h4>
 {% endblock %}
+
+
+{% block issue %}
+{% include "issue/my_issue.html" %}
+{% endblock %}
+
 

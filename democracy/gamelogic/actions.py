@@ -50,8 +50,8 @@ def vote_issue(user, issue, direction, keep_private , api_interface=None ):
 
     if repeated_vote: return
     
-    logging.debug("User %s voted %s on ISSUE %s" % 
-    ( user.username, new_vote.vote, issue.title )) 
+    #logging.debug("User %s voted %s on ISSUE %s" % 
+    #( user.username, new_vote.vote, issue.title )) 
 
     user.message_set.create(message=_("You voted successfully on %s") % issue.title  )
 
@@ -77,8 +77,8 @@ def vote_user(user, voted_user, direction, keep_private, api_interface=None):
         old_vote.is_archived = True
         old_vote.save()
 
-    logging.debug("User %s voted %s on USER %s" %
-    (user.username, new_vote.vote, voted_user.username)) 
+    #logging.debug("User %s voted %s on USER %s" %
+    #(user.username, new_vote.vote, voted_user.username)) 
     user.message_set.create(message=_("You voted successfully on %s") % voted_user.username )
     score.vote_user(user, voted_user, direction, voted_already)
 

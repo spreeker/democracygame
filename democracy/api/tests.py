@@ -16,6 +16,7 @@ from gamelogic.models import MultiplyIssue
 from gamelogic import actions
 from issue.models import Issue
 
+import json
 
 class APIMainTest(TestActionData):
     """ We inherit from TestActionData from gameactions.tests so the
@@ -179,23 +180,23 @@ class VoteHandlerTest( OAuthTests ):
         each user has his own vote on its own issue. 
         """
         parameters = {
-                'vote' : 1 ,
-                'issue' : Issue.objects.get( title = "issue1").pk ,
+                'direction' : 1 ,
+                'issue' : Issue.objects.get(title="issue1").pk ,
                 }
-        url = reverse( "api_vote" )
-        response = self.do_oauth_request( url , parameters )
+        url = reverse("api_vote")
+        response = self.do_oauth_request(url, parameters )
         # conflict / Duplicate
-        self.assertEqual( 409 , response.status_code )
+        self.assertEqual(409, response.status_code)
 
     def test_non_exsitent_issue(self):
         parameters = {
-                'vote' : -1 ,
+                'direction' : -1 ,
                 'issue' : 99999 ,
                 }
-        url = reverse( "api_vote" )
-        response = self.do_oauth_request( url , parameters )
+        url = reverse("api_vote")
+        response = self.do_oauth_request(url, parameters)
 
-        self.assertEqual( 400 , response.status_code )
+        self.assertEqual(400, response.status_code)
 
     def test_vote(self):
         """
@@ -203,7 +204,7 @@ class VoteHandlerTest( OAuthTests ):
         this should succeed. with a 201 CREATED status.
         """
         parameters = {
-                'vote' : -1 ,
+                'direction' : -1 ,
                 'issue' : Issue.objects.get( title = "issue3").pk ,
                 }
 
@@ -219,18 +220,19 @@ class VoteHandlerTest( OAuthTests ):
         issue1 = Issue.objects.get( title = "issue1")
         url = reverse ( 'api_vote' ) 
         response = self.do_oauth_request(url , http_method='GET' ) 
-        expected = """[
-    {
-        "vote": 1, 
+        expected = """[ {
         "time_stamp": "%(t1)s", 
+        "direction": 1, 
         "issue_uri": "%(ri1)s", 
-        "keep_private": false
-    }
-]""" % {"t1" : vote.time_stamp.strftime("%Y-%m-%d %H:%M:%S"),
+        "keep_private": false }
+        ]""" % {
+        "t1" : vote.time_stamp.strftime("%Y-%m-%d %H:%M:%S"),
         "ru1" : reverse("api_user" , args=[self.users[0].id]) , 
         "ri1" : reverse("api_issue" , args=[issue1.id] ) ,
         }
-        self.assertEqual( expected , response.content )
+        json_expected = json.loads(expected)
+        json_resonse = json.loads(response.content)
+        self.assertEqual( json_expected , json_resonse)
         self.assertEqual( 200 , response.status_code )
 
     def test_read_vote(self):
@@ -242,7 +244,7 @@ class VoteHandlerTest( OAuthTests ):
         response = self.do_oauth_request(url , http_method='GET' ) 
         expected = """[
     {
-        "vote": 1, 
+        "direction": 1, 
         "time_stamp": "%(t1)s", 
         "issue_uri": "%(ri1)s", 
         "keep_private": false
@@ -251,8 +253,11 @@ class VoteHandlerTest( OAuthTests ):
         "ru1" : reverse("api_user" , args=[self.users[0].id]) , 
         "ri1" : reverse("api_issue" , args=[issue1.id] ) ,
         }
-        self.assertEqual( expected , response.content )
-        self.assertEqual( 200 , response.status_code )
+
+        json_expected = json.loads(expected)
+        json_resonse = json.loads(response.content)
+        self.assertEqual(json_expected, json_resonse)
+        self.assertEqual(200, response.status_code )
 
 
 class AnonymousUserHandlerTest( APIMainTest ):
@@ -282,12 +287,13 @@ class AnonymousUserHandlerTest( APIMainTest ):
         "r2" :  reverse('api_user' , args=[self.users[1].id]) , 
         "r3" :  reverse('api_user' , args=[self.users[2].id]) , 
         }
-
+ 
         url = reverse( "api_users" )
         result = self.client.get(url).content        
-        #print result
-        self.assertEqual( expected , result )
-
+        json_expected = json.loads(expected)
+        json_resonse = json.loads(result)
+        self.assertEqual(json_expected, json_resonse)
+ 
     def test_get_user(self):
         """ test getting a user """
         user = User.objects.get( username = 'test1' )
@@ -339,7 +345,10 @@ class UserHandlerTest ( OAuthTests ):
     "resource_uri": "%(ur1)s"
 }""" % { "ur1" : reverse( 'api_user' , args=[self.users[0].pk]) }
 
-        self.assertEqual( expected , response.content )
+
+        json_expected = json.loads(expected)
+        json_resonse = json.loads(response.content)
+        self.assertEqual(json_expected, json_resonse)
 
 
 class IssueHandlerTest( OAuthTests ):
@@ -407,7 +416,10 @@ class IssueHandlerTest( OAuthTests ):
         # open the files in a file diff viewer to see result differences
         #rf.write(result)
         #cf.write(expected)
-        self.assertEqual( expected , result )
+        json_expected = json.loads(expected)
+        json_resonse = json.loads(result)
+        self.assertEqual(json_expected, json_resonse)
+ 
 
     def test_read_issue(self):
         """ test read issue """
@@ -429,12 +441,15 @@ class IssueHandlerTest( OAuthTests ):
 
         url = reverse( "api_issue" , args=[self.issue1.pk] )
         response = self.client.get( url )
+
+        json_expected = json.loads(expected)
+        json_resonse = json.loads(response.content)
+        self.assertEqual(json_expected, json_resonse)
         # open the files in a file diff viewer to see result differences
         #rf.write(response.content)
         #cf.write(expected)
         #print expected
         #print response.content
-        self.assertEqual( expected , response.content )
 
     def test_read_bad_issue(self):
         """ test read bad issue """
@@ -490,7 +505,10 @@ class MultiplyHandlerTest( OAuthTests ):
         "mu" : reverse( "api_multiply", args=[multiply_vote.id] ), 
         }
         result = response.content 
-        self.assertEqual( expected , result )
+        json_expected = json.loads(expected)
+        json_resonse = json.loads(result)
+        self.assertEqual(json_expected, json_resonse)
+ 
    
     def test_post_multiply(self):
         issue2 = Issue.objects.get( title = "issue2" )
@@ -577,7 +595,9 @@ class AnonymousMultiplyHandlerTest( APIMainTest ):
         #rf.write(response.content)
         #cf.write(expected)
            
-        self.assertEqual ( expected , response.content )
+        json_expected = json.loads(expected)
+        json_resonse = json.loads(response.content)
+        self.assertEqual(json_expected, json_resonse)
 
 
 class IssueListTest( OAuthTests ): 
@@ -592,20 +612,7 @@ class IssueListTest( OAuthTests ):
         """ test get the newest issues as list """
         url = reverse("api_sort_order", args=["new"] )
         response = self.do_oauth_request( url , http_method="GET" )
-        expected = """[
-    [
-        "%(i1)s", 
-        "%(it1)s"
-    ], 
-    [
-        "%(i2)s", 
-        "%(it2)s"
-    ], 
-    [
-        "%(i3)s", 
-        "%(it3)s"
-    ]
-]"""    % { 
+        expected = """[ [ "%(i1)s", "%(it1)s" ], [ "%(i2)s", "%(it2)s" ], [ "%(i3)s", "%(it3)s" ] ]"""  % { 
         "it1" : self.issue1.time_stamp.strftime("%Y-%m-%d %H:%M:%S") ,
         "it2" : self.issue2.time_stamp.strftime("%Y-%m-%d %H:%M:%S") ,
         "it3" : self.issue3.time_stamp.strftime("%Y-%m-%d %H:%M:%S") ,
@@ -613,7 +620,10 @@ class IssueListTest( OAuthTests ):
         "i2" : reverse( "api_issue" , args=[self.issue2.pk] ) , 
         "i3" : reverse( "api_issue" , args=[self.issue3.pk] ) , 
         }
-        self.assertEqual( expected , response.content )
+        json_expected = json.loads(expected)
+        json_resonse = json.loads(response.content)
+        self.assertEqual(json_expected, json_resonse)
+ 
 
     def test_get_popular(self):
         """ test get the popular issues as list """
@@ -623,25 +633,16 @@ class IssueListTest( OAuthTests ):
         vote_func( self.users[0] , self.issue3 , -1 , False)
 
         response = self.do_oauth_request( url , http_method="GET" )
-        expected = """[
-    [
-        "%(i3)s", 
-        2
-    ], 
-    [
-        "%(i1)s", 
-        1
-    ], 
-    [
-        "%(i2)s", 
-        1
-    ]
-]"""    % { 
+        expected = """[ [ "%(i3)s", 2 ], [ "%(i1)s", 1 ], [ "%(i2)s", 1 ] ]""" % { 
         "i1" : reverse( "api_issue" , args=[self.issue1.pk] ) , 
         "i2" : reverse( "api_issue" , args=[self.issue2.pk] ) , 
         "i3" : reverse( "api_issue" , args=[self.issue3.pk] ) , 
         }
-        self.assertEqual( expected , response.content )
+
+        json_expected = json.loads(expected)
+        json_resonse = json.loads(response.content)
+        self.assertEqual(json_expected, json_resonse)
+ 
 
     def test_get_controversial(self):
         """ test get the controversial issues as list """
@@ -651,13 +652,11 @@ class IssueListTest( OAuthTests ):
         vote_func(self.users[0], self.issue3, -1, False)
 
         response = self.do_oauth_request( url , http_method="GET" )
-        expected = """[
-    [
-        "%(i3)s", 
-        0.0
-    ]
-]"""    % { 
+        expected = """[ [ "%(i3)s", 0.0 ] ]"""    % { 
         "i3" : reverse("api_issue", args=[self.issue3.pk]) , 
         }
-        self.assertEqual(expected, response.content)
 
+        json_expected = json.loads(expected)
+        json_resonse = json.loads(response.content)
+        self.assertEqual(json_expected, json_resonse)
+ 

@@ -2,7 +2,8 @@
 
 from voting.models import Vote
 from voting.views import vote_on_object
-from voting.managers import possible_votes
+from voting.managers import possible_votes, votes
+from django.utils.translation import ugettext_lazy as _
 from gamelogic import actions
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -95,6 +96,7 @@ def get_tagcloud_intersection(agree_issues, disagree_issues):
             all_tags.append(a_tag)
 
     all_tags.extend(tags_dagree.values())
+    
     return calculate_cloud(all_tags)
 
 
@@ -112,7 +114,7 @@ def compare_votes_to_user(request, username):
     if request.user.is_authenticated():
         players_votes = Vote.objects.get_user_votes(request.user, Model=Issue)
         vote_keys = players_votes.values_list('object_id')
-        players_votedict = dict((vote.object_id, vote.vote) for vote in players_votes.all())
+        players_votedict = dict((vote.object_id, vote.direction) for vote in players_votes.all())
         #players_votedict = players_votes.values('object_id', 'vote')
     else:
         votedict = request.session.get('vote_history', dict())
@@ -120,7 +122,7 @@ def compare_votes_to_user(request, username):
         vote_keys = players_votedict.keys()
 
     intersection_votes = user_votes.filter(object_id__in=vote_keys)
-    intersection_votes = intersection_votes.values_list('object_id','vote')
+    intersection_votes = intersection_votes.values_list('object_id','direction')
 
     # Now compare votes.
     id_agree = [] 
@@ -155,7 +157,8 @@ def compare_votes_to_user(request, username):
         issues = dict((issue.id, issue) for issue in qs.all())
         for id, issue in issues.items():
             vote = players_votedict[id]
-            issue_vote.append((issue, possible_votes[vote]))
+            #issue_vote.append((issue, possible_votes[vote]))
+            issue_vote.append((issue, votes.get(vote, _('blank'))))
             issue_vote.sort(_cmp)
         return issue_vote
 
@@ -168,6 +171,10 @@ def compare_votes_to_user(request, username):
 
     ## Get tagcloud of vote intersection.
     cloud = get_tagcloud_intersection(id_agree, id_disagree)
+
+    def tag_cmp(tagA, tagB):
+        return cmp(tagA.name, tagB.name)
+    cloud.sort(tag_cmp)
     
     context = RequestContext(request, {
         'user_to_compare' : user,
