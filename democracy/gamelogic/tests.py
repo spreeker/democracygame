@@ -36,6 +36,11 @@ class TestUsers(TestCase):
             data += "%15s %18s %4d %4d" % (u.username, p.role, p.score, v)
             data += "\n"
 
+        votes = Vote.objects.get_popular(Issue, min_tv=0)
+        data += "Votes \n%15s %18s \n" % ("Vote count", "Object")
+        for vote in votes:
+            data += "%15s %18s \n" % (vote['score'], vote['object_id'])
+
         return data
      
     def load_users(self):
@@ -145,11 +150,11 @@ class TestActionData(TestUsers):
     def setUp(self):
         super(TestActionData, self).setUp()
 
-        self.reset( levels.MIN_SCORE_ACTIVE_CITIZENS, "active citizen" )
+        self.reset(levels.MIN_SCORE_ACTIVE_CITIZENS, "active citizen" )
         self.load_users()
         # make sure default values in db are now ok
-        self.assertEqual( User.objects.count() , len(self.users))
-        self.assertEqual( self.profiles[0].score , levels.MIN_SCORE_ACTIVE_CITIZENS )
+        self.assertEqual(User.objects.count(), len(self.users))
+        self.assertEqual(self.profiles[0].score, levels.MIN_SCORE_ACTIVE_CITIZENS )
         
         # add issues
         for i, issue in enumerate(self.issues):
@@ -157,7 +162,7 @@ class TestActionData(TestUsers):
 
         # test the adding of issues was succesfull
         # this get run multiple times , dubplicate issues should not be created
-        self.assertEqual( Issue.objects.count() , len(self.issues))
+        self.assertEqual(Issue.objects.count(), len(self.issues))
 
     def tearDown(self):
         super(TestActionData, self).tearDown()

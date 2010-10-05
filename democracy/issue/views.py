@@ -97,7 +97,7 @@ def order_issues(request, sortorder, issues, min_tv=6, subset=None):
         return page, issues
 
     if sortorder == 'popular':
-        votes = Vote.objects.get_popular(Issue, object_ids=issue_ids)
+        votes = Vote.objects.get_popular(Issue, object_ids=issue_ids, min_tv=min_tv)
         page, issues = merge_qs(votes, issues)
         issues = _sort_issues(page.object_list, issues)
         return page, issues

@@ -105,7 +105,7 @@ def candidate(user, userprofile):
     parlement_members_ids = UserProfile.objects.filter(
         role='parlement member').values_list('id') 
     pm_votes = Vote.objects.get_popular(User, 
-            object_ids=parlement_members_ids, reverse=True)
+            object_ids=parlement_members_ids, reverse=True, min_tv=0)
 
     lowest_vote_count = pm_votes[0]
 

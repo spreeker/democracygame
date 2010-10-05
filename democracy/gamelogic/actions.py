@@ -65,7 +65,8 @@ def vote_user(user, voted_user, direction, keep_private, api_interface=None):
     if user.id == voted_user.id: return #don't vote on yourself!!
 
     repeated_vote, voted_already, new_vote = \
-        Vote.objects.record_vote(user, voted_user, direction, keep_private,  api_interface )
+        new_vote = Vote.objects.record_vote(user, 
+            voted_user, direction, keep_private, api_interface)
 
     if repeated_vote: return
     qs = Vote.objects.get_user_votes(user, Model=User)
@@ -84,9 +85,9 @@ def vote_user(user, voted_user, direction, keep_private, api_interface=None):
 # make this signal code?
 def vote(user, obj, direction, keep_private , api_interface=None ):
     if isinstance(obj, Issue):
-        vote_issue(user, obj, direction, keep_private , api_interface=None )
+        return vote_issue(user, obj, direction, keep_private , api_interface=None )
     elif isinstance(obj, User):
-        vote_user(user, obj, direction, keep_private, api_interface=None)
+        return vote_user(user, obj, direction, keep_private, api_interface=None)
 
 
 def propose(user, title, body, direction, source_url,
