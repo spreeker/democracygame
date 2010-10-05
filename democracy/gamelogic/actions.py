@@ -39,7 +39,7 @@ from voting.models import Vote
 from issue.models import Issue
 from voting.models import possible_votes 
 
-
+# make this signal code?
 def vote_issue(user, issue, direction, keep_private , api_interface=None ):
     """Unified voting (both blank and normal votes)."""
     userprofile = user.get_profile()
@@ -82,6 +82,7 @@ def vote_user(user, voted_user, direction, keep_private, api_interface=None):
     user.message_set.create(message=_("You voted successfully on %s") % voted_user.username )
     score.vote_user(user, voted_user, direction, voted_already)
 
+# make this signal code?
 def vote(user, obj, direction, keep_private , api_interface=None ):
     if isinstance(obj, Issue):
         vote_issue(user, obj, direction, keep_private , api_interface=None )
@@ -188,12 +189,19 @@ role_to_actions = {
         'tag' : tag,
         'propose' : propose,
         'multiply' : multiply,
+    },
+    'party program' : {
+        'vote' : vote,
+        #'vote user' : vote_user,
+        'tag' : tag,
+        'propose' : propose,
+        #'multiply' : multiply,
     }
 }
 
 def get_actions(user):
     """return all possible game actions for a user """
-    if not user.is_authenticated()  : return role_to_actions['anonymous citizen']
+    if not user.is_authenticated(): return role_to_actions['anonymous citizen']
     userprofile = user.get_profile()
     actions = role_to_actions[userprofile.role]
     return actions

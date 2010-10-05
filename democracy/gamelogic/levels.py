@@ -126,6 +126,14 @@ def parlement_member(user, userprofile):
     """
     pass
 
+def party_program(user, userprofile):
+    """
+    this is the special party program profile. for party programs.
+    easy entrance of users.
+    no changes.
+    """
+    pass
+
 upgrade = {
     'anonymous citizen' : anonymous_citizen,
     'citizen' : citizen,
@@ -133,6 +141,7 @@ upgrade = {
     'opinion leader' : opinion_leader,
     'candidate' : candidate,
     'parlement member' : parlement_member,
+    'party program' : party_program,
 }
 
 def change_score(user, score):

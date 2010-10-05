@@ -127,7 +127,7 @@ INSTALLED_APPS = (
     'django.contrib.markup',
 
     'debug_toolbar', # comment out in production!!
-    'south',    # comment out in production!!
+    'south', 
     #Democracy
     'gamelogic',
     'profiles',
