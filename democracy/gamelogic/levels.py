@@ -15,7 +15,7 @@ import logging
 # put these values in a database??
 MAX_PARLEMENT = 15
 MAX_OPINION_LEADERS = 50
-MIN_SCORE_ACTIVE_CITIZENS = 30
+MIN_SCORE_ACTIVE_CITIZENS = 30 # onchange edit template/isssue/myissuelist to.
 
 def anonymous_citizen(user, userprofile):
     """No code needed , upgrade is to citizen is done when you are registering an account

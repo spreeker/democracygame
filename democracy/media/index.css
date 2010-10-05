@@ -57,9 +57,11 @@ h3 {
     margin-left: 5.5em;
     margin-top: 1.5em;
 }
-
-td textarea {
-    width: 300px; height:80px;  
+#title {
+    width: 300px; height:30px;
+}
+#arguments {
+    width: 300px; height:200px;  
 }
 
 .error th { background: #FBC2C4; }

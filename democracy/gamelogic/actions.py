@@ -8,9 +8,8 @@ This module itself uses functions from the score.py and levels.py see if
 an action is allowed and how it affects the score of the players / the democracy
 world.
 
-user_actions = get_actions( user )
-
-use the role_to_actions dict to determine availability of actions for user
+user_actions = get_actions(user)
+unavailable_acttion = get_unavailable_actions(user)
 
 example usage
 -------------

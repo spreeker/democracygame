@@ -6,9 +6,12 @@ from voting.managers import votes
 from tagging.forms import TagField
 
 class IssueForm(forms.Form):
-    title = forms.CharField(label=_('your issue title'), max_length = 100)
+    title = forms.CharField(label=_('your issue title'), 
+        widget = forms.Textarea(attrs={'id':'title'}),
+        max_length = 200,
+    )
     body = forms.CharField( label=_('arguments'),
-        widget = forms.Textarea(),
+        widget = forms.Textarea(attrs={'id': 'arguments'}),
         max_length = 2000,
     )
     url = forms.URLField(label= _('external source of information'))
