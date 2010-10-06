@@ -10,9 +10,9 @@
         <tbody>
     {% for profile in page.object_list %}
         {% if profile.user == request.user %} 
-        <tr class="notice">
+            <tr class="notice">
         {% else %}
-        <tr class="{% cycle 'even' '' %}">
+            <tr>
         {% endif %}
                 <td>{{ profile.rank }}</td>
                 <td><a href="{% url userprofile profile.user.username %}">{{ profile.user.username }}</a></td>
