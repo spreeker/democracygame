@@ -31,31 +31,31 @@
 </head>
 <body>
 <div id="header" class="container " >
-<div id="mainmenu" class="span-12">
+<div id="mainmenu" class="span-14">
     {% block mainmenu %} <a href="/">{% trans "mainpage" %}</a>  {% endblock %}
 </div>
-<div id="userbar" class="span-12 last " >
+<div id="userbar" class="span-15 last " >
 {% block userbar %}{% endblock %}
 </div>
 </div>
 
 <div class="container">
-<div id="sidebar" class="span-6">
+<div id="sidebar" class="span-9">
   {% block sidebar %}&nbsp;{% endblock %}
 </div>
-<div id="bigcontent" class="span-18 last">
+<div id="bigcontent" class="span-20 last">
     {% block bigcontent %}{% endblock %}
-<div id="content" class="span-14 ">
+<div id="content" class="span-15 ">
     {% block content %}{% endblock %}
 </div>
-<div id="gamenews" class="span-4 last">
+<div id="gamenews" class="span-5 last">
 {% block gamenews%}<p></p>{% endblock %}
 <div id="messagebar"> 
 {% block messagebar %}{% endblock %}
 </div>
 </div>
 </div>
-<div id="footer" class="span-24 last">
+<div id="footer" class="span-29 last">
  {% block footer %}
  {% endblock %}
 </div>
