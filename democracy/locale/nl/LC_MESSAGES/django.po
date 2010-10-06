@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-09-18 20:21+0200\n"
-"PO-Revision-Date: 2010-09-18 20:21\n"
+"POT-Creation-Date: 2010-10-05 23:01+0200\n"
+"PO-Revision-Date: 2010-10-05 22:51\n"
 "Last-Translator: stephan preeker <stephan@preeker.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -36,12 +36,12 @@ msgstr "Duits"
 msgid "French"
 msgstr "Frans"
 
-#: gamelogic/actions.py:56 gamelogic/actions.py:82
+#: gamelogic/actions.py:55 gamelogic/actions.py:82
 #, python-format
 msgid "You voted successfully on %s"
 msgstr "u heeft gestemd op \"%s\""
 
-#: gamelogic/actions.py:111
+#: gamelogic/actions.py:112
 #, python-format
 msgid "You created issue \"%s\" successfully"
 msgstr "uw voorstel \"%s\" is toegevoegd"
@@ -71,20 +71,24 @@ msgstr "kandidaat"
 msgid "Parliament member"
 msgstr "Kamerlid"
 
-#: gamelogic/models.py:28
+#: gamelogic/models.py:15
+msgid "party program"
+msgstr ""
+
+#: gamelogic/models.py:29
 #, python-format
 msgid "%(user)s  multiplies for %(issue)s"
-msgstr "% (user) verzwaart %(issue)s "
+msgstr "%(user)s verzwaart %(issue)s "
 
-#: gamelogic/models.py:39
+#: gamelogic/models.py:40
 msgid "You have no multiplies left"
 msgstr "U mag geen voorstellen meer verzwaren"
 
-#: gamelogic/models.py:42
+#: gamelogic/models.py:43
 msgid "You cannot not multiplie on your own issues"
 msgstr "U mag uw eigen voorstellen niet verzwaren"
 
-#: gamelogic/models.py:45
+#: gamelogic/models.py:46
 msgid "succesfully added multiply"
 msgstr "Voorstel weegt nu zwaarder"
 
@@ -92,23 +96,23 @@ msgstr "Voorstel weegt nu zwaarder"
 msgid "your issue title"
 msgstr "mijn voorstel titel"
 
-#: issue/forms.py:10
+#: issue/forms.py:13
 msgid "arguments"
 msgstr "argumenten"
 
-#: issue/forms.py:14
+#: issue/forms.py:17
 msgid "external source of information"
 msgstr "Meer informatie"
 
-#: issue/forms.py:15
+#: issue/forms.py:18
 msgid "source type"
 msgstr "bron"
 
-#: issue/forms.py:16 templates/issue/issue.html:56
+#: issue/forms.py:19 templates/issue/issue.html:56
 msgid "your vote"
 msgstr "jouw stem"
 
-#: issue/forms.py:19 issue/forms.py:26
+#: issue/forms.py:22 issue/forms.py:29
 msgid "tags"
 msgstr "tags"
 
@@ -137,25 +141,25 @@ msgstr "document"
 msgid "image"
 msgstr "beeld"
 
-#: issue/views.py:176 voting/managers.py:12
+#: issue/views.py:183 voting/managers.py:12
 msgid "Against"
 msgstr "tegen"
 
-#: issue/views.py:177 templates/issue/issue.html:41
+#: issue/views.py:184 templates/issue/issue.html:41
 #: templates/profiles/compare_votes_to_user.html:8
 #, fuzzy
 msgid "Blank"
 msgstr "Blanco"
 
-#: issue/views.py:290 profiles/views/votes.py:61
+#: issue/views.py:302 profiles/views/votes.py:61
 msgid "You did not pick a valid option"
 msgstr "u heeft geen geldige optie gekozen"
 
-#: issue/views.py:304
+#: issue/views.py:316
 msgid "You voted succesfull, to save your votes please register"
 msgstr "Stem was succesvol. Om uw stemmen op te slaan moet u zich registreren."
 
-#: issue/views.py:336
+#: issue/views.py:348
 msgid "You cannot multiply yet!"
 msgstr "U mag geen voorstellen meer verzwaren"
 
@@ -171,7 +175,7 @@ msgstr "blanco"
 msgid "democracy game"
 msgstr "democratiespel"
 
-#: templates/base.html:18
+#: templates/base.html:35
 msgid "mainpage"
 msgstr "homepage"
 
@@ -183,12 +187,19 @@ msgstr "alle voorstellen"
 msgid "your issues"
 msgstr "mijn voorstellen"
 
-#: templates/base_content.html:10 templates/issue/search.html:7
-#, fuzzy
+#: templates/base_content.html:7
+msgid "players"
+msgstr "spelers"
+
+#: templates/base_content.html:8
+msgid "stemadvies"
+msgstr ""
+
+#: templates/base_content.html:13 templates/issue/search.html:7
 msgid "search issue"
 msgstr "zoek voorstel"
 
-#: templates/base_content.html:43
+#: templates/base_content.html:46
 msgid "pick language.."
 msgstr "kies een taal..."
 
@@ -197,7 +208,6 @@ msgid "previous"
 msgstr "vorige"
 
 #: templates/pagination.html:9
-#, fuzzy
 msgid "Page"
 msgstr "Pagina"
 
@@ -262,55 +272,57 @@ msgstr "verzwaar"
 msgid "by"
 msgstr "door"
 
+#: templates/issue/issue.html:61
+msgid "extra information"
+msgstr "meer informatie"
+
 #: templates/issue/issue_list.html:13
-#, fuzzy
 msgid "Vote!"
-msgstr "Stem! "
+msgstr "Stem!"
 
 #: templates/issue/issue_list.html:14 templates/issue/issue_list_user.html:12
-#: templates/issue/my_issue_list.html:41
+#: templates/issue/my_issue_list.html:42
 #: templates/issue/my_issues_list.html:40
 msgid "popular"
 msgstr "populair"
 
 #: templates/issue/issue_list.html:15 templates/issue/issue_list_user.html:15
-#: templates/issue/my_issue_list.html:42
+#: templates/issue/my_issue_list.html:43
 #: templates/issue/my_issues_list.html:41
-#, fuzzy
 msgid "for"
 msgstr "voor"
 
 #: templates/issue/issue_list.html:16 templates/issue/issue_list_user.html:13
-#: templates/issue/my_issue_list.html:43
+#: templates/issue/my_issue_list.html:44
 #: templates/issue/my_issues_list.html:42
 msgid "controversial"
 msgstr "controversieel"
 
 #: templates/issue/issue_list.html:17 templates/issue/issue_list_user.html:16
-#: templates/issue/my_issue_list.html:44
+#: templates/issue/my_issue_list.html:45
 #: templates/issue/my_issues_list.html:43
-#, fuzzy
 msgid "against"
 msgstr "tegen"
 
 #: templates/issue/issue_list.html:18 templates/issue/issue_list_user.html:14
-#: templates/issue/my_issue_list.html:45
+#: templates/issue/my_issue_list.html:46
 #: templates/issue/my_issues_list.html:44
 msgid "new"
 msgstr "nieuw"
 
+#: templates/issue/issue_list.html:19
+msgid "unseen"
+msgstr ""
+
 #: templates/issue/issue_list_user.html:11
-#, fuzzy
 msgid "Issues for"
 msgstr "voorstellen van"
 
 #: templates/issue/my_issue.html:22
-#, fuzzy
 msgid "Publish"
 msgstr "publiceer"
 
 #: templates/issue/my_issue.html:22
-#, fuzzy
 msgid "Hide"
 msgstr "verberg"
 
@@ -319,7 +331,6 @@ msgid "tag"
 msgstr "tag"
 
 #: templates/issue/my_issue_list.html:8
-#, fuzzy
 msgid ""
 "\n"
 "        Make sure you check your spelling. It is not possible to change your "
@@ -338,7 +349,6 @@ msgstr ""
 
 #: templates/issue/my_issue_list.html:19
 #: templates/issue/my_issues_list.html:19
-#, fuzzy
 msgid "Your issues"
 msgstr "Jouw voorstellen"
 
@@ -347,18 +357,17 @@ msgstr "Jouw voorstellen"
 msgid "propose issue"
 msgstr "doe een voorstel"
 
-#: templates/issue/my_issue_list.html:31
+#: templates/issue/my_issue_list.html:32
 #: templates/issue/my_issues_list.html:31
 msgid "submit issue"
 msgstr "bewaar voorstel"
 
-#: templates/issue/my_issue_list.html:34
-#: templates/issue/my_issues_list.html:34
+#: templates/issue/my_issue_list.html:35
 #, fuzzy
-msgid "You cannot propose yet, you need more points"
+msgid "You cannot propose yet, you need 30 points"
 msgstr "U kunt geen voorstel doen, u heeft meer punten nodig."
 
-#: templates/issue/my_issue_list.html:40
+#: templates/issue/my_issue_list.html:41
 #: templates/issue/my_issues_list.html:39
 #, fuzzy
 msgid "Proposed by you"
@@ -382,6 +391,11 @@ msgstr ""
 "hebben.  Als de inhoud verandert worden bestaande stemmen ongeldig. U kunt "
 "uw voorstel verbergen. Als u een voorstel wilt wijzigen  maakt u gewoon een "
 "nieuw voorstel."
+
+#: templates/issue/my_issues_list.html:34
+#, fuzzy
+msgid "You cannot propose yet, you need more points"
+msgstr "U kunt geen voorstel doen, u heeft meer punten nodig."
 
 #: templates/issue/search.html:8
 #, fuzzy
@@ -528,6 +542,11 @@ msgstr "punten"
 msgid "Role"
 msgstr "rol"
 
+#: templates/profiles/ranking.html:35
+#, fuzzy
+msgid "search user"
+msgstr "zoek voorstel"
+
 #: templates/profiles/search_user.html:6
 msgid "search"
 msgstr "zoeken"
@@ -539,7 +558,7 @@ msgstr "Gezochte gebruikers niet gevonden..."
 #: templates/profiles/search_user.html:21
 #, python-format
 msgid "page %(no)s of %(np)s "
-msgstr "pagina %(geen)s  van %(NP)s "
+msgstr "pagina %(no)s  van %(np)s "
 
 #: templates/profiles/user_detail.html:5
 #, fuzzy
@@ -848,7 +867,6 @@ msgstr "te persoonlijk"
 msgid "Multiply"
 msgstr "verzwaren"
 
-#, fuzzy
 #~ msgid "Your vote"
 #~ msgstr "Jouw stem"
 
@@ -925,9 +943,6 @@ msgstr "verzwaren"
 
 #~ msgid "show results"
 #~ msgstr "toon resultaten"
-
-#~ msgid "more information"
-#~ msgstr "meer informatie"
 
 #~ msgid "votes"
 #~ msgstr "stemmen"

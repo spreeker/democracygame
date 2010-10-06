@@ -57,9 +57,11 @@ h3 {
     margin-left: 5.5em;
     margin-top: 1.5em;
 }
-
-td textarea {
-    width: 300px; height:80px;  
+#title {
+    width: 500px; height:35px;
+}
+#arguments {
+    width: 500px; height:200px;  
 }
 
 .error th { background: #FBC2C4; }
@@ -78,7 +80,7 @@ td textarea {
 .issues p {
     margin-right: 4em;
 }
-
+.issues .odd {background:#e5ecf9;}
 #proposetips{
     margin-left : 0em;
 }

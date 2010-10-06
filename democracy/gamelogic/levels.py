@@ -15,7 +15,7 @@ import logging
 # put these values in a database??
 MAX_PARLEMENT = 15
 MAX_OPINION_LEADERS = 50
-MIN_SCORE_ACTIVE_CITIZENS = 30
+MIN_SCORE_ACTIVE_CITIZENS = 30 # onchange edit template/isssue/myissuelist to.
 
 def anonymous_citizen(user, userprofile):
     """No code needed , upgrade is to citizen is done when you are registering an account
@@ -105,7 +105,7 @@ def candidate(user, userprofile):
     parlement_members_ids = UserProfile.objects.filter(
         role='parlement member').values_list('id') 
     pm_votes = Vote.objects.get_popular(User, 
-            object_ids=parlement_members_ids, reverse=True)
+            object_ids=parlement_members_ids, reverse=True, min_tv=0)
 
     lowest_vote_count = pm_votes[0]
 
@@ -126,6 +126,14 @@ def parlement_member(user, userprofile):
     """
     pass
 
+def party_program(user, userprofile):
+    """
+    this is the special party program profile. for party programs.
+    easy entrance of users.
+    no changes.
+    """
+    pass
+
 upgrade = {
     'anonymous citizen' : anonymous_citizen,
     'citizen' : citizen,
@@ -133,6 +141,7 @@ upgrade = {
     'opinion leader' : opinion_leader,
     'candidate' : candidate,
     'parlement member' : parlement_member,
+    'party program' : party_program,
 }
 
 def change_score(user, score):

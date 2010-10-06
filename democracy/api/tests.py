@@ -453,10 +453,10 @@ class IssueHandlerTest( OAuthTests ):
 
     def test_read_bad_issue(self):
         """ test read bad issue """
-        url = reverse( "api_issue" , args=[999999] )
-        response = self.client.get( url )
+        url = reverse("api_issue", args=[999999])
+        response = self.client.get(url)
         
-        self.assertEqual( 404 , response.status_code )
+        self.assertEqual(404, response.status_code )
 
     def test_post_issue(self):
         """ test posting of issue """
@@ -522,38 +522,38 @@ class MultiplyHandlerTest( OAuthTests ):
     def test_post_ownissue_multiply(self):
         """multiplying your own issue should not be allowed.
         """
-        issue1 = Issue.objects.get( title = "issue1" )
+        issue1 = Issue.objects.get(title = "issue1" )
         parameters = {
             'issue' : issue1.pk
         }
-        url = reverse( "api_multiplies" )       
-        response = self.do_oauth_request( url, parameters=parameters ) 
-        self.assertEqual( 401, response.status_code )
+        url = reverse("api_multiplies")       
+        response = self.do_oauth_request(url, parameters=parameters ) 
+        self.assertEqual(401, response.status_code )
  
     def test_post_nonexcistingissue_multiply(self):
         """multiplying your own issue should not be allowed.
         """
-        issue1 = Issue.objects.get( title = "issue1" )
+        issue1 = Issue.objects.get(title = "issue1" )
         parameters = {
             'issue' : 999999 
         }
-        url = reverse( "api_multiplies" )       
-        response = self.do_oauth_request( url, parameters=parameters ) 
-        self.assertEqual( 400 , response.status_code )
+        url = reverse("api_multiplies")       
+        response = self.do_oauth_request(url, parameters=parameters ) 
+        self.assertEqual(400, response.status_code)
  
 class AnonymousMultiplyHandlerTest( APIMainTest ):
 
     def test_get_multiplies (self):
         """ read multiplies """
         #remember only users 1 and 2 can do multiplies
-        issue1 = Issue.objects.get( title="issue1" )
-        issue2 = Issue.objects.get( title="issue2" )
+        issue1 = Issue.objects.get(title="issue1" )
+        issue2 = Issue.objects.get(title="issue2" )
 
-        self.do_multiply( self.users[0], issue2 )
-        self.do_multiply( self.users[1], issue1 )
+        self.do_multiply(self.users[0], issue2)
+        self.do_multiply(self.users[1], issue1)
         
-        multiply_vote1 = MultiplyIssue.objects.get( user=self.users[0] )
-        multiply_vote2 = MultiplyIssue.objects.get( user=self.users[1] )
+        multiply_vote1 = MultiplyIssue.objects.get(user=self.users[0])
+        multiply_vote2 = MultiplyIssue.objects.get(user=self.users[1])
 
         url = reverse( 'api_multiplies' )
         response = self.client.get( url )
@@ -630,9 +630,9 @@ class IssueListTest( OAuthTests ):
         url = reverse("api_sort_order", args=["popular"] )
         #vote on an issue so we get one popular one..
         vote_func = actions.role_to_actions[self.profiles[0].role]['vote'] 
-        vote_func( self.users[0] , self.issue3 , -1 , False)
+        issue = vote_func(self.users[0], self.issue3, -1, False)
 
-        response = self.do_oauth_request( url , http_method="GET" )
+        response = self.do_oauth_request(url, http_method="GET")
         expected = """[ [ "%(i3)s", 2 ], [ "%(i1)s", 1 ], [ "%(i2)s", 1 ] ]""" % { 
         "i1" : reverse( "api_issue" , args=[self.issue1.pk] ) , 
         "i2" : reverse( "api_issue" , args=[self.issue2.pk] ) , 

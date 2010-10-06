@@ -10,7 +10,7 @@
 <div class="issues"> 
 {% block propose %} {% endblock %}
 {% block issue_menu %}
-<h2> {% trans "Vote!"%} </h2> 
+<h2>{% trans "Vote!"%}</h2> 
 <h4> | <a href="{% url issue_list 'popular' %}"> {% trans 'popular' %} </a> |
     <a href="{% url issue_list 'for' %}">{% trans 'for' %}</a> | 
     <a href="{% url issue_list 'controversial' %}">{%trans 'controversial' %}</a> | 
@@ -28,9 +28,11 @@
     {% dict_entry_for_item issue from request.session.vote_history as vote %}
 {% endif %}
 
+<div class="{% cycle 'odd' 'even' %}"
 {% block issue %}
 {% include "issue/issue.html" %}
 {% endblock %}
+</div>
 
 {% endfor %}
 </ul>

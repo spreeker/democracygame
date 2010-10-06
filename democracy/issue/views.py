@@ -80,7 +80,12 @@ def order_issues(request, sortorder, issues, min_tv=6, subset=None):
         scores = [(v['score'], v['object_id'],) for v in votes.all()] 
         #scores.sort()
         id_issue = dict((issue.id, issue) for issue in issues)
-        return [ id_issue[id] for score, id in scores ]
+        sorted_issues = []
+        for score, id in scores:
+            issue = id_issue.get(id, False) # it is possible to have hidden issues in the score.
+            if issue:
+                sorted_issues.append(issue)
+        return sorted_issues
 
     def merge_qs(votes, issues):
         """ with this method shrinks the issues qs using a paginated
@@ -92,9 +97,10 @@ def order_issues(request, sortorder, issues, min_tv=6, subset=None):
         return page, issues
 
     if sortorder == 'popular':
-        votes = Vote.objects.get_popular(Issue, object_ids=issue_ids)
+        votes = Vote.objects.get_popular(Issue, object_ids=issue_ids, min_tv=min_tv)
         page, issues = merge_qs(votes, issues)
         issues = _sort_issues(page.object_list, issues)
+        return page, issues
         #issues = vote_annotate(issues, Vote.payload, 'id', Count)
     elif sortorder == 'controversial':
         votes = Vote.objects.get_controversial(Issue, object_ids=issue_ids, min_tv=min_tv)

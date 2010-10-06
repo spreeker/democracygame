@@ -149,7 +149,7 @@ class VoteManager(models.Manager):
 
         return vote_dict
 
-    def get_popular(self, Model, object_ids=None, reverse=False):
+    def get_popular(self, Model, object_ids=None, reverse=False, min_tv=2):
         """ return qs ordered by popularity """
         ctype = ContentType.objects.get_for_model(Model)
         qs = self.filter(content_type=ctype,)
@@ -160,6 +160,7 @@ class VoteManager(models.Manager):
 
         qs = qs.values('object_id',)
         qs = qs.annotate(score=Count("direction")).order_by()
+        qs = qs.filter(score__gt=min_tv) 
 
         if reverse:
             return qs.order_by('score')

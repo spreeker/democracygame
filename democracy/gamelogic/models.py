@@ -12,6 +12,7 @@ roles = {'anonymous citizen' : _(u'Anonymous Citizen'),
         'opinion leader' : _(u'Opinion Leader'),
         'candidate' : _('Candidate'), 
         'parliament member' : _('Parliament member'),
+        'party program' : _('party program'),
 }
         #"minister", 
         #'prime minister']

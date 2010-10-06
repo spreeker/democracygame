@@ -136,7 +136,7 @@ class IssueList(AnonymousBaseHandler):
 
         sortorder = kwargs.get("sortorder", "")
         if sortorder == 'popular':
-            qs = Vote.objects.get_popular(Issue)
+            qs = Vote.objects.get_popular(Issue, min_tv=0)
             qs = qs.values_list('object_id', 'score')
         elif sortorder == 'controversial':
             qs = Vote.objects.get_controversial(Issue)
