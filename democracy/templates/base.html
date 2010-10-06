@@ -43,11 +43,10 @@
 <div id="sidebar" class="span-6">
   {% block sidebar %}&nbsp;{% endblock %}
 </div>
+<div id="bigcontent" class="span-18 last">
+    {% block bigcontent %}{% endblock %}
 <div id="content" class="span-14 ">
     {% block content %}{% endblock %}
-    <div id="ccontent">
-        {% block ccontent %}{% endblock %}
-    </div>
 </div>
 <div id="gamenews" class="span-4 last">
 {% block gamenews%}<p></p>{% endblock %}
@@ -55,7 +54,7 @@
 {% block messagebar %}{% endblock %}
 </div>
 </div>
-
+</div>
 <div id="footer" class="span-24 last">
  {% block footer %}
  {% endblock %}
