@@ -58,10 +58,10 @@ h3 {
     margin-top: 1.5em;
 }
 #title {
-    width: 300px; height:30px;
+    width: 500px; height:35px;
 }
 #arguments {
-    width: 300px; height:200px;  
+    width: 500px; height:200px;  
 }
 
 .error th { background: #FBC2C4; }
@@ -80,7 +80,7 @@ h3 {
 .issues p {
     margin-right: 4em;
 }
-
+.issues .odd {background:#e5ecf9;}
 #proposetips{
     margin-left : 0em;
 }
