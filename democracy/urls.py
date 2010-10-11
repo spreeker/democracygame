@@ -33,7 +33,7 @@ urlpatterns = patterns('',
     #
     url(r'^juni2010/$', 'juni2010.views.compare_to_parties', name='juni_2010'),
     #
-    url(r'^$' , 'issue.views.issue_list', name="index"),
+    url(r'^$' , 'issue.views.issue_list', kwargs={'sortorder':'popular'}, name="index", ),
 )
 
 if 'rosetta' in settings.INSTALLED_APPS:
