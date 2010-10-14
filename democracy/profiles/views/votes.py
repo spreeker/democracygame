@@ -4,7 +4,6 @@ from voting.models import Vote
 from voting.views import vote_on_object
 from voting.managers import possible_votes, votes
 from django.utils.translation import ugettext_lazy as _
-from gamelogic import actions
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.db.models.sql.datastructures import EmptyResultSet
@@ -13,7 +12,6 @@ from django.template import RequestContext
 from django.db.models.query import QuerySet
 from registration.signals import user_activated
 
-from gamelogic import actions
 from issue.models import Issue
 from django.contrib.auth.views import password_reset
 
@@ -22,30 +20,6 @@ from tagging.utils import calculate_cloud
 
 from profiles.views import get_user_candidate_context
 
-def migrate_votes(request, user, votes):
-    """When an User registers, migrate the 
-       users session votes to REAL votes.
-    """
-    for issue_id, direction in votes.items():
-        try:
-            issue = Issue.objects.get(id=issue_id)
-        except Issue.DoesNotExist:
-            continue
-        actions.vote(user, issue, int(direction), keep_private=False)   
-
-
-def activate_user(sender, *args, **kwargs):
-    """ if user has anoymous votes migrate his votes
-        into the database. 
-    """ 
-    user = kwargs.get('user')
-    request = kwargs.get('request')
-    if request.session.has_key("vote_history"):
-        if user: 
-            migrate_votes(request, user, request.session["vote_history"])
-            del request.session["vote_history"]
-
-user_activated.connect(activate_user)
 
 @login_required
 def record_vote_on_user(request, user_id):
