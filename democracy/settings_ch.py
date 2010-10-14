@@ -11,6 +11,7 @@ sys.path.append(os.path.split(PROJECT_PATH)[0] + '/external_apps/' )
 BASE_PATH = os.path.dirname(__file__)
 
 DEBUG = False
+TEMPLATE_DEBUG = False # on production this should be disabeled
 
 SERVER_EMAIL = 'reinder@rustema.nl'
 DEFAULT_FROM_EMAIL = 'webmaster@democratiespel.nl'
