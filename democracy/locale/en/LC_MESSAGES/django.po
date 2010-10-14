@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-05 23:01+0200\n"
+"POT-Creation-Date: 2010-10-14 10:18+0200\n"
 "PO-Revision-Date: 2010-05-30 23:26\n"
 "Last-Translator: ReindeR Rustema <reinder@rustema.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -104,15 +104,15 @@ msgstr ""
 msgid "external source of information"
 msgstr ""
 
-#: issue/forms.py:18
+#: issue/forms.py:20
 msgid "source type"
 msgstr ""
 
-#: issue/forms.py:19 templates/issue/issue.html:56
+#: issue/forms.py:23 templates/issue/issue.html:56
 msgid "your vote"
 msgstr ""
 
-#: issue/forms.py:22 issue/forms.py:29
+#: issue/forms.py:26 issue/forms.py:35
 msgid "tags"
 msgstr ""
 
@@ -194,7 +194,7 @@ msgstr ""
 msgid "stemadvies"
 msgstr ""
 
-#: templates/base_content.html:13 templates/issue/search.html:7
+#: templates/base_content.html:13
 #, fuzzy
 msgid "search issue"
 msgstr "door u voorgesteld"
@@ -281,31 +281,31 @@ msgid "Vote!"
 msgstr ""
 
 #: templates/issue/issue_list.html:14 templates/issue/issue_list_user.html:12
-#: templates/issue/my_issue_list.html:42
+#: templates/issue/my_issue_list.html:35
 #: templates/issue/my_issues_list.html:40
 msgid "popular"
 msgstr ""
 
 #: templates/issue/issue_list.html:15 templates/issue/issue_list_user.html:15
-#: templates/issue/my_issue_list.html:43
+#: templates/issue/my_issue_list.html:36
 #: templates/issue/my_issues_list.html:41
 msgid "for"
 msgstr ""
 
 #: templates/issue/issue_list.html:16 templates/issue/issue_list_user.html:13
-#: templates/issue/my_issue_list.html:44
+#: templates/issue/my_issue_list.html:37
 #: templates/issue/my_issues_list.html:42
 msgid "controversial"
 msgstr ""
 
 #: templates/issue/issue_list.html:17 templates/issue/issue_list_user.html:16
-#: templates/issue/my_issue_list.html:45
+#: templates/issue/my_issue_list.html:38
 #: templates/issue/my_issues_list.html:43
 msgid "against"
 msgstr ""
 
 #: templates/issue/issue_list.html:18 templates/issue/issue_list_user.html:14
-#: templates/issue/my_issue_list.html:46
+#: templates/issue/my_issue_list.html:39
 #: templates/issue/my_issues_list.html:44
 msgid "new"
 msgstr ""
@@ -341,31 +341,25 @@ msgid ""
 "        "
 msgstr ""
 
-#: templates/issue/my_issue_list.html:19
-#: templates/issue/my_issues_list.html:19
-#, fuzzy
-msgid "Your issues"
-msgstr "door u voorgesteld"
-
-#: templates/issue/my_issue_list.html:21
+#: templates/issue/my_issue_list.html:15
 #: templates/issue/my_issues_list.html:21
 #, fuzzy
 msgid "propose issue"
 msgstr "door u voorgesteld"
 
-#: templates/issue/my_issue_list.html:32
+#: templates/issue/my_issue_list.html:25
 #: templates/issue/my_issues_list.html:31
 msgid "submit issue"
 msgstr ""
 
-#: templates/issue/my_issue_list.html:35
+#: templates/issue/my_issue_list.html:28
 msgid "You cannot propose yet, you need 30 points"
 msgstr ""
 
-#: templates/issue/my_issue_list.html:41
-#: templates/issue/my_issues_list.html:39
+#: templates/issue/my_issue_list.html:34
+#: templates/issue/my_issues_list.html:19
 #, fuzzy
-msgid "Proposed by you"
+msgid "Your issues"
 msgstr "door u voorgesteld"
 
 #: templates/issue/my_issues_list.html:8
@@ -384,9 +378,10 @@ msgstr ""
 msgid "You cannot propose yet, you need more points"
 msgstr ""
 
-#: templates/issue/search.html:8
-msgid "search issue by title"
-msgstr ""
+#: templates/issue/my_issues_list.html:39
+#, fuzzy
+msgid "Proposed by you"
+msgstr "door u voorgesteld"
 
 #: templates/piston/authorize_token.html:4
 msgid "3rd party Authorization Page"
@@ -499,23 +494,23 @@ msgstr ""
 msgid "Rankings"
 msgstr ""
 
-#: templates/profiles/ranking.html:9
+#: templates/profiles/ranking.html:10
 msgid "Rank"
 msgstr ""
 
-#: templates/profiles/ranking.html:9
+#: templates/profiles/ranking.html:10
 msgid "Name"
 msgstr ""
 
-#: templates/profiles/ranking.html:9
+#: templates/profiles/ranking.html:10
 msgid "Score"
 msgstr ""
 
-#: templates/profiles/ranking.html:9
+#: templates/profiles/ranking.html:10
 msgid "Role"
 msgstr ""
 
-#: templates/profiles/ranking.html:35
+#: templates/profiles/ranking.html:36
 #, fuzzy
 msgid "search user"
 msgstr "door u voorgesteld"
