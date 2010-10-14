@@ -17,18 +17,18 @@ DEBUG = True  #on production server this should be FASLE
 TEMPLATE_DEBUG = True # on production this should be disabeled
 
 ADMINS = (
-    # ('Stephan Preeker', 'stephan@preeker.net'),
+    ('Stephan Preeker', 'stephan@preeker.net'),
 )
-
 MANAGERS = ADMINS
 
-DATABASE_HOST = ''
-DATABASE_PORT = ''
-
-DATABASE_ENGINE = 'postgresql_psycopg2'
-DATABASE_NAME = 'democracy_democratiespel'
-DATABASE_USER = 'democracy'
-DATABASE_PASSWORD = 'ADkdg5.Q'
+DATABASES = {
+    'default' : {
+        'ENGINE' : 'django.db.backends.postgresql_psycopg2',
+        'NAME' : 'democracy_democratiespel',
+        'USER' : 'democracy',
+        'PASSWORD' : 'ADkdg5.Q',
+    }
+}
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -73,20 +73,19 @@ ADMIN_MEDIA_PREFIX = '/admin/media/'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.load_template_source',
-    'django.template.loaders.app_directories.load_template_source',
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+    #'django.template.loaders.app_directories.load_template_source',
 )
 
 MIDDLEWARE_CLASSES = (
-#    'django.middleware.cache.UpdateCacheMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
 #    'django.contrib.csrf.middleware.CsrfMiddleware',
-#    'debug_toolbar.middleware.DebugToolbarMiddleware', ## !! comment out in production.
+    'voting.middleware.VoteHistory',
     'django.middleware.doc.XViewMiddleware',
-#    'django.middleware.cache.FetchFromCacheMiddleware',
 )
 CACHE_MIDDLEWARE_SECONDS = 60
 CACHE_MIDDLEWARE_KEY_PREFIX = "demo"
@@ -108,12 +107,12 @@ LOGIN_REDIRECT_URL = '/'
 
 # Set the context processors used by RequestContext objects: 
 TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.core.context_processors.auth',
+    'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.debug',
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
     'django.core.context_processors.request',
-    'dashboard.context_processors.get_a_profile',
+    'profiles.context_processors.userprofile',
 )
 
 INSTALLED_APPS = (
