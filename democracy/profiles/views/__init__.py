@@ -1,3 +1,5 @@
+import copy
+
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.db.models.sql.datastructures import EmptyResultSet
@@ -8,7 +10,9 @@ from django.utils import simplejson
 from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
+from gamelogic.models import roles 
 from profiles.forms import ChangeProfile
 from profiles.models import UserProfile
 from voting.models import Vote
@@ -121,7 +125,29 @@ def change_description(request):
     return render_to_response('profiles/user_detail.html', context)
 
 
-from django.core.paginator import Paginator, InvalidPage, EmptyPage
+def make_pyramid(parliament):
+    """
+    return list with pyramid rows.
+    1
+    2 3
+    4 5 6
+    7 8 9 10
+    11 12 13 14 15
+    ...
+    """
+    rows = []
+    row = [] 
+    level = 1
+    max_index = 1
+    for x, profile in enumerate(parliament):
+        if x == max_index:
+            rows.append(copy.deepcopy(row))
+            row = []
+            level += 1
+            max_index = max_index + level
+        row.append(profile)
+                
+    return rows
 
 def ranking(request, qs=None):
     """Display a list of players ordered by rank""" 
@@ -129,6 +155,16 @@ def ranking(request, qs=None):
         users = UserProfile.objects.all().order_by('-score')
     else:
         users = UserProfile.objects.filter(user__in=qs.values_list('id'))
+
+    human_roles = roles.copy()
+    human_roles.pop('party program')
+
+    parliament = users.filter(role="parliament member")
+    parliament = make_pyramid(parliament)
+    ministers = users.filter(role="minister")
+    party_programs = users.filter(role="party program")
+
+    users = users.filter(role__in=human_roles.keys())
     users = users.select_related()
     #logging.debug(ranks)
     paginator = Paginator(users, 50) 
@@ -139,13 +175,18 @@ def ranking(request, qs=None):
     except(EmptyPage, InvalidPage):
         page = paginator.page(paginator.num_pages)
 
+    party_program = []
+
+
     for i, profile in enumerate(page.object_list):
         if qs:
             profile.rank = profile.ranking
         else:
             profile.rank =  (pageno - 1) * 50 + i + 1
 
-    context = RequestContext(request, {'page' : page, } )
+    context = RequestContext(request, {'page' : page, 
+               'party_programs' : party_programs,
+               'parliament' : parliament,
+               'ministers' : ministers,
+                })
     return render_to_response('profiles/ranking.html', context)
-
-

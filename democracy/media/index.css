@@ -169,6 +169,17 @@ h3 {
     color:gray;
     padding:0em 1em 0em 1em;
 }
+#pyramid{
+    text-align: center;
+}
+.pyramid_layer{
+    display: inline;
+}
+
+.even {
+    background:#e5ecf9;
+}
+
 /* tags */
 #sidebar .green { color:#264409; }
 #sidebar .yellow { color:#514721; }

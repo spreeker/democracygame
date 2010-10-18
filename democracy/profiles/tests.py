@@ -25,7 +25,7 @@ from django.test import Client, TestCase
 
 
 class ClientTestRegistration(TestCase):
-    fixtures = ['testdata.json']
+    #fixtures = ['testdata.json']
 
     def test_get_view(self):
         "GET a view"
@@ -59,11 +59,4 @@ class ClientTestRegistration(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response , 'errorlist' )
 
-
-## TODO
-#
-#   Do some anonymous votes.
-#   Do register
-#   Check if votes are in DB now.
-#
-
+#TODO get email confirmation.
