@@ -92,35 +92,35 @@ def candidate(user, userprofile):
         userprofile.role = 'opinion leader'
         return 'opinion leader'
 
-    #check if you are good enough to be in parlement.    
-    count_parlement = UserProfile.objects.filter(role='parlement member').count() 
+    #check if you are good enough to be in parliament.    
+    count_parliament = UserProfile.objects.filter(role='parliament member').count() 
 
-    if count_parlement < MAX_PARLEMENT:
+    if count_parliament < MAX_PARLEMENT:
         # there are not enough opinion leaders
         # so you will become one automatically.
-        userprofile.role = 'parlement member'
-        return 'parlement member'
+        userprofile.role = 'parliament member'
+        return 'parliament member'
 
-    # now check if you have more votes than the lowest parlement member. 
-    parlement_members_ids = UserProfile.objects.filter(
-        role='parlement member').values_list('id') 
+    # now check if you have more votes than the lowest parliament member. 
+    parliament_members_ids = UserProfile.objects.filter(
+        role='parliament member').values_list('id') 
     pm_votes = Vote.objects.get_popular(User, 
-            object_ids=parlement_members_ids, reverse=True, min_tv=0)
+            object_ids=parliament_members_ids, reverse=True, min_tv=0)
 
     lowest_vote_count = pm_votes[0]
 
-    lowest_parlement_member = User.objects.get(
+    lowest_parliament_member = User.objects.get(
         id=lowest_vote_count['object_id']).get_profile()
 
     if votes_on_user > lowest_vote_count['score']: 
-        userprofile.role = 'parlement member'
+        userprofile.role = 'parliament member'
         #downgrade lowest member
-        lowest_parlement_member.role = 'candidate'
-        lowest_parlement_member.save()
-        return 'parlement member' 
+        lowest_parliament_member.role = 'candidate'
+        lowest_parliament_member.save()
+        return 'parliament member' 
  
-def parlement_member(user, userprofile):
-    """If you are the top voted candidates, you get into the parlement 
+def parliament_member(user, userprofile):
+    """If you are the top voted candidates, you get into the parliament 
        If you are not anymore you get downgraded. 
        This is done by upcoming candidates.
     """
@@ -146,7 +146,7 @@ upgrade = {
     'active citizen' : active_citizen,
     'opinion leader' : opinion_leader,
     'candidate' : candidate,
-    'parlement member' : parlement_member,
+    'parliament member' : parliament_member,
     'party program' : party_program,
     'minister'  : minister,
     'prime minister' : minister,

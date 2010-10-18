@@ -183,7 +183,7 @@ role_to_actions = {
         'propose' : propose,
         'multiply' : multiply,
     },
-    'parlement member' : {
+    'parliament member' : {
         'vote' : vote,
         'vote user' : vote_user,
         'tag' : tag,

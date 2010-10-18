@@ -2,15 +2,16 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-14 10:18+0200\n"
+"POT-Creation-Date: 2010-10-18 16:29+0200\n"
 "PO-Revision-Date: 2010-10-18 11:11\n"
 "Last-Translator: ReindeR Rustema <reinder@rustema.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -74,6 +75,16 @@ msgstr "Kamerlid"
 #: gamelogic/models.py:15
 msgid "party program"
 msgstr "partij programma"
+
+#: gamelogic/models.py:16
+#, fuzzy
+msgid "minister"
+msgstr "registreren"
+
+#: gamelogic/models.py:17
+#, fuzzy
+msgid "prime minister"
+msgstr "registreren"
 
 #: gamelogic/models.py:29
 #, python-format
@@ -141,7 +152,7 @@ msgstr "document"
 msgid "image"
 msgstr "beeld"
 
-#: issue/views.py:183 voting/managers.py:12
+#: issue/views.py:183 voting/vote_types.py:12
 msgid "Against"
 msgstr "tegen"
 
@@ -150,7 +161,7 @@ msgstr "tegen"
 msgid "Blank"
 msgstr "Blanco"
 
-#: issue/views.py:302 profiles/views/votes.py:61
+#: issue/views.py:302 profiles/views/votes.py:35
 msgid "You did not pick a valid option"
 msgstr "u heeft geen geldige optie gekozen"
 
@@ -166,15 +177,15 @@ msgstr "U mag geen voorstellen meer verzwaren"
 msgid "Username"
 msgstr "gebruikersnaam"
 
-#: profiles/views/votes.py:161
+#: profiles/views/votes.py:135
 msgid "blank"
 msgstr "blanco"
 
-#: templates/base.html:3
+#: templates/base.html:4
 msgid "democracy game"
 msgstr "democratiespel"
 
-#: templates/base.html:35
+#: templates/base.html:52
 msgid "mainpage"
 msgstr "homepage"
 
@@ -198,7 +209,7 @@ msgstr "stemadvies"
 msgid "search issue"
 msgstr "zoek voorstel"
 
-#: templates/base_content.html:46
+#: templates/base_content.html:45
 msgid "pick language.."
 msgstr "kies een taal..."
 
@@ -332,13 +343,19 @@ msgstr "tag"
 #: templates/issue/my_issue_list.html:8
 msgid ""
 "\n"
-"        Make sure you check your spelling. It is not possible to change your issue later.\n"
-"        We do not allow change because people might have voted. If content changes,  votes\n"
+"        Make sure you check your spelling. It is not possible to change your "
+"issue later.\n"
+"        We do not allow change because people might have voted. If content "
+"changes,  votes\n"
 "        are invalidated. You can hide the old issue.\n"
 "        "
 msgstr ""
 "\n"
-"Zorg ervoor dat uw spelling correct is. Het is niet mogelijk om later uw voorstel te wijzigen. We staan dit niet toe, omdat mensen gestemd kunnen hebben.  Als de inhoud verandert worden bestaande stemmen ongeldig. U kunt uw voorstel verbergen. Als u een voorstel wilt wijzigen maakt u gewoon een nieuw voorstel. "
+"Zorg ervoor dat uw spelling correct is. Het is niet mogelijk om later uw "
+"voorstel te wijzigen. We staan dit niet toe, omdat mensen gestemd kunnen "
+"hebben.  Als de inhoud verandert worden bestaande stemmen ongeldig. U kunt "
+"uw voorstel verbergen. Als u een voorstel wilt wijzigen maakt u gewoon een "
+"nieuw voorstel. "
 
 #: templates/issue/my_issue_list.html:15
 #: templates/issue/my_issues_list.html:21
@@ -362,13 +379,20 @@ msgstr "uw voorstellen"
 #: templates/issue/my_issues_list.html:8
 msgid ""
 "\n"
-"        Make sure you check your spelling. It is not possible to change your issue later.\n"
-"        We do not allow change because people might have voted. If content changes,  votes\n"
-"        are invalidated. You can archive / hide the old issue by not publishing your issue.\n"
+"        Make sure you check your spelling. It is not possible to change your "
+"issue later.\n"
+"        We do not allow change because people might have voted. If content "
+"changes,  votes\n"
+"        are invalidated. You can archive / hide the old issue by not "
+"publishing your issue.\n"
 "        "
 msgstr ""
 "\n"
-"Zorg ervoor dat uw spelling correct is. Het is niet mogelijk om later uw voorstel te wijzigen. We staan dit niet toe, omdat mensen gestemd kunnen hebben.  Als de inhoud verandert worden bestaande stemmen ongeldig. U kunt uw voorstel verbergen. Als u een voorstel wilt wijzigen  maakt u gewoon een nieuw voorstel."
+"Zorg ervoor dat uw spelling correct is. Het is niet mogelijk om later uw "
+"voorstel te wijzigen. We staan dit niet toe, omdat mensen gestemd kunnen "
+"hebben.  Als de inhoud verandert worden bestaande stemmen ongeldig. U kunt "
+"uw voorstel verbergen. Als u een voorstel wilt wijzigen  maakt u gewoon een "
+"nieuw voorstel."
 
 #: templates/issue/my_issues_list.html:34
 msgid "You cannot propose yet, you need more points"
@@ -389,13 +413,18 @@ msgstr "autoriseer derde partij"
 #: templates/piston/authorize_token.html:10
 msgid ""
 "\n"
-"    You came on this page because you want to use your voting data and/or play\n"
+"    You came on this page because you want to use your voting data and/or "
+"play\n"
 "    the democracy game on an other website/service than ours.\n"
 "    To protect your data *you* need to authorize the 3rd\n"
-"    party on this page to acces your data. You can revoke granted acces later if you want.\n"
+"    party on this page to acces your data. You can revoke granted acces "
+"later if you want.\n"
 msgstr ""
 "\n"
-"U bent op deze pagina gekomen omdat u uw stem data wilt delen met een derde partij, en website anders dan die van Democratiespel. Om uw data te beschermen moet u toestemming geven voor het gebruik. U kunt uw toestemming later altijd terug trekken.\n"
+"U bent op deze pagina gekomen omdat u uw stem data wilt delen met een derde "
+"partij, en website anders dan die van Democratiespel. Om uw data te "
+"beschermen moet u toestemming geven voor het gebruik. U kunt uw toestemming "
+"later altijd terug trekken.\n"
 
 #: templates/profiles/candidate_info.html:2
 msgid "Your candidate"
@@ -463,8 +492,13 @@ msgid "Candidate?"
 msgstr "kandidaat?"
 
 #: templates/profiles/compare_votes_to_user.html:46
-msgid "Every player can vote on one person. Persons with the most votes will get into the parlement."
-msgstr "Elke speler kan op één ander stemmen. Kandidaten met de meeste stemmen krijgen een zetel in de Kamer."
+#, fuzzy
+msgid ""
+"Every player can vote on one person. Persons with the most votes will get "
+"into the parliament."
+msgstr ""
+"Elke speler kan op één ander stemmen. Kandidaten met de meeste stemmen "
+"krijgen een zetel in de Kamer."
 
 #: templates/profiles/compare_votes_to_user.html:50
 msgid "VOTE ON"
@@ -483,28 +517,54 @@ msgid "You are now logged out."
 msgstr "Je bent nu afgemeld"
 
 #: templates/profiles/ranking.html:6
+#, fuzzy
+msgid "Parliament"
+msgstr "Kamerlid"
+
+#: templates/profiles/ranking.html:18
 msgid "Rankings"
 msgstr "spelersvolgordes"
 
-#: templates/profiles/ranking.html:10
+#: templates/profiles/ranking.html:22
 msgid "Rank"
 msgstr "rating"
 
-#: templates/profiles/ranking.html:10
+#: templates/profiles/ranking.html:22
 msgid "Name"
 msgstr "naam"
 
-#: templates/profiles/ranking.html:10
+#: templates/profiles/ranking.html:22
 msgid "Score"
 msgstr "punten"
 
-#: templates/profiles/ranking.html:10
+#: templates/profiles/ranking.html:22
 msgid "Role"
 msgstr "rol"
 
-#: templates/profiles/ranking.html:36
+#: templates/profiles/ranking.html:45
 msgid "search user"
 msgstr "zoek voorstel"
+
+#: templates/profiles/ranking.html:50
+msgid "parties"
+msgstr ""
+
+#: templates/profiles/ranking.html:52
+msgid "party"
+msgstr ""
+
+#: templates/profiles/ranking.html:52 templates/profiles/user_detail.html:9
+msgid "score"
+msgstr "punten"
+
+#: templates/profiles/ranking.html:66
+msgid "ministry"
+msgstr ""
+
+#: templates/profiles/ranking.html:66
+#, fuzzy
+msgid "name"
+msgstr "gebruikersnaam"
 
 #: templates/profiles/search_user.html:6
 msgid "search"
@@ -522,10 +582,6 @@ msgstr "pagina %(no)s  van %(np)s "
 #: templates/profiles/user_detail.html:5
 msgid "rank"
 msgstr "details"
-
-#: templates/profiles/user_detail.html:9
-msgid "score"
-msgstr "punten"
 
 #: templates/profiles/user_detail.html:10
 msgid "role"
@@ -580,30 +636,24 @@ msgid "tagcloud of"
 msgstr "tagcloud van"
 
 #: templates/registration/activate.html:5
-msgid ""
-"\t\n"
-"\tYour account on democracy has been created. \n"
-"\t"
+#, fuzzy
+msgid "Your account on democracy has been created."
 msgstr "uw account in het democratiespel is aangemaakt"
 
-#: templates/registration/activate.html:8
+#: templates/registration/activate.html:7
 msgid "Login"
 msgstr "aanmelden"
 
-#: templates/registration/activate.html:11
-msgid "Your previous anonymous votes have been saved to your profile!"
-msgstr "uw vorige anonieme stemmen zijn opgeslagen in uw profiel"
-
-#: templates/registration/activation_complete.html:5
-msgid ""
-"\n"
-"\t<p>\n"
-"\tYou have been succesfully registered!\n"
-"\t</p>\n"
-"\t"
+#: templates/registration/activation_complete.html:6
+#, fuzzy
+msgid "You have been succesfully registered!"
 msgstr ""
 "\n"
 "<p>uw registratie is geslaagd!</p>"
+
+#: templates/registration/activation_complete.html:8
+msgid "GO PLAY"
+msgstr ""
 
 #: templates/registration/logged_out.html:4
 msgid "Home"
@@ -630,8 +680,12 @@ msgid "Password change"
 msgstr "wachtwoord wijzigen"
 
 #: templates/registration/password_change_form.html:8
-msgid "Please enter your old password, for security's sake, and then enter your new password twice so we can verify you typed it in correctly."
-msgstr "geef uw oude wachtwoord en voer vervolgens uw nieuwe wachtwoord twee keer in, zodat we kunnen nagaan of u het correct hebt getypt"
+msgid ""
+"Please enter your old password, for security's sake, and then enter your new "
+"password twice so we can verify you typed it in correctly."
+msgstr ""
+"geef uw oude wachtwoord en voer vervolgens uw nieuwe wachtwoord twee keer "
+"in, zodat we kunnen nagaan of u het correct hebt getypt"
 
 #: templates/registration/password_change_form.html:13
 msgid "Old password:"
@@ -669,7 +723,9 @@ msgid "Enter new password"
 msgstr "voer een nieuw wachtwoord in"
 
 #: templates/registration/password_reset_confirm.html:11
-msgid "Please enter your new password twice so we can verify you typed it in correctly."
+msgid ""
+"Please enter your new password twice so we can verify you typed it in "
+"correctly."
 msgstr "voer uw nieuwe wachtwoord twee keer in, om typfouten te voorkomen"
 
 #: templates/registration/password_reset_confirm.html:23
@@ -677,15 +733,21 @@ msgid "Password reset unsuccessful"
 msgstr "wachtwoord resetten mislukt"
 
 #: templates/registration/password_reset_confirm.html:25
-msgid "The password reset link was invalid, possibly because it has already been used.  Please request a new password reset."
-msgstr "De link om uw wachtwoord te resetten was ongeldig, mogelijk omdat het al is gebruikt. We verzoeken u een nieuwe wachtwoord reset aan te vragen."
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a new password reset."
+msgstr ""
+"De link om uw wachtwoord te resetten was ongeldig, mogelijk omdat het al is "
+"gebruikt. We verzoeken u een nieuwe wachtwoord reset aan te vragen."
 
 #: templates/registration/password_reset_done.html:6
 msgid "Password reset successful"
 msgstr "wachtwoord resetten is gelukt"
 
 #: templates/registration/password_reset_done.html:8
-msgid "We've e-mailed you instructions for setting your password to the e-mail address you submitted. You should be receiving it shortly."
+msgid ""
+"We've e-mailed you instructions for setting your password to the e-mail "
+"address you submitted. You should be receiving it shortly."
 msgstr "We hebben u instructies voor het instellen van uw wachtwoord gemailed"
 
 #: templates/registration/password_reset_email.html:2
@@ -719,8 +781,12 @@ msgid "Password reset"
 msgstr "| wachtwoord resetten"
 
 #: templates/registration/password_reset_form.html:8
-msgid "Forgotten your password? Enter your e-mail address below, and we'll e-mail instructions for setting a new one."
-msgstr "Wachtwoord vergeten? Voer uw e-mailadres in en wij e-mailen u instructies voor het instellen van een nieuw wachtwoord"
+msgid ""
+"Forgotten your password? Enter your e-mail address below, and we'll e-mail "
+"instructions for setting a new one."
+msgstr ""
+"Wachtwoord vergeten? Voer uw e-mailadres in en wij e-mailen u instructies "
+"voor het instellen van een nieuw wachtwoord"
 
 #: templates/registration/password_reset_form.html:13
 msgid "E-mail address:"
@@ -746,59 +812,66 @@ msgid ""
 msgstr ""
 "\n"
 "<p> U heeft zich bijna ingeschreven voor het Democratiespel </p>\n"
-"<p> Controleer uw e-mail op een bevestigingsmail waarin u een bevestigingslink vindt die u moet openen in uw browser om uw registratie te bevestigen. Uw huidige stemmen worden dan opgeslagen bij uw profiel. </p>"
+"<p> Controleer uw e-mail op een bevestigingsmail waarin u een "
+"bevestigingslink vindt die u moet openen in uw browser om uw registratie te "
+"bevestigen. Uw huidige stemmen worden dan opgeslagen bij uw profiel. </p>"
 
 #: templates/registration/registration_form.html:9
 msgid "Some problem ocurred, big deal."
-msgstr "Er doet zich een fout voor. We krijgen er een melding van en gaan het repareren."
+msgstr ""
+"Er doet zich een fout voor. We krijgen er een melding van en gaan het "
+"repareren."
 
-#: voting/managers.py:13
+#: voting/vote_types.py:13
 msgid "For"
 msgstr "voor"
 
-#: voting/managers.py:17
+#: voting/vote_types.py:18
 msgid "Unconvincing"
 msgstr "niet overtuigend"
 
-#: voting/managers.py:18
+#: voting/vote_types.py:19
 msgid "Not political"
 msgstr "niet politiek"
 
-#: voting/managers.py:19
+#: voting/vote_types.py:20
 msgid "Can't completely agree"
 msgstr "ben het niet helemaal mee eens"
 
-#: voting/managers.py:21
+#: voting/vote_types.py:22
 msgid "Needs more work"
 msgstr "nog niet af"
 
-#: voting/managers.py:22
+#: voting/vote_types.py:23
 msgid "Badly worded"
 msgstr "slecht geformuleerd"
 
-#: voting/managers.py:23
+#: voting/vote_types.py:24
 msgid "Duplicate"
 msgstr "bestaat al"
 
-#: voting/managers.py:24
+#: voting/vote_types.py:25
 msgid "Unrelated source"
 msgstr "externe bron niet bruikbaar"
 
-#: voting/managers.py:26
+#: voting/vote_types.py:27
 msgid "I need to know more"
 msgstr "ik moet meer weten"
 
-#: voting/managers.py:27
+#: voting/vote_types.py:28
 msgid "Ask me later"
 msgstr "vraag me later"
 
-#: voting/managers.py:28
+#: voting/vote_types.py:29
 msgid "Too personal"
 msgstr "te persoonlijk"
 
-#: voting/managers.py:35
+#: voting/vote_types.py:35
 msgid "Multiply"
 msgstr "verzwaren"
+
+#~ msgid "Your previous anonymous votes have been saved to your profile!"
+#~ msgstr "uw vorige anonieme stemmen zijn opgeslagen in uw profiel"
 
 #~ msgid "search issue by title"
 #~ msgstr "zoek voorstel op titel"
@@ -893,7 +966,8 @@ msgstr "verzwaren"
 #~ " \n"
 #~ "\n"
 #~ "        <a href=\"http://nl/wiki/index.php/Burger\">%(role)s</a>.<br />\n"
-#~ "\t\t<a href=\"http://nl/wiki/index.php/Punten\">score</a> is %(score)s<br /><br />\n"
+#~ "\t\t<a href=\"http://nl/wiki/index.php/Punten\">score</a> is %(score)"
+#~ "s<br /><br />\n"
 #~ "        <p>\n"
 #~ "\t\tfor : %(total_for)s \n"
 #~ "\t\tagainst : %(total_against)s\n"
@@ -901,8 +975,10 @@ msgstr "verzwaren"
 #~ "        </p>\n"
 #~ "        "
 #~ msgstr ""
-#~ "<a href=\"http://democratiespel.nl/wiki/index.php/Burger\">%(role)s</a>.<br />\n"
-#~ "<a href=\"http://democratiespel.nl/wiki/index.php/Punten\">score</a> is %(score)s<br /><br />\n"
+#~ "<a href=\"http://democratiespel.nl/wiki/index.php/Burger\">%(role)s</a>."
+#~ "<br />\n"
+#~ "<a href=\"http://democratiespel.nl/wiki/index.php/Punten\">score</a> is "
+#~ "%(score)s<br /><br />\n"
 #~ "<p>\n"
 #~ "voor : %(total_for)s\n"
 #~ "tegen : %(total_against)s\n"

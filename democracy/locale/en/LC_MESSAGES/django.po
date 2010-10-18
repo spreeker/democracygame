@@ -2,15 +2,16 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-14 10:18+0200\n"
+"POT-Creation-Date: 2010-10-18 16:29+0200\n"
 "PO-Revision-Date: 2010-10-18 11:12\n"
 "Last-Translator: ReindeR Rustema <reinder@rustema.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -73,6 +74,14 @@ msgstr ""
 
 #: gamelogic/models.py:15
 msgid "party program"
+msgstr ""
+
+#: gamelogic/models.py:16
+msgid "minister"
+msgstr ""
+
+#: gamelogic/models.py:17
+msgid "prime minister"
 msgstr ""
 
 #: gamelogic/models.py:29
@@ -141,7 +150,7 @@ msgstr ""
 msgid "image"
 msgstr ""
 
-#: issue/views.py:183 voting/managers.py:12
+#: issue/views.py:183 voting/vote_types.py:12
 msgid "Against"
 msgstr ""
 
@@ -150,7 +159,7 @@ msgstr ""
 msgid "Blank"
 msgstr ""
 
-#: issue/views.py:302 profiles/views/votes.py:61
+#: issue/views.py:302 profiles/views/votes.py:35
 msgid "You did not pick a valid option"
 msgstr ""
 
@@ -166,15 +175,15 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: profiles/views/votes.py:161
+#: profiles/views/votes.py:135
 msgid "blank"
 msgstr ""
 
-#: templates/base.html:3
+#: templates/base.html:4
 msgid "democracy game"
 msgstr ""
 
-#: templates/base.html:35
+#: templates/base.html:52
 msgid "mainpage"
 msgstr ""
 
@@ -199,7 +208,7 @@ msgstr ""
 msgid "search issue"
 msgstr "door u voorgesteld"
 
-#: templates/base_content.html:46
+#: templates/base_content.html:45
 msgid "pick language.."
 msgstr ""
 
@@ -333,8 +342,10 @@ msgstr ""
 #: templates/issue/my_issue_list.html:8
 msgid ""
 "\n"
-"        Make sure you check your spelling. It is not possible to change your issue later.\n"
-"        We do not allow change because people might have voted. If content changes,  votes\n"
+"        Make sure you check your spelling. It is not possible to change your "
+"issue later.\n"
+"        We do not allow change because people might have voted. If content "
+"changes,  votes\n"
 "        are invalidated. You can hide the old issue.\n"
 "        "
 msgstr ""
@@ -363,9 +374,12 @@ msgstr "door u voorgesteld"
 #: templates/issue/my_issues_list.html:8
 msgid ""
 "\n"
-"        Make sure you check your spelling. It is not possible to change your issue later.\n"
-"        We do not allow change because people might have voted. If content changes,  votes\n"
-"        are invalidated. You can archive / hide the old issue by not publishing your issue.\n"
+"        Make sure you check your spelling. It is not possible to change your "
+"issue later.\n"
+"        We do not allow change because people might have voted. If content "
+"changes,  votes\n"
+"        are invalidated. You can archive / hide the old issue by not "
+"publishing your issue.\n"
 "        "
 msgstr ""
 
@@ -389,10 +403,12 @@ msgstr ""
 #: templates/piston/authorize_token.html:10
 msgid ""
 "\n"
-"    You came on this page because you want to use your voting data and/or play\n"
+"    You came on this page because you want to use your voting data and/or "
+"play\n"
 "    the democracy game on an other website/service than ours.\n"
 "    To protect your data *you* need to authorize the 3rd\n"
-"    party on this page to acces your data. You can revoke granted acces later if you want.\n"
+"    party on this page to acces your data. You can revoke granted acces "
+"later if you want.\n"
 msgstr ""
 
 #: templates/profiles/candidate_info.html:2
@@ -462,7 +478,9 @@ msgid "Candidate?"
 msgstr ""
 
 #: templates/profiles/compare_votes_to_user.html:46
-msgid "Every player can vote on one person. Persons with the most votes will get into the parlement."
+msgid ""
+"Every player can vote on one person. Persons with the most votes will get "
+"into the parliament."
 msgstr ""
 
 #: templates/profiles/compare_votes_to_user.html:50
@@ -482,28 +500,51 @@ msgid "You are now logged out."
 msgstr ""
 
 #: templates/profiles/ranking.html:6
+msgid "Parliament"
+msgstr ""
+
+#: templates/profiles/ranking.html:18
 msgid "Rankings"
 msgstr ""
 
-#: templates/profiles/ranking.html:10
+#: templates/profiles/ranking.html:22
 msgid "Rank"
 msgstr ""
 
-#: templates/profiles/ranking.html:10
+#: templates/profiles/ranking.html:22
 msgid "Name"
 msgstr ""
 
-#: templates/profiles/ranking.html:10
+#: templates/profiles/ranking.html:22
 msgid "Score"
 msgstr ""
 
-#: templates/profiles/ranking.html:10
+#: templates/profiles/ranking.html:22
 msgid "Role"
 msgstr ""
 
-#: templates/profiles/ranking.html:36
-#, fuzzy
+#: templates/profiles/ranking.html:45
 msgid "search user"
+msgstr ""
+
+#: templates/profiles/ranking.html:50
+msgid "parties"
+msgstr ""
+
+#: templates/profiles/ranking.html:52
+msgid "party"
+msgstr ""
+
+#: templates/profiles/ranking.html:52 templates/profiles/user_detail.html:9
+msgid "score"
+msgstr ""
+
+#: templates/profiles/ranking.html:66
+msgid "ministry"
+msgstr ""
+
+#: templates/profiles/ranking.html:66
+msgid "name"
 msgstr ""
 
 #: templates/profiles/search_user.html:6
@@ -522,10 +563,6 @@ msgstr ""
 #: templates/profiles/user_detail.html:5
 msgid "rank"
 msgstr "details"
-
-#: templates/profiles/user_detail.html:9
-msgid "score"
-msgstr ""
 
 #: templates/profiles/user_detail.html:10
 msgid "role"
@@ -580,27 +617,19 @@ msgid "tagcloud of"
 msgstr ""
 
 #: templates/registration/activate.html:5
-msgid ""
-"\t\n"
-"\tYour account on democracy has been created. \n"
-"\t"
+msgid "Your account on democracy has been created."
 msgstr ""
 
-#: templates/registration/activate.html:8
+#: templates/registration/activate.html:7
 msgid "Login"
 msgstr ""
 
-#: templates/registration/activate.html:11
-msgid "Your previous anonymous votes have been saved to your profile!"
+#: templates/registration/activation_complete.html:6
+msgid "You have been succesfully registered!"
 msgstr ""
 
-#: templates/registration/activation_complete.html:5
-msgid ""
-"\n"
-"\t<p>\n"
-"\tYou have been succesfully registered!\n"
-"\t</p>\n"
-"\t"
+#: templates/registration/activation_complete.html:8
+msgid "GO PLAY"
 msgstr ""
 
 #: templates/registration/logged_out.html:4
@@ -628,7 +657,9 @@ msgid "Password change"
 msgstr ""
 
 #: templates/registration/password_change_form.html:8
-msgid "Please enter your old password, for security's sake, and then enter your new password twice so we can verify you typed it in correctly."
+msgid ""
+"Please enter your old password, for security's sake, and then enter your new "
+"password twice so we can verify you typed it in correctly."
 msgstr ""
 
 #: templates/registration/password_change_form.html:13
@@ -667,7 +698,9 @@ msgid "Enter new password"
 msgstr ""
 
 #: templates/registration/password_reset_confirm.html:11
-msgid "Please enter your new password twice so we can verify you typed it in correctly."
+msgid ""
+"Please enter your new password twice so we can verify you typed it in "
+"correctly."
 msgstr ""
 
 #: templates/registration/password_reset_confirm.html:23
@@ -675,7 +708,9 @@ msgid "Password reset unsuccessful"
 msgstr ""
 
 #: templates/registration/password_reset_confirm.html:25
-msgid "The password reset link was invalid, possibly because it has already been used.  Please request a new password reset."
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a new password reset."
 msgstr ""
 
 #: templates/registration/password_reset_done.html:6
@@ -683,7 +718,9 @@ msgid "Password reset successful"
 msgstr ""
 
 #: templates/registration/password_reset_done.html:8
-msgid "We've e-mailed you instructions for setting your password to the e-mail address you submitted. You should be receiving it shortly."
+msgid ""
+"We've e-mailed you instructions for setting your password to the e-mail "
+"address you submitted. You should be receiving it shortly."
 msgstr ""
 
 #: templates/registration/password_reset_email.html:2
@@ -717,7 +754,9 @@ msgid "Password reset"
 msgstr ""
 
 #: templates/registration/password_reset_form.html:8
-msgid "Forgotten your password? Enter your e-mail address below, and we'll e-mail instructions for setting a new one."
+msgid ""
+"Forgotten your password? Enter your e-mail address below, and we'll e-mail "
+"instructions for setting a new one."
 msgstr ""
 
 #: templates/registration/password_reset_form.html:13
@@ -747,51 +786,51 @@ msgstr ""
 msgid "Some problem ocurred, big deal."
 msgstr ""
 
-#: voting/managers.py:13
+#: voting/vote_types.py:13
 msgid "For"
 msgstr ""
 
-#: voting/managers.py:17
+#: voting/vote_types.py:18
 msgid "Unconvincing"
 msgstr ""
 
-#: voting/managers.py:18
+#: voting/vote_types.py:19
 msgid "Not political"
 msgstr ""
 
-#: voting/managers.py:19
+#: voting/vote_types.py:20
 msgid "Can't completely agree"
 msgstr ""
 
-#: voting/managers.py:21
+#: voting/vote_types.py:22
 msgid "Needs more work"
 msgstr ""
 
-#: voting/managers.py:22
+#: voting/vote_types.py:23
 msgid "Badly worded"
 msgstr ""
 
-#: voting/managers.py:23
+#: voting/vote_types.py:24
 msgid "Duplicate"
 msgstr ""
 
-#: voting/managers.py:24
+#: voting/vote_types.py:25
 msgid "Unrelated source"
 msgstr ""
 
-#: voting/managers.py:26
+#: voting/vote_types.py:27
 msgid "I need to know more"
 msgstr ""
 
-#: voting/managers.py:27
+#: voting/vote_types.py:28
 msgid "Ask me later"
 msgstr ""
 
-#: voting/managers.py:28
+#: voting/vote_types.py:29
 msgid "Too personal"
 msgstr ""
 
-#: voting/managers.py:35
+#: voting/vote_types.py:35
 msgid "Multiply"
 msgstr ""
 

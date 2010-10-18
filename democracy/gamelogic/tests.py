@@ -264,7 +264,7 @@ class TestAdvancedLevels(TestActions, TestLeveling):
         self.do_vote_user(self.users[0], self.users[1], 1)
         qs = Vote.objects.all()
         self.load_users()
-        self.assertEqual(self.profiles[1].role , 'parlement member')
+        self.assertEqual(self.profiles[1].role , 'parliament member')
 
         self.do_vote_user(self.users[1], self.users[0], 1)
         self.do_vote_user(self.users[2], self.users[0], 1)
@@ -280,7 +280,7 @@ class TestAdvancedLevels(TestActions, TestLeveling):
         # and downgrade user1 to candidate 
         self.do_vote_user(self.users[4], self.users[2], 1)
         self.load_users()
-        self.assertEqual(self.profiles[2].role , 'parlement member')
+        self.assertEqual(self.profiles[2].role , 'parliament member')
         self.assertEqual(self.profiles[1].role , 'candidate')
         #print self
 
