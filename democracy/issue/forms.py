@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ChoiceField
 from django.utils.translation import ugettext as _
 from issue.models import Issue, source_types
-from voting.managers import votes
+from voting.vote_types import votes
 from tagging.forms import TagField
 
 class IssueForm(forms.Form):
