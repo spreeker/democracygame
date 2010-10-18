@@ -2,6 +2,18 @@
 {% load i18n %}
 
 {% block content %}
+{% ifequal page.number 1 %} 
+    <h2> {% trans "Parliament" %} </h2> 
+    <div id="pyramid">
+        {% for level in parliament %}
+            <div class={% cycle "even" "odd" %}> 
+                {% for profile in level %}
+                    <div class="pyramid_layer"><a href="{% url userprofile profile.user.username %}">*{{ profile.user.username }}*</a></div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+{% endifequal %}
 
 <h2> {% trans "Rankings" %} </h2> 
 <div> 
@@ -24,10 +36,7 @@
         </tbody>
     </table>
 </div>
-
-
 {% include "pagination.html" %}
-
 {% endblock %}
 
 {% block search %}
@@ -37,3 +46,27 @@
     </form>
 {% endblock %}
 
+{% block sidebar %}
+    <h2> {% trans "parties" %} </h2> 
+    <table><thead>
+    <tr><th>{% trans 'party' %}</th><th>{% trans 'score' %}</th></tr></thead>
+    <tbody> 
+    {% for profile in party_programs %}
+        <tr>
+        <td><a href="{% url userprofile profile.user.username %}">{{ profile.user.username }}</a></td>
+        <td>{{ profile.score }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+{% endblock %}
+
+{% block gamenews %}
+    <table><thead>
+        <tr><th>{% trans "ministry" %}</th><th>{% trans "name" %}</th></tr>
+    </thead><tbody>
+        {% for profile in ministers %} 
+            <tr><td>?</td><td><a href="{% url userprofile profile.user.username %}">{{ profile.user.username }}</a></td></tr>
+        {% endfor %}
+    </tbody></table>
+{% endblock %}
