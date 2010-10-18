@@ -13,7 +13,9 @@
 <link rel="stylesheet" href="/media/css/jquery-ui-1.8.4.custom.css" type="text/css" media="screen, projection" />
 {% block extra_head %} 
 {% endblock %}
+</head>
 
+<body>
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -28,9 +30,23 @@
 
 </script>
 
+<div id="fb-root"></div>
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({appId: '124936464227391', status: true, cookie: true,
+             xfbml: true});
+  };
+  (function() {
+    var e = document.createElement('script');
+    e.type = 'text/javascript';
+    e.src = document.location.protocol +
+      '//connect.facebook.net/en_US/all.js';
+    e.async = true;
+    document.getElementById('fb-root').appendChild(e);
+  }());
+</script>
 
-</head>
-<body>
+
 <div id="header" class="container " >
 <div id="mainmenu" class="span-14">
     {% block mainmenu %} <a href="/">{% trans "mainpage" %}</a>  {% endblock %}
