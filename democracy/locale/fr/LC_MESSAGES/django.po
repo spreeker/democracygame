@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-14 10:18+0200\n"
+"POT-Creation-Date: 2010-10-18 15:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -141,7 +141,7 @@ msgstr ""
 msgid "image"
 msgstr ""
 
-#: issue/views.py:183 voting/managers.py:12
+#: issue/views.py:183 voting/vote_types.py:12
 msgid "Against"
 msgstr ""
 
@@ -150,7 +150,7 @@ msgstr ""
 msgid "Blank"
 msgstr ""
 
-#: issue/views.py:302 profiles/views/votes.py:61
+#: issue/views.py:302 profiles/views/votes.py:35
 msgid "You did not pick a valid option"
 msgstr ""
 
@@ -166,15 +166,15 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: profiles/views/votes.py:161
+#: profiles/views/votes.py:135
 msgid "blank"
 msgstr ""
 
-#: templates/base.html:3
+#: templates/base.html:4
 msgid "democracy game"
 msgstr ""
 
-#: templates/base.html:35
+#: templates/base.html:36
 msgid "mainpage"
 msgstr ""
 
@@ -583,27 +583,19 @@ msgid "tagcloud of"
 msgstr ""
 
 #: templates/registration/activate.html:5
-msgid ""
-"\t\n"
-"\tYour account on democracy has been created. \n"
-"\t"
+msgid "Your account on democracy has been created."
 msgstr ""
 
-#: templates/registration/activate.html:8
+#: templates/registration/activate.html:7
 msgid "Login"
 msgstr ""
 
-#: templates/registration/activate.html:11
-msgid "Your previous anonymous votes have been saved to your profile!"
+#: templates/registration/activation_complete.html:6
+msgid "You have been succesfully registered!"
 msgstr ""
 
-#: templates/registration/activation_complete.html:5
-msgid ""
-"\n"
-"\t<p>\n"
-"\tYou have been succesfully registered!\n"
-"\t</p>\n"
-"\t"
+#: templates/registration/activation_complete.html:8
+msgid "GO PLAY"
 msgstr ""
 
 #: templates/registration/logged_out.html:4
@@ -760,50 +752,50 @@ msgstr ""
 msgid "Some problem ocurred, big deal."
 msgstr ""
 
-#: voting/managers.py:13
+#: voting/vote_types.py:13
 msgid "For"
 msgstr ""
 
-#: voting/managers.py:17
+#: voting/vote_types.py:18
 msgid "Unconvincing"
 msgstr ""
 
-#: voting/managers.py:18
+#: voting/vote_types.py:19
 msgid "Not political"
 msgstr ""
 
-#: voting/managers.py:19
+#: voting/vote_types.py:20
 msgid "Can't completely agree"
 msgstr ""
 
-#: voting/managers.py:21
+#: voting/vote_types.py:22
 msgid "Needs more work"
 msgstr ""
 
-#: voting/managers.py:22
+#: voting/vote_types.py:23
 msgid "Badly worded"
 msgstr ""
 
-#: voting/managers.py:23
+#: voting/vote_types.py:24
 msgid "Duplicate"
 msgstr ""
 
-#: voting/managers.py:24
+#: voting/vote_types.py:25
 msgid "Unrelated source"
 msgstr ""
 
-#: voting/managers.py:26
+#: voting/vote_types.py:27
 msgid "I need to know more"
 msgstr ""
 
-#: voting/managers.py:27
+#: voting/vote_types.py:28
 msgid "Ask me later"
 msgstr ""
 
-#: voting/managers.py:28
+#: voting/vote_types.py:29
 msgid "Too personal"
 msgstr ""
 
-#: voting/managers.py:35
+#: voting/vote_types.py:35
 msgid "Multiply"
 msgstr ""
