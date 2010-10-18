@@ -23,10 +23,10 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default' : {
-        'ENGINE' : 'django.db.backends.postgresql_psycopg2',
+        'ENGINE' : 'django.db.backends.sqlite3',
         'NAME' : 'democracy_democratiespel',
-        'USER' : 'democracy',
-        'PASSWORD' : 'ADkdg5.Q',
+        #'USER' : 'democracy',
+        #'PASSWORD' : 'ADkdg5.Q',
     }
 }
 
