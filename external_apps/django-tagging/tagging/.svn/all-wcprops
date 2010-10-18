@@ -1,7 +1,7 @@
 K 25
 svn:wc:ra_dav:version-url
 V 31
-/svn/!svn/ver/156/trunk/tagging
+/svn/!svn/ver/183/trunk/tagging
 END
 admin.py
 K 25
@@ -31,7 +31,7 @@ __init__.py
 K 25
 svn:wc:ra_dav:version-url
 V 43
-/svn/!svn/ver/130/trunk/tagging/__init__.py
+/svn/!svn/ver/183/trunk/tagging/__init__.py
 END
 utils.py
 K 25
@@ -49,13 +49,13 @@ models.py
 K 25
 svn:wc:ra_dav:version-url
 V 41
-/svn/!svn/ver/151/trunk/tagging/models.py
+/svn/!svn/ver/172/trunk/tagging/models.py
 END
 fields.py
 K 25
 svn:wc:ra_dav:version-url
 V 41
-/svn/!svn/ver/149/trunk/tagging/fields.py
+/svn/!svn/ver/170/trunk/tagging/fields.py
 END
 forms.py
 K 25

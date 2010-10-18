@@ -1,0 +1,19 @@
+{% extends "issue/issue_list.html" %}
+{% load i18n %}
+
+
+
+
+
+
+
+{% block issue_menu %}
+<h2>{% trans "Issues for" %} <a href="{% url userprofile username %}">{{username}}</a> </h2>
+<h4><a href="{% url issue_list_user_sort username 'popular' %}"> {% trans 'popular' %} </a> |
+    <a href="{% url issue_list_user_sort username 'controversial' %}">{%trans 'controversial' %}</a> | 
+    <a href="{% url issue_list_user_sort username 'new' %}">{% trans 'new' %}</a> |
+    <a href="{% url issue_list_user_sort username 'for' %}">{% trans 'for' %}</a> | 
+    <a href="{% url issue_list_user_sort username 'against' %}">{% trans 'against' %}</a> 
+</h4>
+{% endblock %}
+

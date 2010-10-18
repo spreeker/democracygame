@@ -3,14 +3,28 @@
 a {
     text-decoration : none ;
 }
+a:hover {
+    text-decoration : underline;
+}
+#sidebar #tags A:visited {
+    color : gray ;
+}   
 h2 {
     text-align : center ;
-    border-bottom : 0.05em solid black ;
-    margin-bottom: 0em;
+    border-bottom : 0.05em solid #CCC;
+    margin-bottom: 0.5em;
 }
 h4 {
-    margin-top: 0em;
+    margin-top: 0.5em;
     text-align : center ;
+}
+.issues h4 {
+    color: #CCC;
+}
+
+h4 a{
+    margin-right: 1em;
+    margin-left: 1em;
 }
 h3 {
     margin-bottom : 1.25em ;
@@ -22,8 +36,40 @@ h3 {
   width: 9em;
   right: 2em;
 }
+
 /* header style declarations */
 
+#header {padding:1.5em;margin-bottom:1.5em;
+        color: #CCC;
+}
+#header a{
+    margin-right: 0.5em;
+    margin-left: 0.5em;
+}
+#header .score {
+    display: inline;
+    text-decoration: bold;
+    color : green;
+}
+
+/* center content */
+.centercontent {
+    margin-left: 5.5em;
+    margin-top: 1.5em;
+}
+#title {
+    width: 500px; height:35px;
+}
+#arguments {
+    width: 500px; height:200px;  
+}
+
+.error th { background: #FBC2C4; }
+.success th { background: #C6D880; }
+.notice th { background:#FFD324; }
+
+
+/* Issue display specific styles */
 .issues p, 
 .issues .title,
 .issues .votecounts,
@@ -31,11 +77,19 @@ h3 {
 .issues h3 {
     margin-left : 4em ;
 }
+.issues p {
+    margin-right: 4em;
+}
+.issues .odd {background:#e5ecf9;}
 #proposetips{
     margin-left : 0em;
 }
-.issues .yourvote {
+.yourvote {
+
+}
+.issues {
     float : right;
+    width : 100%;
 }
 .issues .scoretag {
     margin-left : 2em ;
@@ -54,7 +108,7 @@ h3 {
     display : inline ;
 }
 .issues ul li {
-    border-bottom : 1px solid black ;
+    border-bottom : 1px solid #CCC ;
     padding : 1.2em 1em 1.25em 0;
 }
 .issue_left {
@@ -88,35 +142,38 @@ h3 {
     list-style-type:none;
 }
 .votes ul li {
-    border-bottom : 1px solid black ;
+    border-bottom : 1px solid #CCC;
     padding : 1.2em 1em 1.25em 0;
 }
 
-/* Issue display specific styles */
 
 /* Vote link/report style declarations */
 
 .for {
-    background-color:#99ff99;
-    color:black;
+    font-family: impact;
+    font-size: large;
+    color:green;
     padding:0em 1em 0em 1em;
 }
 
 .against {
-    background-color:#ff6666;
-    color:black;
+    font-family: impact;
+    font-size: large;
+    color:red;
     padding:0em 1em 0em 1em;
 }
 
 .blank {
-    background-color:#cccccc;
-    color:black;
+    font-family: impact;
+    font-size: large;
+    color:gray;
     padding:0em 1em 0em 1em;
 }
+/* tags */
+#sidebar .green { color:#264409; }
+#sidebar .yellow { color:#514721; }
+#sidebar .red { color:#8a1f11 }
 
 #footer {
     clear : both;
 }
-
-
-

@@ -16,7 +16,7 @@ class IssueForm(forms.Form):
     is_draft = forms.TypedChoiceField(choices= ((0 , "NO"), (1, "YES")), coerce=int) 
 
 class VoteForm(forms.Form):
-    vote = forms.ChoiceField(choices = normal_votes.items() ) 
+    direction = forms.ChoiceField(choices = normal_votes.items() ) 
     keep_private = forms.BooleanField(initial = False , required = False )
     issue = forms.ModelChoiceField( queryset = Issue.objects.all() )
 

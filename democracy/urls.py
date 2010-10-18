@@ -12,7 +12,7 @@ from django.conf import settings
 
 urlpatterns = patterns('',
     (r'^api/v0/', include('api.urls')),
-    (r'^dashboard/', include('dashboard.urls')),
+    #(r'^my/', include('dashboard.urls')),
     (r'^issue/', include('issue.urls')),
 
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
@@ -30,8 +30,10 @@ urlpatterns = patterns('',
     #
     (r'^profile/', include('profiles.urls')),
     (r'^i18n/', include('django.conf.urls.i18n')),
-    # 
-    url(r'^$' , 'issue.views.issue_list', name="index"),
+    #
+    url(r'^juni2010/$', 'juni2010.views.compare_to_parties', name='juni_2010'),
+    #
+    url(r'^$' , 'issue.views.issue_list', kwargs={'sortorder':'popular'}, name="index", ),
 )
 
 if 'rosetta' in settings.INSTALLED_APPS:

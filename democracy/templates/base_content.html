@@ -1,11 +1,24 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block mainmenu %}
-    <a href="{% url api_doc %}">API</a> | 
-    <a href="{% url index %}"> {% trans "issues" %} </a> |
-    <a href="{% url dashboard_issues %}"> {% trans "your issues" %} </a> |
-    <a href="{% url dashboard_votes %}"> {% trans "your votes" %} </a> |
+    <a href="http://www.democratiespel.nl/wiki/">help</a> | 
+    <a href="{% url index %}"> {% trans "all issues" %} </a> |
+    <a href="{% url my_issues %}"> {% trans "your issues" %} </a> |
+    <a href="{% url ranking %}"> {% trans "players" %} </a> |
+    <a href="{% url juni_2010 %}"> {% trans "stemadvies" %} </a> |
+
+{% block search %}
+    <form action={% url search_issue %} method="get">
+        <input type="text" id="searchbox" name="searchbox"/>
+        <input type="submit" name="search" value="{% trans "search issue" %}"/>
+    </form>
 {% endblock %}
+{% endblock %}
+
+{% block extra_head %}    
+    <script type="text/javascript" src="/media/js/search.js"></script>
+{% endblock %}
+ 
 
 {% block userbar %}
     {% include "dashboard/userbar.html" %}
@@ -13,15 +26,14 @@
 
 {% block messagebar %}
     {% for m in messages %}<div class="notice">{{m}}</div>{% endfor %}
-    {% if flash_msg %}<div class="notice">{{ flash_msg }}</div>{% endif %}
+    {% if flash_msg %}<div class="success">{{ flash_msg }}</div>{% endif %}
 {% endblock %}
 
 {% block footer %}
 <div id="footerLicense">
         <p class="box">
           <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">
-            <img src="http://i.creativecommons.org/l/by/3.0/88x31.png" alt="Creative Commons License" style="border:none;" height="31" width="88"/>
-          </a>
+            <img src="http://i.creativecommons.org/l/by/3.0/88x31.png" alt="Creative Commons License" style="border:none;" height="31" width="88"/></a>
           Except where otherwise noted, content on this site is<br/>
           licensed under a 
 <a rel="license" href="http://creativecommons.org/licenses/by/3.0/" class="subfoot">Creative Commons Attribution 3.0 License</a>
@@ -30,12 +42,15 @@
 
         <form action="/i18n/setlang/" method="post">
             <input name="next" type="hidden" value="{{ request.get_full_path }}"/>
-        <select name="language">
+        <select name="language" onchange="submit();">
+            <option value="">{% trans 'pick language..' %}</option>
             {% for lang in LANGUAGES %}
                 <option value="{{ lang.0 }}">{{ lang.1 }}</option>
             {% endfor %}
         </select>
         <input type="submit" value="Go" />
-    </form>
+        </form>
 </div>
 {% endblock %}
+
+

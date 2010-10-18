@@ -127,15 +127,17 @@ INSTALLED_APPS = (
     'django.contrib.markup',
 
     'debug_toolbar', # comment out in production!!
-
+    'south', 
+    #Democracy
     'gamelogic',
     'profiles',
     'api',
     'voting',
     'issue',
-
+    'juni2010',
     'dashboard',
-    
+
+    # external apps 
     'tagging',
 	'registration',
     'piston',

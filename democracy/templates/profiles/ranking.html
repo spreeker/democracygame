@@ -1,0 +1,39 @@
+{% extends "base_content.html" %}
+{% load i18n %}
+
+{% block content %}
+
+<h2> {% trans "Rankings" %} </h2> 
+<div> 
+    <table>
+        <thead>
+            <tr><th>{% trans "Rank" %}</th><th>{% trans "Name" %}</th><th>{% trans "Score" %}</th><th>{% trans "Role" %}</th></tr></thead>
+        <tbody>
+    {% for profile in page.object_list %}
+        {% if profile.user == request.user %} 
+            <tr class="notice">
+        {% else %}
+            <tr>
+        {% endif %}
+                <td>{{ profile.rank }}</td>
+                <td><a href="{% url userprofile profile.user.username %}">{{ profile.user.username }}</a></td>
+                <td>{{ profile.score }}</td>
+                <td>{{ profile.role }}</td>
+        </tr>
+    {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+{% include "pagination.html" %}
+
+{% endblock %}
+
+{% block search %}
+    <form action={% url search_user %} method="get">
+        <input type="text" id="search_user" name="searchbox"/>
+        <input type="submit" name="search" value="{% trans "search user" %}"/>
+    </form>
+{% endblock %}
+

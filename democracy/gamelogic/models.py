@@ -10,8 +10,10 @@ roles = {'anonymous citizen' : _(u'Anonymous Citizen'),
         'citizen' : _(u'Citizen'),
         'active citizen' : _(u'Active Citizen'),
         'opinion leader' : _(u'Opinion Leader'),
-}       #"candidate", 
-        #"parliament member", 
+        'candidate' : _('Candidate'), 
+        'parliament member' : _('Parliament member'),
+        'party program' : _('party program'),
+}
         #"minister", 
         #'prime minister']
 

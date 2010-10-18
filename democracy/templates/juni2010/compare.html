@@ -1,0 +1,35 @@
+
+
+{% extends "base_content.html" %}
+{% load i18n %}
+
+{% block content %}
+<h2>Vergelijk uw mening met die van de politieke partijen</h2>
+
+<table>
+<tr><td>partij</td><td>eens </td><td>blanco</td><td>oneens</td></tr>
+{% for username, n_agree, n_blank, n_disagree, n_total_intersection in compared %}
+<tr><td><a href="{% url userprofile username %}">{{username}}</a></td><td class="for">{{n_agree}}</td><td class="blank">{{n_blank}}</td><td class="against">{{n_disagree}}</td></tr>
+{% endfor %}
+</table>
+<h3>Over deze pagina (disclaimer)</h3>
+<p>Voor de Tweede Kamerverkiezingen van 9 juni 2010 zijn de 
+verkiezingsprogramma's gekopieerd in de database van het democratiespel. Alle 
+concrete maatregelen die in de verkiezingsprogramma's genoemd worden zijn 
+letterlijk gekopieerd en voorzien van een beschrijving en enkele tags. De 
+begeleidende teksten zijn weggelaten.</p>
+
+<p>Als u voorstellen van partijen in dit Democratiespel leest dient u er 
+rekening mee te houden dat ze in het originele verkiezingsprogramma anders 
+gepresenteerd worden: de context ontbreekt, de beschrijving en de tags zijn 
+niet van de partij afkomstig. Elk voorstel is daarom gelinkt naar het originele 
+verkiezingsprogramma.</p>
+
+<p>De redactionele beslissingen van ons wil de partij in kwestie mogelijk 
+gecorrigeerd zien. Neem contact op met 
+<a href="mailto:webmaster@democratiespel.nl">webmaster@democratiespel.nl</a> 
+of bel 084 8360670 over 
+<a href="http://www.democratiespel.nl/wiki/index.php/Juni_2010">dit 
+verkiezingsprogramma-overzicht</a>.</p>
+
+{% endblock %}

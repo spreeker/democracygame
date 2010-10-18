@@ -1,18 +1,18 @@
-9
+10
 
 dir
-156
+186
 http://django-tagging.googlecode.com/svn/trunk/tagging/tests
 http://django-tagging.googlecode.com/svn
 
 
 
-2008-10-30T02:17:55.521463Z
-151
-jonathan.buchanan
+2009-11-05T21:37:43.862447Z
+170
+brosner
 has-props
 
-svn:special svn:externals svn:needs-lock
+
 
 
 
@@ -66,11 +66,11 @@ file
 
 
 
-2009-07-18T17:34:55.000000Z
-26ca4cbc5221da0059baefad5fffee9a
-2008-05-04T20:49:27.458486Z
-137
-jonathan.buchanan
+2010-08-26T19:41:04.825594Z
+27cec087f030cf9b33462eb3233ca3c4
+2009-08-23T04:42:08.418991Z
+161
+brosner
 has-props
 
 
@@ -92,7 +92,7 @@ has-props
 
 
 
-592
+848
 
 tests.py
 file
@@ -100,11 +100,11 @@ file
 
 
 
-2009-07-18T17:34:55.000000Z
-225ebea3ed5588dadec881a1cee7e8cb
-2008-10-30T02:17:55.521463Z
-151
-jonathan.buchanan
+2010-08-26T19:41:04.825594Z
+1ffeec204b9f665ccfb951844dc8e471
+2009-11-05T21:37:43.862447Z
+170
+brosner
 has-props
 
 
@@ -126,7 +126,7 @@ has-props
 
 
 
-17475
+44419
 
 models.py
 file
@@ -134,11 +134,11 @@ file
 
 
 
-2009-07-18T17:34:55.000000Z
-25cb3f5db9701c5688534721a2d5e9ab
-2008-04-30T22:40:28.286321Z
-134
-jonathan.buchanan
+2010-08-26T19:41:04.825594Z
+8d3bd9ef33f2fe3d7892acb658c66ff4
+2009-11-05T21:37:43.862447Z
+170
+brosner
 has-props
 
 
@@ -160,7 +160,7 @@ has-props
 
 
 
-811
+878
 
 tags.txt
 file

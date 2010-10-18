@@ -1,18 +1,18 @@
-9
+10
 
 dir
-156
+186
 http://django-tagging.googlecode.com/svn/trunk/docs
 http://django-tagging.googlecode.com/svn
 
 
 
-2008-10-30T02:42:13.481491Z
-154
-jonathan.buchanan
+2010-01-22T09:23:46.538555Z
+175
+brosner
 
 
-svn:special svn:externals svn:needs-lock
+
 
 
 
@@ -32,11 +32,11 @@ file
 
 
 
-2009-07-18T17:34:55.000000Z
-9a891f06788ea37b09bca7b23fd47faa
-2008-10-30T02:42:13.481491Z
-154
-jonathan.buchanan
+2010-08-26T19:41:04.853386Z
+52b0feb2cbd7f17d4357f59624f9b383
+2010-01-22T09:23:46.538555Z
+175
+brosner
 has-props
 
 
@@ -58,5 +58,5 @@ has-props
 
 
 
-29303
+29206
 

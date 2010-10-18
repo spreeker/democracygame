@@ -1,0 +1,68 @@
+{% load i18n %}
+{% load voting_tags %}
+
+<li id="id{{ issue.pk }}" class="issue">
+
+<h3><a href="{% url single_issue issue.slug %}">{{ issue|capfirst }}</a></h3>
+
+<div class="issue_left">
+    <div class="score">
+        <div class="for">{% if vote %}{{ score.1 }}{% endif %}</div>
+        <div class="blank">{% if vote %}{{ score.0 }}{% endif %}</div>
+        <div class="against">{% if vote %}{{ score.2 }}{% endif %}</div>
+    </div>
+</div>
+
+<p> {{ issue.body }} </p>
+{% block extrainfo %} {% endblock %}
+<div class="forms" id="fid{{ issue.pk }}">
+
+<form action="{% url vote issue.pk %}" method="post">
+    <input type="hidden" name="direction" class="direction" value="1" />
+    <input type="hidden" name="next" class="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
+    <input type="submit" value="{% trans "YES" %}"/>
+</form>
+
+<form action="{% url vote issue.pk %}" method="post">
+    <input type="hidden" name="direction" class="direction" value="-1" />
+    <input type="hidden" name="next" class="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
+    <input type="submit" value="{% trans "NO" %}"/>
+</form>
+
+{% block blankform %}
+<form action="{% url vote issue.pk %}" method="post" class="blank">
+    <input type="hidden" name="next" class="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
+    <select name="direction">
+        <option value="-10">{% trans "blank vote because.." %}</option>
+        {% for blank_vote in blank_votes %}
+             <option value="{{ blank_vote.0 }}">{% trans blank_vote.1 %}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" value="{% trans "Blank" %}"/>
+</form>
+{% endblock %}
+
+{% block extraform %}{% endblock %}
+
+{% comment %}
+<form action="{% url multiply issue.pk %}" method="post">
+    <input type="hidden" name="next" class="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
+    <input type="submit" value="{% trans "multiply" %}"/>
+</form>
+{% endcomment %}
+
+{% trans "by" %} <a href="{% url userprofile issue.user.username %}">{{ issue.user }}</a> <div class="yourvote">
+{% if vote.direction %}
+{% trans "your vote" %} : {{ vote.direction|vote_display }}
+{% endif %}
+
+{% if showurl %}
+    <div class="notice">
+    {% trans "extra information" %} :
+<a href="{{ issue.url }}">{{ issue.url }}</a></div>
+{% endif %}
+</div>
+
+</div>{# end forms #}
+
+</li>
