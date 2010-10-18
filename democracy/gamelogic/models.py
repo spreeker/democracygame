@@ -13,9 +13,9 @@ roles = {'anonymous citizen' : _(u'Anonymous Citizen'),
         'candidate' : _('Candidate'), 
         'parliament member' : _('Parliament member'),
         'party program' : _('party program'),
+        'minister' : _('minister'),
+        'prime minister' : _('prime minister'),
 }
-        #"minister", 
-        #'prime minister']
 
 
 class MultiplyIssue(models.Model):
