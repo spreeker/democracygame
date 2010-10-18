@@ -146,7 +146,9 @@ def make_pyramid(parliament):
             level += 1
             max_index = max_index + level
         row.append(profile)
-                
+    # deal with remaining parlement members.
+    if row:
+        rows.append(row) 
     return rows
 
 def ranking(request, qs=None):
