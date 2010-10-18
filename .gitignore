@@ -3,6 +3,7 @@ dev.db
 *.pid
 *.socks
 *.db
+*.pot
 RUN
 democracy_log.txt
 emocracy_log.txt

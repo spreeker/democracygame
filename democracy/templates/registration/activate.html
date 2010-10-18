@@ -2,13 +2,8 @@
 {% load i18n %}
 
 {% block content %}
-	{% blocktrans %}	
-	Your account on democracy has been created. 
-	{% endblocktrans %}
-    <a href="{% url auth_login %}">{% trans "Login" %}</a>
+    {% trans "Your account on democracy has been created." %}
 
-	{% if votes_saved %}
-        {% trans "Your previous anonymous votes have been saved to your profile!" %}
-    {% endif %}
+    <a href="{% url auth_login %}">{% trans "Login" %}</a>
 
 {% endblock %}

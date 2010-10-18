@@ -24,12 +24,14 @@ DEFAULT_FROM = 'webmaster@democratiespel.nl'
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'postgresql_psycopg2'
-DATABASE_NAME = 'democracy_democratiespel'
-DATABASE_USER = 'democracy'
-DATABASE_PASSWORD = 'ADkdg5.Q'
-DATABASE_HOST = ''
-DATABASE_PORT = ''
+DATABASES = {
+    'default' : {
+        'ENGINE' : 'django.db.backends.postgresql_psycopg2',
+        'NAME' : 'democracy_democratiespel',
+        'USER' : 'democracy',
+        'PASSWORD' : 'ADkdg5.Q',
+    }
+}
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -65,19 +67,14 @@ ADMIN_MEDIA_PREFIX = '/media/admin/'
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '5xpy!!naf)+1e6=&amp;%6oa2!u(@0hja#qoo=8)*(!b^x8i3kmgba'
 
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.load_template_source',
-    'django.template.loaders.app_directories.load_template_source',
-#     'django.template.loaders.eggs.load_template_source',
-)
 
 MIDDLEWARE_CLASSES = (
+    'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.doc.XViewMiddleware',
+    'voting.middleware.VoteHistory',
 )
 
 ROOT_URLCONF = 'urls'
@@ -122,17 +119,17 @@ ACCOUNT_ACTIVATION_DAYS = 1
 
 # Set the context processors used by RequestContext objects: 
 TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.core.context_processors.auth',
+    'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.debug',
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
     'django.core.context_processors.request',
-    'dashboard.context_processors.get_a_profile',
+    'profiles.context_processors.userprofile',
 )
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.load_template_source',
-    'django.template.loaders.app_directories.load_template_source',
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
 )
 
 FORCELOWERCASE_TAGS = True

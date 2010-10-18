@@ -17,10 +17,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.utils.translation import ugettext_lazy as _
 
-from piston.models import Consumer
-
 from voting.managers import VoteManager 
-from voting.managers import possible_votes
+from voting.vote_types import possible_votes
 
 class Vote(models.Model):
     user = models.ForeignKey(User)
@@ -28,7 +26,7 @@ class Vote(models.Model):
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField() 
     payload = generic.GenericForeignKey('content_type', 'object_id')
-    # voto AKA direction.
+    # vote AKA direction.
     direction = models.IntegerField(choices = possible_votes.items(), default=1 )
     time_stamp = models.DateTimeField(editable = False , default=datetime.now )
     # optional **kwargs

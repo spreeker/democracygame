@@ -2,10 +2,8 @@
 {% load i18n %}
 
 {% block content %}
-	{% blocktrans %}
 	<p>
-	You have been succesfully registered!
+	{% trans "You have been succesfully registered!" %}
 	</p>
-	{% endblocktrans %}
-    <p> <a href="/"> GO PLAY </a> </p>
+    <p> <a href="/">{% trans "GO PLAY" %}</a> </p>
 {% endblock %}

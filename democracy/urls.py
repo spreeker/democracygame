@@ -1,7 +1,6 @@
 import os
 from django.conf.urls.defaults import *
 from django.contrib import admin
-
 admin.autodiscover()
 
 from piston.authentication import oauth_request_token
@@ -16,7 +15,7 @@ urlpatterns = patterns('',
     (r'^issue/', include('issue.urls')),
 
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
-    (r'^admin/(.*)', admin.site.root),
+    (r'^admin/', include(admin.site.urls)),
 
     # Development stuff, media served by django itself.
     # in procution have Apache handle media.
