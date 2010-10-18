@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: registration\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-08-14 13:25+0200\n"
-"PO-Revision-Date: 2010-03-11 22:51\n"
+"PO-Revision-Date: 2010-10-17 21:15\n"
 "Last-Translator: ReindeR Rustema <reinder@rustema.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -35,7 +35,7 @@ msgstr "wachtwoord (opnieuw)"
 
 #: forms.py:54
 msgid "Usernames can only contain letters, numbers and underscores"
-msgstr "Gebruikersnamen kunnen alleen letters, nummer sen liggende streepjes bevatten."
+msgstr "Een gebruikersnaam kan alleen letters, nummers en liggende streepjes bevatten."
 
 #: forms.py:59
 msgid "This username is already taken. Please choose another."
@@ -59,7 +59,7 @@ msgstr "Dit e-mailadres is reeds in gebruik. Kiest u alstublieft een ander e-mai
 
 #: forms.py:151
 msgid "Registration using free email addresses is prohibited. Please supply a different email address."
-msgstr "U kunt zich niet registreren met een gratis e-mailadres. Kiest u alstublieft een ander e-mail adres."
+msgstr "U kunt zich niet registreren met een gratis e-mailadres. Kiest u alstublieft een ander e-mailadres."
 
 #: models.py:191
 msgid "user"
