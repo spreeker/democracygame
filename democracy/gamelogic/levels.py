@@ -126,6 +126,11 @@ def parlement_member(user, userprofile):
     """
     pass
 
+def minister(user, userprofile):
+    """You get voted to become minister. minister changes are unknown for now.
+    """
+    pass
+
 def party_program(user, userprofile):
     """
     this is the special party program profile. for party programs.
@@ -133,6 +138,7 @@ def party_program(user, userprofile):
     no changes.
     """
     pass
+
 
 upgrade = {
     'anonymous citizen' : anonymous_citizen,
@@ -142,6 +148,8 @@ upgrade = {
     'candidate' : candidate,
     'parlement member' : parlement_member,
     'party program' : party_program,
+    'minister'  : minister,
+    'prime minister' : minister,
 }
 
 def change_score(user, score):
