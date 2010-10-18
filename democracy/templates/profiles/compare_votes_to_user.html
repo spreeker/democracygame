@@ -43,7 +43,7 @@
 
 {% block gamenews %}
 <h2>{% trans "Candidate?" %}</h2><p></p>
-<p class="notice">{% trans "Every player can vote on one person. Persons with the most votes will get into the parlement."%}</p> 
+<p class="notice">{% trans "Every player can vote on one person. Persons with the most votes will get into the parliament."%}</p>
 <form action=" {% url vote_user user_to_compare.id %}" method="post">
     <input type="hidden" name="direction" class="direction" value="1" />
     <input type="hidden" name="next" class="next" value="{{ request.get_full_path }}" />
