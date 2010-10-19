@@ -40,7 +40,7 @@
 <form action="{% url vote issue.pk %}" method="post" class="blank">
     <input type="hidden" name="next" class="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
     <select name="direction">
-        <option value="-10">{% trans "blank vote because.." %}</option>
+        <option value="17">{% trans "blank vote because.." %}</option>
         {% for blank_vote in blank_votes %}
              <option value="{{ blank_vote.0 }}">{% trans blank_vote.1 %}</option>
         {% endfor %}
