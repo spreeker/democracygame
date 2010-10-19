@@ -8,7 +8,7 @@
 <div class="issue_left">
     <div class="score">
         <div class="for">{% if vote %}{{ score.1 }}{% endif %}</div>
-        <div class="blank">{% if vote %}{{ score.0 }}{% endif %}</div>
+        <div class="blank">{% if vote %}{{ score.0 }}{% else %}?{% endif %}</div>
         <div class="against">{% if vote %}{{ score.2 }}{% endif %}</div>
     </div>
 </div>
@@ -20,13 +20,20 @@
 <form action="{% url vote issue.pk %}" method="post">
     <input type="hidden" name="direction" class="direction" value="1" />
     <input type="hidden" name="next" class="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
-    <input type="submit" value="{% trans "YES" %}"/>
+    <button type="submit" class="positive{% ifequal vote.direction 1 %} selected{% endifequal %}">
+    <img src="/media/img/tick.png" alt=""/>
+        {% trans "Agree" %}
+    </button>
 </form>
 
 <form action="{% url vote issue.pk %}" method="post">
     <input type="hidden" name="direction" class="direction" value="-1" />
     <input type="hidden" name="next" class="next" value="{{ request.get_full_path }}#{{issue.pk}}" />
-    <input type="submit" value="{% trans "NO" %}"/>
+    <button type="submit" class="negative{% ifequal vote.direction -1 %} selected{% endifequal %}">
+    <img src="/media/img/cross.png" alt=""/>
+        {% trans "Disagree" %}
+    </button>
+
 </form>
 
 {% block blankform %}
@@ -52,7 +59,7 @@
 {% endcomment %}
 
 {% trans "by" %} <a href="{% url userprofile issue.user.username %}">{{ issue.user }}</a> <div class="yourvote">
-{% if vote.direction %}
+{% if vote.direction > 2 %}
 {% trans "your vote" %} : {{ vote.direction|vote_display }}
 {% endif %}
 

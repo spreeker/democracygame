@@ -69,6 +69,14 @@ function vote(){
         dataType : "json",
         complete : afterVote,
     });
+    if (direction == -1){
+        $("button.negative", this).addClass('selected');
+        $("button.positive", forms).removeClass('selected');
+    } else if (direction == 1){
+        $("button.positive", this).addClass('selected');
+        $("button.negative", forms).removeClass('selected');
+    };
+
     return false;
 }
 $(function(){
