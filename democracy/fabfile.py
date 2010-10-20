@@ -4,7 +4,7 @@ env.user = 'democracy'
 env.hosts = ['derdekamer.net',]
 
 def prepare_deploy():
-    local('./TESTS', capture=False)
+    local('./TESTS', capture=True)
     local('git push ch stephan:deployment', capture=False)
 
 

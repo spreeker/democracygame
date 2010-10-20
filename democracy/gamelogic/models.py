@@ -48,4 +48,4 @@ class MultiplyIssue(models.Model):
                 msg = _("succesfully added multiply")
                 return self
 
-        self.user.message_set.create(message=msg)
+        #self.user.message_set.create(message=msg)
