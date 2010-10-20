@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 from gamelogic.models import roles 
+from gamelogic.models import human_roles 
 
 from django.db.models.signals import post_save
 
@@ -25,7 +26,9 @@ class UserProfile(models.Model):
 
 
     def ranking(self):
-        return UserProfile.objects.filter(score__gte = self.score).count()
+        return UserProfile.objects.filter(
+            role__in=human_roles.keys(),
+            score__gt =self.score).count() + 1
 
 
 def create_userprofile(sender, **kwargs):

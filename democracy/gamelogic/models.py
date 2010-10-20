@@ -16,6 +16,8 @@ roles = {'anonymous citizen' : _(u'Anonymous Citizen'),
         'minister' : _('minister'),
         'prime minister' : _('prime minister'),
 }
+human_roles = roles.copy()
+human_roles.pop('party program')
 
 
 class MultiplyIssue(models.Model):
