@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-20 15:22+0200\n"
-"PO-Revision-Date: 2010-10-20 15:20\n"
+"POT-Creation-Date: 2010-10-20 16:19+0200\n"
+"PO-Revision-Date: 2010-10-20 16:11\n"
 "Last-Translator: stephan preeker <stephan@preeker.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -48,29 +48,33 @@ msgid "You created issue \"%s\" successfully"
 msgstr "uw voorstel \"%s\" is toegevoegd"
 
 #: gamelogic/models.py:9
-msgid "Anonymous Citizen"
+#, fuzzy
+msgid "anonymous Citizen"
 msgstr "Anonieme burger"
 
 #: gamelogic/models.py:10
-msgid "Citizen"
+#, fuzzy
+msgid "citizen"
 msgstr "Burger"
 
 #: gamelogic/models.py:11
-msgid "Active Citizen"
+#, fuzzy
+msgid "active Citizen"
 msgstr "Actieve burger"
 
 #: gamelogic/models.py:12
-msgid "Opinion Leader"
+#, fuzzy
+msgid "opinion Leader"
 msgstr "opinieleider"
 
-#: gamelogic/models.py:13 templates/profiles/candidate_info.html:1
-#: templates/profiles/compare_votes_to_user.html:53
-msgid "Candidate"
+#: gamelogic/models.py:13
+#, fuzzy
+msgid "candidate"
 msgstr "kandidaat"
 
 #: gamelogic/models.py:14
-msgid "Parliament member"
-msgstr "Kamerlid"
+msgid "parliament member"
+msgstr "kamerlid"
 
 #: gamelogic/models.py:15
 msgid "party program"
@@ -246,9 +250,8 @@ msgid "Subjects"
 msgstr "onderwerpen"
 
 #: templates/dashboard/userbar.html:5
-#, fuzzy
 msgid "member position"
-msgstr "leden"
+msgstr "rang lid"
 
 #: templates/dashboard/userbar.html:9
 msgid "logout"
@@ -429,6 +432,11 @@ msgstr ""
 "beschermen moet u toestemming geven voor het gebruik. U kunt uw toestemming "
 "later altijd terug trekken.\n"
 
+#: templates/profiles/candidate_info.html:1
+#: templates/profiles/compare_votes_to_user.html:53
+msgid "Candidate"
+msgstr "kandidaat"
+
 #: templates/profiles/candidate_info.html:2
 msgid "Your candidate"
 msgstr "uw kandidaat"
@@ -550,11 +558,16 @@ msgstr "partij"
 msgid "score"
 msgstr "punten"
 
-#: templates/profiles/ranking.html:66
+#: templates/profiles/ranking.html:65
+#, fuzzy
+msgid "departments"
+msgstr "argumenten"
+
+#: templates/profiles/ranking.html:67
 msgid "ministry"
 msgstr "minister"
 
-#: templates/profiles/ranking.html:66
+#: templates/profiles/ranking.html:67
 #, fuzzy
 msgid "name"
 msgstr "gebruikersnaam"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-18 16:29+0200\n"
+"POT-Creation-Date: 2010-10-20 16:19+0200\n"
 "PO-Revision-Date: 2010-10-18 11:12\n"
 "Last-Translator: ReindeR Rustema <reinder@rustema.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,28 +48,27 @@ msgid "You created issue \"%s\" successfully"
 msgstr ""
 
 #: gamelogic/models.py:9
-msgid "Anonymous Citizen"
+msgid "anonymous Citizen"
 msgstr ""
 
 #: gamelogic/models.py:10
-msgid "Citizen"
+msgid "citizen"
 msgstr ""
 
 #: gamelogic/models.py:11
-msgid "Active Citizen"
+msgid "active Citizen"
 msgstr ""
 
 #: gamelogic/models.py:12
-msgid "Opinion Leader"
+msgid "opinion Leader"
 msgstr ""
 
-#: gamelogic/models.py:13 templates/profiles/candidate_info.html:1
-#: templates/profiles/compare_votes_to_user.html:53
-msgid "Candidate"
+#: gamelogic/models.py:13
+msgid "candidate"
 msgstr ""
 
 #: gamelogic/models.py:14
-msgid "Parliament member"
+msgid "parliament member"
 msgstr ""
 
 #: gamelogic/models.py:15
@@ -84,20 +83,20 @@ msgstr ""
 msgid "prime minister"
 msgstr ""
 
-#: gamelogic/models.py:29
+#: gamelogic/models.py:31
 #, python-format
 msgid "%(user)s  multiplies for %(issue)s"
 msgstr ""
 
-#: gamelogic/models.py:40
+#: gamelogic/models.py:42
 msgid "You have no multiplies left"
 msgstr ""
 
-#: gamelogic/models.py:43
+#: gamelogic/models.py:45
 msgid "You cannot not multiplie on your own issues"
 msgstr ""
 
-#: gamelogic/models.py:46
+#: gamelogic/models.py:48
 msgid "succesfully added multiply"
 msgstr ""
 
@@ -117,7 +116,7 @@ msgstr ""
 msgid "source type"
 msgstr ""
 
-#: issue/forms.py:23 templates/issue/issue.html:56
+#: issue/forms.py:23 templates/issue/issue.html:62
 msgid "your vote"
 msgstr ""
 
@@ -154,7 +153,7 @@ msgstr ""
 msgid "Against"
 msgstr ""
 
-#: issue/views.py:184 templates/issue/issue.html:41
+#: issue/views.py:184 templates/issue/issue.html:47
 #: templates/profiles/compare_votes_to_user.html:8
 msgid "Blank"
 msgstr ""
@@ -183,32 +182,32 @@ msgstr ""
 msgid "democracy game"
 msgstr ""
 
-#: templates/base.html:52
+#: templates/base.html:23
 msgid "mainpage"
 msgstr ""
 
-#: templates/base_content.html:5
+#: templates/base_content.html:6
 msgid "all issues"
 msgstr ""
 
-#: templates/base_content.html:6
+#: templates/base_content.html:7
 msgid "your issues"
 msgstr ""
 
-#: templates/base_content.html:7
-msgid "players"
+#: templates/base_content.html:8
+msgid "members"
 msgstr ""
 
-#: templates/base_content.html:8
+#: templates/base_content.html:9
 msgid "stemadvies"
 msgstr ""
 
-#: templates/base_content.html:13
+#: templates/base_content.html:19
 #, fuzzy
 msgid "search issue"
 msgstr "door u voorgesteld"
 
-#: templates/base_content.html:45
+#: templates/base_content.html:79
 msgid "pick language.."
 msgstr ""
 
@@ -244,8 +243,8 @@ msgstr "delete"
 msgid "Subjects"
 msgstr ""
 
-#: templates/dashboard/userbar.html:4
-msgid "ranking"
+#: templates/dashboard/userbar.html:5
+msgid "member position"
 msgstr ""
 
 #: templates/dashboard/userbar.html:9
@@ -261,27 +260,29 @@ msgstr ""
 msgid "log in"
 msgstr ""
 
-#: templates/issue/issue.html:23
-msgid "YES"
-msgstr "yes"
+#: templates/issue/issue.html:24
+#: templates/profiles/compare_votes_to_user.html:8
+msgid "Agree"
+msgstr ""
 
-#: templates/issue/issue.html:29
-msgid "NO"
-msgstr "no"
+#: templates/issue/issue.html:33
+#: templates/profiles/compare_votes_to_user.html:8
+msgid "Disagree"
+msgstr ""
 
-#: templates/issue/issue.html:36
+#: templates/issue/issue.html:42
 msgid "blank vote because.."
 msgstr ""
 
-#: templates/issue/issue.html:50
+#: templates/issue/issue.html:56
 msgid "multiply"
 msgstr ""
 
-#: templates/issue/issue.html:54
+#: templates/issue/issue.html:60
 msgid "by"
 msgstr ""
 
-#: templates/issue/issue.html:61
+#: templates/issue/issue.html:67
 msgid "extra information"
 msgstr ""
 
@@ -411,6 +412,11 @@ msgid ""
 "later if you want.\n"
 msgstr ""
 
+#: templates/profiles/candidate_info.html:1
+#: templates/profiles/compare_votes_to_user.html:53
+msgid "Candidate"
+msgstr ""
+
 #: templates/profiles/candidate_info.html:2
 msgid "Your candidate"
 msgstr ""
@@ -436,14 +442,6 @@ msgstr ""
 
 #: templates/profiles/compare_votes_to_user.html:5
 msgid "Your votes compared with"
-msgstr ""
-
-#: templates/profiles/compare_votes_to_user.html:8
-msgid "Agree"
-msgstr ""
-
-#: templates/profiles/compare_votes_to_user.html:8
-msgid "Disagree"
 msgstr ""
 
 #: templates/profiles/compare_votes_to_user.html:8
@@ -500,7 +498,7 @@ msgid "You are now logged out."
 msgstr ""
 
 #: templates/profiles/ranking.html:6
-msgid "Parliament"
+msgid "parliament"
 msgstr ""
 
 #: templates/profiles/ranking.html:18
@@ -539,11 +537,15 @@ msgstr ""
 msgid "score"
 msgstr ""
 
-#: templates/profiles/ranking.html:66
+#: templates/profiles/ranking.html:65
+msgid "departments"
+msgstr ""
+
+#: templates/profiles/ranking.html:67
 msgid "ministry"
 msgstr ""
 
-#: templates/profiles/ranking.html:66
+#: templates/profiles/ranking.html:67
 msgid "name"
 msgstr ""
 
@@ -833,6 +835,12 @@ msgstr ""
 #: voting/vote_types.py:35
 msgid "Multiply"
 msgstr ""
+
+#~ msgid "YES"
+#~ msgstr "yes"
+
+#~ msgid "NO"
+#~ msgstr "no"
 
 #~ msgid "Your vote"
 #~ msgstr "door u voorgesteld"

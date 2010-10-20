@@ -1,4 +1,4 @@
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -6,15 +6,15 @@ from issue.models import Issue
 
 MAX_MULTIPLIERS = 4
 
-roles = {'anonymous citizen' : _(u'Anonymous Citizen'), 
-        'citizen' : _(u'Citizen'),
-        'active citizen' : _(u'Active Citizen'),
-        'opinion leader' : _(u'Opinion Leader'),
-        'candidate' : _('Candidate'), 
-        'parliament member' : _('Parliament member'),
-        'party program' : _('party program'),
-        'minister' : _('minister'),
-        'prime minister' : _('prime minister'),
+roles = {'anonymous citizen' : _(u'anonymous Citizen'), 
+        'citizen' : _(u'citizen'),
+        'active citizen' : _(u'active Citizen'),
+        'opinion leader' : _(u'opinion Leader'),
+        'candidate' : _(u'candidate'), 
+        'parliament member' : _(u'parliament member'),
+        'party program' : _(u'party program'),
+        'minister' : _(u'minister'),
+        'prime minister' : _(u'prime minister'),
 }
 human_roles = roles.copy()
 human_roles.pop('party program')
