@@ -7,7 +7,7 @@
 <meta name="google-site-verification" content="SAvGm7bTN2xLL6tgpKLU0jwn08UITM6hctXBTgOyetg" />
 <!--[if lt IE 8]><link rel="stylesheet" href="css/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
 <link href="/media/index.css" rel="stylesheet" type="text/css" />
-<LINK REL="SHORTCUT ICON" hreF="/media/favicon.ico">
+<link rel="shortcut icon" href="/media/favicon.ico"/>
 <script type="text/javascript" src="/media/js/jquery.js"></script>
 <script type="text/javascript" src="/media/js/jquery-ui-1.8.4.custom.min.js"></script>
 <link rel="stylesheet" href="/media/css/jquery-ui-1.8.4.custom.css" type="text/css" media="screen, projection" />
@@ -16,15 +16,19 @@
 </head>
 
 <body>
-<div id="header" class="container " >
-<div id="mainmenu" class="span-14">
+<div id="header">
+<div class="container">
+    <div id="logo">Derde<span class="orange">Kamer</span></div>
+<div id="logobar" class="span-14">
     {% block mainmenu %} <a href="/">{% trans "mainpage" %}</a>  {% endblock %}
 </div>
 <div id="userbar" class="span-15 last " >
 {% block userbar %}{% endblock %}
 </div>
 </div>
+</div>
 
+<div id="middle">
 <div class="container">
 <div id="sidebar" class="span-9">
   {% block sidebar %}&nbsp;{% endblock %}
@@ -35,18 +39,18 @@
     {% block content %}{% endblock %}
 </div>
 <div id="gamenews" class="span-5 last">
-{% block gamenews%}<h2>.<img src="/media/img/chart_bar.png" alt=""/></h2>{% endblock %}
+{% block gamenews%}{% endblock %}
     
 <div id="messagebar"> 
 {% block messagebar %}{% endblock %}
 </div>
-</div>
-</div>
-<div id="footer" class="span-29 last">
+</div><!--gamenews -->
+</div><!--bigcontent -->
+</div><!--container -->
+</div><!--middle -->
+
  {% block footer %}
  {% endblock %}
-</div>
-</div>
 
 <script type="text/javascript">
 
@@ -63,7 +67,7 @@
 </script>
 
 <div id="fb-root"></div>
-<script>
+<script type="text/javascript">
   window.fbAsyncInit = function() {
     FB.init({appId: '124936464227391', status: true, cookie: true,
              xfbml: true});

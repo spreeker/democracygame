@@ -28,13 +28,14 @@
     {% dict_entry_for_item issue from request.session.vote_history as vote %}
 {% endif %}
 
-<div class="{% cycle '' 'even' %}"
+<li id="id{{ issue.pk }}" class="issue {% cycle '' 'even' %}">
 {% block issue %}
 {% include "issue/issue.html" %}
 {% endblock %}
-</div>
+</li>
 
 {% endfor %}
+
 </ul>
 
 {% include "pagination.html" %}

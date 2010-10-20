@@ -1,7 +1,6 @@
 {% load i18n %}
 {% load voting_tags %}
 
-<li id="id{{ issue.pk }}" class="issue">
 
 <h3><a href="{% url single_issue issue.slug %}">{{ issue|capfirst }}</a></h3>
 
@@ -74,4 +73,3 @@
 
 </div>{# end forms #}
 
-</li>
