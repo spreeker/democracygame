@@ -9,10 +9,12 @@
 {% else %}{% trans "Followers" %}
 {% endif %} </h2> 
 
-<p>{% if followers %}
-    {% for candidate in followers %} <a href="{% url userprofile candidate.user %}">
-    <h3>{{ candidate.user.username }}<h3></a>
+<p>
+{% if followers %}
+    {% for candidate in followers %} 
+        <a href="{% url userprofile candidate.user %}"> <h3>{{ candidate.user.username }}<h3></a>
     {% endfor %}
 {% else %} {% trans "nobody's candidate" %}
-{% endif %}</p>
+{% endif %}
+</p>
 

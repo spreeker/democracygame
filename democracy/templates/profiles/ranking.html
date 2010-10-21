@@ -6,7 +6,7 @@
     <h2> {% trans "parliament" %} </h2> 
     <div id="pyramid">
         {% for level in parliament %}
-            <div class={% cycle "even" "odd" %}> 
+            <div class="{% cycle "even" "odd" %}"> 
                 {% for profile in level %}
                     <div class="pyramid_layer"><a href="{% url userprofile profile.user.username %}">*{{ profile.user.username }}*</a></div>
                 {% endfor %}
@@ -68,6 +68,8 @@
     </thead><tbody>
         {% for profile in ministers %} 
             <tr><td>?</td><td><a href="{% url userprofile profile.user.username %}">{{ profile.user.username }}</a></td></tr>
+        {% empty %}
+            <tr><td>?</td><td>?</td></tr> 
         {% endfor %}
     </tbody></table>
 {% endblock %}
