@@ -34,6 +34,10 @@ normal_votes.update(blank_votes)
 multiply_votes = {
     20 : _("Multiply"),
 }
+parlement_votes = {
+    99 : _("Law"),
+}
 
 possible_votes = normal_votes.copy() 
 possible_votes.update(multiply_votes)
+possible_votes.update(parlement_votes)
