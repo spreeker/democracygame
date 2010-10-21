@@ -49,9 +49,6 @@ def vote_issue(user, issue, direction, keep_private , api_interface=None ):
 
     if repeated_vote: return
     
-    #logging.debug("User %s voted %s on ISSUE %s" % 
-    #( user.username, new_vote.vote, issue.title )) 
-
     user.message_set.create(message=_("You voted successfully on %s") % issue.title  )
 
     score.vote(user, issue, direction, voted_already)
@@ -61,7 +58,7 @@ def vote_issue(user, issue, direction, keep_private , api_interface=None ):
 def vote_user(user, voted_user, direction, keep_private, api_interface=None):
     
     userprofile = user.get_profile()
-    if not role_to_actions[userprofile.role].has_key('vote user') : return
+    if not role_to_actions[userprofile.role].has_key('vote_user') : return
     if user.id == voted_user.id: return #don't vote on yourself!!
 
     repeated_vote, voted_already, new_vote = \
@@ -159,25 +156,25 @@ role_to_actions = {
     },
     'citizen' : {
         'vote' : vote,
-        'vote user' : vote_user,
+        #'vote user' : vote_user,
         'tag' : tag,
     },
     'active citizen' : {
         'vote' : vote,
         'tag' : tag,
-        'vote user' : vote_user,
+        'vote_user' : vote_user,
         'propose' : propose,
     },
     'opinion leader' : {
         'vote' : vote,
-        'vote user' : vote_user,
+        'vote_user' : vote_user,
         'tag' : tag,
         'propose' : propose,
         'multiply' : multiply,
     },
     'candidate' : {
         'vote' : vote,
-        'vote user' : vote_user,
+        'vote_user' : vote_user,
         'tag' : tag,
         #re_tag?
         'propose' : propose,
@@ -185,14 +182,14 @@ role_to_actions = {
     },
     'parliament member' : {
         'vote' : vote,
-        'vote user' : vote_user,
+        'vote_user' : vote_user,
         'tag' : tag,
         'propose' : propose,
         'multiply' : multiply,
     },
     'party program' : {
         'vote' : vote,
-        #'vote user' : vote_user,
+        #'vote_ user' : vote_user,
         'tag' : tag,
         'propose' : propose,
         #'multiply' : multiply,
@@ -202,7 +199,12 @@ role_to_actions = {
 def get_actions(user):
     """return all possible game actions for a user """
     if not user.is_authenticated(): return role_to_actions['anonymous citizen']
-    userprofile = user.get_profile()
+    role = 'anonymous citizen'
+    try:
+        userprofile = user.get_profile()
+        role = userprofile.role
+    except UserProfile.DoesNotExist: 
+        pass 
     actions = role_to_actions[userprofile.role]
     return actions
 

@@ -191,7 +191,7 @@ class TestActionData(TestUsers):
 
     def do_vote_user(self, user, voted_user, direction):
         profile = user.get_profile()
-        vote_func = actions.role_to_actions[profile.role]['vote user']
+        vote_func = actions.role_to_actions[profile.role]['vote_user']
         vote_func(user, voted_user, direction, False)
 
 class TestActions(TestActionData):
@@ -239,7 +239,6 @@ class TestActions(TestActionData):
     def test_multiply(self):
                
         issue = Issue.objects.get(title = "issue2")
-
         self.do_multiply(self.users[0] ,issue)
 
         # do a multiply on issue
@@ -267,6 +266,10 @@ class TestAdvancedLevels(TestActions, TestLeveling):
         self.assertEqual(self.profiles[1].role , 'parliament member')
 
         self.do_vote_user(self.users[1], self.users[0], 1)
+        levels.change_score(self.users[2] ,11)   # make sure user2 can vote on user. 
+        levels.change_score(self.users[3] ,11)   # make sure user3 can vote on user. 
+        levels.change_score(self.users[4] ,11)   # make sure user3 can vote on user. 
+        self.load_users()
         self.do_vote_user(self.users[2], self.users[0], 1)
         # now user3 votes on user2 make user2 a candidate..
         self.do_vote_user(self.users[3], self.users[2], 1)
