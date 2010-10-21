@@ -103,7 +103,7 @@ def candidate(user, userprofile):
 
     # now check if you have more votes than the lowest parliament member. 
     parliament_members_ids = UserProfile.objects.filter(
-        role='parliament member').values_list('id') 
+        role='parliament member').values_list('user') 
     pm_votes = Vote.objects.get_popular(User, 
             object_ids=parliament_members_ids, reverse=True, min_tv=0)
 
