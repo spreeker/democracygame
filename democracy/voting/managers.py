@@ -221,13 +221,13 @@ class VoteManager(models.Manager):
 
     def get_for_direction(self, Model, directions=[1,-1]):
         """
-        return objects with a specific direction for ...
-        TODO
+        return object_ids with a specific direction. 
         """
         ctype = ContentType.objects.get_for_model(Model)
         queryset = self.filter(content_type=ctype,)
         queryset = queryset.filter(is_archived=False) 
         queryset = queryset.filter(direction__in=directions)
+        queryset = queryset.values('object_id',)
 
         return queryset
 
