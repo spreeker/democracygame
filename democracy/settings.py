@@ -79,11 +79,10 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
-#    'django.contrib.csrf.middleware.CsrfMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'voting.middleware.VoteHistory',
     'django.middleware.doc.XViewMiddleware',
 )
@@ -125,30 +124,23 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.markup',
 
-    'debug_toolbar', # comment out in production!!
-    'south', 
     #Democracy
     'gamelogic',
     'profiles',
     'api',
     'voting',
     'issue',
-    'juni2010',
-    'dashboard',
+    'juni2010', #stemwijzer.
+    'dashboard', #TODO to be removed.
 
     # external apps 
+    'south', 
+    'chunks',
     'tagging',
 	'registration',
     'piston',
     'rosetta',
 )
-FORCE_SCRIPT_NAME = "" # removes the django.fcgi from the urls.
-
-
-# comment out in production
-DEBUG_TOOLBAR_CONFIG = {
-    'INTERCEPT_REDIRECTS': False,
-}
 
 #SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 FORCELOWERCASE_TAGS = True

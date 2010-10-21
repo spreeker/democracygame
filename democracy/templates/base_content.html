@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load chunks %}
 {% block mainmenu %}
 &nbsp;
     <ul>
@@ -42,27 +43,20 @@
         <div class="col float-left space-sep"> 
             <h2>Site Partners</h2> 
             <ul class="columns"> 
-                <li class="top"><a href="http://www.pretities.nl">Petities.nl</a></li> 
-                <li><a href="http://nl.linkedin.com/in/spreeker" title="spreeker">spreeker</a></li> 
+                {% chunk "left_footer_links" %}
             </ul>           
         </div> 
         <div class="col float-left"> 
             <h2>Links</h2> 
             <ul class="columns">                
-                <li class="top"><a href="http://www.petities.nl">Petities.nl</a></li> 
-                <li><a href="index.html">Link Three</a></li> 
-                <li><a href="index.html">Link Four</a></li> 
-                <li><a href="index.html">Link Five</a></li> 
-                <li><a href="index.html">Link Six</a></li> 
+                {% chunk "middle_footer_links" %}
             </ul> 
         </div>      
     
         <div class="col2 float-right"> 
             <h2>Site Links</h2> 
             <ul class="columns"> 
-                <li class="top"><a href="index.html">Home</a></li> 
-                <li><a href="index.html">About</a></li> 
-                <li><a href="index.html">Sitemap</a></li> 
+                {% chunk "right_footer_links" %}
             </ul> 
  
             <p> 
