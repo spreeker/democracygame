@@ -75,7 +75,6 @@ ADMIN_MEDIA_PREFIX = '/admin/media/'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-    #'django.template.loaders.app_directories.load_template_source',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -131,7 +130,7 @@ INSTALLED_APPS = (
     'voting',
     'issue',
     'juni2010', #stemwijzer.
-    'dashboard', #TODO to be removed.
+    'tests',
 
     # external apps 
     'south', 
