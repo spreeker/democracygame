@@ -10,6 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 #XXX likely to change
 from vote_types import votes, blank_votes, normal_votes
 from vote_types import possible_votes, multiply_votes
+from vote_types import parlement_votes
 
 class VoteManager(models.Manager):
 
@@ -231,21 +232,22 @@ class VoteManager(models.Manager):
 
         return queryset
 
-    def record_vote(self, user, obj, direction, keep_private=False, api_interface=None):
+    def record_vote(self, user, obj, direction, 
+                keep_private=False, api_interface=None, 
+                directions=normal_votes.keys()):
         """
         Archive old votes by switching the is_archived flag to True
         for all the previous votes on <obj> by <user>.
         And we check for and dismiss a repeated vote.
         We save old votes for research, to see interesting
         opinion changes.
-
-        min_tv = minimum total votes, to put in a threshold.
         """
-        if not direction in possible_votes.keys():
-            raise ValueError('Invalid vote %s must be in %s' % (direction, possible_votes.keys()))
+        if not direction in directions:
+            raise ValueError('Invalid vote %s must be in %s' % (direction, directions))
 
         ctype = ContentType.objects.get_for_model(obj)
         votes = self.filter(user=user, content_type=ctype, object_id=obj._get_pk_val(), is_archived=False)
+        votes = votes.filter(direction__in=directions)
 
         voted_already = False
         repeated_vote = False
@@ -266,6 +268,23 @@ class VoteManager(models.Manager):
                         )
             vote.save()
         return repeated_vote, voted_already, vote
+
+
+class LawManager(VoteManager):
+    """ deal with votes which are parlement votes, so called laws """
+
+    def get_query_set(self):
+        """ filter votes on law votes """
+        return super(LawManager, self).get_query_set().filter(direction__in=parlement_votes.keys())
+        
+
+    def make_law(self, user, obj, direction, **kwarg):
+        """ make law, record parlement vote """
+        api_interface=kwarg.get('api_interface', '')
+        self.record_vote(user, obj, direction,
+            keep_private=False, api_interface=api_interface,
+            directions=parlement_votes.keys())
+
 
 # Generic annotation code to annotate queryset from other Models with
 # data from the Vote table 
