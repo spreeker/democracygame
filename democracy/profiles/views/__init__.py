@@ -190,5 +190,6 @@ def ranking(request, qs=None):
                'party_programs' : party_programs,
                'parliament' : parliament,
                'ministers' : ministers,
+               'current' : 'ranking',
                 })
     return render_to_response('profiles/ranking.html', context)

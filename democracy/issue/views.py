@@ -185,8 +185,8 @@ def issue_list(request, *args, **kwargs):
         2 : _(u"Against"), # index -1 fails in templates.
         0 : _(u"Blank"),   # 0 is included to sum up all blank votes.
     })
-
-    context = extra_context
+    context = {'current' : 'all_issues'}
+    context.update(extra_context)
     context.update({
         'blank_votes' : blank_votes.items(),
         'possible_votes' : possible_votes,
@@ -251,6 +251,7 @@ def issues_list_laws(request, sortorder=None):
         extra_context = {
             'issue_tags' : get_tagcloud_issues(issues),
             'sort_url' : reverse('laws'),
+            'current' : 'laws',
         })
 
 @login_required
@@ -270,6 +271,8 @@ def my_issue_list(request, sortorder='new'):
             'issueform' : issueform,
             'showurl' : True,
             'sort_url' : reverse('my_issues'),
+            'current' : 'my_issues',
+            
         }
     )
 

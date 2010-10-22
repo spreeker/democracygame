@@ -80,5 +80,6 @@ def compare_to_parties(request):
         
     context = RequestContext(request, {
         'compared' : compared,
+        'current' : 'juni_2010',
     })
     return render_to_response('juni2010/compare.html', context)
