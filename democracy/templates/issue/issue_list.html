@@ -11,12 +11,29 @@
 {% block propose %} {% endblock %}
 {% block issue_menu %}
 <h2>{% trans "Vote!"%}</h2> 
-<h4> | <a href="{% url issue_list 'popular' %}"> {% trans 'popular' %} </a> |
-    <a href="{% url issue_list 'for' %}">{% trans 'for' %}</a> | 
-    <a href="{% url issue_list 'controversial' %}">{%trans 'controversial' %}</a> | 
-    <a href="{% url issue_list 'against' %}">{% trans 'against' %}</a> |
-    <a href="{% url issue_list 'new' %}">{% trans 'new' %}</a> |
-    <a href="{% url issue_list 'unseen' %}">{% trans 'unseen' %}</a> |
+
+{% if sort_url %}
+{% else %}
+    {% url laws as sort_url %}
+{% endif %}
+<h4> | <a href="{{ sort_url }}popular"
+    {% ifequal sortorder 'popular'%}class="selected"{% endifequal %}
+>{% trans 'popular' %}</a> |
+    <a href="{{ sort_url }}controversial"
+    {% ifequal sortorder 'controversial'%}class="selected"{% endifequal %}
+>{%trans 'controversial' %}</a> | 
+    <a href="{{ sort_url }}new"
+    {% ifequal sortorder 'new'%}class="selected"{% endifequal %}
+>{% trans 'new' %}</a> |
+    <a href="{{ sort_url }}for"
+    {% ifequal sortorder 'for'%}class="selected"{% endifequal %}
+>{% trans 'for' %}</a> | 
+    <a href="{{ sort_url }}against"
+    {% ifequal sortorder 'against'%}class="selected"{% endifequal %}
+>{% trans 'against' %}</a> |
+    <a href="{{ sort_url }}unseen"
+    {% ifequal sortorder 'unseen'%}class="selected"{% endifequal %}
+>{% trans 'unseen' %}</a> |
 </h4>
 {% endblock %}
 
@@ -44,7 +61,7 @@
 {% endblock %}
 
 {%block sidebar %}
-    {% include "dashboard/tag_cloud.html" %}
+    {% include "issue/tag_cloud.html" %}
 {% endblock %}
 
 {% block extra_head %}    

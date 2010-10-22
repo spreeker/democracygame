@@ -33,6 +33,9 @@ h4 a{
     margin-left: 1em;
     color: #6C6E3A;
 }
+h4 .selected {
+    text-decoration : underline;
+}
 h3 a{
     margin-bottom : 1.25em ;
     color: #C34E23;

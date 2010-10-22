@@ -24,6 +24,8 @@ from django.utils.translation import ugettext as _
 from django.utils import simplejson
 
 from tagging.forms import TagField
+from tagging.models import Tag
+from tagging.utils import calculate_cloud
 
 from gamelogic import actions
 from issue.models import Issue
@@ -192,12 +194,18 @@ def issue_list(request, *args, **kwargs):
         'page' : page,
         'votedata' : Vote,
         'flash_msg' : flash_msg,
-        'actions' : actions.get_actions(request.user),
+        'sortorder' : kwargs.get('sortorder', '')
     })
 
     c = RequestContext(request, context)    
     t = loader.get_template(template_name)
     return HttpResponse(t.render(c))
+
+def get_tagcloud_issues(issues):
+    id_issues = issues.values('id') 
+    issue_tags = Tag.objects.usage_for_model(Issue, 
+        counts=True, filters=dict(id__in=id_issues))
+    return calculate_cloud(issue_tags)
 
 
 def issue_list_user(request, username, sortorder=None):
@@ -210,13 +218,40 @@ def issue_list_user(request, username, sortorder=None):
     issues = issues.select_related()
     return issue_list(
         request, 
-        extra_context={'username': username}, 
-        template_name='issue/issue_list_user.html',
+        #template_name='issue/issue_list_user.html',
         issues=issues,
         sortorder=sortorder,
         min_tv=1,
         subset=True,
+        extra_context = {
+            'username': username,
+            'issue_tags' : get_tagcloud_issues(issues),
+            'sort_url' : reverse('issue_list_user', args=(username,)),
+        }
     )
+
+
+def issues_list_laws(request, sortorder=None): 
+    """
+    sow all issues which are law.
+    """
+    law_issues = Vote.laws.get_for_model(Issue)
+    law_issues = law_issues.values('object_id')
+
+    issues = Issue.objects.filter(id__in=law_issues)
+    issues = issues.select_related()
+
+    return issue_list(
+        request, 
+        #template_name='issue/issue_list_laws.html',
+        issues=issues,
+        sortorder=sortorder,
+        min_tv=0,
+        subset=True,
+        extra_context = {
+            'issue_tags' : get_tagcloud_issues(issues),
+            'sort_url' : reverse('laws'),
+        })
 
 @login_required
 def my_issue_list(request, sortorder='new'):
@@ -231,9 +266,11 @@ def my_issue_list(request, sortorder='new'):
         sortorder=sortorder,
         min_tv=1,
         subset=True,
-        extra_context={'issueform' : issueform,
-        'showurl' : True, #show the external url
-        },
+        extra_context={
+            'issueform' : issueform,
+            'showurl' : True,
+            'sort_url' : reverse('my_issues'),
+        }
     )
 
 
@@ -250,7 +287,6 @@ def single_issue(request, title):
         )
 
 def search_issue(request):
-
     slug = request.GET.get('searchbox', "")
     issues = Issue.objects.filter(is_draft=False, title__icontains=slug)
     issues = issues.select_related()
@@ -281,9 +317,6 @@ def xhr_search_issue(request,):
         results = [ i.title for i in issue_result[:100]]
         
     return HttpResponse(simplejson.dumps(results), mimetype='application/json') 
-
-
-        
 
 def record_vote(request, issue_id):
     """
@@ -431,7 +464,6 @@ def publish_issue(request, issue_id):
     """
     publish or not to publish issue
     """
-    logging.debug("i get here") 
     if request.is_ajax():
         return xhr_publish_issue(request, issue_id)
 
