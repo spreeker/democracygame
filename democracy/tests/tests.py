@@ -25,6 +25,7 @@ class IndexTest(TestCase):
         urls = [ ]
         urls.append('/')
         urls.append(reverse('api_doc'))
+        urls.append(reverse('laws'))
         urls.append(reverse('issue_list_user', args=['test']))
 
         for url in urls:
