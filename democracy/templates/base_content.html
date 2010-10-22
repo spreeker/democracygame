@@ -20,6 +20,17 @@
             <input type="submit" name="search" value="{% trans "search issue" %}"/>
         </form>
     {% endblock %}
+
+    <form action="/i18n/setlang/" method="post">
+        <input name="next" type="hidden" value="{{ request.get_full_path }}"/>
+        <select name="language" onchange="submit();">
+        <option value="">{% trans 'pick language..' %}</option>
+        {% for lang in LANGUAGES %}
+            <option value="{{ lang.0 }}">{{ lang.1 }}</option>
+        {% endfor %}
+        </select>
+        <input type="submit" value="Go" />
+    </form>
 {% endblock %}
 
 {% block extra_head %}    
@@ -41,20 +52,20 @@
     <div id="footer-wrap"><div id="footer-content"> 
     
         <div class="col float-left space-sep"> 
-            <h2>Site Partners</h2> 
+            <h2>{% trans "Democracygame"  %}</h2> 
             <ul class="columns"> 
                 {% chunk "left_footer_links" %}
             </ul>           
         </div> 
         <div class="col float-left"> 
-            <h2>Links</h2> 
+            <h2>{% trans "About us" %}</h2> 
             <ul class="columns">                
                 {% chunk "middle_footer_links" %}
             </ul> 
         </div>      
     
         <div class="col2 float-right"> 
-            <h2>Site Links</h2> 
+            <h2>{% trans "Suported by" %}</h2> 
             <ul class="columns"> 
                 {% chunk "right_footer_links" %}
             </ul> 
@@ -67,17 +78,7 @@
             Valid <a href="http://jigsaw.w3.org/css-validator/check/referer">CSS</a> |
                   <a href="http://validator.w3.org/check/referer">XHTML</a> 
             </p>
-            <form action="/i18n/setlang/" method="post">
-            <input name="next" type="hidden" value="{{ request.get_full_path }}"/>
-            <select name="language" onchange="submit();">
-            <option value="">{% trans 'pick language..' %}</option>
-            {% for lang in LANGUAGES %}
-                <option value="{{ lang.0 }}">{{ lang.1 }}</option>
-            {% endfor %}
-            </select>
-            <input type="submit" value="Go" />
-            </form>
-        </div> 
+                    </div> 
         <br class="clear" /> 
     
     </div></div> 
