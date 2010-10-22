@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-20 16:19+0200\n"
+"POT-Creation-Date: 2010-10-22 17:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,12 +37,12 @@ msgstr ""
 msgid "French"
 msgstr ""
 
-#: gamelogic/actions.py:55 gamelogic/actions.py:82
+#: gamelogic/actions.py:52 gamelogic/actions.py:79
 #, python-format
 msgid "You voted successfully on %s"
 msgstr ""
 
-#: gamelogic/actions.py:112
+#: gamelogic/actions.py:109
 #, python-format
 msgid "You created issue \"%s\" successfully"
 msgstr ""
@@ -149,24 +149,24 @@ msgstr ""
 msgid "image"
 msgstr ""
 
-#: issue/views.py:183 voting/vote_types.py:12
+#: issue/views.py:185 voting/vote_types.py:12
 msgid "Against"
 msgstr ""
 
-#: issue/views.py:184 templates/issue/issue.html:47
+#: issue/views.py:186 templates/issue/issue.html:47
 #: templates/profiles/compare_votes_to_user.html:8
 msgid "Blank"
 msgstr ""
 
-#: issue/views.py:302 profiles/views/votes.py:35
+#: issue/views.py:335 profiles/views/votes.py:35
 msgid "You did not pick a valid option"
 msgstr ""
 
-#: issue/views.py:316
+#: issue/views.py:349
 msgid "You voted succesfull, to save your votes please register"
 msgstr ""
 
-#: issue/views.py:348
+#: issue/views.py:381
 msgid "You cannot multiply yet!"
 msgstr ""
 
@@ -182,32 +182,44 @@ msgstr ""
 msgid "democracy game"
 msgstr ""
 
-#: templates/base.html:23
-msgid "mainpage"
-msgstr ""
-
-#: templates/base_content.html:6
+#: templates/base_content.html:7
 msgid "all issues"
 msgstr ""
 
-#: templates/base_content.html:7
+#: templates/base_content.html:8
 msgid "your issues"
 msgstr ""
 
-#: templates/base_content.html:8
+#: templates/base_content.html:9
+msgid "laws"
+msgstr ""
+
+#: templates/base_content.html:10
 msgid "members"
 msgstr ""
 
-#: templates/base_content.html:9
+#: templates/base_content.html:11
 msgid "stemadvies"
 msgstr ""
 
-#: templates/base_content.html:19
+#: templates/base_content.html:21
 msgid "search issue"
 msgstr ""
 
-#: templates/base_content.html:79
+#: templates/base_content.html:28
 msgid "pick language.."
+msgstr ""
+
+#: templates/base_content.html:56
+msgid "Democracygame"
+msgstr ""
+
+#: templates/base_content.html:62
+msgid "About us"
+msgstr ""
+
+#: templates/base_content.html:69
+msgid "Suported by"
 msgstr ""
 
 #: templates/pagination.html:5 templates/profiles/search_user.html:19
@@ -236,27 +248,6 @@ msgstr ""
 
 #: templates/dashboard/my_votes.html:23
 msgid "DELETE"
-msgstr ""
-
-#: templates/dashboard/tag_cloud.html:3
-msgid "Subjects"
-msgstr ""
-
-#: templates/dashboard/userbar.html:5
-msgid "member position"
-msgstr ""
-
-#: templates/dashboard/userbar.html:9
-msgid "logout"
-msgstr ""
-
-#: templates/dashboard/userbar.html:11 templates/profiles/login.html:25
-#: templates/registration/registration_form.html:12
-msgid "register"
-msgstr ""
-
-#: templates/dashboard/userbar.html:12 templates/profiles/logout.html:7
-msgid "log in"
 msgstr ""
 
 #: templates/issue/issue.html:24
@@ -289,42 +280,28 @@ msgstr ""
 msgid "Vote!"
 msgstr ""
 
-#: templates/issue/issue_list.html:14 templates/issue/issue_list_user.html:12
-#: templates/issue/my_issue_list.html:35
-#: templates/issue/my_issues_list.html:40
+#: templates/issue/issue_list.html:21 templates/issue/my_issues_list.html:40
 msgid "popular"
 msgstr ""
 
-#: templates/issue/issue_list.html:15 templates/issue/issue_list_user.html:15
-#: templates/issue/my_issue_list.html:36
-#: templates/issue/my_issues_list.html:41
-msgid "for"
-msgstr ""
-
-#: templates/issue/issue_list.html:16 templates/issue/issue_list_user.html:13
-#: templates/issue/my_issue_list.html:37
-#: templates/issue/my_issues_list.html:42
+#: templates/issue/issue_list.html:24 templates/issue/my_issues_list.html:42
 msgid "controversial"
 msgstr ""
 
-#: templates/issue/issue_list.html:17 templates/issue/issue_list_user.html:16
-#: templates/issue/my_issue_list.html:38
-#: templates/issue/my_issues_list.html:43
-msgid "against"
-msgstr ""
-
-#: templates/issue/issue_list.html:18 templates/issue/issue_list_user.html:14
-#: templates/issue/my_issue_list.html:39
-#: templates/issue/my_issues_list.html:44
+#: templates/issue/issue_list.html:27 templates/issue/my_issues_list.html:44
 msgid "new"
 msgstr ""
 
-#: templates/issue/issue_list.html:19
-msgid "unseen"
+#: templates/issue/issue_list.html:30 templates/issue/my_issues_list.html:41
+msgid "for"
 msgstr ""
 
-#: templates/issue/issue_list_user.html:11
-msgid "Issues for"
+#: templates/issue/issue_list.html:33 templates/issue/my_issues_list.html:43
+msgid "against"
+msgstr ""
+
+#: templates/issue/issue_list.html:36
+msgid "unseen"
 msgstr ""
 
 #: templates/issue/my_issue.html:22
@@ -364,11 +341,6 @@ msgstr ""
 msgid "You cannot propose yet, you need 30 points"
 msgstr ""
 
-#: templates/issue/my_issue_list.html:34
-#: templates/issue/my_issues_list.html:19
-msgid "Your issues"
-msgstr ""
-
 #: templates/issue/my_issues_list.html:8
 msgid ""
 "\n"
@@ -381,12 +353,20 @@ msgid ""
 "        "
 msgstr ""
 
+#: templates/issue/my_issues_list.html:19
+msgid "Your issues"
+msgstr ""
+
 #: templates/issue/my_issues_list.html:34
 msgid "You cannot propose yet, you need more points"
 msgstr ""
 
 #: templates/issue/my_issues_list.html:39
 msgid "Proposed by you"
+msgstr ""
+
+#: templates/issue/tag_cloud.html:3
+msgid "Subjects"
 msgstr ""
 
 #: templates/piston/authorize_token.html:4
@@ -409,7 +389,7 @@ msgid ""
 msgstr ""
 
 #: templates/profiles/candidate_info.html:1
-#: templates/profiles/compare_votes_to_user.html:53
+#: templates/profiles/compare_votes_to_user.html:57
 msgid "Candidate"
 msgstr ""
 
@@ -418,7 +398,7 @@ msgid "Your candidate"
 msgstr ""
 
 #: templates/profiles/candidate_info.html:5
-#: templates/profiles/compare_votes_to_user.html:56
+#: templates/profiles/compare_votes_to_user.html:60
 msgid "No candidate chosen yet"
 msgstr ""
 
@@ -427,12 +407,12 @@ msgid "Your followers"
 msgstr ""
 
 #: templates/profiles/candidate_info.html:9
-#: templates/profiles/compare_votes_to_user.html:58
+#: templates/profiles/compare_votes_to_user.html:62
 msgid "Followers"
 msgstr ""
 
-#: templates/profiles/candidate_info.html:16
-#: templates/profiles/compare_votes_to_user.html:63
+#: templates/profiles/candidate_info.html:17
+#: templates/profiles/compare_votes_to_user.html:67
 msgid "nobody's candidate"
 msgstr ""
 
@@ -472,16 +452,25 @@ msgstr ""
 
 #: templates/profiles/compare_votes_to_user.html:46
 msgid ""
-"Every player can vote on one person. Persons with the most votes will get "
-"into the parliament."
+"Every member who is active citizen or better can vote on one person. Persons "
+"with the most votes will get into the parliament."
 msgstr ""
 
-#: templates/profiles/compare_votes_to_user.html:50
-msgid "VOTE ON"
+#: templates/profiles/compare_votes_to_user.html:51
+msgid "follow"
+msgstr ""
+
+#: templates/profiles/compare_votes_to_user.html:54
+msgid "you cannot vote on a user yet"
 msgstr ""
 
 #: templates/profiles/login.html:19
 msgid "Try again, username and password don't match."
+msgstr ""
+
+#: templates/profiles/login.html:25 templates/profiles/userbar.html:11
+#: templates/registration/registration_form.html:12
+msgid "register"
 msgstr ""
 
 #: templates/profiles/login.html:26
@@ -490,6 +479,10 @@ msgstr ""
 
 #: templates/profiles/logout.html:5
 msgid "You are now logged out."
+msgstr ""
+
+#: templates/profiles/logout.html:7 templates/profiles/userbar.html:12
+msgid "log in"
 msgstr ""
 
 #: templates/profiles/ranking.html:6
@@ -611,6 +604,14 @@ msgstr ""
 
 #: templates/profiles/user_detail.html:46
 msgid "tagcloud of"
+msgstr ""
+
+#: templates/profiles/userbar.html:5
+msgid "member position"
+msgstr ""
+
+#: templates/profiles/userbar.html:9
+msgid "logout"
 msgstr ""
 
 #: templates/registration/activate.html:5
@@ -829,4 +830,12 @@ msgstr ""
 
 #: voting/vote_types.py:35
 msgid "Multiply"
+msgstr ""
+
+#: voting/vote_types.py:40
+msgid "Law"
+msgstr ""
+
+#: voting/vote_types.py:41
+msgid "Rejected by parliament"
 msgstr ""
