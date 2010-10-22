@@ -14,7 +14,7 @@
 
 {% if sort_url %}
 {% else %}
-    {% url laws as sort_url %}
+    {% url all_issues as sort_url %}
 {% endif %}
 <h4> | <a href="{{ sort_url }}popular"
     {% ifequal sortorder 'popular'%}class="selected"{% endifequal %}
