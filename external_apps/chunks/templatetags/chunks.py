@@ -1,10 +1,11 @@
 from django import template
 from django.db import models
 from django.core.cache import cache
+from django.contrib.sites.models import Site
 
 register = template.Library()
 
-Chunk = models.get_model('chunks', 'chunk')
+Chunk = models.get_model('chunks', 'Chunk')
 CACHE_PREFIX = "chunk_"
 
 def do_get_chunk(parser, token):
@@ -20,24 +21,34 @@ def do_get_chunk(parser, token):
     # Check to see if the key is properly double/single quoted
     if not (key[0] == key[-1] and key[0] in ('"', "'")):
         raise template.TemplateSyntaxError, "%r tag's argument should be in quotes" % tag_name
-    # Send key without quotes and caching time
+    # Send key (without quotes) and caching time
     return ChunkNode(key[1:-1], cache_time)
     
 class ChunkNode(template.Node):
     def __init__(self, key, cache_time=0):
        self.key = key
-       self.cache_time = cache_time
+       self.cache_time = int(cache_time)
+       self.lang_code = template.Variable('LANGUAGE_CODE')
     
     def render(self, context):
         try:
-            cache_key = CACHE_PREFIX + self.key
-            c = cache.get(cache_key)
-            if c is None:
-                c = Chunk.objects.get(key=self.key)
-                cache.set(cache_key, c, int(self.cache_time))
-            content = c.content
-        except Chunk.DoesNotExist:
-            content = ''
+            lang = self.lang_code.resolve(context)
+        except template.VariableDoesNotExist:
+            # no LANGUAGE_CODE variable found in context, just return ''
+            return ''
+        site = Site.objects.get_current().id  # Django caches get_current()
+        cache_key = CACHE_PREFIX + self.key + lang + str(site)
+        content = cache.get(cache_key)
+        if content is None:
+            try:
+                chunk = Chunk.objects.get(key=self.key, lang_code=lang, site=site)
+                content = chunk.content
+            except Chunk.DoesNotExist:
+                # cache missing models as empty chunk strings
+                content = ''
+            if self.cache_time > 0: 
+                # don't even call cache if timeout is 0
+                cache.set(cache_key, content, self.cache_time)
         return content
-        
+
 register.tag('chunk', do_get_chunk)
