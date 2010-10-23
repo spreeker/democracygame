@@ -12,9 +12,7 @@
 
 <li id="vote{{ vote.pk }}" ><a name="{{vote.pk}}"></a>
 <div class="yourvote">
-{% if vote.vote %}
-{% for key , direction in possible_votes.items %}{% ifequal key vote.vote %}{% trans direction %}{% endifequal %}{% endfor %}
-{% endif %}
+{% trans "your vote" %} : {{ vote.direction|vote_display }}
 </div>
 <div class="title">{{ vote.payload.title }}</div>
 <div class="forms">
@@ -45,7 +43,5 @@
 
 {% endblock %}
 
-{%block sidebar %}
-    {% include "dashboard/tag_cloud.html" %}
-{% endblock %}
+{%block sidebar %} {% endblock %}
 
