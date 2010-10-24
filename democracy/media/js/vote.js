@@ -42,6 +42,7 @@ function vote(){
         'direction' : direction,
         'issue_id' : issue_id,
     };
+    localStorage.setItem(issue_id, direction)
     var afterVote = function(xhr, textStatus){
         // updates the user interface after a vote
         // if an error occurs print this on screen.

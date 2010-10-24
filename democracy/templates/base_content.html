@@ -26,6 +26,13 @@
 
 {% block gamenews %}
 <h2>.<img src="/media/img/chart_bar.png" alt=""/></h2>
+
+        {% trans "voting progress" %}
+        <div id="progressbar"></div>
+    <div>{% widthratio total_votes total_issues 100 %}</div>
+
+    {% if total_laws %}<p>{% trans "total laws" %} {{ total_laws }}</p> {% endif %}
+
     {% block search %}
         <form action="{% url search_issue %}" method="get">
             <input type="text" id="searchbox" name="searchbox"/>
@@ -43,6 +50,16 @@
         </select>
         <input type="submit" value="Go" />
     </form>
+    <div id="gamedata">
+
+        {% if total_votes %} {% trans "total votes" %}
+        <div id="total_votes" class="hidden">{{ total_votes }}</div>
+        {% endif %}
+
+        {% trans "total issues" %}
+       <div id="total_issues" class="hidden">{{ total_issues }}</div>
+
+    </div>
 {% endblock %}
 
 {% block extra_head %}    
