@@ -33,11 +33,12 @@ from issue.forms import IssueForm, Publish, TagForm
 from voting.managers import possible_votes, blank_votes, vote_annotate
 from voting.models import Vote
 from voting.views import vote_on_object
+from voting.vote_types import normal_votes
 from django.db.models import Count, Avg, Sum 
 
 
-def paginate(request, qs, pagesize=8):
-    paginator = Paginator(qs, pagesize)
+def paginate(request, queryset, pagesize=8):
+    paginator = Paginator(queryset, pagesize)
     try:
         pageno = int(request.GET.get('page', '1'))
     except ValueError:
@@ -48,10 +49,19 @@ def paginate(request, qs, pagesize=8):
         page = paginator.page(paginator.num_pages) #last page
     return page
 
+def paginate_issues(request, votes, issues):
+        """ shrinks the issues queryset using a paginated
+            vote queryset. 
+        """
+        page = paginate(request, votes, 8)
+        object_ids = [ d['object_id'] for d in page.object_list ] #d = direction.
+        issues = issues.filter(id__in=object_ids)
+        return page, issues
+
 
 def order_issues(request, sortorder, issues, min_tv=6, subset=None):
     """
-    return page and qs of issues derived from voting data. 
+    return page and queryset of issues derived from voting data. 
     
     returns issues ordered by
         popularity - issues with a lot of votes.
@@ -59,11 +69,7 @@ def order_issues(request, sortorder, issues, min_tv=6, subset=None):
         for     - mostpeople vote for.
         against -issues most people vote against.
         new     -issues you have not voted on.
-
-    we are trying to do some aggegration using gfk's. Which is
-    not easy to do or look at:
-    http://github.com/coleifer/django-simple-ratings/tree/master/ratings
-    or tagging generic!
+        unseen  -issues you have not seen.
 
     *min_tv*  minimal total votes. only issues are considered which have
         min_tv amount of votes.
@@ -101,35 +107,23 @@ def order_issues(request, sortorder, issues, min_tv=6, subset=None):
                 sorted_issues.append(issue)
         return sorted_issues
 
-    def merge_qs(votes, issues):
-        """ with this method shrinks the issues qs using a paginated
-            vote qs. so the vote_annotate will run fast.
-        """
-        page = paginate(request, votes, 8)
-        object_ids = [ d['object_id'] for d in page.object_list ] #d = direction.
-        issues = issues.filter(id__in=object_ids)
-        return page, issues
-
     if sortorder == 'popular':
         votes = Vote.objects.get_popular(Issue, object_ids=issue_ids, min_tv=min_tv)
-        page, issues = merge_qs(votes, issues)
+        page, issues = paginate_issues(request, votes, issues)
         issues = _sort_issues(page.object_list, issues)
         return page, issues
-        #issues = vote_annotate(issues, Vote.payload, 'id', Count)
     elif sortorder == 'controversial':
         votes = Vote.objects.get_controversial(Issue, object_ids=issue_ids, min_tv=min_tv)
-        return merge_qs(votes, issues)
+        return paginate_issues(request, votes, issues)
     elif sortorder == 'for':
         votes = Vote.objects.get_top(Issue, object_ids=issue_ids, min_tv=min_tv)
-        page, issues = merge_qs(votes, issues)
-        #issues = vote_annotate(issues, Vote.payload, 'vote', Sum)
+        page, issues = paginate_issues(request, votes, issues)
         issues = _sort_issues(page.object_list, issues)
         return page, issues
     elif sortorder == 'against':
         votes = Vote.objects.get_bottom(Issue, object_ids=issue_ids, min_tv=min_tv)
-        page, issues = merge_qs(votes, issues)
+        page, issues = paginate_issues(request, votes, issues)
         issues = _sort_issues(page.object_list, issues)
-        #issues = vote_annotate(issues, Vote.payload, 'vote', Sum, desc=False)
     elif sortorder == 'new':
         issues = issues.order_by('-time_stamp')
     else:
