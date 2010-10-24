@@ -19,6 +19,11 @@ def restart_server():
     run('./init/democracy restart') 
 
 
+def updatelanguagefiles():
+    with cd('democracy/democracy/'):
+        run('git commit locale/ -m "update language files"')
+    local('git pull ch deployment', capture=True)
+
 def update():
     test()
     push_deploy()
