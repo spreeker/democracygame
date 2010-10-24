@@ -199,12 +199,21 @@ def issue_list(request, *args, **kwargs):
         'page' : page,
         'votedata' : Vote,
         'flash_msg' : flash_msg,
-        'sortorder' : kwargs.get('sortorder', '')
+        'sortorder' : kwargs.get('sortorder', ''),
+        'total_issues' : Issue.active.count(),
+        'total_votes' : get_user_votes(request) 
     })
 
     c = RequestContext(request, context)    
     t = loader.get_template(template_name)
     return HttpResponse(t.render(c))
+
+def get_user_votes(request):
+    if request.user.is_authenticated():
+        votes = Vote.objects.get_user_votes(request.user)
+        votes = votes.filter(direction__in=normal_votes.keys())
+        return votes.count()
+    return 0
 
 def get_tagcloud_issues(issues):
     id_issues = issues.values('id') 
@@ -252,6 +261,7 @@ def issues_list_laws(request, sortorder=None):
             'issue_tags' : get_tagcloud_issues(issues),
             'sort_url' : reverse('laws'),
             'current' : 'laws',
+            'total_laws' : issues.count(),
         })
 
 @login_required
