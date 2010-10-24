@@ -270,16 +270,19 @@ class VoteManager(models.Manager):
         return repeated_vote, voted_already, vote
 
 
-class LawManager(VoteManager):
-    """ deal with votes which are parlement votes, so called laws """
+class ParliamentVoteManager(VoteManager):
+    """ deal with votes which are parliament votes, so called laws """
 
     def get_query_set(self):
         """ filter votes on law votes """
-        return super(LawManager, self).get_query_set().filter(direction__in=parlement_votes.keys())
+        return super(ParliamentVoteManager, self).get_query_set().filter(
+            direction__in=parlement_votes.keys(),
+            is_archived=False,
+            )
         
 
     def make_law(self, user, obj, direction, **kwarg):
-        """ make law, record parlement vote """
+        """ make law, record parliament vote """
         api_interface=kwarg.get('api_interface', '')
         self.record_vote(user, obj, direction,
             keep_private=False, api_interface=api_interface,
@@ -291,6 +294,8 @@ class LawManager(VoteManager):
 # 
 # NOTE: my experience is that below raw sql works but is slow.
 # 
+#issues = vote_annotate(issues, Vote.payload, 'vote', Sum, desc=False)
+#
 # more info:
 #
 # http://djangosnippets.org/snippets/2034/

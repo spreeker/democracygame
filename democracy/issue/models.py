@@ -13,6 +13,8 @@ from django.contrib import admin
 
 from django.utils.translation import ugettext_lazy as _
 from issue.managers import IssueManager
+from issue.managers import LawManager 
+from issue.managers import ActiveManager 
 from issue.fields import AutoSlugField
 
 import tagging
@@ -48,6 +50,10 @@ class Issue(models.Model):
     hotness = models.IntegerField(default=0)
     votes = models.IntegerField(default=0)
     
+    objects = IssueManager()
+    active = ActiveManager()
+    laws =  LawManager()
+
     def __unicode__(self):
         return self.title
        

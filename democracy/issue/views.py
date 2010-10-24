@@ -71,13 +71,25 @@ def order_issues(request, sortorder, issues, min_tv=6, subset=None):
     *subset*  if you want to run the vote management functions on a smaller
         subset of votes derived from the given issues, set to True. dont set this
         on true is issues not filtered.
+
+    we are trying to do some aggegration using gfk's. Which is
+    not easy to do or look at:
+    http://github.com/coleifer/django-simple-ratings/tree/master/ratings
+    or tagging generic! this approach is slow we take a different approach:
+    
+    Currenty we use the voting managers functions for a sorted vote queryset.
+    We paginate the vote queryset. From this vote queryset we use 
+    the object_ids and score field to get and sort the relevant issues.
+
+    we return a page object and issue queryset to display on the page.
+    we dont use the page.object_list because those are not always issues
+    and could well be votes.
     """
     issue_ids = None
     if subset:
         issue_ids = issues.values_list('id')
 
     #sort issue on their vote score value.
-    #this is faster then hitting the db again for an anotation.
     def _sort_issues(votes, issues,):
         scores = [(v['score'], v['object_id'],) for v in votes.all()] 
         #scores.sort()
@@ -157,8 +169,7 @@ def issue_list(request, *args, **kwargs):
     if kwargs.has_key('issues'):
         issues = kwargs['issues']
     else:
-        issues = Issue.objects.select_related().order_by('-time_stamp')
-        issues = issues.filter( is_draft=False )
+        issues = Issue.active.select_related().order_by('-time_stamp')
 
     if kwargs.get('sortorder', False):
         #pagination is now done on vote table
@@ -213,12 +224,10 @@ def issue_list_user(request, username, sortorder=None):
     For a user, specified by the ``username`` parameter, show his / her issues.
     """ 
     user = get_object_or_404(User, username=username)
-    issues = Issue.objects.filter(user=user.id)
-    issues = issues.filter( is_draft=False )
+    issues = Issue.active.filter(user=user.id)
     issues = issues.select_related()
     return issue_list(
         request, 
-        #template_name='issue/issue_list_user.html',
         issues=issues,
         sortorder=sortorder,
         min_tv=1,
@@ -235,10 +244,7 @@ def issues_list_laws(request, sortorder=None):
     """
     sow all issues which are law.
     """
-    law_issues = Vote.laws.get_for_model(Issue)
-    law_issues = law_issues.values('object_id')
-
-    issues = Issue.objects.filter(id__in=law_issues)
+    issues = Issue.laws.all()
     issues = issues.select_related()
 
     return issue_list(
