@@ -10,7 +10,7 @@ and websites.
 Installation:
 =============
 
-I asume basic python , django, linux and scm knowledge.
+I asume basic python, django, linux and scm knowledge.
 
 Installing democracy for development:
 
@@ -20,7 +20,7 @@ requirements:
 # python2.6 , oauth library needs it.
 # markup
 # dist-utils
-# django-trunk (10-2010)
+# django-trunk 1.2.3 
 
 # gettext
 
@@ -34,6 +34,12 @@ Testing
 =======
 
 We put quite some effort in creating tests for our application
+
+run all tests:
+
+$./TEST 
+
+or
 
 $ python manage.py test
 
