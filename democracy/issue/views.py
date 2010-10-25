@@ -186,16 +186,10 @@ def issue_list(request, *args, **kwargs):
     if flash_msg:
         del request.session['flash_msg']
 
-    possible_votes.update({
-        #not used in db.just for template compatibility.
-        2 : _(u"Against"), # index -1 fails in templates.
-        0 : _(u"Blank"),   # 0 is included to sum up all blank votes.
-    })
     context = {'current' : 'all_issues'}
     context.update(extra_context)
     context.update({
         'blank_votes' : blank_votes.items(),
-        'possible_votes' : possible_votes,
         'issues'  : issues, 
         'page' : page,
         'votedata' : Vote,

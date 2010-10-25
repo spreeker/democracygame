@@ -71,7 +71,6 @@ class VotesForObjectsNode(template.Node):
         for object_id in counts_on_objects.keys(): 
             vote_counts = dict.fromkeys( possible_votes.keys() , 0 )
             vote_counts.update( counts_on_objects[object_id])
-            vote_counts[2] = vote_counts[-1] # template does not allow -1
             counts_on_objects[object_id] = vote_counts
 
         context[self.context_var] = counts_on_objects 
