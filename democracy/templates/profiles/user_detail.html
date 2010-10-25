@@ -11,8 +11,8 @@
     <tr><th>{% trans "title" %}         </th><td> {{profile.title}}               </td></tr>
     <tr><th>{% trans "website" %}      </th><td> {{profile.url|urlizetrunc:30}} </td></tr>
     <tr><th>{% trans "about" %}  </th><td> {{profile.description}}        </td></tr>
-    <!--<tr><th>{% trans "id verified" %}  </th><td> {{profile.id_is_verified}}     </td></tr> --!>
-    {% if personal %}                                                           </td></tr>
+    <!-- <tr><th>{% trans "id verified" %}  </th><td> {{profile.id_is_verified}}     </td></tr> -->
+    {% if personal %}                                                           
     <tr><th>{% trans "votes public" %} </th><td> {{profile.votes_public}}       </td></tr>
     <tr><th>{% trans "email" %}        </th><td> {{user.email}}                 </td></tr>
     <tr><th>{% trans "show identity" %}</th><td> {{profile.show_identity}}      </td></tr>
