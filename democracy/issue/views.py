@@ -209,9 +209,12 @@ def issue_list(request, *args, **kwargs):
     return HttpResponse(t.render(c))
 
 def get_user_votes(request):
+    """ Get vote.count on active issues.
+    """
     if request.user.is_authenticated():
-        votes = Vote.objects.get_user_votes(request.user)
+        votes = Vote.objects.get_user_votes(request.user, Model=Issue)
         votes = votes.filter(direction__in=normal_votes.keys())
+        votes = votes.filter(object_id__in=Issue.active.values_list('id',))
         return votes.count()
     return 0
 
