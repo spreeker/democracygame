@@ -172,16 +172,11 @@ def issue_list(request, *args, **kwargs):
         page, issues = order_issues(request, kwargs['sortorder'], 
             issues, min_tv, subset)
 
-    elif 'tag' in kwargs:
-        tag = "\"%s\"" % kwargs['tag']
-        issues = Issue.tagged.with_any(tag)
-        issues = issues.filter(is_draft=False)
-        extra_context['selected_tag'] = kwargs['tag']
-
     if not page: 
         page = paginate(request, issues)
         issues = page.object_list
 
+    #XXX to be changed.
     flash_msg = request.session.get("flash_msg","")
     if flash_msg:
         del request.session['flash_msg']
@@ -218,6 +213,29 @@ def get_tagcloud_issues(issues):
     issue_tags = Tag.objects.usage_for_model(Issue, 
         counts=True, filters=dict(id__in=id_issues))
     return calculate_cloud(issue_tags)
+
+
+def issue_list_with_tag(request, tag=None, sortorder=None):
+    """
+    For a tag. display list of issues
+    """
+    if tag:
+        stag = "\"%s\"" % tag 
+        issues = Issue.tagged.with_any(stag)
+        issues = issues.filter(is_draft=False)
+        return issue_list(
+            request, 
+            issues=issues,
+            sortorder=sortorder,
+            min_tv=1,
+            subset=True,
+            extra_context = {
+                'selected_tag' : tag,
+                'issue_tags' : get_tagcloud_issues(issues),
+                'sort_url' : reverse('issue_with_tag', args=[tag,]),
+            })
+    else:
+        return issue_list(request)
 
 
 def issue_list_user(request, username, sortorder=None):
