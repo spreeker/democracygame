@@ -175,7 +175,8 @@ def issue_list(request, *args, **kwargs):
     elif 'tag' in kwargs:
         tag = "\"%s\"" % kwargs['tag']
         issues = Issue.tagged.with_any(tag)
-        issues = issues.filter( is_draft=False )
+        issues = issues.filter(is_draft=False)
+        extra_context['selected_tag'] = kwargs['tag']
 
     if not page: 
         page = paginate(request, issues)
