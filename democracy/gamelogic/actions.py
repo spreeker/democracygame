@@ -49,7 +49,7 @@ def vote_issue(user, issue, direction, keep_private , api_interface=None ):
 
     if repeated_vote: return
     
-    user.message_set.create(message=_("You voted successfully on %s") % issue.title  )
+    #user.message_set.create(message=_("You voted successfully on %s") % issue.title  )
 
     score.vote(user, issue, direction, voted_already)
 
@@ -76,7 +76,7 @@ def vote_user(user, voted_user, direction, keep_private, api_interface=None):
 
     #logging.debug("User %s voted %s on USER %s" %
     #(user.username, new_vote.vote, voted_user.username)) 
-    user.message_set.create(message=_("You voted successfully on %s") % voted_user.username )
+    #user.message_set.create(message=_("You voted successfully on %s") % voted_user.username )
     score.vote_user(user, voted_user, direction, voted_already)
 
 # make this signal code?

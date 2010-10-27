@@ -1,5 +1,5 @@
 function displaymessage(txt){
-    $(messagebar).append('<div class="notice">' + txt + '</div>');
+    $('#messagebar').append('<div class="notice">' + txt + '</div>');
 }
 
 function getScoresFrom(score){
