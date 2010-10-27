@@ -1,6 +1,6 @@
 {% load i18n %}
 {% if user.is_authenticated %}
-<a href="{% url userprofile user %}">{{user.username}}</a> |
+<a id="username" href="{% url userprofile user %}">{{user.username}}</a> |
 <a href="http://www.democratiespel.nl/wiki/index.php/Rol">{% trans user.get_profile.role %}</a> |
 <a href="{% url ranking %}">{% trans "member position" %}</a>
 <div class="score">{{user.get_profile.ranking }}</div> 
@@ -8,7 +8,9 @@
 <div class="score">{{user.get_profile.score}}</div> 
 <a href="{% url logout %}">{% trans "logout" %}</a>
 {% else %}
+    <div class="for">
     <a href="{% url registration_register %}">{% trans "register" %} </a>  
     <a href="{% url auth_login %}">{% trans "log in" %} </a>
+    </div>
 {% endif %}
 
