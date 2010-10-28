@@ -222,7 +222,11 @@ def issue_list_with_tag(request, tag=None, sortorder=None):
     if tag:
         stag = "\"%s\"" % tag 
         issues = Issue.tagged.with_any(stag)
-        issues = issues.filter(is_draft=False)
+        tag_cloud = []
+        if issues:
+            tag_cloud = get_tagcloud_issues(issues)
+            issues = issues.filter(is_draft=False)
+
         return issue_list(
             request, 
             issues=issues,
@@ -231,7 +235,7 @@ def issue_list_with_tag(request, tag=None, sortorder=None):
             subset=True,
             extra_context = {
                 'selected_tag' : tag,
-                'issue_tags' : get_tagcloud_issues(issues),
+                'issue_tags' : tag_cloud, 
                 'sort_url' : reverse('issue_with_tag', args=[tag,]),
             })
     else:
