@@ -31,15 +31,17 @@ class TestUsers(TestCase):
         data = "%15s %18s %6s %6s\n" % ("User", "Role", "Score", "Votes")
         for i,u in enumerate(self.users):
 
-            v = Vote.objects.get_for_object(u).count()
+            v = Vote.objects.get_user_votes(u).count()
             p = self.profiles[i]
             data += "%15s %18s %4d %4d" % (u.username, p.role, p.score, v)
             data += "\n"
 
         votes = Vote.objects.get_popular(Issue, min_tv=0)
-        data += "Votes \n%15s %18s \n" % ("Vote count", "Object")
+        data += "Votes \n%15s %18s %6s \n" % ("Vote count", "Object", "Owner")
         for vote in votes:
-            data += "%15s %18s \n" % (vote['score'], vote['object_id'])
+            issue = Issue.objects.get(id=vote['object_id'])
+            data += "%15s %18s %6s \n" % (vote['score'], issue.title, issue.user)
+        
 
         return data
      

@@ -291,7 +291,7 @@ def my_issue_list(request, sortorder='new'):
         template_name='issue/my_issue_list.html',
         issues=issues,
         sortorder=sortorder,
-        min_tv=1,
+        min_tv=0,
         subset=True,
         extra_context={
             'issueform' : issueform,

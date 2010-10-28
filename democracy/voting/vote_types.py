@@ -12,7 +12,6 @@ votes = {
     -1 : _(u"Against"),
     0  : _(u"blank"),
     1  : _(u"For"),
-    #2 is used as -1 in templates.
 }
 
 blank_votes = {

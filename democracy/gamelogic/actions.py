@@ -121,7 +121,7 @@ def propose(user, title, body, direction, source_url,
         issue.save()
         new_issue = issue
 
-    Vote.objects.record_vote(user , new_issue, direction,)    
+    Vote.objects.record_vote(user, new_issue, direction,)    
 
     return new_issue
 

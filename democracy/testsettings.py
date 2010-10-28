@@ -3,6 +3,11 @@ from settings_ch import *
 DATABASE_ENGINE = 'sqlite3'
 DATABASE_NAME = 'dev.db'
 
+DEBUG = True
+TEMPLATE_DEBUG = True
+
+
+
 DATABASES = {
     'default' : {
         'ENGINE' : 'django.db.backends.sqlite3',
