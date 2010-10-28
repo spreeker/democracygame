@@ -69,8 +69,10 @@ class VotesForObjectsNode(template.Node):
         counts_on_objects = Vote.objects.get_for_objects_in_bulk(objects)
 
         for object_id in counts_on_objects.keys(): 
-            vote_counts = dict.fromkeys( possible_votes.keys() , 0 )
-            vote_counts.update( counts_on_objects[object_id])
+            # all vote types default to 0.
+            vote_counts = dict.fromkeys(possible_votes.keys(), 0)
+            vote_counts.update(counts_on_objects[object_id])
+            vote_counts[2] = vote_counts[-1] # we cannot index -1 in templates.
             counts_on_objects[object_id] = vote_counts
 
         context[self.context_var] = counts_on_objects 
