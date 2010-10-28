@@ -212,7 +212,7 @@ def get_tagcloud_issues(issues):
     id_issues = issues.values('id') 
     issue_tags = Tag.objects.usage_for_model(Issue, 
         counts=True, filters=dict(id__in=id_issues))
-    return calculate_cloud(issue_tags)
+    return calculate_cloud(issue_tags, steps=7, )
 
 
 def issue_list_with_tag(request, tag=None, sortorder=None):
