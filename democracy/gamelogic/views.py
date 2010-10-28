@@ -75,10 +75,11 @@ def xhr_key_data(request):
 
         for profile in parties:
             name = profile.user.username
-            names.append(name)
             profile_issues = Issue.active.filter(user=profile.user)
             ids = [issue.id for issue in profile_issues]
-            data[name] = ids
+            if len(ids) > 3:
+                data[name] = ids
+                names.append(name)
             
         data['names'] = names 
 
