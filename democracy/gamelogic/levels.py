@@ -78,8 +78,6 @@ def opinion_leader(user, userprofile):
     votes_on_user = Vote.objects.get_for_object(user).count()
     
     if votes_on_user:
-        #logging.debug(votes_on_user)
-        #logging.debug(user)
         userprofile.role = 'candidate'
         return 'candidate'
  
@@ -97,19 +95,12 @@ def candidate(user, userprofile):
     #check if you are good enough to be in parliament.    
     count_parliament = UserProfile.objects.filter(role='parliament member').count() 
 
-    if count_parliament < MAX_PARLEMENT:
-        # there are not enough opinion leaders
-        # so you will become one automatically.
-        userprofile.role = 'parliament member'
-        return 'parliament member'
-
-    # now check if you have more votes than the lowest parliament member. 
-    # in case of draw, more points.
     parliament_members = UserProfile.objects.filter(
         role='parliament member').order_by('score')
 
+    ids = [ p.user.id for p in parliament_members ]
     candidate_votes = Vote.objects.get_popular(User, 
-            object_ids=parliament_members, reverse=True, min_tv=0)
+            object_ids=ids, reverse=True, min_tv=0)
 
     lowest_vote_count = candidate_votes[0]
 
@@ -121,15 +112,24 @@ def candidate(user, userprofile):
     if losers:
         userprofile.role = 'parliament member'
         for member in parliament_members.filter(user__in=losers):
-            member.role = 'opinion_leader'            
+            member.role = 'opinion leader'            
             member.save()
         return 'parliament member' 
 
-    # all members have followers then...
-    # parliament member with the least followers gets downgraded.
+    # check if there are enough members.
+    if count_parliament < MAX_PARLEMENT:
+        # there are not enough opinion leaders
+        # so you will become one automatically.
+        userprofile.role = 'parliament member'
+        return 'parliament member'
+
+    # there are enough members, and all have followers..
+    # then parliament member with the least followers gets downgraded.
     lowest_parliament_member = parliament_members.get(
         user=lowest_vote_count['object_id'])
 
+    # now check if you have more votes than the lowest parliament member. 
+    # or ifequal the score counts.
     if((votes_on_user > lowest_vote_count['score']) or 
         #if equal check score.
        ((votes_on_user == lowest_vote_count['score']) and 
