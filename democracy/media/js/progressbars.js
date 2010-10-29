@@ -111,13 +111,11 @@ function create_party_bar(){
             var text = "<a href='/issue/by/"+name+"'>"+name+"</a>"
             var bar_text = create_bar(name, text);
             var progress = update_bar(name, partydata[name]); 
-
-            if(progress == 100){
-                var url = "/profile/compare_votes_to_user/"+name;
-                var link = $("a", bar_text);
-                link.attr('href', url);
-            }
-            
+            //if(progress == 100){
+                //var url = "/profile/compare_votes_to_user/"+name;
+                //var link = $("a", bar_text);
+                //link.attr('href', url);
+            //}
         });
 
     };
