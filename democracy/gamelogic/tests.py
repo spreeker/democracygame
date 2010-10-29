@@ -266,15 +266,15 @@ class TestAdvancedLevels(TestActions, TestLeveling):
         qs = Vote.objects.all()
         self.load_users()
         self.assertEqual(self.profiles[1].role , 'parliament member')
-
         self.do_vote_user(self.users[1], self.users[0], 1)
         levels.change_score(self.users[2] ,11)   # make sure user2 can vote on user. 
         levels.change_score(self.users[3] ,11)   # make sure user3 can vote on user. 
-        levels.change_score(self.users[4] ,11)   # make sure user3 can vote on user. 
+        levels.change_score(self.users[4] ,11)   # make sure user4 can vote on user. 
         self.load_users()
         self.do_vote_user(self.users[2], self.users[0], 1)
         # now user3 votes on user2 make user2 a candidate..
         self.do_vote_user(self.users[3], self.users[2], 1)
+        self.load_users()
         self.assertEqual(self.profiles[2].role , 'candidate')
         # now voting on yourself should do nothing.
         total = Vote.objects.count()

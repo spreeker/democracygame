@@ -29,8 +29,8 @@ from django.http import Http404
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 
-import score
-import levels
+from gamelogic import score
+from gamelogic import levels
 from gamelogic.models import roles
 
 from gamelogic.models import MultiplyIssue
