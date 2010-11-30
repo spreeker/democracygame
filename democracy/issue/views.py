@@ -74,9 +74,10 @@ def order_issues(request, sortorder, issues, min_tv=6, subset=None):
     *min_tv*  minimal total votes. only issues are considered which have
         min_tv amount of votes.
     
-    *subset*  if you want to run the vote management functions on a smaller
+    *subset*  if you want to run the vote management 
+        functions (controvesial, popular etc) on a smaller
         subset of votes derived from the given issues, set to True. dont set this
-        on true is issues not filtered.
+        on true is issues are not filtered.
 
     we are trying to do some aggegration using gfk's. Which is
     not easy to do or look at:

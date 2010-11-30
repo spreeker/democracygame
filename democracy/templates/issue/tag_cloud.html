@@ -1,6 +1,6 @@
 {% load i18n %}
 {% load tagging_tags %}
-<h2>{% trans "Subjects" %}</h2>
+<h2><a href="/">{% trans "Subjects" %}</a></h2>
 <div id="tags">
 {% if issue_tags %}
 {% else %}
@@ -9,8 +9,7 @@
 
 {% for tag in issue_tags %}
 {% if selected_tag == tag.name %}
-
-<a class="notice" href="{% url issue_with_tag tag.name %}"><font size="{{ tag.font_size }}">{{ tag.name }}</font></a>
+<a href="{% url issue_with_tag tag.name %}"><font class="selected" size="{{ tag.font_size }}">{{ tag.name }}</font></a>
 {% else %}
 <a href="{% url issue_with_tag tag.name %}"><font size="{{ tag.font_size }}">{{ tag.name }}</font></a>
 {% endif %}
