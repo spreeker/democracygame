@@ -62,10 +62,10 @@ function update_bar(id, issue_ids){
 };
 
 function create_tag_bar(){
-    var tag = $("#tags").find('a.notice');
+    var tag = $("#tags").find('font.selected');
 
     if(!tag.length){ return };
-    tag = $("font", tag).text();
+    tag = tag.text();
     var tag_bar = $('#tag_bar');
     //create tagbar diff if it not exists already.
     if(!tag_bar.length){
