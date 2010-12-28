@@ -74,9 +74,10 @@ def order_issues(request, sortorder, issues, min_tv=6, subset=None):
     *min_tv*  minimal total votes. only issues are considered which have
         min_tv amount of votes.
     
-    *subset*  if you want to run the vote management functions on a smaller
+    *subset*  if you want to run the vote management 
+        functions (controvesial, popular etc) on a smaller
         subset of votes derived from the given issues, set to True. dont set this
-        on true is issues not filtered.
+        on true is issues are not filtered.
 
     we are trying to do some aggegration using gfk's. Which is
     not easy to do or look at:
@@ -172,29 +173,19 @@ def issue_list(request, *args, **kwargs):
         page, issues = order_issues(request, kwargs['sortorder'], 
             issues, min_tv, subset)
 
-    elif 'tag' in kwargs:
-        tag = "\"%s\"" % kwargs['tag']
-        issues = Issue.tagged.with_any(tag)
-        issues = issues.filter( is_draft=False )
-
     if not page: 
         page = paginate(request, issues)
         issues = page.object_list
 
+    #XXX to be changed.
     flash_msg = request.session.get("flash_msg","")
     if flash_msg:
         del request.session['flash_msg']
 
-    possible_votes.update({
-        #not used in db.just for template compatibility.
-        2 : _(u"Against"), # index -1 fails in templates.
-        0 : _(u"Blank"),   # 0 is included to sum up all blank votes.
-    })
     context = {'current' : 'all_issues'}
     context.update(extra_context)
     context.update({
         'blank_votes' : blank_votes.items(),
-        'possible_votes' : possible_votes,
         'issues'  : issues, 
         'page' : page,
         'votedata' : Vote,
@@ -209,9 +200,12 @@ def issue_list(request, *args, **kwargs):
     return HttpResponse(t.render(c))
 
 def get_user_votes(request):
+    """ Get vote.count on active issues.
+    """
     if request.user.is_authenticated():
-        votes = Vote.objects.get_user_votes(request.user)
+        votes = Vote.objects.get_user_votes(request.user, Model=Issue)
         votes = votes.filter(direction__in=normal_votes.keys())
+        votes = votes.filter(object_id__in=Issue.active.values_list('id',))
         return votes.count()
     return 0
 
@@ -219,7 +213,34 @@ def get_tagcloud_issues(issues):
     id_issues = issues.values('id') 
     issue_tags = Tag.objects.usage_for_model(Issue, 
         counts=True, filters=dict(id__in=id_issues))
-    return calculate_cloud(issue_tags)
+    return calculate_cloud(issue_tags, steps=7, )
+
+
+def issue_list_with_tag(request, tag=None, sortorder=None):
+    """
+    For a tag. display list of issues
+    """
+    if tag:
+        stag = "\"%s\"" % tag 
+        issues = Issue.tagged.with_any(stag)
+        tag_cloud = []
+        if issues:
+            tag_cloud = get_tagcloud_issues(issues)
+            issues = issues.filter(is_draft=False)
+
+        return issue_list(
+            request, 
+            issues=issues,
+            sortorder=sortorder,
+            min_tv=1,
+            subset=True,
+            extra_context = {
+                'selected_tag' : tag,
+                'issue_tags' : tag_cloud, 
+                'sort_url' : reverse('issue_with_tag', args=[tag,]),
+            })
+    else:
+        return issue_list(request)
 
 
 def issue_list_user(request, username, sortorder=None):
@@ -275,7 +296,7 @@ def my_issue_list(request, sortorder='new'):
         template_name='issue/my_issue_list.html',
         issues=issues,
         sortorder=sortorder,
-        min_tv=1,
+        min_tv=0,
         subset=True,
         extra_context={
             'issueform' : issueform,

@@ -29,4 +29,6 @@ def update():
     push_deploy()
     with cd('democracy'):
         run('git checkout -f')
+    with cd('democracy/democracy/'):
+        run('python manage.py compilemessages')
     restart_server()

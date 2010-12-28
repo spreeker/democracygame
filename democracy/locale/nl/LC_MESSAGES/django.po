@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-24 23:14+0200\n"
-"PO-Revision-Date: 2010-10-24 17:25\n"
-"Last-Translator: ReindeR Rustema <reinder@rustema.nl>\n"
+"POT-Creation-Date: 2010-10-28 00:48+0200\n"
+"PO-Revision-Date: 2010-10-24 23:44\n"
+"Last-Translator: stephan preeker <stephan@preeker.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -37,38 +37,28 @@ msgstr "Duits"
 msgid "French"
 msgstr "Frans"
 
-#: gamelogic/actions.py:52 gamelogic/actions.py:79
-#, python-format
-msgid "You voted successfully on %s"
-msgstr "u heeft gestemd op \"%s\""
-
 #: gamelogic/actions.py:109
 #, python-format
 msgid "You created issue \"%s\" successfully"
 msgstr "uw voorstel \"%s\" is toegevoegd"
 
 #: gamelogic/models.py:9
-#, fuzzy
 msgid "anonymous Citizen"
 msgstr "Anonieme burger"
 
 #: gamelogic/models.py:10
-#, fuzzy
 msgid "citizen"
 msgstr "Burger"
 
 #: gamelogic/models.py:11
-#, fuzzy
 msgid "active Citizen"
 msgstr "Actieve burger"
 
 #: gamelogic/models.py:12
-#, fuzzy
 msgid "opinion Leader"
 msgstr "opinieleider"
 
 #: gamelogic/models.py:13
-#, fuzzy
 msgid "candidate"
 msgstr "kandidaat"
 
@@ -81,12 +71,10 @@ msgid "party program"
 msgstr "partij programma"
 
 #: gamelogic/models.py:16
-#, fuzzy
 msgid "minister"
 msgstr "minister"
 
 #: gamelogic/models.py:17
-#, fuzzy
 msgid "prime minister"
 msgstr "minister-president"
 
@@ -157,24 +145,15 @@ msgstr "document"
 msgid "image"
 msgstr "beeld"
 
-#: issue/views.py:190 voting/vote_types.py:12
-msgid "Against"
-msgstr "tegen"
-
-#: issue/views.py:191 templates/issue/issue.html:47
-#: templates/profiles/compare_votes_to_user.html:8
-msgid "Blank"
-msgstr "Blanco"
-
-#: issue/views.py:348 profiles/views/votes.py:35
+#: issue/views.py:364 profiles/views/votes.py:35
 msgid "You did not pick a valid option"
 msgstr "u heeft geen geldige optie gekozen"
 
-#: issue/views.py:362
+#: issue/views.py:378
 msgid "You voted succesfull, to save your votes please register"
 msgstr "Stem was succesvol. Om uw stemmen op te slaan moet u zich registreren."
 
-#: issue/views.py:394
+#: issue/views.py:410
 msgid "You cannot multiply yet!"
 msgstr "U mag geen voorstellen meer verzwaren"
 
@@ -182,7 +161,7 @@ msgstr "U mag geen voorstellen meer verzwaren"
 msgid "Username"
 msgstr "gebruikersnaam"
 
-#: profiles/views/votes.py:135
+#: profiles/views/votes.py:135 voting/vote_types.py:13
 msgid "blank"
 msgstr "blanco"
 
@@ -200,7 +179,7 @@ msgstr "mijn voorstellen"
 
 #: templates/base_content.html:14
 msgid "laws"
-msgstr ""
+msgstr "wetten"
 
 #: templates/base_content.html:17
 msgid "members"
@@ -212,31 +191,44 @@ msgstr "stemadvies"
 
 #: templates/base_content.html:30
 msgid "voting progress"
+msgstr "voortgang stemmen"
+
+#: templates/base_content.html:35
+msgid "to save your progress please"
 msgstr ""
 
-#: templates/base_content.html:34
+#: templates/base_content.html:36 templates/profiles/login.html:25
+#: templates/profiles/userbar.html:12
+#: templates/registration/registration_form.html:12
+msgid "register"
+msgstr "registreren"
+
+#: templates/base_content.html:38
+#, fuzzy
+msgid "login"
+msgstr "aanmelden"
+
+#: templates/base_content.html:42
 msgid "total laws"
-msgstr ""
+msgstr "totaal wetten"
 
-#: templates/base_content.html:39
+#: templates/base_content.html:47
 msgid "search issue"
 msgstr "zoek voorstel"
 
-#: templates/base_content.html:46
+#: templates/base_content.html:54
 msgid "pick language.."
 msgstr "kies een taal..."
 
-#: templates/base_content.html:55
-#, fuzzy
+#: templates/base_content.html:63
 msgid "total votes"
-msgstr "jouw stemmen"
+msgstr "total stemmen"
 
-#: templates/base_content.html:59
-#, fuzzy
+#: templates/base_content.html:67
 msgid "total issues"
-msgstr "alle voorstellen"
+msgstr "totaal voorstellen"
 
-#: templates/base_content.html:84
+#: templates/base_content.html:92
 msgid ""
 "\n"
 "<h2>Democracygame</h2> \n"
@@ -254,8 +246,16 @@ msgid ""
 "</ul>           \n"
 "            "
 msgstr ""
+"\n"
+"<h2> Democratiespel </h2><ul class=\"columns\"><li class=\"top\"> <a href="
+"\"http://democratiespel.nl\">Democratiespel</a> </li><li> <a href=\"http://"
+"democratiespel.nl/blog/?p=93/\">Democratiespel mobiele interface</a> </"
+"li><li> <a href=\"http://democratiespel.nl/blog/\">Democratiespel Blog</a> </"
+"li><li> <a href=\"http://democratiespel.nl/wiki/\">Democratiespel Wiki</a> </"
+"li><li> <a href=\"http://api.democratiespel.nl/api/v0/doc/\">Application "
+"Programming Interface</a> </li></ul>"
 
-#: templates/base_content.html:96
+#: templates/base_content.html:104
 msgid ""
 "\n"
 "<h2>About us</h2> \n"
@@ -271,8 +271,16 @@ msgid ""
 "</ul> \n"
 "            "
 msgstr ""
+"\n"
+"<h2> Over ons </h2><ul class=\"columns\"><li class=\"top\"> een project van "
+"<a href=\"http://petities.nl\">Petities.nl</a> </li><li> dank aan "
+"startkapitaal van <a href=\"http://www.digitalepioniers.nl/projecten/"
+"Democratie-spel-nl/137\">Digitale Pioniers</a> </li><li> gebouwd door <a "
+"href=\"http://nl.linkedin.com/in/spreeker\">Bara Software</a> </li><li> "
+"broncode in <a href=\"http://github.com/spreeker/democracygame\">Github</a> "
+"</li></ul>"
 
-#: templates/base_content.html:108
+#: templates/base_content.html:116
 msgid ""
 "\n"
 "<h2>Supported by</h2> \n"
@@ -286,8 +294,14 @@ msgid ""
 "</ul> \n"
 "            "
 msgstr ""
+"\n"
+"<h2> Ondersteund door </h2><ul class=\"columns\"><li class=\"top\"> <a href="
+"\"http://www.petities.nl\">Petities.nl</a> </li><li> <a href=\"http://nl."
+"linkedin.com/in/spreeker\" title=\"spreeker\">spreeker</a> </li><li> <a href="
+"\"http://no-www.org/\" title=\"no-www.org\">klasse A no-www.org naleving</a> "
+"</li></ul>"
 
-#: templates/base_content.html:116
+#: templates/base_content.html:124
 msgid ""
 "\n"
 "<p> \n"
@@ -303,6 +317,15 @@ msgid ""
 "</p>\n"
 "            "
 msgstr ""
+"\n"
+"<p> Tenzij anders vermeld, op deze site is content licentie gegeven onder "
+"een <a rel=\"license\" href=\"http://creativecommons.org/licenses/by/3.0/\" "
+"class=\"subfoot\">Creative Commons Attribution 3.0 License</a> <br /> <a "
+"href=\"http://www.bluewebtemplates.com/\" title=\"Website Templates"
+"\">website templates</a> door <a href=\"http://www.styleshout.com/"
+"\">styleshout</a> <br /> Valid <a href=\"http://jigsaw.w3.org/css-validator/"
+"check/referer\">CSS</a> | <a href=\"http://validator.w3.org/check/referer"
+"\">XHTML</a> </p>"
 
 #: templates/pagination.html:5 templates/profiles/search_user.html:19
 msgid "previous"
@@ -333,6 +356,11 @@ msgstr "oneens"
 #: templates/issue/issue.html:42
 msgid "blank vote because.."
 msgstr "blanco stem, want... "
+
+#: templates/issue/issue.html:47
+#: templates/profiles/compare_votes_to_user.html:8
+msgid "Blank"
+msgstr "Blanco"
 
 #: templates/issue/issue.html:56
 msgid "multiply"
@@ -484,21 +512,21 @@ msgstr "kandidaat"
 msgid "Your candidate"
 msgstr "uw kandidaat"
 
-#: templates/profiles/candidate_info.html:5
+#: templates/profiles/candidate_info.html:7
 #: templates/profiles/compare_votes_to_user.html:60
 msgid "No candidate chosen yet"
 msgstr "nog geen kandidaat gekozen"
 
-#: templates/profiles/candidate_info.html:8
+#: templates/profiles/candidate_info.html:11
 msgid "Your followers"
 msgstr "uw volgers"
 
-#: templates/profiles/candidate_info.html:9
+#: templates/profiles/candidate_info.html:12
 #: templates/profiles/compare_votes_to_user.html:62
 msgid "Followers"
 msgstr "volgers"
 
-#: templates/profiles/candidate_info.html:17
+#: templates/profiles/candidate_info.html:20
 #: templates/profiles/compare_votes_to_user.html:67
 msgid "nobody's candidate"
 msgstr "kandidaat zonder aanhang"
@@ -538,29 +566,22 @@ msgid "Candidate?"
 msgstr "kandidaat?"
 
 #: templates/profiles/compare_votes_to_user.html:46
-#, fuzzy
 msgid ""
 "Every member who is active citizen or better can vote on one person. Persons "
 "with the most votes will get into the parliament."
 msgstr "Een kandidaat volgen helpt die speler aan een parlementszetel"
 
 #: templates/profiles/compare_votes_to_user.html:51
-#, fuzzy
 msgid "follow"
-msgstr "volgers"
+msgstr "maak jouw kandidaat"
 
 #: templates/profiles/compare_votes_to_user.html:54
 msgid "you cannot vote on a user yet"
-msgstr ""
+msgstr "u kunt nog niet op een lid stemmen"
 
 #: templates/profiles/login.html:19
 msgid "Try again, username and password don't match."
 msgstr "Probeer het opnieuw, gebruikersnaam en wachtwoord komen niet overeen"
-
-#: templates/profiles/login.html:25 templates/profiles/userbar.html:11
-#: templates/registration/registration_form.html:12
-msgid "register"
-msgstr "registreren"
 
 #: templates/profiles/login.html:26
 msgid "reset password"
@@ -570,7 +591,7 @@ msgstr "| reset mijn wachtwoord"
 msgid "You are now logged out."
 msgstr "Je bent nu afgemeld"
 
-#: templates/profiles/logout.html:7 templates/profiles/userbar.html:12
+#: templates/profiles/logout.html:7 templates/profiles/userbar.html:13
 msgid "log in"
 msgstr "aanmelden"
 
@@ -615,16 +636,14 @@ msgid "score"
 msgstr "punten"
 
 #: templates/profiles/ranking.html:65
-#, fuzzy
 msgid "departments"
-msgstr "argumenten"
+msgstr "ministeries"
 
 #: templates/profiles/ranking.html:67
 msgid "ministry"
 msgstr "minister"
 
 #: templates/profiles/ranking.html:67
-#, fuzzy
 msgid "name"
 msgstr "gebruikersnaam"
 
@@ -706,7 +725,6 @@ msgid "logout"
 msgstr "afmelden"
 
 #: templates/registration/activate.html:5
-#, fuzzy
 msgid "Your account on democracy has been created."
 msgstr "uw account in het democratiespel is aangemaakt"
 
@@ -715,7 +733,6 @@ msgid "Login"
 msgstr "aanmelden"
 
 #: templates/registration/activation_complete.html:6
-#, fuzzy
 msgid "You have been succesfully registered!"
 msgstr "<p>uw registratie is geslaagd!</p>"
 
@@ -902,72 +919,75 @@ msgstr "gesorteerd op datum"
 msgid "DELETE"
 msgstr "wissen"
 
-#: voting/vote_types.py:13
+#: voting/vote_types.py:12
+msgid "Against"
+msgstr "tegen"
+
+#: voting/vote_types.py:14
 msgid "For"
 msgstr "voor"
 
-#: voting/vote_types.py:18
+#: voting/vote_types.py:19
 msgid "Unconvincing"
 msgstr "niet overtuigend"
 
-#: voting/vote_types.py:19
+#: voting/vote_types.py:20
 msgid "Not political"
 msgstr "niet politiek"
 
-#: voting/vote_types.py:20
+#: voting/vote_types.py:21
 msgid "Can't completely agree"
 msgstr "ben het niet helemaal mee eens"
 
-#: voting/vote_types.py:22
+#: voting/vote_types.py:23
 msgid "Needs more work"
 msgstr "nog niet af"
 
-#: voting/vote_types.py:23
+#: voting/vote_types.py:24
 msgid "Badly worded"
 msgstr "slecht geformuleerd"
 
-#: voting/vote_types.py:24
+#: voting/vote_types.py:25
 msgid "Duplicate"
 msgstr "bestaat al"
 
-#: voting/vote_types.py:25
+#: voting/vote_types.py:26
 msgid "Unrelated source"
 msgstr "externe bron niet bruikbaar"
 
-#: voting/vote_types.py:27
+#: voting/vote_types.py:28
 msgid "I need to know more"
 msgstr "ik moet meer weten"
 
-#: voting/vote_types.py:28
+#: voting/vote_types.py:29
 msgid "Ask me later"
 msgstr "vraag me later"
 
-#: voting/vote_types.py:29
+#: voting/vote_types.py:30
 msgid "Too personal"
 msgstr "te persoonlijk"
 
-#: voting/vote_types.py:35
+#: voting/vote_types.py:36
 msgid "Multiply"
 msgstr "verzwaren"
 
-#: voting/vote_types.py:40
-msgid "Law"
-msgstr ""
-
 #: voting/vote_types.py:41
-#, fuzzy
-msgid "Rejected by parliament"
-msgstr "parlement"
+msgid "Law"
+msgstr "wet"
 
-#, fuzzy
+#: voting/vote_types.py:42
+msgid "Rejected by parliament"
+msgstr "afgewezen door parlement"
+
+#~ msgid "You voted successfully on %s"
+#~ msgstr "u heeft gestemd op \"%s\""
+
 #~ msgid "Democracygame"
 #~ msgstr "democratiespel"
 
-#, fuzzy
 #~ msgid "About us"
 #~ msgstr "over ons"
 
-#, fuzzy
 #~ msgid "Suported by"
 #~ msgstr "voorstel van "
 

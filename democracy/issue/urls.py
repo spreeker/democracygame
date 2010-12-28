@@ -1,7 +1,6 @@
 from django.conf.urls.defaults import *
 from issue.models import Issue
 from django.views.decorators.cache import cache_page
-from tagging.views import tagged_object_list
 
 urlpatterns = patterns('issue.views',
     url(r'^vote/(?P<issue_id>\d+)$', 'record_vote', name='vote' ),
@@ -10,7 +9,11 @@ urlpatterns = patterns('issue.views',
     url(r'^laws/$', 'issues_list_laws', name='laws' ),
 
     url(r'^tag/(?P<issue_id>\d+)$', 'tag_issue', name='tag_issue' ),
-    url(r'^with/tag/(?P<tag>[^/]+)/$', 'issue_list' , name='issue_with_tag'),
+    url(r'^with/tag/(?P<tag>[^/]+)/(?P<sortorder>\w+)/$', 'issue_list_with_tag', 
+        name='issue_sorted_with_tag'),
+    url(r'^with/tag/(?P<tag>[^/]+)/$', 'issue_list_with_tag', name='issue_with_tag'),
+    
+
     url(r'^publish/(?P<issue_id>\d+)$', 'publish_issue', name='publish'),
 
     url(r'^by/(?P<username>\w+)/$', 'issue_list_user', name='issue_list_user'),

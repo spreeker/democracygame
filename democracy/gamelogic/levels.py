@@ -78,14 +78,14 @@ def opinion_leader(user, userprofile):
     votes_on_user = Vote.objects.get_for_object(user).count()
     
     if votes_on_user:
-        #logging.debug(votes_on_user)
-        #logging.debug(user)
         userprofile.role = 'candidate'
         return 'candidate'
  
 def candidate(user, userprofile):
     """if people have voted on you as person you can become candidate.
        if you have no personal votes anymore you should be downgraded.
+       if you have more votes than the lowest parliament member you
+       come into the parliament and the lowerst parliament member drops out.
     """
     votes_on_user = Vote.objects.get_for_object(user).count()
     if not votes_on_user:
@@ -95,24 +95,45 @@ def candidate(user, userprofile):
     #check if you are good enough to be in parliament.    
     count_parliament = UserProfile.objects.filter(role='parliament member').count() 
 
+    parliament_members = UserProfile.objects.filter(
+        role='parliament member').order_by('score')
+
+    ids = [ p.user.id for p in parliament_members ]
+    candidate_votes = Vote.objects.get_popular(User, 
+            object_ids=ids, reverse=True, min_tv=0)
+
+    lowest_vote_count = candidate_votes[0]
+
+    pm_member_with_votes_ids = set([ p['object_id'] for p in candidate_votes ])
+    pm_member_ids = set([ profile.user.pk for profile in parliament_members]) 
+
+    #check the case of parliament members without followers.
+    losers = pm_member_ids - pm_member_with_votes_ids
+    if losers:
+        userprofile.role = 'parliament member'
+        for member in parliament_members.filter(user__in=losers):
+            member.role = 'opinion leader'            
+            member.save()
+        return 'parliament member' 
+
+    # check if there are enough members.
     if count_parliament < MAX_PARLEMENT:
         # there are not enough opinion leaders
         # so you will become one automatically.
         userprofile.role = 'parliament member'
         return 'parliament member'
 
+    # there are enough members, and all have followers..
+    # then parliament member with the least followers gets downgraded.
+    lowest_parliament_member = parliament_members.get(
+        user=lowest_vote_count['object_id'])
+
     # now check if you have more votes than the lowest parliament member. 
-    parliament_members_ids = UserProfile.objects.filter(
-        role='parliament member').values_list('user') 
-    pm_votes = Vote.objects.get_popular(User, 
-            object_ids=parliament_members_ids, reverse=True, min_tv=0)
-
-    lowest_vote_count = pm_votes[0]
-
-    lowest_parliament_member = User.objects.get(
-        id=lowest_vote_count['object_id']).get_profile()
-
-    if votes_on_user > lowest_vote_count['score']: 
+    # or ifequal the score counts.
+    if((votes_on_user > lowest_vote_count['score']) or 
+        #if equal check score.
+       ((votes_on_user == lowest_vote_count['score']) and 
+       (userprofile.score > lowest_parliament_member.score))):
         userprofile.role = 'parliament member'
         #downgrade lowest member
         lowest_parliament_member.role = 'candidate'
@@ -124,7 +145,11 @@ def parliament_member(user, userprofile):
        If you are not anymore you get downgraded. 
        This is done by upcoming candidates.
     """
-    pass
+    votes_on_user = Vote.objects.get_for_object(user).count()
+    if not votes_on_user:
+        userprofile.role = 'opinion leader'
+        return 'opinion leader'
+
 
 def minister(user, userprofile):
     """You get voted to become minister. minister changes are unknown for now.

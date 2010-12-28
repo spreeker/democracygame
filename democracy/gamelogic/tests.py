@@ -31,15 +31,17 @@ class TestUsers(TestCase):
         data = "%15s %18s %6s %6s\n" % ("User", "Role", "Score", "Votes")
         for i,u in enumerate(self.users):
 
-            v = Vote.objects.get_for_object(u).count()
+            v = Vote.objects.get_user_votes(u).count()
             p = self.profiles[i]
             data += "%15s %18s %4d %4d" % (u.username, p.role, p.score, v)
             data += "\n"
 
         votes = Vote.objects.get_popular(Issue, min_tv=0)
-        data += "Votes \n%15s %18s \n" % ("Vote count", "Object")
+        data += "Votes \n%15s %18s %6s \n" % ("Vote count", "Object", "Owner")
         for vote in votes:
-            data += "%15s %18s \n" % (vote['score'], vote['object_id'])
+            issue = Issue.objects.get(id=vote['object_id'])
+            data += "%15s %18s %6s \n" % (vote['score'], issue.title, issue.user)
+        
 
         return data
      
@@ -264,15 +266,15 @@ class TestAdvancedLevels(TestActions, TestLeveling):
         qs = Vote.objects.all()
         self.load_users()
         self.assertEqual(self.profiles[1].role , 'parliament member')
-
         self.do_vote_user(self.users[1], self.users[0], 1)
         levels.change_score(self.users[2] ,11)   # make sure user2 can vote on user. 
         levels.change_score(self.users[3] ,11)   # make sure user3 can vote on user. 
-        levels.change_score(self.users[4] ,11)   # make sure user3 can vote on user. 
+        levels.change_score(self.users[4] ,11)   # make sure user4 can vote on user. 
         self.load_users()
         self.do_vote_user(self.users[2], self.users[0], 1)
         # now user3 votes on user2 make user2 a candidate..
         self.do_vote_user(self.users[3], self.users[2], 1)
+        self.load_users()
         self.assertEqual(self.profiles[2].role , 'candidate')
         # now voting on yourself should do nothing.
         total = Vote.objects.count()

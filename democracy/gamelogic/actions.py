@@ -29,8 +29,8 @@ from django.http import Http404
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 
-import score
-import levels
+from gamelogic import score
+from gamelogic import levels
 from gamelogic.models import roles
 
 from gamelogic.models import MultiplyIssue
@@ -49,7 +49,7 @@ def vote_issue(user, issue, direction, keep_private , api_interface=None ):
 
     if repeated_vote: return
     
-    user.message_set.create(message=_("You voted successfully on %s") % issue.title  )
+    #user.message_set.create(message=_("You voted successfully on %s") % issue.title  )
 
     score.vote(user, issue, direction, voted_already)
 
@@ -76,7 +76,7 @@ def vote_user(user, voted_user, direction, keep_private, api_interface=None):
 
     #logging.debug("User %s voted %s on USER %s" %
     #(user.username, new_vote.vote, voted_user.username)) 
-    user.message_set.create(message=_("You voted successfully on %s") % voted_user.username )
+    #user.message_set.create(message=_("You voted successfully on %s") % voted_user.username )
     score.vote_user(user, voted_user, direction, voted_already)
 
 # make this signal code?
@@ -121,7 +121,7 @@ def propose(user, title, body, direction, source_url,
         issue.save()
         new_issue = issue
 
-    Vote.objects.record_vote(user , new_issue, direction,)    
+    Vote.objects.record_vote(user, new_issue, direction,)    
 
     return new_issue
 

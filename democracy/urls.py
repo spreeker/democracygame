@@ -13,6 +13,7 @@ urlpatterns = patterns('',
     (r'^api/v0/', include('api.urls')),
     #(r'^my/', include('dashboard.urls')),
     (r'^issue/', include('issue.urls')),
+    (r'^game/', include('gamelogic.urls')),
 
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     (r'^admin/', include(admin.site.urls)),

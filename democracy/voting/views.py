@@ -82,6 +82,7 @@ def vote_on_object(request, model, direction, post_vote_redirect=None,
                                  'must define a get_absolute_url method or '
                                  'property.')
         #Vote.objects.record_vote(request.user, obj, direction)
+        # should be done with signal pre_save.
         actions.vote(request.user, obj, direction, keep_private=False, ) 
         return HttpResponseRedirect(next)
     else:
@@ -150,6 +151,7 @@ def xmlhttprequest_vote_on_object(request, model, direction,
             'No %s found for %s.' % (model._meta.verbose_name, lookup_kwargs))
 
     # Vote and respond
+    #should be done whit signal presave.
     #Vote.objects.record_vote(request.user, obj, vote)
     actions.vote(request.user, obj, direction, keep_private=False,) 
     return HttpResponse(simplejson.dumps({

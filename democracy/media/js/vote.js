@@ -1,5 +1,5 @@
 function displaymessage(txt){
-    $(messagebar).append('<div class="notice">' + txt + '</div>');
+    $('#messagebar').append('<div class="notice">' + txt + '</div>');
 }
 
 function getScoresFrom(score){
@@ -19,12 +19,25 @@ function getScoresFrom(score){
     return score;
 }
 
-function handleError(xhr, textStatus){
+var error = function(xhr, textStatus){
     console.log(textStatus);
     document.open();
     document.write(xhr.responseText);
     document.close();
 }
+
+function add_vote_data(id, direction){
+    //load user vote data from localStorage
+    //add new vote to dataset.
+    var userdata = localStorage.getItem('user'); 
+    userdata = $.parseJSON(userdata);
+    var votes = userdata.votes;
+    votes[id] = direction;
+    userdata.votes = votes;
+    userdata = JSON.stringify(userdata); 
+    //console.log(userdata);
+    localStorage.setItem('user', userdata);
+};
 
 
 function vote(){
@@ -42,14 +55,11 @@ function vote(){
         'direction' : direction,
         'issue_id' : issue_id,
     };
-    localStorage.setItem(issue_id, direction)
+    add_vote_data(issue_id, direction);
+    update_progressbars();
+
     var afterVote = function(xhr, textStatus){
         // updates the user interface after a vote
-        // if an error occurs print this on screen.
-        if(textStatus.match(/error/g)) {
-            handleError(xhr, textStatus);
-            return;
-        }
         // get the results to show on screen.
         results = $.parseJSON(xhr.responseText);
         score = getScoresFrom(results.score)  
@@ -60,7 +70,7 @@ function vote(){
         $('.against', score_box).text(score.against);
         // notify user of any messages.
         if(results.message){
-            displaymessage(results.message);    
+            //displaymessage(results.message);    
         }
     };
     $.ajax({
@@ -69,6 +79,7 @@ function vote(){
         data : data,
         dataType : "json",
         complete : afterVote,
+        error : error,
     });
     if (direction == -1){
         $("button.negative", this).addClass('selected');
@@ -77,9 +88,9 @@ function vote(){
         $("button.positive", this).addClass('selected');
         $("button.negative", forms).removeClass('selected');
     };
-
     return false;
 }
+
 $(function(){
     $(".forms").find("form").click(function(){
        vote.apply(this);

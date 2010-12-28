@@ -28,8 +28,16 @@
 <h2>.<img src="/media/img/chart_bar.png" alt=""/></h2>
 
         {% trans "voting progress" %}
-        <div id="progressbar"></div>
-    <div>{% widthratio total_votes total_issues 100 %}</div>
+        <span id="votebar_value">{% widthratio total_votes total_issues 100 %}</span>
+        <div id="votebar"></div>
+       {% if not user.is_authenticated %} 
+        <p class="notice">
+            {% trans "to save your progress please" %} 
+            <a class="for" href="{% url registration_register %}">{% trans "register" %}</a>  or
+
+            <a class="for" href="{% url auth_login %}">{% trans "login" %}</a>
+        </p>
+       {% endif %}
 
     {% if total_laws %}<p>{% trans "total laws" %} {{ total_laws }}</p> {% endif %}
 

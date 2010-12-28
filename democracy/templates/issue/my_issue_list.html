@@ -3,6 +3,8 @@
 {% load voting_tags %}
 
 {% block bigcontent %}
+<p></p>
+<fieldset><legend>{% trans "propose issue" %}</legend>
 {% if actions.propose %}
         <div class="notice">
         {% blocktrans %}
@@ -11,8 +13,7 @@
         are invalidated. You can hide the old issue.
         {% endblocktrans %}
         </div>
-<p></p>
-<fieldset><legend>{% trans "propose issue" %}</legend>
+
 <form action="{{ request.get_full_path }}" method="post">
 <table>
    

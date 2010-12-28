@@ -42,9 +42,12 @@ h3 a{
     letter-spacing: 0px;
     font: normal normal normal 1em/normal Georgia, 'Times New Roman', Times, serif;
 }
-#tags a{
-
+#tags > a > font.selected{
+  color: #F3A251;
+  padding: 3px;
+  border-bottom: 1px solid;
 }
+
 #messagebar{
   position: fixed;
   top: 6em;
