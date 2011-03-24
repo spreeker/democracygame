@@ -7,9 +7,13 @@
 <h2>Vergelijk uw mening met die van de politieke partijen</h2>
 
 <table>
-<tr><td>partij</td><td>eens </td><td>blanco</td><td>oneens</td></tr>
-{% for username, n_agree, n_blank, n_disagree, n_total_intersection in compared %}
-<tr><td><a href="{% url userprofile username %}">{{username}}</a></td><td class="for">{{n_agree}}</td><td class="blank">{{n_blank}}</td><td class="against">{{n_disagree}}</td></tr>
+<tr><td>partij</td><td>eens</td><td>blanco</td><td>oneens</td><td>match</td></tr>
+{% for agreeing, username, n_agree, n_blank, n_disagree, n_total_intersection in compared %}
+<tr><td><a href="{% url compare_votes_to_user username %}">{{username}}</a></td>
+            <td class="for">{{n_agree}}</td>
+            <td class="blank">{{n_blank}}</td>
+            <td class="against">{{n_disagree}}</td>
+            <td>{{agreeing|floatformat:"-1"}}%</td></tr>
 {% endfor %}
 </table>
 <h3>Over deze pagina (disclaimer)</h3>

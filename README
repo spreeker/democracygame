@@ -1,4 +1,5 @@
-check www.democartiespel.nl/wiki for project information.
+On derdekamer.net the application is running.
+check www.democartiespel.nl/wiki for more project information.
 
 Democracy project is a government sponsored project which has as main goal
 creating a voting game api to enhanche political awareness of citizens
@@ -6,6 +7,8 @@ We are developing a Dashboard for your voting data and a mobile interface
 for the api. Democracy is meant to be as open as possible, information should
 be free and it should be easy to integrate our tools/game into other tools
 and websites.
+
+We are closely related to the dutch petities.nl petitions website.
 
 Installation:
 =============
