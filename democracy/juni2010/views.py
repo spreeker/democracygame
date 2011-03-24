@@ -37,21 +37,15 @@ def compare_to_parties(request):
         n_agree = 0
         n_disagree = 0
         n_blank = 0
-        for k, vote in party_votedict.items():
+        for k, direction in party_votedict.items():
             if user_votedict.has_key(k):
-                # If both vote the same, that is agreement.
-                if user_votedict[k] == vote:
+                # party issues are always for=1.
+                if user_votedict[k] == 1:
                     n_agree += 1
-                # Both voting blanc (even if for different reasons) is consirdered
-                # to be in agreement. Assuming blanc votes have integers larger than
-                # unity!
-                elif (user_votedict[k] > 1 and vote > 1):
-                    n_agree += 1
-                # One blanc vote and one other is considered neither agreement nor 
-                # disagreement.
-                elif (user_votedict[k] > 1 or vote > 1):
+                # One blanc vote
+                elif (user_votedict[k] > 1 ):
                     n_blank += 1
-                # Disagreement:
+                # Disagreement
                 else:
                     n_disagree += 1
 
